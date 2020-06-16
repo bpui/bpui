@@ -1,0 +1,104 @@
+<!--
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2020-02-07 14:49
+* Desc:
+*/
+ -->
+
+<template>
+  <div>
+    page1 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+    <div style="height:300px"></div>
+    <button @click="pushNav">push use api</button>
+    <router-link to="/navbar/page2" :data="data">push</router-link><br>
+    <router-link to="/navbar/page2" animate="slideOut">push with slideOut</router-link><br>
+    <router-link to="/navbar/page2" animate="lift">push with lift</router-link><br>
+    <router-link to="/navbar/page2" animate="fade">push with fade</router-link><br>
+    <div style="height:800px">ddd</div>
+  </div>
+</template>
+
+<script lang="ts">
+  import Vue from 'vue';
+  import {
+    Component,
+    Prop,
+    Watch,
+    Provide,
+    Emit,
+  } from 'vue-property-decorator';
+  import {
+    State,
+    Mutation
+  } from 'vuex-class';
+
+  @Component({
+    components: {
+    }
+  })
+  export default class extends Vue {
+
+    //
+    // event.
+    // @Emit()
+    // demoEvent(type: string) { }
+
+    //
+    // state.
+    // @State(state=>state.demo) demo:DEMO_TYPE;
+
+    //
+    // Prop
+    // @Prop({ type: number })
+    // demo: number = 1
+
+    //
+    // data.
+    @Provide() demo:number = 1;
+    @Provide() data:number[] = [1, 2, 3, 4];
+
+    //
+    // computed.
+    // get demo() { return xxxx; }
+
+    //
+    // watch.
+    // @Watch('child')
+    // onChildChanged(val: string, oldVal: string) { }
+
+    //
+    // lifecycle hook.
+    constructor() {
+      super();
+      // this.$router.getMatchedComponents()
+    }
+
+    mounted() {
+      console.log('page1 mounted');
+    }
+
+    beforeDestroy() {
+      console.log('page1 beforeDestroy');
+    }
+
+    viewAppear(popData:any) {
+      console.log('page1 viewAppear: ' + popData);
+      this.$navbar.setBarInfo({title: 'navbar', hidden:false});
+      // this.$navbar.setBarLeftItem({icon: 'loading'});
+    }
+    
+    viewDisappear() {
+      console.log('page1 viewDisappear');
+    }
+
+    pushNav() {
+      this.$navbar.push('./page2');
+    }
+  }
+</script>
+
+
+<style>
+</style>

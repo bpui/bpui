@@ -1,0 +1,39 @@
+{
+  "description": "navbarView",
+  "dependencies": {
+    "@bpui/libs": "^0.2.8",
+    "febs-browser": "^1.0.2"
+  },
+  "devDependencies": {
+    "vue-property-decorator": "^8.4.0",
+    "vuex-class": "^0.3.2"
+  },
+  "directories": {},
+  "keywords": [],
+  "engines": {
+    "node": ">=8"
+  },
+  "homepage": "https://github.com/bpui/bpui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bpui/bpui.git"
+  },
+  "files": [
+    "dist",
+    "style",
+    "types"
+  ],
+  "license": "MIT",
+  "main": "dist/index.common.min.js",
+  "module": "dist/index.esm.min.js",
+  "unpkg": "dist/index.min.js",
+  "types": "types/index.d.ts",
+  "maintainers": [
+    {
+      "name": "brainpoint",
+      "email": "bpoint.lee@gmail.com"
+    }
+  ],
+  "name": "@bpui/navbar-view",
+  "version": "0.1.8"
+}

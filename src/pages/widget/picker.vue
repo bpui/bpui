@@ -1,0 +1,120 @@
+<!--
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lanck
+* Date: 2020-02-10 16:46
+* Desc: bp-button 案列
+*/
+ -->
+
+<template>
+  <div style="height:1000px;">
+    <!-- custom picker -->
+    <h4>custom picker</h4>
+    <button @click="visible1=true">show1</button>
+    <button @click="()=>{visible1=true; value1=2;}">show1</button>
+    <button @click="visible2=true">show2</button>
+ 
+    <!-- picker1 -->
+    <bp-picker ref="picker1" v-model="value1" :visible.sync="visible1" @confirm="onConfirm1"  @change="onChange1" :datasource="[{label:'1',value:1}, {label:'2',value:2}, {label:'2',value:2}, {label:'2',value:2}, {label:'2',value:2}]" />
+
+    <!-- picker2 -->
+    <!-- <bp-picker ref="picker2" v-model="value2" :visible.sync="visible2" @confirm="onConfirm2" @change="onChange2" :datasource="[{label:'1',value:1, children:[{label:'22',value:2}]}, {label:'2',value:2}, {label:'2',value:2}]" /> -->
+    <!-- <bp-picker ref="picker2" v-model="value2" :visible.sync="visible2" @confirm="onConfirm2" @change="onChange2" :datasource="PickerTimeDatasource" /> -->
+    <bp-picker ref="picker2" v-model="value2" :visible.sync="visible2" @confirm="onConfirm2" @change="onChange2" :datasource="PickerDateDatasource" />
+  </div>
+</template>
+
+<script lang="ts">
+  import {
+    Component,
+    Vue,
+    Prop,
+    Watch,
+    Provide,
+    Emit,
+    Ref
+  } from "vue-property-decorator";
+  import {
+    State,
+    Mutation
+  } from "vuex-class";
+
+  import bpui from 'bpui.js';
+
+  @Component({
+    components: {
+      bpPicker: bpui.bpPicker,
+    }
+  })
+  export default class extends Vue {
+    
+    @Ref()
+    picker1: bp.Picker;
+
+    //
+    // event.
+    @Emit()
+    demoEvent(type: string) {}
+
+    //
+    // state.
+    // @State(state=>state.demo) demo:DEMO_TYPE;
+
+    //
+    // Prop
+    // @Prop({ type: number }) demo: number;
+
+    //
+    // data.
+    @Provide() visible1:boolean = false;
+    @Provide() visible2:boolean = false;
+    @Provide() value1 = null;
+    @Provide() value2 = [];
+    @Provide() PickerTimeDatasource = new bpui.PickerTimeDatasource({hourText:'h', minuteText:'m'});
+    @Provide() PickerDateDatasource = new bpui.PickerDateDatasource({yearText:'n'});
+    
+
+    //
+    // computed.
+    // get demo() { return xxxx; }
+
+    // //
+    // // watch.
+    // @Watch('visible1')
+    // onChildChanged(val: string, oldVal: string) { console.log(val); }
+
+    //
+    // lifecycle hook.
+    constructor() {
+      super();
+    }
+
+    mounted() {
+      this.$timer.sleep(10000).then(()=>{
+        // this.value1 = 2;
+        // this.$refs.picker1.setSelect(0, 2, false);
+      });
+    }
+
+    onConfirm2() {
+      console.log('confirm', this.value2);
+      this.$bpWidget.showAlert( JSON.stringify(this.value2));
+    }
+    onChange2(value) {
+      console.log('change', value);
+      this.$bpWidget.showToast(JSON.stringify(value));
+    }
+    onConfirm1() {
+      console.log('confirm', this.value1, this.picker1.getValue());
+      this.$bpWidget.showAlert(this.value1);
+    }
+    onChange1(value) {
+      console.log('change', value);
+      this.$bpWidget.showToast(value);
+    }
+  }
+</script>
+
+<style lang="scss">
+</style>

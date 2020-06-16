@@ -1,0 +1,1031 @@
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2020-02-24 11:03
+* Desc: 
+*/
+
+
+
+/**
+* Copyright (c) 2017 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2020-02-12 12:05
+* Desc: 
+*/
+
+/* 系统字体 */
+$bpFont: -apple-system-font,"PingFang SC","Microsoft YaHei",sans-serif;  
+$bpFontSize: 17px;
+
+/* 主色 */
+$bpColorPrimary: #07C160;
+/* 警告色 */
+$bpColorWarn: #FA5151;
+/* 背景色 */
+$bpBgColor: #F7F7F7;
+/* 文本颜色 */
+$bpTextColor: #111;
+/* 副文本颜色 */
+$bpTextColorSecondary: #333;
+/* 链接文本颜色 */
+$bpLinkColor: #576B95;
+/* 边框颜色 */
+$bpBorderColor: rgba(0,0,0,.1);
+
+
+// 不支持圆角
+// -color 使用图片边框的颜色, 会渐变.
+@mixin bp-thinBorderBottom($color) {
+  border-bottom: 1px solid $color;
+  @media (-webkit-min-device-pixel-ratio: 2),(min-resolution:192dpi) {
+    border-bottom: none;
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-image: linear-gradient(0deg, $color 49%, transparent 51%, transparent);
+  }
+}
+
+@mixin bp-thinBorderTop($color) {
+  border-top: 1px solid $color;
+  @media (-webkit-min-device-pixel-ratio: 2),(min-resolution:192dpi) {
+    border-top: none;
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-image: linear-gradient(180deg, $color 50%, transparent 50%, transparent);
+  }
+}
+
+@mixin bp-thinBorderLeft($color) {
+  border-left: 1px solid $color;
+  @media (-webkit-min-device-pixel-ratio: 2),(min-resolution:192dpi) {
+    border-left: none;
+    background-size: 1px 100%;
+    background-repeat: no-repeat;
+    background-position: left;
+    background-image: linear-gradient(90deg, $color 50%, transparent 50%, transparent);
+  }
+}
+
+@mixin bp-thinBorderRight($color) {
+  border-right: 1px solid $color;
+  @media (-webkit-min-device-pixel-ratio: 2),(min-resolution:192dpi) {
+    border-right: none;
+    background-size: 1px 100%;
+    background-repeat: no-repeat;
+    background-position: right;
+    background-image: linear-gradient(270deg, $color 49%, transparent 51%, transparent);
+  }
+}
+
+
+@mixin bp-thinBorderTopLeft($color) {
+  border-top: 1px solid $color;
+  border-left: 1px solid $color;
+  @media (-webkit-min-device-pixel-ratio: 2),(min-resolution:192dpi) {
+    border-top: none;
+    border-left: none;
+    background-size: 100% 1px, 1px 100%;
+    background-repeat: no-repeat;
+    background-position: top, left;
+    background-image: linear-gradient(180deg, $color 50%, transparent 50%, transparent), linear-gradient(90deg, $color 50%, transparent 50%, transparent);
+  }
+}
+
+@mixin bp-thinBorder($color) {
+  border-top: 1px solid $color;
+  border-left: 1px solid $color;
+  border-bottom: 1px solid $color;
+  border-right: 1px solid $color;
+  @media (-webkit-min-device-pixel-ratio: 2),(min-resolution:192dpi) {
+    border-top: none;
+    border-left: none;
+    border-bottom: none;
+    border-right: none;
+    background-size: 100% 1px, 1px 100%, 100% 1px, 1px 100%;
+    background-repeat: no-repeat;
+    background-position: top, left, bottom, right;
+    background-image: linear-gradient(180deg, $color 50%, transparent 50%, transparent), linear-gradient(90deg, $color 50%, transparent 50%, transparent), linear-gradient(0deg, $color 49%, transparent 51%, transparent), linear-gradient(270deg, $color 49%, transparent 51%, transparent);
+  }
+}
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2018-06-13 15:04
+* Desc: 设备自适应.
+*/
+
+/*
+iphone4  320~480
+iphone5  320~568
+iphone6  375~667
+
+iphone6p 414~736
+iphonex  375~812
+
+ipad      768~1024
+ipad pro  1024~1366
+*/
+
+
+/* is phone */
+@mixin bp-isPhone {
+  @media screen and (max-width: 767px) {
+    @content;
+  }
+}
+
+/* is tablet */
+@mixin bp-isTablet {
+  @media screen and (min-width: 768px) {
+    @content;
+  }
+}
+
+/* Landscape */
+@mixin bp-isLandscape {
+  @media screen and (orientation:landscape) {
+    @content;
+  }
+}
+/* Portrait */
+@mixin bp-isPortrait {
+  @media screen and (orientation:portrait) {
+    @content;
+  }
+}
+
+
+
+
+/**
+ * @desc: 单行缩略.
+ */
+@mixin bp-ellipsis() {
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+/**
+ * @desc: 多行缩略.
+ * @param lines: 指定最多的行数.
+ */
+@mixin bp-ellipsisMultiline($lines) {
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-all;
+  /*! autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+}
+
+/**
+ * @desc: 平滑字体.
+ */
+@mixin bp-smoothing() {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+
+/** use for unpkg cdn */
+
+
+@font-face {
+  font-family: 'bpui-icon';
+  src:  url('//unpkg.com/@bpui/libs/icons/font/bpui-icon.eot');
+  src:  url('//unpkg.com/@bpui/libs/icons/font/bpui-icon.eot#iefix') format('embedded-opentype'),
+    url('//unpkg.com/@bpui/libs/icons/font/bpui-icon.ttf') format('truetype'),
+    url('//unpkg.com/@bpui/libs/icons/font/bpui-icon.woff') format('woff'),
+    url('//unpkg.com/@bpui/libs/icons/font/bpui-icon.svg#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.bp-icon {
+  font-family: "bpui-icon" !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  height: 32px;
+  width: 32px;
+  font-size: 32px;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  display: inline-block;
+
+  &:before {
+    display: block;
+  }
+}
+
+
+.bp-iconArrowDown:before {
+  content: "\e900";
+}
+.bp-iconArrowLeft:before {
+  content: "\e901";
+}
+.bp-iconArrowRight:before {
+  content: "\e902";
+}
+.bp-iconArrowUp:before {
+  content: "\e903";
+}
+.bp-iconCancel:before {
+  content: "\e904";
+}
+.bp-iconDelete:before {
+  content: "\e905";
+}
+.bp-iconEdit:before {
+  content: "\e906";
+}
+.bp-iconHeart:before {
+  content: "\e907";
+}
+.bp-iconHeartFill:before {
+  content: "\e908";
+  color: #f44335;
+}
+
+
+/** loading frame */
+@-webkit-keyframes bp-iconLoading_animationSpinKeyframes {
+  0% {
+    -webkit-transform: rotate(0deg)
+  }
+  to {
+    -webkit-transform: rotate(360deg)
+  }
+}
+
+@keyframes bp-iconLoading_animationSpinKeyframes {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg)
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg)
+  }
+}
+
+.bp-iconLoading {
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  -webkit-animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
+  -moz-animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
+  animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
+}
+.bp-iconLoading .path1:before {
+  content: "\e909";
+  color: rgb(0, 0, 0);
+  opacity: 0.6;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+}
+.bp-iconLoading .path2:before {
+  content: "\e90a";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.65;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path3:before {
+  content: "\e90b";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.7;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path4:before {
+  content: "\e90c";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.73;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path5:before {
+  content: "\e90d";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.68;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path6:before {
+  content: "\e90e";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.59;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path7:before {
+  content: "\e90f";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.53;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path8:before {
+  content: "\e910";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.48;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path9:before {
+  content: "\e911";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.44;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path10:before {
+  content: "\e912";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.41;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path11:before {
+  content: "\e913";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.38;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path12:before {
+  content: "\e914";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.35;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLocation:before {
+  content: "\e915";
+}
+.bp-iconLocationPin:before {
+  content: "\e916";
+}
+.bp-iconMenu:before {
+  content: "\e917";
+}
+.bp-iconMinus:before {
+  content: "\e918";
+}
+.bp-iconMore:before {
+  content: "\e919";
+}
+.bp-iconOk:before {
+  content: "\e91a";
+}
+.bp-iconPlus:before {
+  content: "\e91b";
+}
+.bp-iconSetting:before {
+  content: "\e91c";
+}
+.bp-iconStar:before {
+  content: "\e91d";
+}
+.bp-iconStarFill:before {
+  content: "\e91e";
+  color: #efc75e;
+}
+.bp-iconUser:before {
+  content: "\e91f";
+}
+
+html {
+  @include bp-smoothing();
+  font-family: $bpFont;
+  font-size: $bpFontSize;
+}
+
+* {
+  touch-action: manipulation;
+  /* no 300ms delay */
+}
+
+[class|=bp],
+button,
+label {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-transform-style: flat;
+  transform-style: flat;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-touch-callout: none;
+  // -webkit-user-select: none;
+  // -khtml-user-select: none;
+  // -moz-user-select: none;
+  // -ms-user-select: none;
+  // user-select: none;
+}
+
+.bp-ellipsis {
+  @include bp-ellipsis();
+}
+.bp-ellipsisMultiline1 {
+  @extend .bp-ellipsis;
+}
+.bp-ellipsisMultiline2 {
+  @include bp-ellipsisMultiline(2);
+}
+.bp-ellipsisMultiline3 {
+  @include bp-ellipsisMultiline(3);
+}
+.bp-ellipsisMultiline4 {
+  @include bp-ellipsisMultiline(4);
+}
+.bp-ellipsisMultiline5 {
+  @include bp-ellipsisMultiline(5);
+}
+.bp-ellipsisMultiline6 {
+  @include bp-ellipsisMultiline(6);
+}
+.bp-ellipsisMultiline7 {
+  @include bp-ellipsisMultiline(7);
+}
+.bp-ellipsisMultiline8 {
+  @include bp-ellipsisMultiline(8);
+}
+
+.bp-smoothing {
+  @include bp-smoothing();
+}
+
+
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2020-02-13 15:45
+* Desc: 
+*/
+
+
+/* 状态栏默认高度 */
+$bpNavbarStatusBarHeight: 20px;
+/* 导航条默认高度 */
+$bpNavbarHeight: 44px;
+/* 导航条的参照字体大小 */
+$bpNavbarFontSize: 17px;
+/* 导航条背景色 */
+$bpNavbarBgColor: rgb(247, 247, 250);
+/* 导航条透明度 */
+$bpNavbarBgOpacity: 0.9;
+/* 左右两侧文本颜色 */
+$bpNarbarTextColor: $bpColorPrimary;
+/* 标题文本颜色 */
+$bpNarbarTitleColor: #111;
+/* 边框颜色 */
+$bpNarbarBorderColor: $bpBorderColor;
+/* 页面背景色 */
+$bpNavbarPageBgColor: rgb(255, 255, 255);
+
+
+
+
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2018-06-13 15:04
+* Desc: 页面切换过渡动画相关.
+*/
+
+$bpNavbarFadeDurtion: 0.3s;
+
+/**
+ * fade
+ */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity $bpNavbarFadeDurtion;
+}
+
+.fade-enter {
+  opacity: 0.5;
+}
+.fade-enter-to {
+  opacity: 1.0;
+}
+.fade-leave {
+  opacity: 1.0;
+  z-index: 99999;
+}
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fadeOut-enter-active, .fadeOut-leave-active {
+  transition: opacity $bpNavbarFadeDurtion;
+}
+
+.fadeOut-enter {
+  opacity: 0.5;
+}
+.fadeOut-enter-to {
+  opacity: 1.0;
+}
+.fadeOut-leave {
+  z-index: 99999;
+  opacity: 1.0;
+}
+.fadeOut-leave-to {
+  opacity: 0;
+}
+
+
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2018-06-13 15:04
+* Desc: 页面切换过渡动画相关.
+*/
+
+$bpNavbarLiftDurtion: 0.3s;
+
+/**
+ * lift
+ */
+ .lift-enter {
+   transform: translateY(100vh);
+ }
+ .lift-enter-active {
+   transition: transform $bpNavbarLiftDurtion ease;
+   z-index: 99999;
+ }
+ .lift-enter-to {
+   transform: translateY(0vh);
+ }
+ .lift-leave {
+   transform: translateY(0vh);
+ }
+ .lift-leave-active {
+   transition: transform $bpNavbarLiftDurtion ease;
+ }
+ .lift-leave-to {
+   transform: translateY(-50vh);
+ }
+ 
+ /**
+  * liftOut
+  */
+ .liftOut-enter {
+   transform: translateY(-50vh);
+ }
+ .liftOut-enter-active {
+   transition: transform $bpNavbarLiftDurtion ease;
+ }
+ .liftOut-enter-to {
+   transform: translateY(0vh);
+ }
+ .liftOut-leave {
+   transform: translateY(0vh);
+ }
+ .liftOut-leave-active {
+   transition: transform $bpNavbarLiftDurtion ease;
+   z-index: 99999;
+ }
+ .liftOut-leave-to {
+   transform: translateY(100vh);
+ }
+ 
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2018-06-13 15:04
+* Desc: 页面切换过渡动画相关.
+*/
+
+
+$bpNavbarSlideDurtion: 0.3s;
+ 
+/**
+ * slide 带50%偏移
+ */
+.slide-enter {
+  transform: translateX(100vw);
+}
+.slide-enter-active {
+  transition: transform $bpNavbarSlideDurtion;// ease;
+  z-index: 99999;
+}
+.slide-enter-to {
+  transform: translateX(0vw);
+}
+.slide-leave {
+  transform: translateX(0vw);
+}
+.slide-leave-active {
+  transition: transform $bpNavbarSlideDurtion;// ease;
+}
+.slide-leave-to {
+  transform: translateX(-50vw);
+}
+
+/**
+ * slideOut 带50%偏移
+ */
+.slideOut-enter {
+  transform: translateX(-50vw);
+}
+.slideOut-enter-active {
+  transition: transform $bpNavbarSlideDurtion;// ease;
+}
+.slideOut-enter-to {
+  transform: translateX(0vw);
+}
+.slideOut-leave {
+  transform: translateX(0vw);
+}
+.slideOut-leave-active {
+  transition: transform $bpNavbarSlideDurtion;// ease;
+  z-index: 99999;
+}
+.slideOut-leave-to {
+  transform: translateX(100vw);
+}
+
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2018-06-13 15:04
+* Desc: 页面切换过渡动画相关.
+*/
+
+
+$bpNavbarSlideAllDurtion: 0.3s;
+
+/**
+ * slideAll 带100%偏移
+ */
+ .slideAll-enter {
+   transform: translateX(100vw);
+ }
+ .slideAll-enter-active {
+   transition: transform $bpNavbarSlideAllDurtion ease;
+   z-index: 99999;
+ }
+ .slideAll-enter-to {
+   transform: translateX(0vw);
+ }
+ .slideAll-leave {
+   transform: translateX(0vw);
+ }
+ .slideAll-leave-active {
+   transition: transform $bpNavbarSlideAllDurtion ease;
+ }
+ .slideAll-leave-to {
+   transform: translateX(-50vw);
+ }
+ 
+ /**
+  * slideAllOut 100%偏移
+  */
+ .slideAllOut-enter {
+   transform: translateX(-50vw);
+ }
+ .slideAllOut-enter-active {
+   transition: transform $bpNavbarSlideAllDurtion ease;
+ }
+ .slideAllOut-enter-to {
+   transform: translateX(0vw);
+ }
+ .slideAllOut-leave {
+   transform: translateX(0vw);
+ }
+ .slideAllOut-leave-active {
+   transition: transform $bpNavbarSlideAllDurtion ease;
+   z-index: 99999;
+ }
+ .slideAllOut-leave-to {
+   transform: translateX(100vw);
+ }
+
+ 
+
+.bp-navbar_animate {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0, 1);
+}
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2020-02-13 15:45
+* Desc: 
+*/
+
+.bp-navbarView {
+  /* 导航条 */
+  .bp-navbarView_bar {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    // position: absolute;
+    position: fixed;
+    justify-content: space-between;
+
+    z-index: 1000;
+    width: 100%;
+    height: $bpNavbarHeight;
+    background-color: $bpNavbarBgColor;
+    opacity: $bpNavbarBgOpacity;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    touch-action: initial;
+    pointer-events: initial;
+
+    /* 包含状态栏 */
+    &.bp-navbarView_containStatusBar {
+      height: $bpNavbarHeight+$bpNavbarStatusBarHeight;
+      .bp-navbarView_leftItem, .bp-navbarView_rightItem, .bp-navbarView_centerItem {
+        margin-top: $bpNavbarStatusBarHeight;
+      }
+    }
+
+    // border
+    @include bp-thinBorderBottom($bpNarbarBorderColor);
+
+    button {
+      @include bp-smoothing();
+
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      touch-action: manipulation;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      display: inline-block;
+      text-align: center;
+      vertical-align: middle;
+      user-select: none;
+      transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+      white-space: nowrap;
+      word-wrap: break-word;
+      font-weight: 400;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+      outline: 0;
+      outline-offset: 0;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+
+      svg {
+        vertical-align: middle;
+      }
+
+      &:active {
+        opacity: 0.3;
+      }
+    }
+
+    .bp-navbarView_leftItem, .bp-navbarView_rightItem {
+      display: flex;
+      flex-direction: row;
+      cursor: pointer;
+      padding: 0;
+      border: none;
+      width: 27.5vw;
+      max-width: 200px;
+      background: transparent;
+      margin: 0;
+      
+      &:focus {
+        outline: none;
+      }
+
+      $bpNavbarIconWidth: (25/17)*$bpNavbarFontSize;
+
+      span {
+        font-size: (17/17)*$bpNavbarFontSize;
+        font-weight: 400;
+        line-height: $bpNavbarHeight;
+        display: block;
+        color: $bpNarbarTextColor;
+      }
+  
+
+      .bp-navbarView_icon, svg {
+        width: $bpNavbarIconWidth;
+        height: $bpNavbarIconWidth;
+        margin-top: ($bpNavbarHeight - $bpNavbarIconWidth) / 2;
+        display: block;
+        color: $bpNarbarTextColor;
+      }
+      .bp-navbarView_icon:before {
+        width: $bpNavbarIconWidth;
+        height: $bpNavbarIconWidth;
+        font-size: $bpNavbarIconWidth;
+      }
+    }
+
+    /* 左侧按钮 */
+    .bp-navbarView_leftItem {
+      text-align: left;
+      padding-left: 8px;
+
+      .bp-navbarView_icon, svg {
+        margin-right: 4px;
+        float: left;
+      }
+      span {
+        float: left;
+      }
+    }
+    /* 右侧按钮 */
+    .bp-navbarView_rightItem {
+      padding-right: 8px;
+      text-align: right;
+
+      .bp-navbarView_icon, svg {
+        margin-left: 4px;
+        float: right;
+      }
+      span {
+        float: right;
+      }
+    }
+    /* 中部 */
+    .bp-navbarView_centerItem {
+      font-size: (20/17)*$bpNavbarFontSize;
+      font-weight: 400;
+      line-height: $bpNavbarHeight;
+      text-align: center;
+      width: 44vw;
+      background: transparent;
+      color: $bpNarbarTitleColor;
+    }
+  }
+}
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2020-02-13 15:45
+* Desc: 
+*/
+
+body {
+  padding-left: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-right: 0;
+  margin: 0 !important;
+  height: auto !important;
+}
+
+.bp-navbarView {
+  // -webkit-transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  // -webkit-overflow-scrolling: touch;
+  backface-visibility: hidden;
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .bp-navbarView_page {
+    // -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    width: 100%;
+    max-width: 100vw;
+    min-height: 100vh;
+    box-shadow: -3px -3px 20px 2px rgba(0, 0, 0, 0.15);
+    touch-action: initial;
+    pointer-events: initial;
+    // overflow-x: hidden;
+    // overflow-y: visible;
+    box-sizing: border-box;
+    background-color: $bpNavbarPageBgColor;
+
+    &>div {
+      padding-top: $bpNavbarHeight;
+      width: 100%;
+      max-width: 100vw;
+      min-height: 100vh;
+      box-sizing: border-box !important;
+    }
+  }
+
+  .bp-navbarView_static {
+    // position: static !important;
+  }
+  .bp-navbarView_absolute {
+    position: absolute !important;
+  }
+
+  /* 包含状态栏 */
+  &.bp-navbarView_containStatusBar {
+    .bp-navbarView_page > div {
+      padding-top: $bpNavbarHeight+$bpNavbarStatusBarHeight;
+    }
+  }
+}
+
+
+.bp-navbarView_loading {
+  -webkit-animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
+  -moz-animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
+  animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
+}

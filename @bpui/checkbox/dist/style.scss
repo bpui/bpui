@@ -1,0 +1,529 @@
+/**
+* Copyright (c) 2017 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2020-02-12 12:05
+* Desc: 
+*/
+
+/* 系统字体 */
+$bpFont: -apple-system-font,"PingFang SC","Microsoft YaHei",sans-serif;  
+$bpFontSize: 17px;
+
+/* 主色 */
+$bpColorPrimary: #07C160;
+/* 警告色 */
+$bpColorWarn: #FA5151;
+/* 背景色 */
+$bpBgColor: #F7F7F7;
+/* 文本颜色 */
+$bpTextColor: #111;
+/* 副文本颜色 */
+$bpTextColorSecondary: #333;
+/* 链接文本颜色 */
+$bpLinkColor: #576B95;
+/* 边框颜色 */
+$bpBorderColor: rgba(0,0,0,.1);
+
+
+/**
+ * @desc: 单行缩略.
+ */
+@mixin bp-ellipsis() {
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+/**
+ * @desc: 多行缩略.
+ * @param lines: 指定最多的行数.
+ */
+@mixin bp-ellipsisMultiline($lines) {
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-all;
+  /*! autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+}
+
+/**
+ * @desc: 平滑字体.
+ */
+@mixin bp-smoothing() {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+
+/** use for unpkg cdn */
+
+
+@font-face {
+  font-family: 'bpui-icon';
+  src:  url('//unpkg.com/@bpui/libs/icons/font/bpui-icon.eot');
+  src:  url('//unpkg.com/@bpui/libs/icons/font/bpui-icon.eot#iefix') format('embedded-opentype'),
+    url('//unpkg.com/@bpui/libs/icons/font/bpui-icon.ttf') format('truetype'),
+    url('//unpkg.com/@bpui/libs/icons/font/bpui-icon.woff') format('woff'),
+    url('//unpkg.com/@bpui/libs/icons/font/bpui-icon.svg#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.bp-icon {
+  font-family: "bpui-icon" !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  height: 32px;
+  width: 32px;
+  font-size: 32px;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  display: inline-block;
+
+  &:before {
+    display: block;
+  }
+}
+
+
+.bp-iconArrowDown:before {
+  content: "\e900";
+}
+.bp-iconArrowLeft:before {
+  content: "\e901";
+}
+.bp-iconArrowRight:before {
+  content: "\e902";
+}
+.bp-iconArrowUp:before {
+  content: "\e903";
+}
+.bp-iconCancel:before {
+  content: "\e904";
+}
+.bp-iconDelete:before {
+  content: "\e905";
+}
+.bp-iconEdit:before {
+  content: "\e906";
+}
+.bp-iconHeart:before {
+  content: "\e907";
+}
+.bp-iconHeartFill:before {
+  content: "\e908";
+  color: #f44335;
+}
+
+
+/** loading frame */
+@-webkit-keyframes bp-iconLoading_animationSpinKeyframes {
+  0% {
+    -webkit-transform: rotate(0deg)
+  }
+  to {
+    -webkit-transform: rotate(360deg)
+  }
+}
+
+@keyframes bp-iconLoading_animationSpinKeyframes {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg)
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg)
+  }
+}
+
+.bp-iconLoading {
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  -webkit-animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
+  -moz-animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
+  animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
+}
+.bp-iconLoading .path1:before {
+  content: "\e909";
+  color: rgb(0, 0, 0);
+  opacity: 0.6;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+}
+.bp-iconLoading .path2:before {
+  content: "\e90a";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.65;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path3:before {
+  content: "\e90b";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.7;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path4:before {
+  content: "\e90c";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.73;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path5:before {
+  content: "\e90d";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.68;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path6:before {
+  content: "\e90e";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.59;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path7:before {
+  content: "\e90f";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.53;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path8:before {
+  content: "\e910";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.48;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path9:before {
+  content: "\e911";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.44;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path10:before {
+  content: "\e912";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.41;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path11:before {
+  content: "\e913";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.38;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLoading .path12:before {
+  content: "\e914";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.35;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: -1em;
+}
+.bp-iconLocation:before {
+  content: "\e915";
+}
+.bp-iconLocationPin:before {
+  content: "\e916";
+}
+.bp-iconMenu:before {
+  content: "\e917";
+}
+.bp-iconMinus:before {
+  content: "\e918";
+}
+.bp-iconMore:before {
+  content: "\e919";
+}
+.bp-iconOk:before {
+  content: "\e91a";
+}
+.bp-iconPlus:before {
+  content: "\e91b";
+}
+.bp-iconSetting:before {
+  content: "\e91c";
+}
+.bp-iconStar:before {
+  content: "\e91d";
+}
+.bp-iconStarFill:before {
+  content: "\e91e";
+  color: #efc75e;
+}
+.bp-iconUser:before {
+  content: "\e91f";
+}
+
+html {
+  @include bp-smoothing();
+  font-family: $bpFont;
+  font-size: $bpFontSize;
+}
+
+* {
+  touch-action: manipulation;
+  /* no 300ms delay */
+}
+
+[class|=bp],
+button,
+label {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-transform-style: flat;
+  transform-style: flat;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-touch-callout: none;
+  // -webkit-user-select: none;
+  // -khtml-user-select: none;
+  // -moz-user-select: none;
+  // -ms-user-select: none;
+  // user-select: none;
+}
+
+.bp-ellipsis {
+  @include bp-ellipsis();
+}
+.bp-ellipsisMultiline1 {
+  @extend .bp-ellipsis;
+}
+.bp-ellipsisMultiline2 {
+  @include bp-ellipsisMultiline(2);
+}
+.bp-ellipsisMultiline3 {
+  @include bp-ellipsisMultiline(3);
+}
+.bp-ellipsisMultiline4 {
+  @include bp-ellipsisMultiline(4);
+}
+.bp-ellipsisMultiline5 {
+  @include bp-ellipsisMultiline(5);
+}
+.bp-ellipsisMultiline6 {
+  @include bp-ellipsisMultiline(6);
+}
+.bp-ellipsisMultiline7 {
+  @include bp-ellipsisMultiline(7);
+}
+.bp-ellipsisMultiline8 {
+  @include bp-ellipsisMultiline(8);
+}
+
+.bp-smoothing {
+  @include bp-smoothing();
+}
+
+
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2020-02-13 15:45
+* Desc: 
+*/
+
+/* 字体 */
+$bpCheckboxFontSize: 0.9rem;
+$bpCheckboxFontWeight: 400;
+
+/* 尺寸 */
+$bpCheckboxSize: 18px;
+$bpCheckboxRadius: 2px;
+
+/* 颜色 */
+$bpCheckboxBgColor: $bpColorPrimary;
+/* 中间勾标记的颜色 */
+$bpCheckboxTickColor: #fff;
+/* label颜色 */
+$bpCheckboxLabelColor: #606266;
+
+
+.bp-checkbox {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: 0;
+    outline-offset: 0;
+    
+    color: $bpCheckboxLabelColor;
+    font-weight: $bpCheckboxFontWeight;
+    font-size: $bpCheckboxFontSize;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    white-space: nowrap;
+    user-select: none;
+    margin: 2px;
+
+    .bp-checkbox__input {
+        white-space: nowrap;
+        cursor: pointer;
+        outline: none;
+        display: inline-block;
+        line-height: 1;
+        position: relative;
+        vertical-align: middle;
+
+        .bp-checkbox__inner {
+            display: inline-block;
+            position: relative;
+            border: 1px solid #dcdfe6;
+            border-radius: $bpCheckboxRadius;
+            box-sizing: border-box;
+            width: $bpCheckboxSize;
+            height: $bpCheckboxSize;
+            background-color: $bpCheckboxTickColor;
+            z-index: 1;
+            transition: border-color .25s cubic-bezier(.71, -.46, .29, 1.46), background-color .25s cubic-bezier(.71, -.46, .29);
+
+            .bp-icon {
+                width: $bpCheckboxSize - 2px;
+                height: $bpCheckboxSize - 2px;
+                font-size: $bpCheckboxSize - 2px;
+                color: $bpCheckboxTickColor;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        }
+
+        .bp-checkbox__inner_hover {
+            border-color: $bpCheckboxBgColor;
+        }
+
+        .bp-checkbox__inner_checked {
+            border-color: $bpCheckboxBgColor;
+            background-color: $bpCheckboxBgColor;
+        }
+
+        .bp-checkbox__original {
+            opacity: 0 !important;
+            outline: none !important;
+            position: absolute !important;
+            margin: 0 !important;
+            width: 0 !important;
+            height: 0 !important;
+            z-index: -1 !important;
+        }
+    }
+
+    .bp-checkbox__label {
+        height: $bpCheckboxSize;
+        vertical-align: middle;
+        display: inline-block;
+        padding-left: 5px;
+        line-height: 1;
+        // font-size: 14px;
+    }
+
+    // disabled
+    &.bp-Checkbox__disabled {
+        opacity: .5;
+        cursor: not-allowed;
+        touch-action: none;
+        pointer-events: none;
+    }
+}
+

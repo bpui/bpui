@@ -1,0 +1,53 @@
+{
+  "description": "bpui common libs",
+  "dependencies": {
+    "@types/hammerjs": "^2.0.36",
+    "febs-browser": "^1.0.2",
+    "hammerjs": "^2.0.8",
+    "smoothscroll-polyfill": "^0.4.4"
+  },
+  "devDependencies": {},
+  "directories": {},
+  "keywords": [
+    "timer",
+    "dom",
+    "router",
+    "device",
+    "gesture",
+    "touch",
+    "ios",
+    "weixin",
+    "IE"
+  ],
+  "engines": {
+    "node": ">=8"
+  },
+  "files": [
+    "src",
+    "icons",
+    "style",
+    "types",
+    "dist"
+  ],
+  "homepage": "https://github.com/bpui/bpui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bpui/bpui.git"
+  },
+  "license": "MIT",
+  "main": "dist/index.common.js",
+  "module": "dist/index.esm.js",
+  "unpkg": "dist/index.min.js",
+  "types": "types/index.d.ts",
+  "maintainers": [
+    {
+      "name": "brainpoint",
+      "email": "bpoint.lee@gmail.com"
+    }
+  ],
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
+  },
+  "name": "@bpui/libs",
+  "version": "0.2.8"
+}

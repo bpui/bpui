@@ -1,0 +1,21 @@
+$height:  667px;
+$width: 375px;
+.container {
+  height: $height;
+  width: $width;
+  color: #333;
+  @include bp-thinBorder(#eee);
+  padding: 10px;
+  
+  h4 {
+    margin: 20px 0 10px 0;
+    @include bp-thinBorderBottom(#eee);
+    color: #888;
+    font-style: italic;
+  }
+
+  div {
+    min-height: 20px;
+    width: $width;
+  }
+}

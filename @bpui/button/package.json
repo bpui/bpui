@@ -1,0 +1,34 @@
+{
+  "description": "button",
+  "dependencies": {
+    "@bpui/libs": "^0.2.8"
+  },
+  "directories": {},
+  "keywords": [],
+  "engines": {
+    "node": ">=8"
+  },
+  "files": [
+    "style",
+    "dist"
+  ],
+  "homepage": "https://github.com/bpui/bpui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bpui/bpui.git"
+  },
+  "main": "style/_index.scss",
+  "unpkg": "style/unpkg.scss",
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "brainpoint",
+      "email": "bpoint.lee@gmail.com"
+    }
+  ],
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
+  },
+  "name": "@bpui/button",
+  "version": "0.1.10"
+}

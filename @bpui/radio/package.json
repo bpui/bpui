@@ -1,0 +1,42 @@
+{
+  "description": "radio",
+  "dependencies": {
+    "@bpui/libs": "^0.2.8"
+  },
+  "directories": {},
+  "keywords": [],
+  "engines": {
+    "node": ">=8"
+  },
+  "files": [
+    "style",
+    "src",
+    "dist",
+    "types"
+  ],
+  "homepage": "https://github.com/bpui/bpui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bpui/bpui.git"
+  },
+  "main": "dist/index.common.js",
+  "module": "dist/index.esm.js",
+  "unpkg": "dist/index.min.js",
+  "types": "types/index.d.ts",
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "lanck",
+      "email": "601768787@qq.com"
+    },
+    {
+      "name": "brainpoint",
+      "email": "bpoint.lee@gmail.com"
+    }
+  ],
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
+  },
+  "name": "@bpui/radio",
+  "version": "0.1.8"
+}

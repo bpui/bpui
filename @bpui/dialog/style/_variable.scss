@@ -1,0 +1,27 @@
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2020-02-13 15:45
+* Desc: 
+*/
+
+/* 字体 */
+$bpDialogTitleFontSize: 1.1rem;
+$bpDialogTitleFontWeight: 400;
+$bpDialogFontSize: 0.9rem;
+
+/* 尺寸 */
+$bpDialogRadius: 6px;
+
+/* 对话框颜色 */
+$bpDialogBgColor: rgba(255, 255, 255, 0.90);
+$bpDialogTitleColor: darken($bpTextColor, 10%);
+$bpDialogTextColor: $bpTextColor;
+$bpDialogCloseColor: #b3b3b3;
+
+$bpDialogAnimateDurtion: 0.2s;
+
+/* loading */
+$bpLoadingRadius: 8px;
+$bpLoadingBgColor: rgba(43, 43, 43, 0.92);
+$bpLoadingTextColor: #d4d4d4;

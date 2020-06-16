@@ -1,9 +1,8 @@
 .DS_Store
 __MACOSX
 node_modules
-_dist
-dist
-/src/router/_tmpConfig.ts
+dist/*.map
+dist/index.js
 
 # local env files
 .env.local

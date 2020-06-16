@@ -1,0 +1,44 @@
+{
+  "description": "bpui",
+  "dependencies": {
+    "@bpui/actionsheet": "^0.1.4",
+    "@bpui/button": "^0.1.10",
+    "@bpui/checkbox": "^0.1.9",
+    "@bpui/dialog": "^0.1.18",
+    "@bpui/input": "^0.1.13",
+    "@bpui/libs": "^0.2.8",
+    "@bpui/navbar-view": "^0.1.8",
+    "@bpui/picker": "^0.1.22",
+    "@bpui/popover": "^0.1.1",
+    "@bpui/radio": "^0.1.8",
+    "@bpui/switch": "^0.1.8"
+  },
+  "devDependencies": {},
+  "directories": {},
+  "keywords": [],
+  "engines": {
+    "node": ">=8"
+  },
+  "homepage": "https://github.com/bpui/bpui.js#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bpui/bpui.js.git"
+  },
+  "files": [
+    "dist",
+    "src",
+    "style",
+    "types"
+  ],
+  "license": "MIT",
+  "main": "src/index.ts",
+  "types": "types/index.d.ts",
+  "maintainers": [
+    {
+      "name": "brainpoint",
+      "email": "bpoint.lee@gmail.com"
+    }
+  ],
+  "name": "bpui.js",
+  "version": "0.1.14"
+}

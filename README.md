@@ -1,1 +1,5 @@
-in coding
+## Run
+
+```bash
+npm run dev
+```
