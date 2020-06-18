@@ -840,6 +840,7 @@ $bpLoadingTextColor: #d4d4d4;
 /** 滚动条造成的闪动问题 */
 .bp-widget__fixscroll {
   overflow-y: hidden !important;
+  overflow-x: hidden !important;  /* for safari */
   position: relative;
   // padding-right: calc(100vw - 100%) !important;
 }
@@ -852,6 +853,13 @@ $bpLoadingTextColor: #d4d4d4;
 
 
 .bp-dialog {
+
+  /* safari polyfill */
+  @include bp-isPhone {
+    position: fixed !important;
+    // height: inherit !important;
+    // touch-action: none !important;
+  }
 
   &.bp-widget__visible {
     & > div {
@@ -1040,31 +1048,36 @@ $bpLoadingTextColor: #d4d4d4;
   .bp-widget__content {
 
     margin: 5px auto 0px auto;
-    padding: 5px 10px 5px 10px;
     width: auto;
     // height: auto;
     // min-height: 40px;
     max-width: 250px;
     min-width: 100px;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    
-    box-shadow: 0px 0px 2px 1px rgba(165, 165, 165, 0.17);
-    position: relative;
-    text-align: center;
+    // display: flex;
+    display: block;
 
-    font-size: $bpDialogFontSize;
-    border-radius: $bpLoadingRadius;
-    background-color: $bpLoadingBgColor;
-    color: $bpLoadingTextColor;
+    & > div {
+      padding: 5px 10px 5px 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      
+      box-shadow: 0px 0px 2px 1px rgba(165, 165, 165, 0.17);
+      position: relative;
+      text-align: center;
 
-    .bp-icon {
+      font-size: $bpDialogFontSize;
+      border-radius: $bpLoadingRadius;
+      background-color: $bpLoadingBgColor;
       color: $bpLoadingTextColor;
-      i, i:before {
+
+      .bp-icon {
         color: $bpLoadingTextColor;
+        i, i:before {
+          color: $bpLoadingTextColor;
+        }
       }
     }
   }
@@ -1085,31 +1098,37 @@ $bpLoadingTextColor: #d4d4d4;
 
 .bp-widget.bp-toast__center {
   user-select: none;
-  height: 100vh !important;
-  // justify-content: center;
+  // height: 100vh !important;
+  top: 0;
+  bottom: 0;
+  height: auto !important;
+  justify-content: center;
 
   .bp-widget__content {
-    min-height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin: auto;
-    padding: 10px;
-
-    .bp-toast__main {
+    & > div {
+      min-height: 100px;
+      min-width: 100px;
       display: flex;
       justify-content: center;
-      flex-direction: column;
       align-items: center;
-      padding: 10px 20px 10px 20px;
-    }
+      flex-direction: column;
+      margin: auto;
+      padding: 10px;
 
-    .bp-toast__text {
-      padding: 0px;
+      .bp-toast__main {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 20px 10px 20px;
+      }
 
-      &:first-child {
-        line-height: 80px; /* fix ie 10 */
+      .bp-toast__text {
+        padding: 0px;
+
+        &:first-child {
+          line-height: 80px; /* fix ie 10 */
+        }
       }
     }
   }
@@ -1189,6 +1208,13 @@ $bpPickerIndicatorHeight: 40px;
     width: 100vw !important;
 
     box-sizing: border-box !important;
+
+    /* safari polyfill */
+    @include bp-isPhone {
+      position: fixed !important;
+      height: inherit !important;
+      touch-action: none !important;
+    }
   }
 
   .bp-widget__contentWrap {

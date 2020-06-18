@@ -1012,6 +1012,8 @@ label {
 /** 滚动条造成的闪动问题 */
 .bp-widget__fixscroll {
   overflow-y: hidden !important;
+  overflow-x: hidden !important;
+  /* for safari */
   position: relative;
 }
 
@@ -1021,6 +1023,14 @@ label {
 * Date: 2020-02-28 17:01
 * Desc: 
 */
+.bp-dialog {
+  /* safari polyfill */
+}
+@media screen and (max-width: 767px) {
+  .bp-dialog {
+    position: fixed !important;
+  }
+}
 .bp-dialog.bp-widget__visible > div {
   top: 0px;
 }
@@ -1197,10 +1207,13 @@ label {
 }
 .bp-widget.bp-toast .bp-widget__content {
   margin: 5px auto 0px auto;
-  padding: 5px 10px 5px 10px;
   width: auto;
   max-width: 250px;
   min-width: 100px;
+  display: block;
+}
+.bp-widget.bp-toast .bp-widget__content > div {
+  padding: 5px 10px 5px 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1213,10 +1226,10 @@ label {
   background-color: rgba(43, 43, 43, 0.92);
   color: #d4d4d4;
 }
-.bp-widget.bp-toast .bp-widget__content .bp-icon {
+.bp-widget.bp-toast .bp-widget__content > div .bp-icon {
   color: #d4d4d4;
 }
-.bp-widget.bp-toast .bp-widget__content .bp-icon i, .bp-widget.bp-toast .bp-widget__content .bp-icon i:before {
+.bp-widget.bp-toast .bp-widget__content > div .bp-icon i, .bp-widget.bp-toast .bp-widget__content > div .bp-icon i:before {
   color: #d4d4d4;
 }
 .bp-widget.bp-toast .bp-toast__main {
@@ -1232,10 +1245,14 @@ label {
 
 .bp-widget.bp-toast__center {
   user-select: none;
-  height: 100vh !important;
+  top: 0;
+  bottom: 0;
+  height: auto !important;
+  justify-content: center;
 }
-.bp-widget.bp-toast__center .bp-widget__content {
+.bp-widget.bp-toast__center .bp-widget__content > div {
   min-height: 100px;
+  min-width: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1243,17 +1260,17 @@ label {
   margin: auto;
   padding: 10px;
 }
-.bp-widget.bp-toast__center .bp-widget__content .bp-toast__main {
+.bp-widget.bp-toast__center .bp-widget__content > div .bp-toast__main {
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   padding: 10px 20px 10px 20px;
 }
-.bp-widget.bp-toast__center .bp-widget__content .bp-toast__text {
+.bp-widget.bp-toast__center .bp-widget__content > div .bp-toast__text {
   padding: 0px;
 }
-.bp-widget.bp-toast__center .bp-widget__content .bp-toast__text:first-child {
+.bp-widget.bp-toast__center .bp-widget__content > div .bp-toast__text:first-child {
   line-height: 80px;
   /* fix ie 10 */
 }
@@ -1308,6 +1325,14 @@ label {
   height: 100vh !important;
   width: 100vw !important;
   box-sizing: border-box !important;
+  /* safari polyfill */
+}
+@media screen and (max-width: 767px) {
+  .bp-actionsheet .bp-widget__content {
+    position: fixed !important;
+    height: inherit !important;
+    touch-action: none !important;
+  }
 }
 .bp-actionsheet .bp-widget__contentWrap {
   padding-bottom: constant(safe-area-inset-bottom) !important;

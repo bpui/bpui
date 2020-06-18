@@ -14,15 +14,12 @@
     :visible.sync="visibleReal" 
     :maskClose="maskClose" 
     :mask="mask" 
-    :pageClass="pageClass" 
-    :pageStyle="pageStyle"
     :preventEvent="false"
     :hideBodyScroll="false"
   >
-    <div class="bp-popover__main" ref="main" :direction="directionData" :style="{
-      left: offsetLeft,
-      top: offsetTop,
-      }">
+    <div class="bp-popover__main" ref="main" :direction="directionData" :style="pStyle"  
+      :class="pageClass"
+    >
       <slot name="default" />
       <div class="bp-popover__arrow" :style="{
         left: offsetArrowLeft,
@@ -64,6 +61,27 @@
       },
       bind: {
       },
+    },
+    computed: {
+      pStyle() {
+        if (this.pageStyle) {
+          if (typeof this.pageStyle === 'string') {
+            return `left:${this.offsetLeft};top:${this.offsetTop};`+this.pageStyle;
+          }
+          else {
+            return {
+              left: this.offsetLeft,
+              top: this.offsetTop,
+              ...this.pageStyle
+            };
+          }
+        } else {
+          return {
+            left: this.offsetLeft,
+            top: this.offsetTop,
+          }
+        }
+      }
     },
     data() {
       return {
@@ -166,7 +184,7 @@
               $(el).on('mouseover', this._onTrigger);
               $(el).on('mouseleave', this._onTriggerHide);
             }
-          } if (this.trigger == 'click') {
+          } else if (this.trigger == 'click') {
             let eventName = bpLibs.device.browserIsMobile()? 'click': 'click';
             $(el).off(eventName, this._onTrigger).on(eventName, this._onTrigger);  
           }

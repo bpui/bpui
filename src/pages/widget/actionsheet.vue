@@ -12,16 +12,30 @@
     <!-- custom actionsheet -->
     <h4>custom actionsheet</h4>
     <button @click="visible1=true">show1</button>
+    <button @click="visible2=true">show custom</button>
  
     <!-- actionsheet -->
     <bp-actionsheet :visible.sync="visible1">
       <div class="bp-actionsheet__group">
-        <div class="bp-actionsheet__cell" @click="$bpWidget.showToast(1)">ddd</div>
+        <div class="bp-actionsheet__cell" @click="$bpWidget.showToast({content:1})">ddd</div>
         <div class="bp-actionsheet__cell" @click="$bpWidget.showToast(2)">ddd</div>
         <div class="bp-actionsheet__cell" @click="$bpWidget.showToast(3)">ddd</div>
       </div>
       <div class="bp-actionsheet__group">
         <div class="bp-actionsheet__cellWarn" @click="visible1=false">ddd</div>
+      </div>
+    </bp-actionsheet>
+
+    <!-- actionsheet -->
+    <bp-actionsheet :visible.sync="visible2" :pageStyle="{height:'200px',overflow: 'auto',display:'block'}">
+      <div style="height:300px; width:100%; background:#fff;">
+        df
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
+        <div>a</div>
       </div>
     </bp-actionsheet>
   </div>
@@ -65,6 +79,7 @@
     //
     // data.
     @Provide() visible1:boolean = false;
+    @Provide() visible2:boolean = false;
 
     //
     // computed.

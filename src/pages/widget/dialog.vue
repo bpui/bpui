@@ -25,7 +25,7 @@
     <!-- api dialog -->
     <h4>api toast</h4>
     <button @click="$bpWidget.showToast({content:'hello world!'})">toast top</button>
-    <button @click="$bpWidget.showToast({content:'hello world!', icon: 'locationPin'})">toast top (icon)</button>
+    <button @click="$bpWidget.showToast({content:'hello world!', icon: 'locationPin', durable:4000})">toast top (icon)</button>
     <button @click="$bpWidget.showToast({content:'hello world2!', pos:'center', durable: 4000})">toast center</button>
     <button @click="$bpWidget.showToast({content:'创建成功!', pos:'center', icon: 'ok'})">toast center (icon)</button>
  

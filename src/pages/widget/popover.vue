@@ -14,7 +14,7 @@
     <button ref="btn1">
       hover
     </button>
-    <bp-popover :bind="$refs.btn1" trigger="hover">
+    <bp-popover :bind="$refs.btn1" trigger="hover" >
       <span style="width:100px">
         hello sfsdf 
       </span>

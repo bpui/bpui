@@ -9,7 +9,7 @@
 
 // .bp-widget
 
-import * as febs from 'febs-browser';;
+import * as febs from 'febs-browser';
 import bpLibs from '@bpui/libs';
 
 const ApiClass = 'bp-apiClass';
@@ -112,10 +112,28 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
   let html = $('html');
 
   if (hideBodyScroll) {
-    let scrollWidth = window.innerWidth - febs.dom.getViewPort().width;
-    if (scrollWidth > 0) {
+    let willFix = false;
+    let scrollWidth = 0;
+
+    // 桌面端判断垂直滚动条.
+    if (!febs.utils.browserIsMobile()) {
+      scrollWidth = window.innerWidth - febs.dom.getViewPort().width;
+      if (scrollWidth > 0) {
+        willFix = true;
+      }
+    }
+    // 移动端
+    else {
+      if (showMask && febs.dom.getDocumentPort().height > febs.dom.getViewPort().height) {
+        willFix = true;
+      }
+    }
+    
+    if (willFix) {
       body.addClass('bp-widget__fixscroll');
-      html.css('padding-right', scrollWidth + 'px');
+      if (scrollWidth > 0) {
+        html.css('padding-right', scrollWidth + 'px');
+      }
       hidedScroll = true;
     }
     else {
@@ -126,12 +144,12 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
   //
   // polyfill firefox.
   if (hidedScroll) {
-    if (navigator.userAgent.indexOf('Firefox') > 0) {
+    if (navigator.userAgent.indexOf('Firefox') >= 0) {
       mask.css('overflow-y', 'scroll');
     }
   }
   else {
-    if (navigator.userAgent.indexOf('Firefox') > 0) {
+    if (navigator.userAgent.indexOf('Firefox') >= 0) {
       mask.css('overflow-y', '');
     }
   }
@@ -369,17 +387,19 @@ export function hideWidget(el, cb) {
       cb();
     }
 
-    if (!preWidget) {
-      $('body').removeClass('bp-widget__fixscroll');
-      $('html').css('padding-right', '');
-    }
-    else {
-      if (!preWidget.hasClass('bp-widget__bodyFixscroll')) {
+    if (curMask) {
+      if (!preWidget) {
         $('body').removeClass('bp-widget__fixscroll');
-      }
-      let ss = preWidget.attr('data-htmlp');
-      if (ss.length <= 0) {
         $('html').css('padding-right', '');
+      }
+      else {
+        if (!preWidget.hasClass('bp-widget__bodyFixscroll')) {
+          $('body').removeClass('bp-widget__fixscroll');
+        }
+        let ss = preWidget.attr('data-htmlp');
+        if (ss.length <= 0) {
+          $('html').css('padding-right', '');
+        }
       }
     }
     

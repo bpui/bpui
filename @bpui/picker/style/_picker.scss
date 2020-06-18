@@ -51,6 +51,13 @@ $bpPickerIndicatorHeight: 40px;
     width: 100vw !important;
 
     box-sizing: border-box !important;
+
+    /* safari polyfill */
+    @include bp-isPhone {
+      position: fixed !important;
+      height: inherit !important;
+      touch-action: none !important;
+    }
   }
 
   .bp-widget__contentWrap {

@@ -11,6 +11,10 @@
     "dev": "node ./scripts/buildRouterConfig & vue-cli-service serve"
   },
   "dependencies": {
+    "@bpui/actionsheet": "^0.1.5",
+    "@bpui/dialog": "^0.1.19",
+    "@bpui/picker": "^0.1.23",
+    "@bpui/popover": "^0.1.2",
     "animate.css": "3.5.2",
     "core-js": "^3.6.4",
     "febs-browser": "^1.0.2",

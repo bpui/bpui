@@ -16,11 +16,13 @@
 
 <template>
   <widget ref="widget" class="bp-toast" :mask="false" :preventEvent="false" :hideBodyScroll="false">
-    <div v-if="icon" class="bp-toast__main">
-      <bp-icon :name="icon"/>
-    </div>
-    <div class="bp-toast__text">
-      {{content}}
+    <div>
+      <div v-if="icon" class="bp-toast__main">
+        <bp-icon :name="icon"/>
+      </div>
+      <div class="bp-toast__text">
+        {{content}}
+      </div>
     </div>
   </widget>
 </template>

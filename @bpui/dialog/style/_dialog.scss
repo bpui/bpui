@@ -8,6 +8,13 @@
 
 .bp-dialog {
 
+  /* safari polyfill */
+  @include bp-isPhone {
+    position: fixed !important;
+    // height: inherit !important;
+    // touch-action: none !important;
+  }
+
   &.bp-widget__visible {
     & > div {
       top: 0px;

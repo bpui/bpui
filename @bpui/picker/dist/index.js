@@ -1,5 +1,5 @@
 /*!
- * bpui picker v0.1.22
+ * bpui picker v0.1.23
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3468,8 +3468,6 @@
 	      visible: _vm.visibleReal,
 	      maskClose: _vm.maskClose,
 	      mask: _vm.mask,
-	      pageClass: _vm.pageClass,
-	      pageStyle: _vm.pageStyle,
 	      preventEvent: true
 	    },
 	    on: {
@@ -3478,7 +3476,9 @@
 	      }
 	    }
 	  }, [_c("div", {
-	    staticClass: "bp-widget__contentWrap"
+	    staticClass: "bp-widget__contentWrap",
+	    "class": _vm.pageClass,
+	    style: _vm.pageStyle
 	  }, [_vm.$slots["toolbar"] ? _c("div", {
 	    staticClass: "bp-picker__toolbar bp-ellipsis"
 	  }, [_vm._t("toolbar")], 2) : _c("div", {

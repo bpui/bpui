@@ -1,7 +1,7 @@
 {
   "description": "actionSheet",
   "dependencies": {
-    "@bpui/dialog": "^0.1.18",
+    "@bpui/dialog": "^0.1.19",
     "@bpui/libs": "^0.2.8"
   },
   "directories": {},
@@ -35,5 +35,5 @@
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
   "name": "@bpui/actionsheet",
-  "version": "0.1.4"
+  "version": "0.1.5"
 }

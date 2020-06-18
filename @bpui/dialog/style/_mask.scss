@@ -85,6 +85,7 @@
 /** 滚动条造成的闪动问题 */
 .bp-widget__fixscroll {
   overflow-y: hidden !important;
+  overflow-x: hidden !important;  /* for safari */
   position: relative;
   // padding-right: calc(100vw - 100%) !important;
 }

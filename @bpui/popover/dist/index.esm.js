@@ -1,309 +1,11 @@
 /*!
- * bpui popover v0.1.1
+ * bpui popover v0.1.2
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 
 import bpLibs from '@bpui/libs';
 import bpDialog from '@bpui/dialog';
-
-function _newArrowCheck(innerThis, boundThis) {
-  if (innerThis !== boundThis) {
-    throw new TypeError("Cannot instantiate an arrow function");
-  }
-}
-
-var script = {
-  components: {
-    widget: bpDialog.bpWidget
-  },
-  props: {
-    visible: Boolean,
-    mask: {
-      "default": false,
-      type: Boolean
-    },
-    maskClose: {
-      "default": true,
-      type: Boolean
-    },
-    pageClass: String | Array,
-    pageStyle: String | Array | Object,
-    direction: {
-      "default": 'auto',
-      type: String
-    },
-    trigger: {
-      type: String
-    },
-    bind: {}
-  },
-  data: function data() {
-    return {
-      visibleReal: false,
-      directionData: 'auto',
-      offsetTop: 0,
-      offsetLeft: 0,
-      offsetArrowLeft: null,
-      offsetArrowTop: null,
-      offsetArrowBottom: null,
-      offsetArrowRight: null
-    };
-  },
-  watch: {
-    visible: function visible(v, oldV) {
-      if (this.visibleReal != v) {
-        this.visibleReal = v;
-
-        if (v != oldV && v) {
-          this._show(this.direction); // this._show('top');
-          // this._show('bottom');
-          // this._show('left');
-          // this._show('right');
-
-        }
-      }
-    },
-    visibleReal: function visibleReal(v) {
-      this.$emit('update:visible', v);
-    },
-    bind: function bind(v, oldV) {
-      this._removeEvent(oldV);
-
-      this._bindEvent(v);
-    }
-  },
-  beforeMount: function beforeMount() {
-    this.visibleReal = this.visible;
-  },
-  beforeDestroy: function beforeDestroy() {
-    $('body').off('click', this._hide);
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    // $('body').off('click', this._hide).on('click', this._hide);
-    // if (this.trigger) {
-    //   let el = $(this.$el).parent();
-    //   this._bindEvent(el);
-    // }
-    this.$nextTick(function () {
-      _newArrowCheck(this, _this);
-
-      this.$parent.$forceUpdate();
-    }.bind(this));
-  },
-  methods: {
-    /**
-     * @desc: 显示
-     * @return promise.
-     */
-    show: function show() {
-      return this.$refs.widget.show();
-    },
-
-    /**
-     * @desc: 隐藏.
-     * @return promise.
-     */
-    hide: function hide() {
-      return this.$refs.widget.hide();
-    },
-    _removeEvent: function _removeEvent(v) {
-      if (v) {
-        var el;
-
-        if (bpLibs.dom.isVueObject(v)) {
-          el = v.$el;
-        } else {
-          el = v;
-        }
-
-        $(el).off('mouseover', this._onTrigger);
-        $(el).off('mouseleave', this._onTriggerHide);
-        $(el).off('click', this._onTrigger);
-      }
-    },
-    _bindEvent: function _bindEvent(v) {
-      this._removeEvent(v);
-
-      if (v) {
-        var el;
-
-        if (bpLibs.dom.isVueObject(v)) {
-          el = v.$el;
-        } else {
-          el = v;
-        }
-
-        if (this.trigger == 'hover') {
-          if (bpLibs.device.browserIsMobile()) {
-            $(el).on('click', this._onTrigger);
-          } else {
-            $(el).on('mouseover', this._onTrigger);
-            $(el).on('mouseleave', this._onTriggerHide);
-          }
-        }
-
-        if (this.trigger == 'click') {
-          var eventName = bpLibs.device.browserIsMobile() ? 'click' : 'click';
-          $(el).off(eventName, this._onTrigger).on(eventName, this._onTrigger);
-        }
-      }
-    },
-    _onTrigger: function _onTrigger(ev) {
-      var _this2 = this;
-
-      this.visibleReal = true;
-      setTimeout(function () {
-        _newArrowCheck(this, _this2);
-
-        $('body').off('click', this._hide).on('click', this._hide);
-      }.bind(this), 10);
-
-      this._show(this.direction);
-    },
-    _onTriggerHide: function _onTriggerHide(ev) {
-      this.visibleReal = false;
-      $('body').off('click', this._hide);
-    },
-    _show: function _show(directionData) {
-      var _this3 = this;
-
-      var bind = this.bind;
-
-      if (!this.bind) {
-        return;
-      }
-
-      var el;
-
-      if (bpLibs.dom.isVueObject(bind)) {
-        el = bind.$el;
-      } else {
-        el = bind;
-      }
-
-      var offset = bpLibs.dom.getElementOffset(el);
-      var port = {};
-      port.height = el.clientHeight;
-      port.width = el.clientWidth;
-      var viewPort = bpLibs.dom.getViewPort();
-      var docOffset = bpLibs.dom.getDocumentOffset();
-      this.offsetTop = offset.top + docOffset.top; // this.offsetLeft = offset.left;
-      // directionData.
-
-      if (directionData == 'top') {
-        this.directionData = 'top';
-        this.offsetTop -= port.height;
-        this.offsetTop -= 8;
-      } else if (directionData == 'bottom') {
-        this.directionData = 'bottom';
-        this.offsetTop += port.height;
-      } else if (directionData == 'left') {
-        this.directionData = 'left';
-        this.offsetLeft = offset.left + port.width;
-      } else if (directionData == 'right') {
-        this.directionData = 'right';
-        this.offsetLeft = offset.left + port.width;
-      } else {
-        if (offset.top + port.height / 2 > viewPort.height / 2) {
-          this.directionData = 'top';
-          this.offsetTop -= port.height;
-          this.offsetTop -= 8;
-        } else {
-          this.directionData = 'bottom';
-          this.offsetTop += port.height;
-        }
-      }
-
-      this.offsetTop = parseInt(this.offsetTop);
-      this.offsetTop += 'px'; // arrow.
-
-      var arrowOffset;
-
-      if (directionData == 'left' || directionData == 'right') {
-        arrowOffset = parseInt(offset.top + port.height / 2);
-      } else {
-        arrowOffset = parseInt(offset.left + port.width / 2);
-      }
-
-      var SCREEN_PADDING = 10;
-      var main = this.$refs.main;
-      bpLibs.dom.probeDom(400, function () {
-        _newArrowCheck(this, _this3);
-
-        return main.clientWidth > 0;
-      }.bind(this), function () {
-        _newArrowCheck(this, _this3);
-
-        if (directionData == 'left' || directionData == 'right') {
-          var mainOffset = parseInt(arrowOffset - main.clientHeight / 2);
-
-          if (mainOffset < SCREEN_PADDING) {
-            mainOffset = SCREEN_PADDING;
-          }
-
-          if (mainOffset + main.clientHeight > viewPort.height - SCREEN_PADDING) {
-            mainOffset = viewPort.height - SCREEN_PADDING - main.clientHeight;
-          }
-
-          this.offsetTop = parseInt(mainOffset + docOffset.top) + 'px';
-          this.offsetLeft = directionData == 'right' ? offset.left + port.width - 6 : offset.left - main.clientWidth - 6;
-          this.offsetLeft += docOffset.left;
-          this.offsetLeft = parseInt(this.offsetLeft);
-          this.offsetLeft += 'px';
-          this.offsetArrowLeft = null;
-          this.offsetArrowBottom = null;
-          this.offsetArrowTop = parseInt(arrowOffset - mainOffset - 6);
-
-          if (this.offsetArrowTop < 10) {
-            this.offsetArrowTop = 10;
-          } else if (this.offsetArrowTop > main.clientHeight - 22) {
-            this.offsetArrowTop = parseInt(main.clientHeight - 22);
-          }
-
-          this.offsetArrowTop += 'px';
-          this.offsetArrowRight = null;
-        } else {
-          var cw = parseInt(main.clientWidth || 50);
-
-          var _mainOffset = parseInt(arrowOffset - cw / 2);
-
-          if (_mainOffset < SCREEN_PADDING) {
-            _mainOffset = SCREEN_PADDING;
-          }
-
-          if (_mainOffset + cw > viewPort.width - SCREEN_PADDING) {
-            _mainOffset = viewPort.width - SCREEN_PADDING - cw;
-          }
-
-          this.offsetLeft = parseInt(_mainOffset) + 'px';
-          this.offsetArrowLeft = parseInt(arrowOffset - _mainOffset) - 6;
-
-          if (this.offsetArrowLeft < 10) {
-            this.offsetArrowLeft = 10;
-          } else if (this.offsetArrowLeft > cw - 22) {
-            this.offsetArrowLeft = cw - 22;
-          }
-
-          this.offsetArrowLeft += 'px';
-          this.offsetArrowBottom = null;
-          this.offsetArrowTop = null;
-          this.offsetArrowRight = null;
-        }
-      }.bind(this));
-    },
-    _hide: function _hide() {
-      var _this4 = this;
-
-      $('body').off('click', this._hide);
-      this.hide().then(function (res) {
-        _newArrowCheck(this, _this4);
-      }.bind(this));
-    }
-  }
-};
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -967,6 +669,370 @@ _export({ target: 'Array', proto: true, forced: FORCED }, {
   }
 });
 
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function ownKeys$1(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys$1(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys$1(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+function _newArrowCheck(innerThis, boundThis) {
+  if (innerThis !== boundThis) {
+    throw new TypeError("Cannot instantiate an arrow function");
+  }
+}
+
+var script = {
+  components: {
+    widget: bpDialog.bpWidget
+  },
+  props: {
+    visible: Boolean,
+    mask: {
+      "default": false,
+      type: Boolean
+    },
+    maskClose: {
+      "default": true,
+      type: Boolean
+    },
+    pageClass: String | Array,
+    pageStyle: String | Array | Object,
+    direction: {
+      "default": 'auto',
+      type: String
+    },
+    trigger: {
+      type: String
+    },
+    bind: {}
+  },
+  computed: {
+    pStyle: function pStyle() {
+      if (this.pageStyle) {
+        if (typeof this.pageStyle === 'string') {
+          return "left:".concat(this.offsetLeft, ";top:").concat(this.offsetTop, ";") + this.pageStyle;
+        } else {
+          return _objectSpread2({
+            left: this.offsetLeft,
+            top: this.offsetTop
+          }, this.pageStyle);
+        }
+      } else {
+        return {
+          left: this.offsetLeft,
+          top: this.offsetTop
+        };
+      }
+    }
+  },
+  data: function data() {
+    return {
+      visibleReal: false,
+      directionData: 'auto',
+      offsetTop: 0,
+      offsetLeft: 0,
+      offsetArrowLeft: null,
+      offsetArrowTop: null,
+      offsetArrowBottom: null,
+      offsetArrowRight: null
+    };
+  },
+  watch: {
+    visible: function visible(v, oldV) {
+      if (this.visibleReal != v) {
+        this.visibleReal = v;
+
+        if (v != oldV && v) {
+          this._show(this.direction); // this._show('top');
+          // this._show('bottom');
+          // this._show('left');
+          // this._show('right');
+
+        }
+      }
+    },
+    visibleReal: function visibleReal(v) {
+      this.$emit('update:visible', v);
+    },
+    bind: function bind(v, oldV) {
+      this._removeEvent(oldV);
+
+      this._bindEvent(v);
+    }
+  },
+  beforeMount: function beforeMount() {
+    this.visibleReal = this.visible;
+  },
+  beforeDestroy: function beforeDestroy() {
+    $('body').off('click', this._hide);
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    // $('body').off('click', this._hide).on('click', this._hide);
+    // if (this.trigger) {
+    //   let el = $(this.$el).parent();
+    //   this._bindEvent(el);
+    // }
+    this.$nextTick(function () {
+      _newArrowCheck(this, _this);
+
+      this.$parent.$forceUpdate();
+    }.bind(this));
+  },
+  methods: {
+    /**
+     * @desc: 显示
+     * @return promise.
+     */
+    show: function show() {
+      return this.$refs.widget.show();
+    },
+
+    /**
+     * @desc: 隐藏.
+     * @return promise.
+     */
+    hide: function hide() {
+      return this.$refs.widget.hide();
+    },
+    _removeEvent: function _removeEvent(v) {
+      if (v) {
+        var el;
+
+        if (bpLibs.dom.isVueObject(v)) {
+          el = v.$el;
+        } else {
+          el = v;
+        }
+
+        $(el).off('mouseover', this._onTrigger);
+        $(el).off('mouseleave', this._onTriggerHide);
+        $(el).off('click', this._onTrigger);
+      }
+    },
+    _bindEvent: function _bindEvent(v) {
+      this._removeEvent(v);
+
+      if (v) {
+        var el;
+
+        if (bpLibs.dom.isVueObject(v)) {
+          el = v.$el;
+        } else {
+          el = v;
+        }
+
+        if (this.trigger == 'hover') {
+          if (bpLibs.device.browserIsMobile()) {
+            $(el).on('click', this._onTrigger);
+          } else {
+            $(el).on('mouseover', this._onTrigger);
+            $(el).on('mouseleave', this._onTriggerHide);
+          }
+        } else if (this.trigger == 'click') {
+          var eventName = bpLibs.device.browserIsMobile() ? 'click' : 'click';
+          $(el).off(eventName, this._onTrigger).on(eventName, this._onTrigger);
+        }
+      }
+    },
+    _onTrigger: function _onTrigger(ev) {
+      var _this2 = this;
+
+      this.visibleReal = true;
+      setTimeout(function () {
+        _newArrowCheck(this, _this2);
+
+        $('body').off('click', this._hide).on('click', this._hide);
+      }.bind(this), 10);
+
+      this._show(this.direction);
+    },
+    _onTriggerHide: function _onTriggerHide(ev) {
+      this.visibleReal = false;
+      $('body').off('click', this._hide);
+    },
+    _show: function _show(directionData) {
+      var _this3 = this;
+
+      var bind = this.bind;
+
+      if (!this.bind) {
+        return;
+      }
+
+      var el;
+
+      if (bpLibs.dom.isVueObject(bind)) {
+        el = bind.$el;
+      } else {
+        el = bind;
+      }
+
+      var offset = bpLibs.dom.getElementOffset(el);
+      var port = {};
+      port.height = el.clientHeight;
+      port.width = el.clientWidth;
+      var viewPort = bpLibs.dom.getViewPort();
+      var docOffset = bpLibs.dom.getDocumentOffset();
+      this.offsetTop = offset.top + docOffset.top; // this.offsetLeft = offset.left;
+      // directionData.
+
+      if (directionData == 'top') {
+        this.directionData = 'top';
+        this.offsetTop -= port.height;
+        this.offsetTop -= 8;
+      } else if (directionData == 'bottom') {
+        this.directionData = 'bottom';
+        this.offsetTop += port.height;
+      } else if (directionData == 'left') {
+        this.directionData = 'left';
+        this.offsetLeft = offset.left + port.width;
+      } else if (directionData == 'right') {
+        this.directionData = 'right';
+        this.offsetLeft = offset.left + port.width;
+      } else {
+        if (offset.top + port.height / 2 > viewPort.height / 2) {
+          this.directionData = 'top';
+          this.offsetTop -= port.height;
+          this.offsetTop -= 8;
+        } else {
+          this.directionData = 'bottom';
+          this.offsetTop += port.height;
+        }
+      }
+
+      this.offsetTop = parseInt(this.offsetTop);
+      this.offsetTop += 'px'; // arrow.
+
+      var arrowOffset;
+
+      if (directionData == 'left' || directionData == 'right') {
+        arrowOffset = parseInt(offset.top + port.height / 2);
+      } else {
+        arrowOffset = parseInt(offset.left + port.width / 2);
+      }
+
+      var SCREEN_PADDING = 10;
+      var main = this.$refs.main;
+      bpLibs.dom.probeDom(400, function () {
+        _newArrowCheck(this, _this3);
+
+        return main.clientWidth > 0;
+      }.bind(this), function () {
+        _newArrowCheck(this, _this3);
+
+        if (directionData == 'left' || directionData == 'right') {
+          var mainOffset = parseInt(arrowOffset - main.clientHeight / 2);
+
+          if (mainOffset < SCREEN_PADDING) {
+            mainOffset = SCREEN_PADDING;
+          }
+
+          if (mainOffset + main.clientHeight > viewPort.height - SCREEN_PADDING) {
+            mainOffset = viewPort.height - SCREEN_PADDING - main.clientHeight;
+          }
+
+          this.offsetTop = parseInt(mainOffset + docOffset.top) + 'px';
+          this.offsetLeft = directionData == 'right' ? offset.left + port.width - 6 : offset.left - main.clientWidth - 6;
+          this.offsetLeft += docOffset.left;
+          this.offsetLeft = parseInt(this.offsetLeft);
+          this.offsetLeft += 'px';
+          this.offsetArrowLeft = null;
+          this.offsetArrowBottom = null;
+          this.offsetArrowTop = parseInt(arrowOffset - mainOffset - 6);
+
+          if (this.offsetArrowTop < 10) {
+            this.offsetArrowTop = 10;
+          } else if (this.offsetArrowTop > main.clientHeight - 22) {
+            this.offsetArrowTop = parseInt(main.clientHeight - 22);
+          }
+
+          this.offsetArrowTop += 'px';
+          this.offsetArrowRight = null;
+        } else {
+          var cw = parseInt(main.clientWidth || 50);
+
+          var _mainOffset = parseInt(arrowOffset - cw / 2);
+
+          if (_mainOffset < SCREEN_PADDING) {
+            _mainOffset = SCREEN_PADDING;
+          }
+
+          if (_mainOffset + cw > viewPort.width - SCREEN_PADDING) {
+            _mainOffset = viewPort.width - SCREEN_PADDING - cw;
+          }
+
+          this.offsetLeft = parseInt(_mainOffset) + 'px';
+          this.offsetArrowLeft = parseInt(arrowOffset - _mainOffset) - 6;
+
+          if (this.offsetArrowLeft < 10) {
+            this.offsetArrowLeft = 10;
+          } else if (this.offsetArrowLeft > cw - 22) {
+            this.offsetArrowLeft = cw - 22;
+          }
+
+          this.offsetArrowLeft += 'px';
+          this.offsetArrowBottom = null;
+          this.offsetArrowTop = null;
+          this.offsetArrowRight = null;
+        }
+      }.bind(this));
+    },
+    _hide: function _hide() {
+      var _this4 = this;
+
+      $('body').off('click', this._hide);
+      this.hide().then(function (res) {
+        _newArrowCheck(this, _this4);
+      }.bind(this));
+    }
+  }
+};
+
 function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier
 /* server only */
 , shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
@@ -1068,8 +1134,6 @@ var __vue_render__ = function __vue_render__() {
       visible: _vm.visibleReal,
       maskClose: _vm.maskClose,
       mask: _vm.mask,
-      pageClass: _vm.pageClass,
-      pageStyle: _vm.pageStyle,
       preventEvent: false,
       hideBodyScroll: false
     },
@@ -1081,10 +1145,8 @@ var __vue_render__ = function __vue_render__() {
   }, [_c("div", {
     ref: "main",
     staticClass: "bp-popover__main",
-    style: {
-      left: _vm.offsetLeft,
-      top: _vm.offsetTop
-    },
+    "class": _vm.pageClass,
+    style: _vm.pStyle,
     attrs: {
       direction: _vm.directionData
     }

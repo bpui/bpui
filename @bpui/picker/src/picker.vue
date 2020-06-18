@@ -19,11 +19,11 @@
     :visible.sync="visibleReal" 
     :maskClose="maskClose" 
     :mask="mask" 
-    :pageClass="pageClass" 
-    :pageStyle="pageStyle"
     :preventEvent="true">
     
-    <div class="bp-widget__contentWrap">
+    <div class="bp-widget__contentWrap"
+      :class="pageClass" 
+      :style="pageStyle">
       <div v-if="$slots['toolbar']" class="bp-picker__toolbar bp-ellipsis" >
         <slot name="toolbar" />
       </div>

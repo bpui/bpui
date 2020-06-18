@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v0.1.18
+ * bpui dialog v0.1.19
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1680,11 +1680,29 @@ function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
   var html = $('html');
 
   if (hideBodyScroll) {
-    var scrollWidth = window.innerWidth - febs.dom.getViewPort().width;
+    var willFix = false;
+    var scrollWidth = 0; // 桌面端判断垂直滚动条.
 
-    if (scrollWidth > 0) {
+    if (!febs.utils.browserIsMobile()) {
+      scrollWidth = window.innerWidth - febs.dom.getViewPort().width;
+
+      if (scrollWidth > 0) {
+        willFix = true;
+      }
+    } // 移动端
+    else {
+        if (showMask && febs.dom.getDocumentPort().height > febs.dom.getViewPort().height) {
+          willFix = true;
+        }
+      }
+
+    if (willFix) {
       body.addClass('bp-widget__fixscroll');
-      html.css('padding-right', scrollWidth + 'px');
+
+      if (scrollWidth > 0) {
+        html.css('padding-right', scrollWidth + 'px');
+      }
+
       hidedScroll = true;
     } else {
       hidedScroll = body.hasClass('bp-widget__fixscroll');
@@ -1694,11 +1712,11 @@ function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
 
 
   if (hidedScroll) {
-    if (navigator.userAgent.indexOf('Firefox') > 0) {
+    if (navigator.userAgent.indexOf('Firefox') >= 0) {
       mask.css('overflow-y', 'scroll');
     }
   } else {
-    if (navigator.userAgent.indexOf('Firefox') > 0) {
+    if (navigator.userAgent.indexOf('Firefox') >= 0) {
       mask.css('overflow-y', '');
     }
   } // if (body.hasClass('bp-widget__fixscroll')) {
@@ -1967,18 +1985,20 @@ function hideWidget(el, cb) {
       cb();
     }
 
-    if (!preWidget) {
-      $('body').removeClass('bp-widget__fixscroll');
-      $('html').css('padding-right', '');
-    } else {
-      if (!preWidget.hasClass('bp-widget__bodyFixscroll')) {
+    if (curMask) {
+      if (!preWidget) {
         $('body').removeClass('bp-widget__fixscroll');
-      }
-
-      var ss = preWidget.attr('data-htmlp');
-
-      if (ss.length <= 0) {
         $('html').css('padding-right', '');
+      } else {
+        if (!preWidget.hasClass('bp-widget__bodyFixscroll')) {
+          $('body').removeClass('bp-widget__fixscroll');
+        }
+
+        var ss = preWidget.attr('data-htmlp');
+
+        if (ss.length <= 0) {
+          $('html').css('padding-right', '');
+        }
       }
     }
   }, duration + 10);
@@ -4009,7 +4029,7 @@ var __vue_render__$5 = function __vue_render__() {
       preventEvent: false,
       hideBodyScroll: false
     }
-  }, [_vm.icon ? _c("div", {
+  }, [_c("div", [_vm.icon ? _c("div", {
     staticClass: "bp-toast__main"
   }, [_c("bp-icon", {
     attrs: {
@@ -4017,7 +4037,7 @@ var __vue_render__$5 = function __vue_render__() {
     }
   })], 1) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "bp-toast__text"
-  }, [_vm._v("\n    " + _vm._s(_vm.content) + "\n  ")])]);
+  }, [_vm._v("\n      " + _vm._s(_vm.content) + "\n    ")])])]);
 };
 
 var __vue_staticRenderFns__$5 = [];
