@@ -11,6 +11,7 @@ import bpLibs from "@bpui/libs";
 import VuePlugin from './vue/plugins';
 import bpDialog from './dialog.vue';
 import bpWidget from './widget.vue';
+import * as hook from './utils/hooks';
 
 import * as mask from './utils/mask';
 
@@ -79,6 +80,8 @@ init();
 export default {
   init,
   VuePlugin,
+
+  hook,
 
   registerDialogComponents,
   apiWidget,

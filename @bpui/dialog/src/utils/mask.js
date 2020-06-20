@@ -11,6 +11,7 @@
 
 import * as febs from 'febs-browser';
 import bpLibs from '@bpui/libs';
+import * as hooks from './hooks';
 
 const ApiClass = 'bp-apiClass';
 
@@ -86,6 +87,13 @@ export function getWidgetZIndex(dataMark) {
   return zIndex;
 }
 
+function hack(el) {
+  var sUserAgent = navigator.userAgent.toLowerCase();
+  if(sUserAgent.indexOf("baidu") >= 0) {
+    el.css('backdrop-filter', 'none');
+  }
+}
+
 /**
 * @desc: 显示遮罩层.
 */
@@ -101,7 +109,9 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
     if (cb) cb();
     return;
   }
-  
+
+  hack(mask);
+
   // 防止scroll造成的页面抖动.
   // let body = $('body');
   // let html = $('html');
@@ -115,26 +125,30 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
     let willFix = false;
     let scrollWidth = 0;
 
-    // 桌面端判断垂直滚动条.
-    if (!febs.utils.browserIsMobile()) {
-      scrollWidth = window.innerWidth - febs.dom.getViewPort().width;
-      if (scrollWidth > 0) {
-        willFix = true;
+    if ((showMask||preventEvent)) {
+      // 桌面端判断垂直滚动条.
+      if (!febs.utils.browserIsMobile()) {
+        scrollWidth = window.innerWidth - febs.dom.getViewPort().width;
+        if (scrollWidth > 0) {
+          willFix = true;
+        }
       }
-    }
-    // 移动端
-    else {
-      if (showMask && febs.dom.getDocumentPort().height > febs.dom.getViewPort().height) {
-        willFix = true;
+      // 移动端
+      else {
+        if (febs.dom.getDocumentPort().height > febs.dom.getViewPort().height) {
+          willFix = true;
+        }
       }
     }
     
     if (willFix) {
       body.addClass('bp-widget__fixscroll');
       if (scrollWidth > 0) {
+        hooks.callWidgetShake(scrollWidth);
         html.css('padding-right', scrollWidth + 'px');
       }
       hidedScroll = true;
+      mask.addClass('bp-widget__willFix');
     }
     else {
       hidedScroll = body.hasClass('bp-widget__fixscroll');
@@ -305,6 +319,12 @@ export function removeAllApiModal(elementSelector) {
       }
     }
 
+    $('body').removeClass('bp-widget__fixscroll');
+    let pr = $('html').css('padding-right');
+    if (pr && pr.length > 0) {
+      hooks.callWidgetShake(0);
+      $('html').css('padding-right', '');
+    }
   } // if.
 }
 
@@ -330,6 +350,7 @@ export function hideWidget(el, cb) {
   let curZIndex = Number(mask.css('z-index'));
   let curMask = mask.hasClass('bp-widget__mask');
   let curMaskTmp = mask.hasClass('bp-widget__maskTmp');
+  let hasFix = mask.hasClass('bp-widget__willFix');
 
   // zindex.
   let dialogs = [];
@@ -387,9 +408,10 @@ export function hideWidget(el, cb) {
       cb();
     }
 
-    if (curMask) {
+    if (hasFix) {
       if (!preWidget) {
         $('body').removeClass('bp-widget__fixscroll');
+        hooks.callWidgetShake(0);
         $('html').css('padding-right', '');
       }
       else {
@@ -398,6 +420,7 @@ export function hideWidget(el, cb) {
         }
         let ss = preWidget.attr('data-htmlp');
         if (ss.length <= 0) {
+          hooks.callWidgetShake(0);
           $('html').css('padding-right', '');
         }
       }

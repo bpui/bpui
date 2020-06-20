@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v0.1.19
+ * bpui dialog v0.1.20
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1589,6 +1589,183 @@
     }
   });
 
+  // `IsArray` abstract operation
+  // https://tc39.github.io/ecma262/#sec-isarray
+  var isArray = Array.isArray || function isArray(arg) {
+    return classofRaw(arg) == 'Array';
+  };
+
+  var SPECIES$2 = wellKnownSymbol('species');
+
+  // `ArraySpeciesCreate` abstract operation
+  // https://tc39.github.io/ecma262/#sec-arrayspeciescreate
+  var arraySpeciesCreate = function (originalArray, length) {
+    var C;
+    if (isArray(originalArray)) {
+      C = originalArray.constructor;
+      // cross-realm fallback
+      if (typeof C == 'function' && (C === Array || isArray(C.prototype))) C = undefined;
+      else if (isObject(C)) {
+        C = C[SPECIES$2];
+        if (C === null) C = undefined;
+      }
+    } return new (C === undefined ? Array : C)(length === 0 ? 0 : length);
+  };
+
+  var createProperty = function (object, key, value) {
+    var propertyKey = toPrimitive(key);
+    if (propertyKey in object) objectDefineProperty.f(object, propertyKey, createPropertyDescriptor(0, value));
+    else object[propertyKey] = value;
+  };
+
+  var engineUserAgent = getBuiltIn('navigator', 'userAgent') || '';
+
+  var process = global_1.process;
+  var versions = process && process.versions;
+  var v8 = versions && versions.v8;
+  var match, version;
+
+  if (v8) {
+    match = v8.split('.');
+    version = match[0] + match[1];
+  } else if (engineUserAgent) {
+    match = engineUserAgent.match(/Edge\/(\d+)/);
+    if (!match || match[1] >= 74) {
+      match = engineUserAgent.match(/Chrome\/(\d+)/);
+      if (match) version = match[1];
+    }
+  }
+
+  var engineV8Version = version && +version;
+
+  var SPECIES$3 = wellKnownSymbol('species');
+
+  var arrayMethodHasSpeciesSupport = function (METHOD_NAME) {
+    // We can't use this feature detection in V8 since it causes
+    // deoptimization and serious performance degradation
+    // https://github.com/zloirock/core-js/issues/677
+    return engineV8Version >= 51 || !fails(function () {
+      var array = [];
+      var constructor = array.constructor = {};
+      constructor[SPECIES$3] = function () {
+        return { foo: 1 };
+      };
+      return array[METHOD_NAME](Boolean).foo !== 1;
+    });
+  };
+
+  var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('splice');
+  var USES_TO_LENGTH$1 = arrayMethodUsesToLength('splice', { ACCESSORS: true, 0: 0, 1: 2 });
+
+  var max$2 = Math.max;
+  var min$4 = Math.min;
+  var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
+  var MAXIMUM_ALLOWED_LENGTH_EXCEEDED = 'Maximum allowed length exceeded';
+
+  // `Array.prototype.splice` method
+  // https://tc39.github.io/ecma262/#sec-array.prototype.splice
+  // with adding support of @@species
+  _export({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT || !USES_TO_LENGTH$1 }, {
+    splice: function splice(start, deleteCount /* , ...items */) {
+      var O = toObject(this);
+      var len = toLength(O.length);
+      var actualStart = toAbsoluteIndex(start, len);
+      var argumentsLength = arguments.length;
+      var insertCount, actualDeleteCount, A, k, from, to;
+      if (argumentsLength === 0) {
+        insertCount = actualDeleteCount = 0;
+      } else if (argumentsLength === 1) {
+        insertCount = 0;
+        actualDeleteCount = len - actualStart;
+      } else {
+        insertCount = argumentsLength - 2;
+        actualDeleteCount = min$4(max$2(toInteger(deleteCount), 0), len - actualStart);
+      }
+      if (len + insertCount - actualDeleteCount > MAX_SAFE_INTEGER) {
+        throw TypeError(MAXIMUM_ALLOWED_LENGTH_EXCEEDED);
+      }
+      A = arraySpeciesCreate(O, actualDeleteCount);
+      for (k = 0; k < actualDeleteCount; k++) {
+        from = actualStart + k;
+        if (from in O) createProperty(A, k, O[from]);
+      }
+      A.length = actualDeleteCount;
+      if (insertCount < actualDeleteCount) {
+        for (k = actualStart; k < len - actualDeleteCount; k++) {
+          from = k + actualDeleteCount;
+          to = k + insertCount;
+          if (from in O) O[to] = O[from];
+          else delete O[to];
+        }
+        for (k = len; k > len - actualDeleteCount + insertCount; k--) delete O[k - 1];
+      } else if (insertCount > actualDeleteCount) {
+        for (k = len - actualDeleteCount; k > actualStart; k--) {
+          from = k + actualDeleteCount - 1;
+          to = k + insertCount - 1;
+          if (from in O) O[to] = O[from];
+          else delete O[to];
+        }
+      }
+      for (k = 0; k < insertCount; k++) {
+        O[k + actualStart] = arguments[k + 2];
+      }
+      O.length = len - actualDeleteCount + insertCount;
+      return A;
+    }
+  });
+
+  var GlobalWidgetHook = '$BpGlobalWidgetHook';
+  /**
+   * 添加页面抖动hook.
+   * 回调方法中的paddingRight参数表示发生抖动时页面中fixed元素应该在原有paddingRight值上增加的像素值.
+   */
+
+  function addWidgetShake(foo
+  /*:(paddingRight:number)=>void*/
+  ) {
+    if (!window[GlobalWidgetHook]) {
+      window[GlobalWidgetHook] = [];
+    }
+
+    var hooks = window[GlobalWidgetHook];
+
+    if (hooks.indexOf(foo) < 0) {
+      hooks.push(foo);
+    }
+  }
+  /**
+   * 移除页面抖动hook.
+   */
+
+  function removeWidgetShake(foo
+  /*:(paddingRight:number)=>void*/
+  ) {
+    var hooks = window[GlobalWidgetHook];
+
+    if (hooks) {
+      var i = hooks.indexOf(foo);
+      if (i >= 0) hooks.splice(0, 1);
+    }
+  }
+  function callWidgetShake(paddingRight
+  /*:number*/
+  ) {
+    var hooks = window[GlobalWidgetHook];
+
+    if (hooks) {
+      for (var i = 0; i < hooks.length; i++) {
+        hooks[i] && hooks[i](paddingRight);
+      }
+    }
+  }
+
+  var hook = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    addWidgetShake: addWidgetShake,
+    removeWidgetShake: removeWidgetShake,
+    callWidgetShake: callWidgetShake
+  });
+
   var ApiClass = 'bp-apiClass';
 
   function domGetDuration(el) {
@@ -1655,9 +1832,18 @@
 
     return zIndex;
   }
+
+  function hack(el) {
+    var sUserAgent = navigator.userAgent.toLowerCase();
+
+    if (sUserAgent.indexOf("baidu") >= 0) {
+      el.css('backdrop-filter', 'none');
+    }
+  }
   /**
   * @desc: 显示遮罩层.
   */
+
 
   function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
     var _this = this;
@@ -1671,10 +1857,11 @@
     if (mask.hasClass('bp-widget__visible')) {
       if (cb) cb();
       return;
-    } // 防止scroll造成的页面抖动.
+    }
+
+    hack(mask); // 防止scroll造成的页面抖动.
     // let body = $('body');
     // let html = $('html');
-
 
     var hidedScroll = false;
     var body = $('body');
@@ -1682,29 +1869,34 @@
 
     if (hideBodyScroll) {
       var willFix = false;
-      var scrollWidth = 0; // 桌面端判断垂直滚动条.
+      var scrollWidth = 0;
 
-      if (!febs.utils.browserIsMobile()) {
-        scrollWidth = window.innerWidth - febs.dom.getViewPort().width;
+      if (showMask || preventEvent) {
+        // 桌面端判断垂直滚动条.
+        if (!febs.utils.browserIsMobile()) {
+          scrollWidth = window.innerWidth - febs.dom.getViewPort().width;
 
-        if (scrollWidth > 0) {
-          willFix = true;
-        }
-      } // 移动端
-      else {
-          if (showMask && febs.dom.getDocumentPort().height > febs.dom.getViewPort().height) {
+          if (scrollWidth > 0) {
             willFix = true;
           }
-        }
+        } // 移动端
+        else {
+            if (febs.dom.getDocumentPort().height > febs.dom.getViewPort().height) {
+              willFix = true;
+            }
+          }
+      }
 
       if (willFix) {
         body.addClass('bp-widget__fixscroll');
 
         if (scrollWidth > 0) {
+          callWidgetShake(scrollWidth);
           html.css('padding-right', scrollWidth + 'px');
         }
 
         hidedScroll = true;
+        mask.addClass('bp-widget__willFix');
       } else {
         hidedScroll = body.hasClass('bp-widget__fixscroll');
       }
@@ -1897,6 +2089,14 @@
           return;
         }
       }
+
+      $('body').removeClass('bp-widget__fixscroll');
+      var pr = $('html').css('padding-right');
+
+      if (pr && pr.length > 0) {
+        callWidgetShake(0);
+        $('html').css('padding-right', '');
+      }
     } // if.
 
   }
@@ -1924,7 +2124,8 @@
     var dataMark = 'page' + pageLen;
     var curZIndex = Number(mask.css('z-index'));
     var curMask = mask.hasClass('bp-widget__mask');
-    var curMaskTmp = mask.hasClass('bp-widget__maskTmp'); // zindex.
+    var curMaskTmp = mask.hasClass('bp-widget__maskTmp');
+    var hasFix = mask.hasClass('bp-widget__willFix'); // zindex.
 
     var dialogs = [];
     var masks = $(".bp-widget[data-mark='".concat(dataMark, "']")); // let curPageMaskLength = masks.length;
@@ -1986,9 +2187,10 @@
         cb();
       }
 
-      if (curMask) {
+      if (hasFix) {
         if (!preWidget) {
           $('body').removeClass('bp-widget__fixscroll');
+          callWidgetShake(0);
           $('html').css('padding-right', '');
         } else {
           if (!preWidget.hasClass('bp-widget__bodyFixscroll')) {
@@ -1998,6 +2200,7 @@
           var ss = preWidget.attr('data-htmlp');
 
           if (ss.length <= 0) {
+            callWidgetShake(0);
             $('html').css('padding-right', '');
           }
         }
@@ -2521,14 +2724,14 @@
     }
   };
 
-  var SPECIES$2 = wellKnownSymbol('species');
+  var SPECIES$4 = wellKnownSymbol('species');
 
   var setSpecies = function (CONSTRUCTOR_NAME) {
     var Constructor = getBuiltIn(CONSTRUCTOR_NAME);
     var defineProperty = objectDefineProperty.f;
 
-    if (descriptors && Constructor && !Constructor[SPECIES$2]) {
-      defineProperty(Constructor, SPECIES$2, {
+    if (descriptors && Constructor && !Constructor[SPECIES$4]) {
+      defineProperty(Constructor, SPECIES$4, {
         configurable: true,
         get: function () { return this; }
       });
@@ -2670,14 +2873,12 @@
     return ITERATION_SUPPORT;
   };
 
-  var engineUserAgent = getBuiltIn('navigator', 'userAgent') || '';
-
   var engineIsIos = /(iphone|ipod|ipad).*applewebkit/i.test(engineUserAgent);
 
   var location = global_1.location;
   var set$1 = global_1.setImmediate;
   var clear = global_1.clearImmediate;
-  var process = global_1.process;
+  var process$1 = global_1.process;
   var MessageChannel = global_1.MessageChannel;
   var Dispatch = global_1.Dispatch;
   var counter = 0;
@@ -2726,9 +2927,9 @@
       delete queue[id];
     };
     // Node.js 0.8-
-    if (classofRaw(process) == 'process') {
+    if (classofRaw(process$1) == 'process') {
       defer = function (id) {
-        process.nextTick(runner(id));
+        process$1.nextTick(runner(id));
       };
     // Sphere (JS game engine) Dispatch API
     } else if (Dispatch && Dispatch.now) {
@@ -2780,9 +2981,9 @@
 
 
   var MutationObserver = global_1.MutationObserver || global_1.WebKitMutationObserver;
-  var process$1 = global_1.process;
+  var process$2 = global_1.process;
   var Promise$1 = global_1.Promise;
-  var IS_NODE = classofRaw(process$1) == 'process';
+  var IS_NODE = classofRaw(process$2) == 'process';
   // Node.js 11 shows ExperimentalWarning on getting `queueMicrotask`
   var queueMicrotaskDescriptor = getOwnPropertyDescriptor$3(global_1, 'queueMicrotask');
   var queueMicrotask = queueMicrotaskDescriptor && queueMicrotaskDescriptor.value;
@@ -2793,7 +2994,7 @@
   if (!queueMicrotask) {
     flush = function () {
       var parent, fn;
-      if (IS_NODE && (parent = process$1.domain)) parent.exit();
+      if (IS_NODE && (parent = process$2.domain)) parent.exit();
       while (head) {
         fn = head.fn;
         head = head.next;
@@ -2811,7 +3012,7 @@
     // Node.js
     if (IS_NODE) {
       notify = function () {
-        process$1.nextTick(flush);
+        process$2.nextTick(flush);
       };
     // browsers with MutationObserver, except iOS - https://github.com/zloirock/core-js/issues/339
     } else if (MutationObserver && !engineIsIos) {
@@ -2896,24 +3097,6 @@
     }
   };
 
-  var process$2 = global_1.process;
-  var versions = process$2 && process$2.versions;
-  var v8 = versions && versions.v8;
-  var match, version;
-
-  if (v8) {
-    match = v8.split('.');
-    version = match[0] + match[1];
-  } else if (engineUserAgent) {
-    match = engineUserAgent.match(/Edge\/(\d+)/);
-    if (!match || match[1] >= 74) {
-      match = engineUserAgent.match(/Chrome\/(\d+)/);
-      if (match) version = match[1];
-    }
-  }
-
-  var engineV8Version = version && +version;
-
   var task$1 = task.set;
 
 
@@ -2925,7 +3108,7 @@
 
 
 
-  var SPECIES$3 = wellKnownSymbol('species');
+  var SPECIES$5 = wellKnownSymbol('species');
   var PROMISE = 'Promise';
   var getInternalState = internalState.get;
   var setInternalState = internalState.set;
@@ -2968,7 +3151,7 @@
       exec(function () { /* empty */ }, function () { /* empty */ });
     };
     var constructor = promise.constructor = {};
-    constructor[SPECIES$3] = FakePromise;
+    constructor[SPECIES$5] = FakePromise;
     return !(promise.then(function () { /* empty */ }) instanceof FakePromise);
   });
 
@@ -3384,53 +3567,8 @@
     }
   };
 
-  // `IsArray` abstract operation
-  // https://tc39.github.io/ecma262/#sec-isarray
-  var isArray = Array.isArray || function isArray(arg) {
-    return classofRaw(arg) == 'Array';
-  };
-
-  var createProperty = function (object, key, value) {
-    var propertyKey = toPrimitive(key);
-    if (propertyKey in object) objectDefineProperty.f(object, propertyKey, createPropertyDescriptor(0, value));
-    else object[propertyKey] = value;
-  };
-
-  var SPECIES$4 = wellKnownSymbol('species');
-
-  // `ArraySpeciesCreate` abstract operation
-  // https://tc39.github.io/ecma262/#sec-arrayspeciescreate
-  var arraySpeciesCreate = function (originalArray, length) {
-    var C;
-    if (isArray(originalArray)) {
-      C = originalArray.constructor;
-      // cross-realm fallback
-      if (typeof C == 'function' && (C === Array || isArray(C.prototype))) C = undefined;
-      else if (isObject(C)) {
-        C = C[SPECIES$4];
-        if (C === null) C = undefined;
-      }
-    } return new (C === undefined ? Array : C)(length === 0 ? 0 : length);
-  };
-
-  var SPECIES$5 = wellKnownSymbol('species');
-
-  var arrayMethodHasSpeciesSupport = function (METHOD_NAME) {
-    // We can't use this feature detection in V8 since it causes
-    // deoptimization and serious performance degradation
-    // https://github.com/zloirock/core-js/issues/677
-    return engineV8Version >= 51 || !fails(function () {
-      var array = [];
-      var constructor = array.constructor = {};
-      constructor[SPECIES$5] = function () {
-        return { foo: 1 };
-      };
-      return array[METHOD_NAME](Boolean).foo !== 1;
-    });
-  };
-
   var IS_CONCAT_SPREADABLE = wellKnownSymbol('isConcatSpreadable');
-  var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
+  var MAX_SAFE_INTEGER$1 = 0x1FFFFFFFFFFFFF;
   var MAXIMUM_ALLOWED_INDEX_EXCEEDED = 'Maximum allowed index exceeded';
 
   // We can't use this feature detection in V8 since it causes
@@ -3465,10 +3603,10 @@
         E = i === -1 ? O : arguments[i];
         if (isConcatSpreadable(E)) {
           len = toLength(E.length);
-          if (n + len > MAX_SAFE_INTEGER) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
+          if (n + len > MAX_SAFE_INTEGER$1) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
           for (k = 0; k < len; k++, n++) if (k in E) createProperty(A, n, E[k]);
         } else {
-          if (n >= MAX_SAFE_INTEGER) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
+          if (n >= MAX_SAFE_INTEGER$1) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
           createProperty(A, n++, E);
         }
       }
@@ -4124,6 +4262,7 @@
   var index = {
     init: init,
     VuePlugin: VuePlugin,
+    hook: hook,
     registerDialogComponents: registerDialogComponents,
     apiWidget: apiWidget,
     bpDialog: __vue_component__$1,

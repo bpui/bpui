@@ -24,10 +24,29 @@ function registerApp(
   console.log('%c[bpui v' + pkg.version + '] Thanks for visited! 😊', 'color: #e95420;');
 }
 
+class Hook {
+  /**
+   * 添加页面抖动hook.
+   * 回调方法中的paddingRight参数表示发生抖动时页面中fixed元素应该在原有paddingRight值上增加的像素值.
+   */
+  addWidgetShake(foo:(paddingRight:number)=>void):void {
+    getComponent('dialog').default.hook.addWidgetShake(foo);
+  }
+
+  /**
+   * 移除页面抖动hook.
+   */
+  removeWidgetShake(foo:(paddingRight:number)=>void):void {
+    getComponent('dialog').default.hook.removeWidgetShake(foo);
+  }
+}
 
 export default class Instance {
   static registerApp = registerApp;
   static libs = libs;
+
+  // 
+  static get hook() { return new Hook(); }
 
   //
   static get bpNavbarView() { return getComponent('navbarView').default.bpNavbarView; }

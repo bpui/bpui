@@ -40,3 +40,18 @@ export function registerApp(
   App:any,
   components?:ComponentName[]
 ): void;
+
+
+export interface Hook {
+  /**
+   * @desc: 添加页面抖动hook.
+   * 回调方法中的paddingRight参数表示发生抖动时页面中fixed元素应该在原有paddingRight值上增加的像素值.
+   */
+  addWidgetShake(foo:(paddingRight:number)=>void):void;
+
+  /**
+   * @desc: 移除页面抖动hook.
+   */
+  removeWidgetShake(foo:(paddingRight:number)=>void):void;
+}
+export const hook:Hook;

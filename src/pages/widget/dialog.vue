@@ -108,6 +108,9 @@
     // lifecycle hook.
     constructor() {
       super();
+      bpui.hook.addWidgetShake((paddingRight)=>{
+        console.log("widget shake: " + paddingRight);
+      })
     }
 
     showAlert():void {
