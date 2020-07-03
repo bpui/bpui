@@ -1,5 +1,5 @@
 /*!
- * bpui input v0.1.13
+ * bpui input v0.1.14
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1482,6 +1482,8 @@ var script = {
   // },
   data: function data() {
     return {
+      value2: '',
+      // 用于textarea上的value(ie中value不能变化,否则vdom会错误.)
       watchValue: true,
       isInputWrong: false,
       realPattern: null,
@@ -1518,6 +1520,9 @@ var script = {
       }.bind(this));
     }
   },
+  beforeMount: function beforeMount() {
+    this.value2 = this.value;
+  },
   mounted: function mounted() {
     this.init();
   },
@@ -1533,6 +1538,41 @@ var script = {
       }
 
       switch (this.type) {
+        case 'int':
+        case 'unsigned-int':
+        case 'float':
+        case 'unsigned-float':
+          this._initIntFloat();
+
+          break;
+
+        case 'textarea':
+          this._initTextarea();
+
+          break;
+        // case 'tel':
+        // case 'email':
+
+        default:
+          this._initOther();
+
+          break;
+      } // switch.
+      // 防止ie上刷新后保留input内容.
+
+
+      if (febs.utils.browserIsIE()) {
+        febs.utils.sleep(100).then(function () {
+          _newArrowCheck(this, _this2);
+
+          this.text(this.value || '');
+        }.bind(this));
+      }
+    },
+    _initOther: function _initOther() {
+      var _this3 = this;
+
+      switch (this.type) {
         case 'tel':
           if (!this.realPattern) {
             this.realPattern = new RegExp("^(1[2-9][0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89]|98[0-9]|99[0-9])\\d{8}$");
@@ -1542,6 +1582,64 @@ var script = {
           this.defaultValue = '';
           break;
 
+        case 'email':
+          if (!this.realPattern) {
+            this.realPattern = new RegExp("^(([A-Za-z0-9\u4E00-\u9FA5_-]|\\.)+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+)$");
+          }
+
+          this.defaultValue = '';
+          break;
+      } // switch.
+      // validate.
+
+
+      var el;
+      el = $($(this.$el).children('input')[0]); // 进行一次验证.
+
+      this.validate(function (vv) {
+        _newArrowCheck(this, _this3);
+
+        el.val(vv);
+      }.bind(this), this.value, false, false);
+
+      this._handleChange(el);
+
+      this._handleFocusBlur(el);
+
+      this._handleKeydownKeyup(el);
+
+      this._handleInput(el);
+    },
+    _initTextarea: function _initTextarea() {
+      var _this4 = this;
+
+      // validate.
+      var el;
+      el = $($(this.$el).children('textarea')[0]); // 进行一次验证.
+
+      if (this.$slots["default"] && this.$slots["default"].length > 0 && !febs.string.isEmpty(this.$slots["default"][0].text)) {
+        this.validate(function (vv) {
+          _newArrowCheck(this, _this4);
+
+          el.val(vv);
+          this.typelen = vv.length;
+        }.bind(this), this.$slots["default"][0].text, false, false);
+      } else if (this.value) {
+        this.typelen = this.value.length;
+      }
+
+      this._handleChange(el);
+
+      this._handleFocusBlur(el);
+
+      this._handleKeydownKeyup(el);
+
+      this._handleInput(el);
+    },
+    _initIntFloat: function _initIntFloat() {
+      var _this5 = this;
+
+      switch (this.type) {
         case 'int':
           this.isInt = true;
 
@@ -1615,168 +1713,158 @@ var script = {
 
           this.isUnsigned = true;
           break;
-
-        case 'email':
-          if (!this.realPattern) {
-            this.realPattern = new RegExp("^(([A-Za-z0-9\u4E00-\u9FA5_-]|\\.)+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+)$");
-          }
-
-          this.defaultValue = '';
       } // switch.
       // validate.
 
 
       var el;
+      el = $($(this.$el).children('input')[0]);
+      this._min = Number.isNaN(parseInt(this.min)) ? Number.MIN_SAFE_INTEGER : parseInt(this.min);
+      this._max = Number.isNaN(parseInt(this.max)) ? Number.MAX_SAFE_INTEGER : parseInt(this.max); // 进行一次验证.
 
-      if (this.type === 'textarea') {
-        el = $($(this.$el).children('textarea')[0]);
-      } else {
-        el = $($(this.$el).children('input')[0]);
+      this.validate(function (vv) {
+        _newArrowCheck(this, _this5);
+
+        el.val(vv);
+      }.bind(this), this.value, false, false);
+
+      this._handleChangeIntFloat(el);
+
+      this._handleFocusBlur(el);
+
+      this._handleKeydownKeyupIntFloat(el);
+
+      if (!febs.utils.browserIsMobile()) {
+        this._handleInput(el);
       }
+    },
+    _handleInput: function _handleInput(el) {
+      var _this6 = this;
 
-      if (this.isFloat || this.isInt) {
-        this._min = Number.isNaN(parseInt(this.min)) ? Number.MIN_SAFE_INTEGER : parseInt(this.min);
-        this._max = Number.isNaN(parseInt(this.max)) ? Number.MAX_SAFE_INTEGER : parseInt(this.max);
-      } // 进行一次验证.
+      // input.
+      el.off('input');
+      el.on('input', function (event) {
+        var _this7 = this;
 
+        _newArrowCheck(this, _this6);
 
-      if (this.type === 'textarea') {
-        if (this.$slots["default"] && this.$slots["default"].length > 0 && !febs.string.isEmpty(this.$slots["default"][0].text)) {
-          this.validate(function (vv) {
-            _newArrowCheck(this, _this2);
-
-            el.val(vv);
-            this.typelen = vv.length;
-          }.bind(this), this.$slots["default"][0].text, false, false);
-        } else if (this.value) {
-          this.typelen = this.value.length;
-        }
-      } else {
-        this.validate(function (vv) {
-          _newArrowCheck(this, _this2);
-
-          el.val(vv);
-        }.bind(this), this.value, false, false);
-      } // change.
-
-
-      el.off('change');
-      el.on('change', function (event) {
-        var _this3 = this;
-
-        _newArrowCheck(this, _this2);
-
-        var elem = $(event.target);
+        var elem = $(event.currentTarget);
         var value = elem.val() || '';
 
         if (this.isInt || this.isFloat) {
           this.validate(function (vv) {
-            _newArrowCheck(this, _this3);
+            _newArrowCheck(this, _this7);
 
             elem.val(vv);
-          }.bind(this), value);
+          }.bind(this), value, true, false);
         } else {
-          this.validate(null, value);
+          this.validate(null, value, true, true);
         } // type.
 
 
         if (this.isInt || this.isFloat) {
           value = Number(value);
+          this.watchValue = false;
           this.$emit('input', value);
-          this.$emit('change', value);
         } else {
+          this.watchValue = false;
           this.$emit('input', value);
-          this.$emit('change', value);
         }
-      }.bind(this)); // no need picker.
+      }.bind(this));
+    },
+    _handleKeydownKeyup: function _handleKeydownKeyup(el) {
+      var _this8 = this;
 
-      {
-        var autoHide = function autoHide(event) {
-          _newArrowCheck(this, _this2);
+      // keydown, keyup.
+      el.off('keydown');
+      el.on('keydown', function (event) {
+        _newArrowCheck(this, _this8);
 
-          // TODO: el不存在时.
-          if (!event.target || !event.target.isSameNode(el[0])) {
-            el[0].blur();
-          }
-        }.bind(this);
-
-        el.off('focus');
-        el.on('focus', function (event) {
-          var _this4 = this;
-
-          _newArrowCheck(this, _this2);
-
-          // this.isInputWrong = false;
-          this.$emit('focus', event);
-          this.focus = true;
-          setTimeout(function () {
-            _newArrowCheck(this, _this4);
-
-            $('body').on('touchstart', autoHide);
-          }.bind(this), 100);
-
-          if (el[0] && (el[0].scrollIntoView || el[0].scrollIntoViewIfNeeded)) {
-            setTimeout(function () {
-              _newArrowCheck(this, _this4);
-
-              if (el[0].scrollIntoViewIfNeeded) el[0].scrollIntoViewIfNeeded();else el[0].scrollIntoView(false);
-            }.bind(this), 300);
-          }
-        }.bind(this));
-        el.off('blur');
-        el.on('blur', function (event) {
-          var _this5 = this;
-
-          _newArrowCheck(this, _this2);
-
-          this.focus = false;
-          $('body').off('touchstart', autoHide);
-          var elem = $(event.target);
-          var value = elem.val() || '';
-          var oldValue = value;
-          this.validate(function (newValue) {
-            _newArrowCheck(this, _this5);
-
-            // type.
-            if (this.isInt || this.isFloat) {
-              oldValue = Number(oldValue);
-              newValue = Number(newValue);
-              elem.val(newValue);
-            }
-
-            if (oldValue != newValue) {
-              this.$emit('input', newValue);
-              this.$emit('change', newValue, oldValue);
-            }
-
-            this.$emit('blur', event);
-          }.bind(this), value);
-        }.bind(this));
-      } // if..else.
-
-      var inputEventRegistered = false; // number.
-
-      if (this.isInt || this.isFloat) {
-        if (febs.utils.browserIsMobile()) {
-          inputEventRegistered = true;
+        if (event.key.length > 1) {
+          return true;
         }
 
-        el.off(febs.utils.browserIsMobile() ? 'input' : 'keydown');
-        el.on(febs.utils.browserIsMobile() ? 'input' : 'keydown', function (event) {
-          var _this6 = this;
+        if (this.regInput) {
+          if (!this.regInput.test(event.key)) {
+            event.stopPropagation();
+            event.preventDefault();
+            event.cancelBubble = true;
+            return false;
+          }
+        } // if.
+        // update value.
 
-          _newArrowCheck(this, _this2);
 
-          var key = event.key || event.data;
+        this.$emit('keydown', event);
+        return true;
+      }.bind(this));
 
-          if (key && key.length > 1) {
-            return true;
+      if (this.type == 'textarea') {
+        el.off('keyup');
+        el.on('keyup', function (event) {
+          _newArrowCheck(this, _this8);
+
+          var vv = $(event.currentTarget).val() || '';
+          this.typelen = vv.length;
+          this.$emit('keyup', event);
+        }.bind(this));
+      } else {
+        el.off('keyup');
+        el.on('keyup', function (event) {
+          _newArrowCheck(this, _this8);
+
+          this.$emit('keyup', event);
+        }.bind(this));
+      }
+    },
+    _handleKeydownKeyupIntFloat: function _handleKeydownKeyupIntFloat(el) {
+      var _this9 = this;
+
+      // number.
+      el.off(febs.utils.browserIsMobile() ? 'input' : 'keydown');
+      el.on(febs.utils.browserIsMobile() ? 'input' : 'keydown', function (event) {
+        var _this10 = this;
+
+        _newArrowCheck(this, _this9);
+
+        var key = event.key || event.data;
+
+        if (key && key.length > 1) {
+          return true;
+        }
+
+        var elem = $(event.currentTarget);
+        var value = elem.val() || '';
+
+        if (event.inputType == 'deleteContentBackward' || event.inputType == 'deleteContentForward') {
+          this.$emit('keydown', event);
+
+          if (febs.utils.browserIsMobile()) {
+            this.watchValue = false;
+            this.$emit('input', value);
           }
 
-          var elem = $(event.target);
-          var value = elem.val() || '';
+          return true;
+        }
 
-          if (event.inputType == 'deleteContentBackward' || event.inputType == 'deleteContentForward') {
+        var isEmpty = value.length == 0;
+        var code = event.which || event.keyCode;
+
+        if (key === '-' || code == 109 || code == 189) // -
+          {
+            if (!this.isUnsigned) {
+              if (value && value.length > 0) {
+                if (value[0] == '-') {
+                  value = value.substr(1);
+                  elem.val(value);
+                } else {
+                  value = '-' + value;
+                  elem.val(value);
+                }
+              }
+            } // update value.
+
+
             this.$emit('keydown', event);
 
             if (febs.utils.browserIsMobile()) {
@@ -1784,26 +1872,29 @@ var script = {
               this.$emit('input', value);
             }
 
-            return true;
+            event.stopPropagation();
+            event.preventDefault();
+            event.cancelBubble = true;
+            return false;
+          } // if.
+        // 0~9.
+
+
+        if (key >= '0' && key <= '9') {
+          if (value == '0') {
+            value = '0.';
+          } else if (value == '-0') {
+            value = '-0.';
           }
 
-          var isEmpty = value.length == 0;
-          var code = event.which || event.keyCode;
+          value = value + key;
 
-          if (key === '-' || code == 109 || code == 189) // -
-            {
-              if (!this.isUnsigned) {
-                if (value && value.length > 0) {
-                  if (value[0] == '-') {
-                    value = value.substr(1);
-                    elem.val(value);
-                  } else {
-                    value = '-' + value;
-                    elem.val(value);
-                  }
-                }
-              } // update value.
+          if (this.isFloat && this.decimal) {
+            var ii = value.indexOf('.');
 
+            if (ii >= 0 && value.length - ii - 1 > this.decimal) {
+              value = value.substr(0, ii + 1 + this.decimal);
+              elem.val(value); // update value.
 
               this.$emit('keydown', event);
 
@@ -1816,177 +1907,179 @@ var script = {
               event.preventDefault();
               event.cancelBubble = true;
               return false;
-            } // if.
-          // 0~9.
-
-
-          if (key >= '0' && key <= '9') {
-            if (value == '0') {
-              value = '0.';
-            } else if (value == '-0') {
-              value = '-0.';
             }
-
-            value = value + key;
-
-            if (this.isFloat && this.decimal) {
-              var ii = value.indexOf('.');
-
-              if (ii >= 0 && value.length - ii - 1 > this.decimal) {
-                value = value.substr(0, ii + 1 + this.decimal);
-                elem.val(value); // update value.
-
-                this.$emit('keydown', event);
-
-                if (febs.utils.browserIsMobile()) {
-                  this.watchValue = false;
-                  this.$emit('input', value);
-                }
-
-                event.stopPropagation();
-                event.preventDefault();
-                event.cancelBubble = true;
-                return false;
-              }
-            } // update value.
+          } // update value.
 
 
-            this.$emit('keydown', event);
+          this.$emit('keydown', event);
 
-            if (febs.utils.browserIsMobile()) {
-              this.watchValue = false;
-              this.$emit('input', value);
-            }
+          if (febs.utils.browserIsMobile()) {
+            this.watchValue = false;
+            this.$emit('input', value);
+          }
 
-            return true;
-          } // .
-          else if (key == '.' && this.isFloat) {
-              if (value.indexOf('.') < 0) {
-                if (isEmpty) {
-                  value = '0';
-                  elem.val(value);
-                } // update value.
-
-
-                this.$emit('keydown', event);
-
-                if (febs.utils.browserIsMobile()) {
-                  this.watchValue = false;
-                  this.$emit('input', value);
-                }
-
-                return true;
-              }
-            } else if (!isEmpty) {
-              this.validate(function (vv) {
-                _newArrowCheck(this, _this6);
-
+          return true;
+        } // .
+        else if (key == '.' && this.isFloat) {
+            if (value.indexOf('.') < 0) {
+              if (isEmpty) {
+                value = '0';
                 elem.val(value);
+              } // update value.
 
-                if (febs.utils.browserIsMobile()) {
-                  this.watchValue = false;
-                  this.$emit('input', value);
-                }
-              }.bind(this), value, true);
-            } else {
-              value = "";
-              elem.val("");
+
+              this.$emit('keydown', event);
 
               if (febs.utils.browserIsMobile()) {
                 this.watchValue = false;
                 this.$emit('input', value);
               }
-            } // update value.
 
-
-          this.$emit('keydown', event);
-          event.stopPropagation();
-          event.preventDefault();
-          event.cancelBubble = true;
-          return false;
-        }.bind(this));
-        el.off('keyup');
-        el.on('keyup', function (event) {
-          _newArrowCheck(this, _this2);
-
-          this.$emit('keyup', event);
-        }.bind(this));
-      } // other. 
-      else {
-          el.off('keydown');
-          el.on('keydown', function (event) {
-            _newArrowCheck(this, _this2);
-
-            if (event.key.length > 1) {
               return true;
             }
-
-            if (this.regInput) {
-              if (!this.regInput.test(event.key)) {
-                event.stopPropagation();
-                event.preventDefault();
-                event.cancelBubble = true;
-                return false;
-              }
-            } // if.
-            // update value.
-
-
-            this.$emit('keydown', event);
-            return true;
-          }.bind(this));
-
-          if (this.type == 'textarea') {
-            el.off('keyup');
-            el.on('keyup', function (event) {
-              _newArrowCheck(this, _this2);
-
-              this.typelen = $(event.target).val().length;
-              this.$emit('keyup', event);
-            }.bind(this));
-          } else {
-            el.off('keyup');
-            el.on('keyup', function (event) {
-              _newArrowCheck(this, _this2);
-
-              this.$emit('keyup', event);
-            }.bind(this));
-          }
-        } // if..else.
-
-
-      if (!inputEventRegistered) {
-        el.off('input');
-        el.on('input', function (event) {
-          var _this7 = this;
-
-          _newArrowCheck(this, _this2);
-
-          var elem = $(event.target);
-          var value = elem.val() || '';
-
-          if (this.isInt || this.isFloat) {
+          } else if (!isEmpty) {
             this.validate(function (vv) {
-              _newArrowCheck(this, _this7);
+              _newArrowCheck(this, _this10);
 
-              elem.val(vv);
-            }.bind(this), value, true, false);
+              elem.val(value);
+
+              if (febs.utils.browserIsMobile()) {
+                this.watchValue = false;
+                this.$emit('input', value);
+              }
+            }.bind(this), value, true);
           } else {
-            this.validate(null, value, true, true);
-          } // type.
+            value = "";
+            elem.val("");
+
+            if (febs.utils.browserIsMobile()) {
+              this.watchValue = false;
+              this.$emit('input', value);
+            }
+          } // update value.
 
 
-          if (this.isInt || this.isFloat) {
-            value = Number(value);
-            this.watchValue = false;
-            this.$emit('input', value);
-          } else {
-            this.watchValue = false;
-            this.$emit('input', value);
+        this.$emit('keydown', event);
+        event.stopPropagation();
+        event.preventDefault();
+        event.cancelBubble = true;
+        return false;
+      }.bind(this));
+      el.off('keyup');
+      el.on('keyup', function (event) {
+        _newArrowCheck(this, _this9);
+
+        this.$emit('keyup', event);
+      }.bind(this));
+    },
+    _handleChange: function _handleChange(el) {
+      var _this11 = this;
+
+      // change.
+      el.off('change');
+      el.on('change', function (event) {
+        _newArrowCheck(this, _this11);
+
+        var elem = $(event.currentTarget);
+        var value = elem.val() || '';
+        this.validate(null, value);
+        this.$emit('input', value);
+        this.$emit('change', value);
+      }.bind(this));
+    },
+    _handleChangeIntFloat: function _handleChangeIntFloat(el) {
+      var _this12 = this;
+
+      el.off('change');
+      el.on('change', function (event) {
+        var _this13 = this;
+
+        _newArrowCheck(this, _this12);
+
+        var elem = $(event.currentTarget);
+        var value = elem.val() || '';
+        this.validate(function (vv) {
+          _newArrowCheck(this, _this13);
+
+          elem.val(vv);
+        }.bind(this), value);
+        value = Number(value);
+        this.$emit('input', value);
+        this.$emit('change', value);
+      }.bind(this));
+    },
+    _handleFocusBlur: function _handleFocusBlur(el) {
+      var _this14 = this;
+
+      // no need picker.
+      var autoHide = function autoHide(event) {
+        _newArrowCheck(this, _this14);
+
+        // TODO: el不存在时.
+        if (!event.currentTarget || !event.currentTarget.isSameNode(el[0])) {
+          el[0].blur();
+        }
+      }.bind(this);
+
+      el.off('focus');
+      el.on('focus', function (event) {
+        var _this15 = this;
+
+        _newArrowCheck(this, _this14);
+
+        this.isInputWrong = false;
+        this.$emit('focus', event);
+        this.focus = true; // mobile side scroll.
+
+        if (febs.utils.browserIsMobile()) {
+          setTimeout(function () {
+            _newArrowCheck(this, _this15);
+
+            $('body').on('touchstart', autoHide);
+          }.bind(this), 100);
+
+          if (el[0] && (el[0].scrollIntoView || el[0].scrollIntoViewIfNeeded)) {
+            setTimeout(function () {
+              _newArrowCheck(this, _this15);
+
+              if (el[0].scrollIntoViewIfNeeded) el[0].scrollIntoViewIfNeeded();else el[0].scrollIntoView(false);
+            }.bind(this), 300);
           }
-        }.bind(this));
-      } // if.
+        }
+      }.bind(this));
+      el.off('blur');
+      el.on('blur', function (event) {
+        var _this16 = this;
 
+        _newArrowCheck(this, _this14);
+
+        this.focus = false;
+
+        if (febs.utils.browserIsMobile()) {
+          $('body').off('touchstart', autoHide);
+        }
+
+        var elem = $(event.currentTarget);
+        var value = elem.val() || '';
+        var oldValue = value;
+        this.validate(function (newValue) {
+          _newArrowCheck(this, _this16);
+
+          // type.
+          if (this.isInt || this.isFloat) {
+            oldValue = Number(oldValue);
+            newValue = Number(newValue);
+            elem.val(newValue);
+          }
+
+          if (oldValue != newValue) {
+            this.$emit('input', newValue);
+            this.$emit('change', newValue, oldValue);
+          }
+
+          this.$emit('blur', event);
+        }.bind(this), value);
+      }.bind(this));
     },
 
     /**
@@ -1996,7 +2089,7 @@ var script = {
      * @param changeInputWrong: 改变输入错误状态.
      */
     validate: function validate(callback, value) {
-      var _this8 = this;
+      var _this17 = this;
 
       var isInputing = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var changeInputWrong = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
@@ -2076,15 +2169,18 @@ var script = {
           return; // return this.defaultValue;
         } else {
           var _value = matches[0];
+          var _v = _value;
 
-          var _v = parseFloat(_value) || 0;
+          if (this.isFloat || this.isInt) {
+            _v = parseFloat(_value) || 0;
 
-          if (_v > this._max) {
-            _v = this._max; // return this._max;
-          }
+            if (_v > this._max) {
+              _v = this._max; // return this._max;
+            }
 
-          if (_v < this._min) {
-            _v = this._min; // return this._min;
+            if (_v < this._min) {
+              _v = this._min; // return this._min;
+            }
           }
 
           if (this.isFloat) {
@@ -2101,7 +2197,7 @@ var script = {
           if (changeInputWrong) {
             if (this.validator) {
               this.validator(parseFloat(_v), function (valid) {
-                _newArrowCheck(this, _this8);
+                _newArrowCheck(this, _this17);
 
                 if (!valid) {
                   this.isInputWrong = true;
@@ -2122,7 +2218,7 @@ var script = {
         if (changeInputWrong) {
           if (this.validator) {
             this.validator(value, function (valid) {
-              _newArrowCheck(this, _this8);
+              _newArrowCheck(this, _this17);
 
               if (!valid) {
                 this.isInputWrong = true;
@@ -2147,14 +2243,14 @@ var script = {
      *                 如果为 '' 则设置为无内容样式.
      */
     text: function text(content) {
-      var _this9 = this;
+      var _this18 = this;
 
       var elem = $(this.$el);
 
       if (this.type === 'textarea') {
-        elem = elem.children('textarea');
+        elem = $(elem.children('textarea')[0]);
       } else {
-        elem = elem.children('input');
+        elem = $(elem.children('input')[0]);
       }
 
       if (febs.utils.isNull(content)) {
@@ -2163,7 +2259,7 @@ var script = {
         // type.
         if (this.isInt || this.isFloat) {
           this.validate(function (newContent) {
-            _newArrowCheck(this, _this9);
+            _newArrowCheck(this, _this18);
 
             elem.val(newContent);
           }.bind(this), content);
@@ -2196,14 +2292,14 @@ var script = {
      * @desc: ios 键盘不回弹问题.
      */
     _onBlur_fixScroll: function _onBlur_fixScroll() {
-      var _this10 = this;
+      var _this19 = this;
 
       var u = navigator.userAgent;
       var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
 
       if (isIOS) {
         setTimeout(function () {
-          _newArrowCheck(this, _this10);
+          _newArrowCheck(this, _this19);
 
           var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0;
           window.scrollTo({
@@ -2479,7 +2575,7 @@ var __vue_render__ = function __vue_render__() {
         return _vm._onBlur_fixScroll($event);
       }
     }
-  }, [_vm._v(_vm._s(_vm.value))]) : _c("input", {
+  }, [_vm._v(_vm._s(_vm.value2 || ""))]) : _c("input", {
     staticClass: "bp-input__inner",
     attrs: {
       type: _vm.type2,

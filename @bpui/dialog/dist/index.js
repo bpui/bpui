@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v0.1.20
+ * bpui dialog v0.1.21
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1841,6 +1841,51 @@
     }
   }
   /**
+   * 根据widget来还原body上的fixed
+   */
+
+
+  function restoreFixedScroll(widget) {
+    if (widget.hasClass('bp-widget__bodyFixscroll')) {
+      $('body').addClass('bp-widget__fixscroll');
+    }
+
+    var ss = widget.attr('data-htmlp');
+
+    if (ss.length > 0) {
+      var sss = febs.string.replace(ss, 'px', '');
+      sss = parseInt(sss) || 0;
+      callWidgetShake(sss);
+      $('html').css('padding-right', ss);
+    }
+  }
+  /**
+   * 根据前一个widget来移除body上的fixed
+   */
+
+  function removeFixedScrollByWidget(preWidget) {
+    if (!preWidget.hasClass('bp-widget__bodyFixscroll')) {
+      $('body').removeClass('bp-widget__fixscroll');
+    }
+
+    var ss = preWidget.attr('data-htmlp');
+
+    if (ss.length <= 0) {
+      callWidgetShake(0);
+      $('html').css('padding-right', '');
+    }
+  }
+
+  function removeFixedScroll() {
+    $('body').removeClass('bp-widget__fixscroll');
+    var pr = $('html').css('padding-right');
+
+    if (pr && pr.length > 0) {
+      callWidgetShake(0);
+      $('html').css('padding-right', '');
+    }
+  }
+  /**
   * @desc: 显示遮罩层.
   */
 
@@ -2090,13 +2135,7 @@
         }
       }
 
-      $('body').removeClass('bp-widget__fixscroll');
-      var pr = $('html').css('padding-right');
-
-      if (pr && pr.length > 0) {
-        callWidgetShake(0);
-        $('html').css('padding-right', '');
-      }
+      removeFixedScroll();
     } // if.
 
   }
@@ -2193,16 +2232,7 @@
           callWidgetShake(0);
           $('html').css('padding-right', '');
         } else {
-          if (!preWidget.hasClass('bp-widget__bodyFixscroll')) {
-            $('body').removeClass('bp-widget__fixscroll');
-          }
-
-          var ss = preWidget.attr('data-htmlp');
-
-          if (ss.length <= 0) {
-            callWidgetShake(0);
-            $('html').css('padding-right', '');
-          }
+          removeFixedScrollByWidget(preWidget);
         }
       }
     }, duration + 10);
@@ -4221,19 +4251,11 @@
         $('html').css('padding-right', '');
       } else {
         for (var i = 0; i < masks.length; i++) {
-          var _mask = $(masks[i]);
+          var mask0 = $(masks[i]);
 
-          if (_mask.hasClass('bp-widget__mask') && _mask.hasClass('bp-widget__visible')) {
-            if (_mask.hasClass('bp-widget__bodyFixscroll')) {
-              $('body').addClass('bp-widget__fixscroll');
-            }
-
-            var ss = _mask.attr('data-htmlp');
-
-            if (ss.length > 0) {
-              $('html').css('padding-right', ss);
-            }
-
+          if (mask0.hasClass('bp-widget__mask') && mask0.hasClass('bp-widget__visible')) {
+            // 还原当前页面的fixed状态.
+            restoreFixedScroll(mask0);
             return;
           }
         }

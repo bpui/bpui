@@ -24,7 +24,10 @@
     <bp-input type="tel" value="15888888888"></bp-input>
 
     <h4>textarea</h4>
-    <bp-input type="textarea" rows="2" maxlength="100" value="123456111"></bp-input>
+    <bp-input type="textarea" rows="2" maxlength="100" v-model="text1"></bp-input>
+    <div>{{text1}}</div>
+
+    <input autocomplete="off">
 
     <h4>number</h4>
     <bp-input type="int" max="100" min="8" value="123456111"></bp-input>
@@ -72,6 +75,7 @@
     //
     // data.
     @Provide() text:string = '';
+    @Provide() text1:string = '345354';
     @Provide() textChange:number = 0;
 
     //

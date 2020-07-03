@@ -1,7 +1,7 @@
 {
   "description": "dialog",
   "dependencies": {
-    "@bpui/libs": "^0.2.8",
+    "@bpui/libs": "^0.2.9",
     "febs-browser": "^1.0.2",
     "vue": "^2.6.11"
   },
@@ -36,5 +36,5 @@
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
   "name": "@bpui/dialog",
-  "version": "0.1.20"
+  "version": "0.1.21"
 }

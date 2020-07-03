@@ -1,17 +1,17 @@
 {
   "description": "bpui",
   "dependencies": {
-    "@bpui/actionsheet": "^0.1.6",
-    "@bpui/button": "^0.1.10",
-    "@bpui/checkbox": "^0.1.9",
-    "@bpui/dialog": "^0.1.20",
-    "@bpui/input": "^0.1.13",
-    "@bpui/libs": "^0.2.8",
-    "@bpui/navbar-view": "^0.1.9",
-    "@bpui/picker": "^0.1.24",
-    "@bpui/popover": "^0.1.3",
-    "@bpui/radio": "^0.1.8",
-    "@bpui/switch": "^0.1.8"
+    "@bpui/actionsheet": "^0.1.7",
+    "@bpui/button": "^0.1.11",
+    "@bpui/checkbox": "^0.1.10",
+    "@bpui/dialog": "^0.1.21",
+    "@bpui/input": "^0.1.14",
+    "@bpui/libs": "^0.2.9",
+    "@bpui/navbar-view": "^0.1.10",
+    "@bpui/picker": "^0.1.25",
+    "@bpui/popover": "^0.1.4",
+    "@bpui/radio": "^0.1.9",
+    "@bpui/switch": "^0.1.9"
   },
   "devDependencies": {},
   "directories": {},
@@ -40,5 +40,5 @@
     }
   ],
   "name": "bpui.js",
-  "version": "0.1.16"
+  "version": "0.1.17"
 }

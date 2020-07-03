@@ -1,7 +1,7 @@
 {
   "description": "navbarView",
   "dependencies": {
-    "@bpui/libs": "^0.2.8",
+    "@bpui/libs": "^0.2.9",
     "febs-browser": "^1.0.2"
   },
   "devDependencies": {
@@ -35,5 +35,5 @@
     }
   ],
   "name": "@bpui/navbar-view",
-  "version": "0.1.9"
+  "version": "0.1.10"
 }

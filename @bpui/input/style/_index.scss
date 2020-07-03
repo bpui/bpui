@@ -18,10 +18,12 @@
     .bp-input__prefixIcon {
         margin-left: 10px;
         cursor: pointer;
+        flex-grow: 0;
     }
     .bp-input__suffixIcon {
         margin-right: 10px;
         cursor: pointer;
+        flex-grow: 0;
     }
 
     input {
@@ -59,7 +61,8 @@
         outline: none;
         padding: 0 15px;
         transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
-        width: 100%;
+        flex-grow: 1;
+        width: auto;
 
         &:focus {
             outline: none;
