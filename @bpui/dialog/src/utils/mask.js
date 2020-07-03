@@ -95,6 +95,46 @@ function hack(el) {
 }
 
 /**
+ * 根据widget来还原body上的fixed
+ */
+export function restoreFixedScroll(widget) {
+  if (widget.hasClass('bp-widget__bodyFixscroll')) {
+    $('body').addClass('bp-widget__fixscroll');
+  }
+
+  let ss = widget.attr('data-htmlp');
+  if (ss.length > 0) {
+    let sss = febs.string.replace(ss, 'px', '');
+    sss = parseInt(sss)||0;
+    hooks.callWidgetShake(sss);
+    $('html').css('padding-right', ss);
+  }
+}
+/**
+ * 根据前一个widget来移除body上的fixed
+ */
+export function removeFixedScrollByWidget(preWidget) {
+  if (!preWidget.hasClass('bp-widget__bodyFixscroll')) {
+    $('body').removeClass('bp-widget__fixscroll');
+  }
+
+  let ss = preWidget.attr('data-htmlp');
+  if (ss.length <= 0) {
+    hooks.callWidgetShake(0);
+    $('html').css('padding-right', '');
+  }
+}
+
+function removeFixedScroll() {
+  $('body').removeClass('bp-widget__fixscroll');
+  let pr = $('html').css('padding-right');
+  if (pr && pr.length > 0) {
+    hooks.callWidgetShake(0);
+    $('html').css('padding-right', '');
+  }
+}
+
+/**
 * @desc: 显示遮罩层.
 */
 export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
@@ -305,7 +345,7 @@ export function removeAllApiModal(elementSelector) {
       if (a.zIndex == b.zIndex) return 0;
       return a.zIndex > b.zIndex? -1: 1;
     });
-      
+
     // 寻找最大的zindex.
     for (let i = 0; i < dialogs.length; i++) {
       let mask0 = dialogs[i].el;
@@ -319,12 +359,7 @@ export function removeAllApiModal(elementSelector) {
       }
     }
 
-    $('body').removeClass('bp-widget__fixscroll');
-    let pr = $('html').css('padding-right');
-    if (pr && pr.length > 0) {
-      hooks.callWidgetShake(0);
-      $('html').css('padding-right', '');
-    }
+    removeFixedScroll();
   } // if.
 }
 
@@ -415,14 +450,7 @@ export function hideWidget(el, cb) {
         $('html').css('padding-right', '');
       }
       else {
-        if (!preWidget.hasClass('bp-widget__bodyFixscroll')) {
-          $('body').removeClass('bp-widget__fixscroll');
-        }
-        let ss = preWidget.attr('data-htmlp');
-        if (ss.length <= 0) {
-          hooks.callWidgetShake(0);
-          $('html').css('padding-right', '');
-        }
+        removeFixedScrollByWidget(preWidget);
       }
     }
     

@@ -61,6 +61,7 @@ export default class Instance {
   static get bpInput() { return getComponent('input').default.bpInput }
   //
   static get bpDialog() { return getComponent('dialog').default.bpDialog }
+  static get apiWidget() { return getComponent('dialog').default.apiWidget }
   static get bpWidget() { return getComponent('dialog').default.bpWidget }
   static get registerDialogComponents() { return getComponent('dialog').default.registerDialogComponents }
   //
@@ -75,3 +76,12 @@ export default class Instance {
   //
   static get bpPopover() { return getComponent('popover').default.bpPopover }
 }
+
+
+class InstanceAgent {
+  static get libs() { return Instance.libs; }
+  static get hook() { return Instance.hook; }
+  static get apiWidget() { return Instance.apiWidget; }
+}
+
+((window||window) as any).bp = InstanceAgent;

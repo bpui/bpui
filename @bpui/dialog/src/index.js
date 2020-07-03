@@ -37,17 +37,11 @@ function maskRouterChange(to, type) {
     }
     else {
       for (let i = 0; i < masks.length; i++) {
-        let mask = $(masks[i]);
-        if (mask.hasClass('bp-widget__mask') && mask.hasClass('bp-widget__visible')) {
+        let mask0 = $(masks[i]);
+        if (mask0.hasClass('bp-widget__mask') && mask0.hasClass('bp-widget__visible')) {
 
-          if (mask.hasClass('bp-widget__bodyFixscroll')) {
-            $('body').addClass('bp-widget__fixscroll');
-          }
-
-          let ss = mask.attr('data-htmlp');
-          if (ss.length > 0) {
-            $('html').css('padding-right', ss);
-          }
+          // 还原当前页面的fixed状态.
+          mask.restoreFixedScroll(mask0);
           return;
         }
       }
