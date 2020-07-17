@@ -1,11 +1,11 @@
 'use strict';
 
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
-* Author: lipengxiang
-* Date: 2020-02-28 17:07
-* Desc: 
-*/
+ * Copyright (c) 2020 Copyright bp All Rights Reserved.
+ * Author: lipengxiang
+ * Date: 2020-02-28 17:07
+ * Desc:
+ */
 
 // .bp-widget
 
@@ -18,21 +18,20 @@ const ApiClass = 'bp-apiClass';
 
 function domGetDuration(el) {
   let d = window.getComputedStyle(el, null);
-  d = d? d['transition-duration']: '0.1s';
+  d = d ? d['transition-duration'] : '0.1s';
   d = d.split(',')[0];
   d = febs.string.trim(d);
   d = febs.string.replace(d, 's', '');
   d = parseFloat(d);
-  d = Math.ceil(d*1000) || 100;
+  d = Math.ceil(d * 1000) || 100;
   return d;
 }
 
-function maskPreventHandler(event){
+function maskPreventHandler(event) {
   if (event.type == 'touchmove' || event.type == 'mousewheel') {
 
-  }
-  else {
-     event.preventDefault();
+  } else {
+    event.preventDefault();
   }
   return false;
 }
@@ -53,8 +52,7 @@ function maskPreventEvent(ee) {
     febs.dom.addEventListener(ee, 'touchup', maskPreventHandler);
     febs.dom.removeEventListener(ee, 'touchdown', maskPreventHandler);
     febs.dom.addEventListener(ee, 'touchdown', maskPreventHandler);
-  }
-  else {
+  } else {
     febs.dom.removeEventListener(ee, 'mousewheel', maskPreventHandler);
     febs.dom.addEventListener(ee, 'mousewheel', maskPreventHandler);
     febs.dom.removeEventListener(ee, 'mouseover', maskPreventHandler);
@@ -72,13 +70,13 @@ export function getWidgetLength() {
 }
 
 /**
-* @desc: 遮罩层当前的zindex.
-*/
+ * @desc: 遮罩层当前的zindex.
+ */
 export function getWidgetZIndex(dataMark) {
   let zIndex = 2000;
   let mask = $(`.bp-widget[data-mark='${dataMark}']`);
   for (let i = 0; i < mask.length; i++) {
-    let t = Number($(mask[i]).css('z-index'))||0;
+    let t = Number($(mask[i]).css('z-index')) || 0;
     if (t > zIndex) {
       zIndex = t;
     }
@@ -89,7 +87,7 @@ export function getWidgetZIndex(dataMark) {
 
 function hack(el) {
   var sUserAgent = navigator.userAgent.toLowerCase();
-  if(sUserAgent.indexOf("baidu") >= 0) {
+  if (sUserAgent.indexOf("baidu") >= 0) {
     el.css('backdrop-filter', 'none');
   }
 }
@@ -105,7 +103,7 @@ export function restoreFixedScroll(widget) {
   let ss = widget.attr('data-htmlp');
   if (ss.length > 0) {
     let sss = febs.string.replace(ss, 'px', '');
-    sss = parseInt(sss)||0;
+    sss = parseInt(sss) || 0;
     hooks.callWidgetShake(sss);
     $('html').css('padding-right', ss);
   }
@@ -135,8 +133,8 @@ function removeFixedScroll() {
 }
 
 /**
-* @desc: 显示遮罩层.
-*/
+ * @desc: 显示遮罩层.
+ */
 export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
 
   let mask = $(el);
@@ -145,27 +143,35 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
     maskPreventEvent(mask);
   }
 
-  if (mask.hasClass('bp-widget__visible')) {
+  // 防止多次调用
+  // bp-widget__showing只是标示 正在显示的的样式名，没有实际样式
+  if (mask.hasClass('bp-widget__visible') || mask.hasClass('bp-widget__showing')) {
     if (cb) cb();
     return;
   }
-
   hack(mask);
 
-  // 防止scroll造成的页面抖动.
-  // let body = $('body');
-  // let html = $('html');
+
+  const pageLen = $('.bp-navbarView_page').length;
+  const dataMark = 'page' + pageLen;
+  const zindex = getWidgetZIndex(dataMark) + 2;
+
+  mask.css('z-index', zindex);
+  mask.attr('data-mark', dataMark);
+  mask.addClass('bp-widget__showing').removeClass('bp-widget__closing');
+  if (showMask) {
+    // 在hideWidget用来辅助判断 是否是显示showMask的widget
+    mask.addClass('bp-widget__maskTmp')
+  }
 
   let hidedScroll = false;
-
-  let body = $('body');
-  let html = $('html');
-
+  const body = $('body');
+  const html = $('html');
   if (hideBodyScroll) {
     let willFix = false;
     let scrollWidth = 0;
 
-    if ((showMask||preventEvent)) {
+    if ((showMask || preventEvent)) {
       // 桌面端判断垂直滚动条.
       if (!febs.utils.browserIsMobile()) {
         scrollWidth = window.innerWidth - febs.dom.getViewPort().width;
@@ -180,7 +186,7 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
         }
       }
     }
-    
+
     if (willFix) {
       body.addClass('bp-widget__fixscroll');
       if (scrollWidth > 0) {
@@ -189,88 +195,52 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
       }
       hidedScroll = true;
       mask.addClass('bp-widget__willFix');
-    }
-    else {
+    } else {
       hidedScroll = body.hasClass('bp-widget__fixscroll');
     }
   }
 
-  //
   // polyfill firefox.
   if (hidedScroll) {
     if (navigator.userAgent.indexOf('Firefox') >= 0) {
       mask.css('overflow-y', 'scroll');
     }
-  }
-  else {
+  } else {
     if (navigator.userAgent.indexOf('Firefox') >= 0) {
       mask.css('overflow-y', '');
     }
   }
-
-  // if (body.hasClass('bp-widget__fixscroll')) {
-  //   mask.css('padding-right', html.css('padding-right'));
-  // }
-  // else {
-  //   mask.css('padding-right', '');
-  // }
-
-  let pageLen = $('.bp-navbarView_page').length;
-  let dataMark = 'page' + pageLen;
-
-  let zindex = getWidgetZIndex(dataMark) + 2;
-  mask.css('z-index', zindex);
 
   // 标记.
   if (body.hasClass('bp-widget__fixscroll')) {
     mask.addClass('bp-widget__bodyFixscroll');
   }
   let ss = html.css('padding-right');
-  if (ss.length > 0) {
+  if (ss && ss.length > 0) {
     mask.attr('data-htmlp', ss);
   }
 
-  let dialogs = [];
-
-  // zindex.
-  let zIndex = 2000;
-  let masks = $(`.bp-widget[data-mark='${dataMark}']`);
-  for (let i = 0; i < masks.length; i++) {
-    let el1 = $(masks[i]);
-    let t = Number(el1.css('z-index'))||0;
-    if (t > zIndex) {
-      zIndex = t;
-    }
-    dialogs.push({zIndex:t, el:el1});
-  }
+  let preMask;
 
   // only one mask.
-  let preMask;
   if (showMask) {
-    dialogs.sort((a, b)=>{
-      if (a.zIndex == b.zIndex) return 0;
-      return a.zIndex > b.zIndex? 1: -1;
-    });
-
-    // 寻找最大的zindex.
-    for (let i = dialogs.length-1; i >= 0; i--) {
-      let mask0 = dialogs[i].el;
+    let _widgets = _getSortWidget(dataMark);
+    // 寻找最大的zindex的preMask
+    for (let i = _widgets.length - 1; i >= 0; i--) {
+      let mask0 = _widgets[i].el;
       if (mask0.hasClass('bp-widget__mask') && !mask[0].isEqualNode(mask0[0])) {
         preMask = mask0;
         break;
       }
     }
-  } // if.
+  }
 
-  // mask.children('.bp-widget__content')
-
-  bpLibs.dom.probeDom(200, ()=>{
+  bpLibs.dom.probeDom(200, () => {
     return 0 == window.innerWidth - febs.dom.getViewPort().width;
-  }, ()=>{
+  }, () => {
     febs.utils.sleep(0)
-      .then(()=>{
-        mask.attr('data-mark', dataMark);
-        mask.addClass('bp-widget__invisible');
+      .then(() => {
+        mask.addClass('bp-widget__invisible')
         mask.removeClass('bp-widget__maskTmp');
         if (showMask) {
           if (!preMask) {
@@ -279,82 +249,68 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
         }
         mask.css('display', 'inherit');
       })
-      .then(()=>febs.utils.sleep(10))
-      .then(()=>{
+      .then(() => {
         if (mask.hasClass('bp-widget__closing')) {
-          if (cb) {
-            cb();
-          }
-          return;
+          return Promise.reject();
         }
-
-        let duration = domGetDuration(mask[0])||100;
+        let duration = domGetDuration(mask[0]) || 100;
         mask.removeClass('bp-widget__invisible').addClass('bp-widget__visible');
-        
         return duration;
       })
-      .then((duration)=>febs.utils.sleep(duration))
-      .then(()=>{
-        if (mask.hasClass('bp-widget__closing')) {
-          if (cb) {
-            cb();
-          }
-          return;
+      .then((duration) => {
+        return febs.utils.sleep(duration)
+      })
+      .then(() => {
+        mask.removeClass('bp-widget__showing');
+        if (mask.hasClass('bp-widget__closing') || mask.hasClass('bp-widget__invisible')) {
+          return Promise.reject();;
         }
-        
+
         if (showMask && preMask) {
           mask.addClass('bp-widget__mask').addClass('bp-widget__maskNoAminate');
-        }
-        else if (showMask) {
+        } else if (showMask) {
           mask.addClass('bp-widget__mask');
         }
 
         if (preMask) {
-          preMask.removeClass('bp-widget__mask').addClass('bp-widget__maskTmp').addClass('bp-widget__maskNoAminate');
+          preMask.removeClass('bp-widget__mask').addClass('bp-widget__maskTmp').addClass(
+            'bp-widget__maskNoAminate');
         }
+
         if (cb) {
           cb();
         }
-      });
+      }).catch(() => {});
   });
 }
 
 /**
-* @desc: 隐藏所有的api层.
-*/
+ * @desc: 隐藏所有的api层.
+ */
 export function removeAllApiModal(elementSelector) {
   let pageLen = $('.bp-navbarView_page').length;
   let dataMark = 'page' + pageLen;
 
-  let apis = $(`${elementSelector?elementSelector:'.'+ApiClass}`);
+  let apis = $(`${elementSelector ? elementSelector : '.' + ApiClass}`);
 
   if (apis.length > 0) {
     apis.remove();
 
     // zindex.
-    let dialogs = [];
-    let masks = $(`.bp-widget[data-mark='${dataMark}']`);
-    for (let i = 0; i < masks.length; i++) {
-      let el1 = $(masks[i]);
-      let t = Number(el1.css('z-index'))||0;
-      dialogs.push({zIndex:t, el:el1});
-    }
 
-    // only one mask.
-    dialogs.sort((a, b)=>{
-      if (a.zIndex == b.zIndex) return 0;
-      return a.zIndex > b.zIndex? -1: 1;
-    });
+    let _widgets = _getSortWidget(dataMark);
+
 
     // 寻找最大的zindex.
-    for (let i = 0; i < dialogs.length; i++) {
-      let mask0 = dialogs[i].el;
+    for (let i = 0; i < _widgets.length; i++) {
+      let mask0 = _widgets[i].el;
 
       if (mask0.hasClass('bp-widget__mask')) {
         return;
       }
       if (mask0.hasClass('bp-widget__maskTmp')) {
-        mask0.removeClass('bp-widget__maskTmp').addClass('bp-widget__mask').removeClass('bp-widget__maskNoAminate');
+        mask0.removeClass('bp-widget__maskTmp').addClass('bp-widget__mask').removeClass(
+          'bp-widget__maskNoAminate');
         return;
       }
     }
@@ -368,91 +324,100 @@ export function removeAllApiModal(elementSelector) {
  */
 export function hideWidget(el, cb) {
   let mask = $(el);
-
-  if (mask.hasClass('bp-widget__invisible')) {
+  // 防止多次调用
+  // bp-widget__closing只是标示 正在关闭的样式名，没有实际样式
+  if (mask.hasClass('bp-widget__invisible') || mask.hasClass('bp-widget__closing')) {
     if (cb) cb();
     return;
   }
 
-  if (mask.hasClass('bp-widget__closing')) {
-    if (cb) cb();
-    return;
-  }
-  mask.addClass('bp-widget__closing');
+  const pageLen = $('.bp-navbarView_page').length;
+  const dataMark = 'page' + pageLen;
 
-  let pageLen = $('.bp-navbarView_page').length;
-  let dataMark = 'page' + pageLen;
-  let curZIndex = Number(mask.css('z-index'));
-  let curMask = mask.hasClass('bp-widget__mask');
-  let curMaskTmp = mask.hasClass('bp-widget__maskTmp');
-  let hasFix = mask.hasClass('bp-widget__willFix');
+  mask.addClass('bp-widget__closing').removeClass('bp-widget__showing');
+  mask.removeClass('bp-widget__visible').addClass('bp-widget__invisible');
+  mask.attr('data-mark', '');
 
-  // zindex.
-  let dialogs = [];
-  let zIndex = 2000;
-  let masks = $(`.bp-widget[data-mark='${dataMark}']`);
-  // let curPageMaskLength = masks.length;
-  for (let i = 0; i < masks.length; i++) {
-    let el1 = $(masks[i]);
-    let t = Number(el1.css('z-index'))||0;
-    if (t > zIndex) {
-      zIndex = t;
-    }
-    dialogs.push({zIndex:t, el:el1});
-  }
+  const _zindex = Number(mask.css('z-index')) || 0;
+  const sortWidget = _getSortWidget(dataMark);
+  const l = sortWidget.length;
+  let preMask; // zIndex 小于当前widget 并显示着的弹框 并带有mask 样式的弹框
+  let preWidget; // zIndex 小于当前widget 并显示着的弹框
+  let postWidget; // zIndex 大于当前widget的弹框
+  let isVisibleWidgetHasFixscroll = false; // 除了当前弹框，是否还有其他弹框显示着
 
-  // only one mask.
-  let preMask;    // 前一个带遮罩的dialog.
-  let preWidget; // 前一个dialog.
-  dialogs.sort((a, b)=>{
-    if (a.zIndex == b.zIndex) return 0;
-    return a.zIndex > b.zIndex? -1: 1;
-  });
+  if (l) {
+    for (let i = sortWidget.length - 1; i >= 0; i--) {
+      const mask0 = sortWidget[i].el;
+      const mask0ZIndex = sortWidget[i].zIndex;
+      const el = mask0[0];
 
-  // 寻找最大的zindex.
-  if (!curMaskTmp && curMask) {
-    for (let i = 0; i < dialogs.length; i++) {
-      let mask0 = dialogs[i].el;
-      if (Number(mask0.css('z-index')) < curZIndex) {
-        if (!preWidget) preWidget = mask0;
-        if (mask0.hasClass('bp-widget__maskTmp')) {
-          preMask = mask0;
-          break;
+      // 判断是否是显示的其他弹框
+      if (el.style.display !== 'none' && !mask0.hasClass('bp-widget__closing') && !mask0.hasClass(
+          'bp-widget__invisible')) {
+        isVisibleWidgetHasFixscroll = true;
+        // 前一个带遮罩的弹框
+        if (!preMask && mask0ZIndex < _zindex && (mask0.hasClass('bp-widget__mask') || mask0
+            .hasClass('bp-widget__maskTmp'))) {
+          preMask = mask0
+        }
+
+        // 前一个弹框
+        if (!preWidget && mask0ZIndex < _zindex) {
+          preWidget = mask0
+        }
+        // 新打开的弹框
+        if (!postWidget && mask0ZIndex > _zindex) {
+          postWidget = mask0
         }
       }
     }
   }
 
-
-  mask.attr('data-mark', '');
-  mask.removeClass('bp-widget__visible').addClass('bp-widget__invisible');
-  let duration = domGetDuration(mask[0])||100;
-
-  if (preMask) {
-    preMask.removeClass('bp-widget__maskTmp').addClass('bp-widget__mask');
+  if (!isVisibleWidgetHasFixscroll) {
+    $('body').removeClass('bp-widget__fixscroll');
+    hooks.callWidgetShake(0);
+    $('html').css('padding-right', '');
   }
 
-  setTimeout(function(){
+  if (!postWidget && preMask) {
+    preMask.removeClass('bp-widget__maskTmp').addClass('bp-widget__maskNoAminate').addClass(
+      'bp-widget__mask');
+  }
+
+  const duration = domGetDuration(mask[0]) || 100;
+  setTimeout(function () {
     mask.css('display', 'none');
-    mask.removeClass('bp-widget__mask').removeClass('bp-widget__closing').removeClass('bp-widget__maskNoAminate');
-    if (preMask) {
+    mask.removeClass('bp-widget__closing');
+    mask.removeClass('bp-widget__mask')
+    mask.removeClass('bp-widget__maskNoAminate');
+
+    if (!postWidget && preMask) {
       preMask.removeClass('bp-widget__maskNoAminate');
     }
 
     if (cb) {
       cb();
     }
+  }, duration);
+}
 
-    if (hasFix) {
-      if (!preWidget) {
-        $('body').removeClass('bp-widget__fixscroll');
-        hooks.callWidgetShake(0);
-        $('html').css('padding-right', '');
-      }
-      else {
-        removeFixedScrollByWidget(preWidget);
-      }
-    }
-    
-  }, duration+10);
+// 取当前页所有widget 并排序；
+function _getSortWidget(dataMark) {
+  const masks = $(`.bp-widget[data-mark='${dataMark}']`);
+  let widget = [];
+  for (let i = 0; i < masks.length; i++) {
+    const el1 = $(masks[i]);
+    const t = Number(el1.css('z-index')) || 2000;
+    widget.push({
+      zIndex: t,
+      el: el1
+    });
+  }
+  widget.sort((a, b) => {
+    if (a.zIndex == b.zIndex) return 0;
+    return a.zIndex > b.zIndex ? 1 : -1;
+  });
+  return widget
+
 }
