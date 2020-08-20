@@ -7,7 +7,7 @@
     "@bpui/dialog": "^0.1.21",
     "@bpui/input": "^0.1.14",
     "@bpui/libs": "^0.2.9",
-    "@bpui/navbar-view": "^0.1.11",
+    "@bpui/navbar-view": "^0.1.12",
     "@bpui/picker": "^0.1.25",
     "@bpui/popover": "^0.1.4",
     "@bpui/radio": "^0.1.9",
@@ -33,12 +33,10 @@
   "license": "MIT",
   "main": "src/index.ts",
   "types": "types/index.d.ts",
-  "maintainers": [
-    {
-      "name": "brainpoint",
-      "email": "bpoint.lee@gmail.com"
-    }
-  ],
+  "maintainers": [{
+    "name": "brainpoint",
+    "email": "bpoint.lee@gmail.com"
+  }],
   "name": "bpui.js",
-  "version": "0.1.18"
+  "version": "0.1.19"
 }
