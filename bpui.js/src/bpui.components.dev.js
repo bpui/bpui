@@ -7,7 +7,7 @@
 * Desc: 所有的组件.
 */
 
-export default [
+module.exports = [
   {
     name: 'navbarView',
     style: function() { return require('../../@bpui/navbar-view/style/_index.scss') },

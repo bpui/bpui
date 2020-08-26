@@ -9,10 +9,10 @@
 
 import libs from '@bpui/libs';
 import { ComponentName } from '../types';
-import Components from './bpui.components';
-import { setComponent, getComponent } from './componentInstance';
+var Components = require('./bpui.components');
+var componentInstance = require('./componentInstance');
 
-export default function (Vue:any, components:ComponentName[]):void {
+export default function (Vue:any, components?:ComponentName[]):void {
 
   // 加载必须加载的库.
   (function() { require('@bpui/libs/style/class.scss') })();
@@ -25,9 +25,9 @@ export default function (Vue:any, components:ComponentName[]):void {
   if (!components) {
     components = [];
     for (var i = 0; i < Components.length; i++) {
-      var element = Components[i];
+      var element:any = Components[i];
       components.push(element.name);
-      loadComponents.push(getComponent(element.name));
+      loadComponents.push(componentInstance.getComponent(element.name));
     }
   }
 

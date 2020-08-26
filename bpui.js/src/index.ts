@@ -2,7 +2,7 @@
 import libs from '@bpui/libs';
 import vuePlugins from './vuePlugins';
 import { ComponentName } from '../types';
-import { getComponent } from './componentInstance';
+var componentInstance = require('./componentInstance');
 var pkg = require('../package.json');
 
 function registerApp(
@@ -30,14 +30,14 @@ class Hook {
    * 回调方法中的paddingRight参数表示发生抖动时页面中fixed元素应该在原有paddingRight值上增加的像素值.
    */
   addWidgetShake(foo:(paddingRight:number)=>void):void {
-    getComponent('dialog').default.hook.addWidgetShake(foo);
+    componentInstance.getComponent('dialog').default.hook.addWidgetShake(foo);
   }
 
   /**
    * 移除页面抖动hook.
    */
   removeWidgetShake(foo:(paddingRight:number)=>void):void {
-    getComponent('dialog').default.hook.removeWidgetShake(foo);
+    componentInstance.getComponent('dialog').default.hook.removeWidgetShake(foo);
   }
 }
 
@@ -49,32 +49,34 @@ export default class Instance {
   static get hook() { return new Hook(); }
 
   //
-  static get bpNavbarView() { return getComponent('navbarView').default.bpNavbarView; }
+  static get bpNavbarView() { return componentInstance.getComponent('navbarView').default.bpNavbarView; }
   //
-  static get bpCheckbox() { return getComponent('checkbox').default.bpCheckbox }
+  static get bpCheckbox() { return componentInstance.getComponent('checkbox').default.bpCheckbox }
   //
-  static get bpRadio() { return getComponent('radio').default.bpRadio }
-  static get bpRadioGroup() { return getComponent('radio').default.bpRadioGroup }
+  static get bpRadio() { return componentInstance.getComponent('radio').default.bpRadio }
+  static get bpRadioGroup() { return componentInstance.getComponent('radio').default.bpRadioGroup }
   //
-  static get bpSwitch() { return getComponent('switch').default.bpSwitch }
+  static get bpSwitch() { return componentInstance.getComponent('switch').default.bpSwitch }
   //
-  static get bpInput() { return getComponent('input').default.bpInput }
+  static get bpInput() { return componentInstance.getComponent('input').default.bpInput }
   //
-  static get bpDialog() { return getComponent('dialog').default.bpDialog }
-  static get apiWidget() { return getComponent('dialog').default.apiWidget }
-  static get bpWidget() { return getComponent('dialog').default.bpWidget }
-  static get registerDialogComponents() { return getComponent('dialog').default.registerDialogComponents }
+  static get bpDialog() {
+    return componentInstance.getComponent('dialog').default.bpDialog
+  }
+  static get apiWidget() { return componentInstance.getComponent('dialog').default.apiWidget }
+  static get bpWidget() { return componentInstance.getComponent('dialog').default.bpWidget }
+  static get registerDialogComponents() { return componentInstance.getComponent('dialog').default.registerDialogComponents }
   //
-  static get bpPicker() { return getComponent('picker').default.bpPicker }
-  static get PickerDateDatasource() { return getComponent('picker').default.PickerDateDatasource }
-  static get PickerDoubleDatasource() { return getComponent('picker').default.PickerDoubleDatasource }
-  static get PickerSingleDatasource() { return getComponent('picker').default.PickerSingleDatasource }
-  static get PickerThreeDatasource() { return getComponent('picker').default.PickerThreeDatasource }
-  static get PickerTimeDatasource() { return getComponent('picker').default.PickerTimeDatasource }
+  static get bpPicker() { return componentInstance.getComponent('picker').default.bpPicker }
+  static get PickerDateDatasource() { return componentInstance.getComponent('picker').default.PickerDateDatasource }
+  static get PickerDoubleDatasource() { return componentInstance.getComponent('picker').default.PickerDoubleDatasource }
+  static get PickerSingleDatasource() { return componentInstance.getComponent('picker').default.PickerSingleDatasource }
+  static get PickerThreeDatasource() { return componentInstance.getComponent('picker').default.PickerThreeDatasource }
+  static get PickerTimeDatasource() { return componentInstance.getComponent('picker').default.PickerTimeDatasource }
   //
-  static get bpActionsheet() { return getComponent('actionsheet').default.bpActionsheet }
+  static get bpActionsheet() { return componentInstance.getComponent('actionsheet').default.bpActionsheet }
   //
-  static get bpPopover() { return getComponent('popover').default.bpPopover }
+  static get bpPopover() { return componentInstance.getComponent('popover').default.bpPopover }
 }
 
 
