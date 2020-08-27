@@ -1,5 +1,5 @@
 /*!
- * bpui popover v0.1.4
+ * bpui popover v0.1.5
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */

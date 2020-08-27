@@ -955,6 +955,12 @@ $bpNavbarSlideAllDurtion: 0.3s;
       background: transparent;
       color: $bpNarbarTitleColor;
     }
+    /* 自定义 */
+    .bp-navbarView_customItem {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+    }
   }
 }
 /**
@@ -1011,13 +1017,14 @@ body {
   .bp-navbarView_static {
     // position: static !important;
   }
+
   .bp-navbarView_absolute {
     position: absolute !important;
   }
 
   /* 包含状态栏 */
   &.bp-navbarView_containStatusBar {
-    .bp-navbarView_page > div {
+    .bp-navbarView_page>div {
       padding-top: $bpNavbarHeight+$bpNavbarStatusBarHeight;
     }
   }

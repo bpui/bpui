@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Copyright (c) 2020 Copyright bp All Rights Reserved.
@@ -9,27 +9,25 @@
 
 // .bp-widget
 
-import * as febs from 'febs-browser';
-import bpLibs from '@bpui/libs';
-import * as hooks from './hooks';
+import * as febs from "febs-browser";
+import bpLibs from "@bpui/libs";
+import * as hooks from "./hooks";
 
-const ApiClass = 'bp-apiClass';
-
+const ApiClass = "bp-apiClass";
 
 function domGetDuration(el) {
   let d = window.getComputedStyle(el, null);
-  d = d ? d['transition-duration'] : '0.1s';
-  d = d.split(',')[0];
+  d = d ? d["transition-duration"] : "0.1s";
+  d = d.split(",")[0];
   d = febs.string.trim(d);
-  d = febs.string.replace(d, 's', '');
+  d = febs.string.replace(d, "s", "");
   d = parseFloat(d);
   d = Math.ceil(d * 1000) || 100;
   return d;
 }
 
 function maskPreventHandler(event) {
-  if (event.type == 'touchmove' || event.type == 'mousewheel') {
-
+  if (event.type == "touchmove" || event.type == "mousewheel") {
   } else {
     event.preventDefault();
   }
@@ -46,25 +44,25 @@ function maskPreventEvent(ee) {
   }
 
   if (febs.utils.browserIsMobile()) {
-    febs.dom.removeEventListener(ee, 'touchmove', maskPreventHandler);
-    febs.dom.addEventListener(ee, 'touchmove', maskPreventHandler);
-    febs.dom.removeEventListener(ee, 'touchup', maskPreventHandler);
-    febs.dom.addEventListener(ee, 'touchup', maskPreventHandler);
-    febs.dom.removeEventListener(ee, 'touchdown', maskPreventHandler);
-    febs.dom.addEventListener(ee, 'touchdown', maskPreventHandler);
+    febs.dom.removeEventListener(ee, "touchmove", maskPreventHandler);
+    febs.dom.addEventListener(ee, "touchmove", maskPreventHandler);
+    febs.dom.removeEventListener(ee, "touchup", maskPreventHandler);
+    febs.dom.addEventListener(ee, "touchup", maskPreventHandler);
+    febs.dom.removeEventListener(ee, "touchdown", maskPreventHandler);
+    febs.dom.addEventListener(ee, "touchdown", maskPreventHandler);
   } else {
-    febs.dom.removeEventListener(ee, 'mousewheel', maskPreventHandler);
-    febs.dom.addEventListener(ee, 'mousewheel', maskPreventHandler);
-    febs.dom.removeEventListener(ee, 'mouseover', maskPreventHandler);
-    febs.dom.addEventListener(ee, 'mouseover', maskPreventHandler);
+    febs.dom.removeEventListener(ee, "mousewheel", maskPreventHandler);
+    febs.dom.addEventListener(ee, "mousewheel", maskPreventHandler);
+    febs.dom.removeEventListener(ee, "mouseover", maskPreventHandler);
+    febs.dom.addEventListener(ee, "mouseover", maskPreventHandler);
   }
-  febs.dom.removeEventListener(ee, 'click', maskPreventHandler);
-  febs.dom.addEventListener(ee, 'click', maskPreventHandler);
+  febs.dom.removeEventListener(ee, "click", maskPreventHandler);
+  febs.dom.addEventListener(ee, "click", maskPreventHandler);
 }
 
 export function getWidgetLength() {
-  let pageLen = $('.bp-navbarView_page').length;
-  let dataMark = 'page' + pageLen;
+  let pageLen = $(".bp-navbarView_page").length;
+  let dataMark = "page" + pageLen;
   let masks = $(`.bp-widget[data-mark='${dataMark}']`);
   return masks.length;
 }
@@ -76,7 +74,7 @@ export function getWidgetZIndex(dataMark) {
   let zIndex = 2000;
   let mask = $(`.bp-widget[data-mark='${dataMark}']`);
   for (let i = 0; i < mask.length; i++) {
-    let t = Number($(mask[i]).css('z-index')) || 0;
+    let t = Number($(mask[i]).css("z-index")) || 0;
     if (t > zIndex) {
       zIndex = t;
     }
@@ -88,7 +86,7 @@ export function getWidgetZIndex(dataMark) {
 function hack(el) {
   var sUserAgent = navigator.userAgent.toLowerCase();
   if (sUserAgent.indexOf("baidu") >= 0) {
-    el.css('backdrop-filter', 'none');
+    el.css("backdrop-filter", "none");
   }
 }
 
@@ -96,39 +94,39 @@ function hack(el) {
  * 根据widget来还原body上的fixed
  */
 export function restoreFixedScroll(widget) {
-  if (widget.hasClass('bp-widget__bodyFixscroll')) {
-    $('body').addClass('bp-widget__fixscroll');
+  if (widget.hasClass("bp-widget__bodyFixscroll")) {
+    $("body").addClass("bp-widget__fixscroll");
   }
 
-  let ss = widget.attr('data-htmlp');
+  let ss = widget.attr("data-htmlp");
   if (ss.length > 0) {
-    let sss = febs.string.replace(ss, 'px', '');
+    let sss = febs.string.replace(ss, "px", "");
     sss = parseInt(sss) || 0;
     hooks.callWidgetShake(sss);
-    $('html').css('padding-right', ss);
+    $("html").css("padding-right", ss);
   }
 }
 /**
  * 根据前一个widget来移除body上的fixed
  */
 export function removeFixedScrollByWidget(preWidget) {
-  if (!preWidget.hasClass('bp-widget__bodyFixscroll')) {
-    $('body').removeClass('bp-widget__fixscroll');
+  if (!preWidget.hasClass("bp-widget__bodyFixscroll")) {
+    $("body").removeClass("bp-widget__fixscroll");
   }
 
-  let ss = preWidget.attr('data-htmlp');
+  let ss = preWidget.attr("data-htmlp");
   if (ss.length <= 0) {
     hooks.callWidgetShake(0);
-    $('html').css('padding-right', '');
+    $("html").css("padding-right", "");
   }
 }
 
 function removeFixedScroll() {
-  $('body').removeClass('bp-widget__fixscroll');
-  let pr = $('html').css('padding-right');
+  $("body").removeClass("bp-widget__fixscroll");
+  let pr = $("html").css("padding-right");
   if (pr && pr.length > 0) {
     hooks.callWidgetShake(0);
-    $('html').css('padding-right', '');
+    $("html").css("padding-right", "");
   }
 }
 
@@ -136,7 +134,6 @@ function removeFixedScroll() {
  * @desc: 显示遮罩层.
  */
 export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
-
   let mask = $(el);
 
   if (preventEvent) {
@@ -145,37 +142,39 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
 
   // 防止多次调用
   // bp-widget__showing只是标示 正在显示的的样式名，没有实际样式
-  if (mask.hasClass('bp-widget__visible') || mask.hasClass('bp-widget__showing')) {
+  if (mask.hasClass("bp-widget__visible") || mask.hasClass("bp-widget__showing")) {
     if (cb) cb();
     return;
   }
   hack(mask);
 
-
-  const pageLen = $('.bp-navbarView_page').length;
-  const dataMark = 'page' + pageLen;
+  const pageLen = $(".bp-navbarView_page").length;
+  const dataMark = "page" + pageLen;
   const zindex = getWidgetZIndex(dataMark) + 2;
 
-  mask.css('z-index', zindex);
-  mask.attr('data-mark', dataMark);
-  mask.addClass('bp-widget__showing').removeClass('bp-widget__closing');
+  mask.css("z-index", zindex);
+  mask.attr("data-mark", dataMark);
+  mask.addClass("bp-widget__showing").removeClass("bp-widget__closing");
   if (showMask) {
     // 在hideWidget用来辅助判断 是否是显示showMask的widget
-    mask.addClass('bp-widget__maskTmp')
+    mask.addClass("bp-widget__maskTmp");
   }
 
   let hidedScroll = false;
-  const body = $('body');
-  const html = $('html');
+  const body = $("body");
+  const html = $("html");
   if (hideBodyScroll) {
     let willFix = false;
     let scrollWidth = 0;
 
-    if ((showMask || preventEvent)) {
+    if (showMask || preventEvent) {
       // 桌面端判断垂直滚动条.
       if (!febs.utils.browserIsMobile()) {
         scrollWidth = window.innerWidth - febs.dom.getViewPort().width;
-        if (scrollWidth > 0) {
+        // if (scrollWidth > 0) {
+        //   willFix = true;
+        // }
+        if (febs.dom.getDocumentPort().height > febs.dom.getViewPort().height) {
           willFix = true;
         }
       }
@@ -188,36 +187,36 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
     }
 
     if (willFix) {
-      body.addClass('bp-widget__fixscroll');
+      body.addClass("bp-widget__fixscroll");
       if (scrollWidth > 0) {
         hooks.callWidgetShake(scrollWidth);
-        html.css('padding-right', scrollWidth + 'px');
+        html.css("padding-right", scrollWidth + "px");
       }
       hidedScroll = true;
-      mask.addClass('bp-widget__willFix');
+      mask.addClass("bp-widget__willFix");
     } else {
-      hidedScroll = body.hasClass('bp-widget__fixscroll');
+      hidedScroll = body.hasClass("bp-widget__fixscroll");
     }
   }
 
   // polyfill firefox.
   if (hidedScroll) {
-    if (navigator.userAgent.indexOf('Firefox') >= 0) {
-      mask.css('overflow-y', 'scroll');
+    if (navigator.userAgent.indexOf("Firefox") >= 0) {
+      mask.css("overflow-y", "scroll");
     }
   } else {
-    if (navigator.userAgent.indexOf('Firefox') >= 0) {
-      mask.css('overflow-y', '');
+    if (navigator.userAgent.indexOf("Firefox") >= 0) {
+      mask.css("overflow-y", "");
     }
   }
 
   // 标记.
-  if (body.hasClass('bp-widget__fixscroll')) {
-    mask.addClass('bp-widget__bodyFixscroll');
+  if (body.hasClass("bp-widget__fixscroll")) {
+    mask.addClass("bp-widget__bodyFixscroll");
   }
-  let ss = html.css('padding-right');
+  let ss = html.css("padding-right");
   if (ss && ss.length > 0) {
-    mask.attr('data-htmlp', ss);
+    mask.attr("data-htmlp", ss);
   }
 
   let preMask;
@@ -228,70 +227,78 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
     // 寻找最大的zindex的preMask
     for (let i = _widgets.length - 1; i >= 0; i--) {
       let mask0 = _widgets[i].el;
-      if (mask0.hasClass('bp-widget__mask') && !mask[0].isEqualNode(mask0[0])) {
+      if (mask0.hasClass("bp-widget__mask") && !mask[0].isEqualNode(mask0[0])) {
         preMask = mask0;
         break;
       }
     }
   }
 
-  bpLibs.dom.probeDom(200, () => {
-    return 0 == window.innerWidth - febs.dom.getViewPort().width;
-  }, () => {
-    febs.utils.sleep(0)
-      .then(() => {
-        mask.addClass('bp-widget__invisible')
-        mask.removeClass('bp-widget__maskTmp');
-        if (showMask) {
-          if (!preMask) {
-            mask.addClass('bp-widget__mask');
+  bpLibs.dom.probeDom(
+    200,
+    () => {
+      return 0 == window.innerWidth - febs.dom.getViewPort().width;
+    },
+    () => {
+      febs.utils
+        .sleep(0)
+        .then(() => {
+          mask.addClass("bp-widget__invisible");
+          mask.removeClass("bp-widget__maskTmp");
+          if (showMask) {
+            if (!preMask) {
+              mask.addClass("bp-widget__mask");
+            }
           }
-        }
-        mask.css('display', 'inherit');
-      })
-      .then(() => {
-        if (mask.hasClass('bp-widget__closing')) {
-          return Promise.reject();
-        }
-        let duration = domGetDuration(mask[0]) || 100;
-        mask.removeClass('bp-widget__invisible').addClass('bp-widget__visible');
-        return duration;
-      })
-      .then((duration) => {
-        return febs.utils.sleep(duration)
-      })
-      .then(() => {
-        mask.removeClass('bp-widget__showing');
-        if (mask.hasClass('bp-widget__closing') || mask.hasClass('bp-widget__invisible')) {
-          return Promise.reject();;
-        }
+          mask.css("display", "inherit");
+        })
+        .then(() => {
+          if (mask.hasClass("bp-widget__closing")) {
+            return Promise.reject();
+          }
+          let duration = domGetDuration(mask[0]) || 100;
+          mask.removeClass("bp-widget__invisible").addClass("bp-widget__visible");
+          return duration;
+        })
+        .then(duration => {
+          return febs.utils.sleep(duration);
+        })
+        .then(() => {
+          mask.removeClass("bp-widget__showing");
+          if (mask.hasClass("bp-widget__closing") || mask.hasClass("bp-widget__invisible")) {
+            return Promise.reject();
+          }
 
-        if (showMask && preMask) {
-          mask.addClass('bp-widget__mask').addClass('bp-widget__maskNoAminate');
-        } else if (showMask) {
-          mask.addClass('bp-widget__mask');
-        }
+          if (showMask && preMask) {
+            mask.addClass("bp-widget__mask").addClass("bp-widget__maskNoAminate");
+          } else if (showMask) {
+            mask.addClass("bp-widget__mask");
+          }
 
-        if (preMask) {
-          preMask.removeClass('bp-widget__mask').addClass('bp-widget__maskTmp').addClass(
-            'bp-widget__maskNoAminate');
-        }
+          if (preMask) {
+            preMask
+              .removeClass("bp-widget__mask")
+              .addClass("bp-widget__maskTmp")
+              .addClass("bp-widget__maskNoAminate");
+          }
 
-        if (cb) {
-          cb();
-        }
-      }).catch(() => {});
-  });
+          if (cb) {
+            cb();
+          }
+        })
+        .catch(() => {});
+    }
+  );
 }
 
 /**
  * @desc: 隐藏所有的api层.
  */
 export function removeAllApiModal(elementSelector) {
-  let pageLen = $('.bp-navbarView_page').length;
-  let dataMark = 'page' + pageLen;
+  let pageLen = $(".bp-navbarView_page").length;
+  let dataMark = "page" + pageLen;
 
-  let apis = $(`${elementSelector ? elementSelector : '.' + ApiClass}`);
+  let apis = $(`${elementSelector ? elementSelector : "." + ApiClass}`);
 
   if (apis.length > 0) {
     apis.remove();
@@ -300,17 +307,18 @@ export function removeAllApiModal(elementSelector) {
 
     let _widgets = _getSortWidget(dataMark);
 
-
     // 寻找最大的zindex.
     for (let i = 0; i < _widgets.length; i++) {
       let mask0 = _widgets[i].el;
 
-      if (mask0.hasClass('bp-widget__mask')) {
+      if (mask0.hasClass("bp-widget__mask")) {
         return;
       }
-      if (mask0.hasClass('bp-widget__maskTmp')) {
-        mask0.removeClass('bp-widget__maskTmp').addClass('bp-widget__mask').removeClass(
-          'bp-widget__maskNoAminate');
+      if (mask0.hasClass("bp-widget__maskTmp")) {
+        mask0
+          .removeClass("bp-widget__maskTmp")
+          .addClass("bp-widget__mask")
+          .removeClass("bp-widget__maskNoAminate");
         return;
       }
     }
@@ -326,19 +334,19 @@ export function hideWidget(el, cb) {
   let mask = $(el);
   // 防止多次调用
   // bp-widget__closing只是标示 正在关闭的样式名，没有实际样式
-  if (mask.hasClass('bp-widget__invisible') || mask.hasClass('bp-widget__closing')) {
+  if (mask.hasClass("bp-widget__invisible") || mask.hasClass("bp-widget__closing")) {
     if (cb) cb();
     return;
   }
 
-  const pageLen = $('.bp-navbarView_page').length;
-  const dataMark = 'page' + pageLen;
+  const pageLen = $(".bp-navbarView_page").length;
+  const dataMark = "page" + pageLen;
 
-  mask.addClass('bp-widget__closing').removeClass('bp-widget__showing');
-  mask.removeClass('bp-widget__visible').addClass('bp-widget__invisible');
-  mask.attr('data-mark', '');
+  mask.addClass("bp-widget__closing").removeClass("bp-widget__showing");
+  mask.removeClass("bp-widget__visible").addClass("bp-widget__invisible");
+  mask.attr("data-mark", "");
 
-  const _zindex = Number(mask.css('z-index')) || 0;
+  const _zindex = Number(mask.css("z-index")) || 0;
   const sortWidget = _getSortWidget(dataMark);
   const l = sortWidget.length;
   let preMask; // zIndex 小于当前widget 并显示着的弹框 并带有mask 样式的弹框
@@ -353,47 +361,55 @@ export function hideWidget(el, cb) {
       const el = mask0[0];
 
       // 判断是否是显示的其他弹框
-      if (el.style.display !== 'none' && !mask0.hasClass('bp-widget__closing') && !mask0.hasClass(
-          'bp-widget__invisible')) {
+      if (
+        el.style.display !== "none" &&
+        !mask0.hasClass("bp-widget__closing") &&
+        !mask0.hasClass("bp-widget__invisible")
+      ) {
         isVisibleWidgetHasFixscroll = true;
         // 前一个带遮罩的弹框
-        if (!preMask && mask0ZIndex < _zindex && (mask0.hasClass('bp-widget__mask') || mask0
-            .hasClass('bp-widget__maskTmp'))) {
-          preMask = mask0
+        if (
+          !preMask &&
+          mask0ZIndex < _zindex &&
+          (mask0.hasClass("bp-widget__mask") || mask0.hasClass("bp-widget__maskTmp"))
+        ) {
+          preMask = mask0;
         }
 
         // 前一个弹框
         if (!preWidget && mask0ZIndex < _zindex) {
-          preWidget = mask0
+          preWidget = mask0;
         }
         // 新打开的弹框
         if (!postWidget && mask0ZIndex > _zindex) {
-          postWidget = mask0
+          postWidget = mask0;
         }
       }
     }
   }
 
   if (!isVisibleWidgetHasFixscroll) {
-    $('body').removeClass('bp-widget__fixscroll');
+    $("body").removeClass("bp-widget__fixscroll");
     hooks.callWidgetShake(0);
-    $('html').css('padding-right', '');
+    $("html").css("padding-right", "");
   }
 
   if (!postWidget && preMask) {
-    preMask.removeClass('bp-widget__maskTmp').addClass('bp-widget__maskNoAminate').addClass(
-      'bp-widget__mask');
+    preMask
+      .removeClass("bp-widget__maskTmp")
+      .addClass("bp-widget__maskNoAminate")
+      .addClass("bp-widget__mask");
   }
 
   const duration = domGetDuration(mask[0]) || 100;
-  setTimeout(function () {
-    mask.css('display', 'none');
-    mask.removeClass('bp-widget__closing');
-    mask.removeClass('bp-widget__mask')
-    mask.removeClass('bp-widget__maskNoAminate');
+  setTimeout(function() {
+    mask.css("display", "none");
+    mask.removeClass("bp-widget__closing");
+    mask.removeClass("bp-widget__mask");
+    mask.removeClass("bp-widget__maskNoAminate");
 
     if (!postWidget && preMask) {
-      preMask.removeClass('bp-widget__maskNoAminate');
+      preMask.removeClass("bp-widget__maskNoAminate");
     }
 
     if (cb) {
@@ -408,7 +424,7 @@ function _getSortWidget(dataMark) {
   let widget = [];
   for (let i = 0; i < masks.length; i++) {
     const el1 = $(masks[i]);
-    const t = Number(el1.css('z-index')) || 2000;
+    const t = Number(el1.css("z-index")) || 2000;
     widget.push({
       zIndex: t,
       el: el1
@@ -418,6 +434,5 @@ function _getSortWidget(dataMark) {
     if (a.zIndex == b.zIndex) return 0;
     return a.zIndex > b.zIndex ? 1 : -1;
   });
-  return widget
-
+  return widget;
 }

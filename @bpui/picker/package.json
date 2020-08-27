@@ -1,8 +1,8 @@
 {
   "description": "picker",
   "dependencies": {
-    "@bpui/dialog": "^0.1.21",
-    "@bpui/libs": "^0.2.9"
+    "@bpui/dialog": "^0.1.22",
+    "@bpui/libs": "^0.2.10"
   },
   "directories": {},
   "keywords": [],
@@ -35,5 +35,5 @@
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
   "name": "@bpui/picker",
-  "version": "0.1.25"
+  "version": "0.1.26"
 }

@@ -52,13 +52,14 @@ body {
   .bp-navbarView_static {
     // position: static !important;
   }
+
   .bp-navbarView_absolute {
     position: absolute !important;
   }
 
   /* 包含状态栏 */
   &.bp-navbarView_containStatusBar {
-    .bp-navbarView_page > div {
+    .bp-navbarView_page>div {
       padding-top: $bpNavbarHeight+$bpNavbarStatusBarHeight;
     }
   }

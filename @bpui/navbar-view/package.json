@@ -1,8 +1,8 @@
 {
   "description": "navbarView",
   "dependencies": {
-    "@bpui/libs": "^0.2.9",
-    "febs-browser": "^1.0.2"
+    "@bpui/libs": "^0.2.10",
+    "febs-browser": "^1.0.3"
   },
   "devDependencies": {
     "vue-property-decorator": "^8.4.0",
@@ -13,10 +13,10 @@
   "engines": {
     "node": ">=8"
   },
-  "homepage": "https://github.com/bpui/bpui#readme",
+  "homepage": "https://github.com/bpui/navbar-view#readme",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/bpui/bpui.git"
+    "url": "git+ssh://git@github.com/bpui/navbar-view.git"
   },
   "files": [
     "dist",
@@ -35,5 +35,5 @@
     }
   ],
   "name": "@bpui/navbar-view",
-  "version": "0.1.10"
+  "version": "0.1.13"
 }

@@ -757,6 +757,7 @@ label {
   /* 左侧按钮 */
   /* 右侧按钮 */
   /* 中部 */
+  /* 自定义 */
 }
 .bp-navbarView .bp-navbarView_bar.bp-navbarView_containStatusBar {
   height: 64px;
@@ -879,6 +880,11 @@ label {
   width: 44vw;
   background: transparent;
   color: #111;
+}
+.bp-navbarView .bp-navbarView_bar .bp-navbarView_customItem {
+  width: 100%;
+  height: 100%;
+  position: absolute;
 }
 
 /**

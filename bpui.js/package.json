@@ -1,17 +1,17 @@
 {
   "description": "bpui",
   "dependencies": {
-    "@bpui/actionsheet": "^0.1.7",
-    "@bpui/button": "^0.1.11",
-    "@bpui/checkbox": "^0.1.10",
-    "@bpui/dialog": "^0.1.21",
-    "@bpui/input": "^0.1.14",
-    "@bpui/libs": "^0.2.9",
-    "@bpui/navbar-view": "^0.1.12",
-    "@bpui/picker": "^0.1.25",
-    "@bpui/popover": "^0.1.4",
-    "@bpui/radio": "^0.1.9",
-    "@bpui/switch": "^0.1.9"
+    "@bpui/actionsheet": "^0.1.8",
+    "@bpui/button": "^0.1.12",
+    "@bpui/checkbox": "^0.1.11",
+    "@bpui/dialog": "^0.1.22",
+    "@bpui/input": "^0.1.15",
+    "@bpui/libs": "^0.2.10",
+    "@bpui/navbar-view": "^0.1.13",
+    "@bpui/picker": "^0.1.26",
+    "@bpui/popover": "^0.1.5",
+    "@bpui/radio": "^0.1.10",
+    "@bpui/switch": "^0.1.10"
   },
   "devDependencies": {},
   "directories": {},
@@ -33,10 +33,12 @@
   "license": "MIT",
   "main": "src/index.ts",
   "types": "types/index.d.ts",
-  "maintainers": [{
-    "name": "brainpoint",
-    "email": "bpoint.lee@gmail.com"
-  }],
+  "maintainers": [
+    {
+      "name": "brainpoint",
+      "email": "bpoint.lee@gmail.com"
+    }
+  ],
   "name": "bpui.js",
-  "version": "0.1.20"
+  "version": "0.1.22"
 }

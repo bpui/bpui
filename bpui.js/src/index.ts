@@ -50,6 +50,7 @@ export default class Instance {
 
   //
   static get bpNavbarView() { return componentInstance.getComponent('navbarView').default.bpNavbarView; }
+  static get bpNavbar() { return componentInstance.getComponent('navbarView').default.bpNavbar; }
   //
   static get bpCheckbox() { return componentInstance.getComponent('checkbox').default.bpCheckbox }
   //

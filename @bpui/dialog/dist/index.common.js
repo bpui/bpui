@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v0.1.21
+ * bpui dialog v0.1.22
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1009,6 +1009,788 @@ if (isForced_1(NUMBER, !NativeNumber(' 0o1') || !NativeNumber('0b1') || NativeNu
   redefine(global_1, NUMBER, NumberWrapper);
 }
 
+var nativePromiseConstructor = global_1.Promise;
+
+var redefineAll = function (target, src, options) {
+  for (var key in src) redefine(target, key, src[key], options);
+  return target;
+};
+
+var defineProperty$2 = objectDefineProperty.f;
+
+
+
+var TO_STRING_TAG$2 = wellKnownSymbol('toStringTag');
+
+var setToStringTag = function (it, TAG, STATIC) {
+  if (it && !has(it = STATIC ? it : it.prototype, TO_STRING_TAG$2)) {
+    defineProperty$2(it, TO_STRING_TAG$2, { configurable: true, value: TAG });
+  }
+};
+
+var SPECIES = wellKnownSymbol('species');
+
+var setSpecies = function (CONSTRUCTOR_NAME) {
+  var Constructor = getBuiltIn(CONSTRUCTOR_NAME);
+  var defineProperty = objectDefineProperty.f;
+
+  if (descriptors && Constructor && !Constructor[SPECIES]) {
+    defineProperty(Constructor, SPECIES, {
+      configurable: true,
+      get: function () { return this; }
+    });
+  }
+};
+
+var anInstance = function (it, Constructor, name) {
+  if (!(it instanceof Constructor)) {
+    throw TypeError('Incorrect ' + (name ? name + ' ' : '') + 'invocation');
+  } return it;
+};
+
+var iterators = {};
+
+var ITERATOR = wellKnownSymbol('iterator');
+var ArrayPrototype = Array.prototype;
+
+// check on default Array iterator
+var isArrayIteratorMethod = function (it) {
+  return it !== undefined && (iterators.Array === it || ArrayPrototype[ITERATOR] === it);
+};
+
+// optional / simple context binding
+var functionBindContext = function (fn, that, length) {
+  aFunction$1(fn);
+  if (that === undefined) return fn;
+  switch (length) {
+    case 0: return function () {
+      return fn.call(that);
+    };
+    case 1: return function (a) {
+      return fn.call(that, a);
+    };
+    case 2: return function (a, b) {
+      return fn.call(that, a, b);
+    };
+    case 3: return function (a, b, c) {
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function (/* ...args */) {
+    return fn.apply(that, arguments);
+  };
+};
+
+var ITERATOR$1 = wellKnownSymbol('iterator');
+
+var getIteratorMethod = function (it) {
+  if (it != undefined) return it[ITERATOR$1]
+    || it['@@iterator']
+    || iterators[classof(it)];
+};
+
+// call something on iterator step with safe closing on error
+var callWithSafeIterationClosing = function (iterator, fn, value, ENTRIES) {
+  try {
+    return ENTRIES ? fn(anObject(value)[0], value[1]) : fn(value);
+  // 7.4.6 IteratorClose(iterator, completion)
+  } catch (error) {
+    var returnMethod = iterator['return'];
+    if (returnMethod !== undefined) anObject(returnMethod.call(iterator));
+    throw error;
+  }
+};
+
+var iterate_1 = createCommonjsModule(function (module) {
+var Result = function (stopped, result) {
+  this.stopped = stopped;
+  this.result = result;
+};
+
+var iterate = module.exports = function (iterable, fn, that, AS_ENTRIES, IS_ITERATOR) {
+  var boundFunction = functionBindContext(fn, that, AS_ENTRIES ? 2 : 1);
+  var iterator, iterFn, index, length, result, next, step;
+
+  if (IS_ITERATOR) {
+    iterator = iterable;
+  } else {
+    iterFn = getIteratorMethod(iterable);
+    if (typeof iterFn != 'function') throw TypeError('Target is not iterable');
+    // optimisation for array iterators
+    if (isArrayIteratorMethod(iterFn)) {
+      for (index = 0, length = toLength(iterable.length); length > index; index++) {
+        result = AS_ENTRIES
+          ? boundFunction(anObject(step = iterable[index])[0], step[1])
+          : boundFunction(iterable[index]);
+        if (result && result instanceof Result) return result;
+      } return new Result(false);
+    }
+    iterator = iterFn.call(iterable);
+  }
+
+  next = iterator.next;
+  while (!(step = next.call(iterator)).done) {
+    result = callWithSafeIterationClosing(iterator, boundFunction, step.value, AS_ENTRIES);
+    if (typeof result == 'object' && result && result instanceof Result) return result;
+  } return new Result(false);
+};
+
+iterate.stop = function (result) {
+  return new Result(true, result);
+};
+});
+
+var ITERATOR$2 = wellKnownSymbol('iterator');
+var SAFE_CLOSING = false;
+
+try {
+  var called = 0;
+  var iteratorWithReturn = {
+    next: function () {
+      return { done: !!called++ };
+    },
+    'return': function () {
+      SAFE_CLOSING = true;
+    }
+  };
+  iteratorWithReturn[ITERATOR$2] = function () {
+    return this;
+  };
+  // eslint-disable-next-line no-throw-literal
+  Array.from(iteratorWithReturn, function () { throw 2; });
+} catch (error) { /* empty */ }
+
+var checkCorrectnessOfIteration = function (exec, SKIP_CLOSING) {
+  if (!SKIP_CLOSING && !SAFE_CLOSING) return false;
+  var ITERATION_SUPPORT = false;
+  try {
+    var object = {};
+    object[ITERATOR$2] = function () {
+      return {
+        next: function () {
+          return { done: ITERATION_SUPPORT = true };
+        }
+      };
+    };
+    exec(object);
+  } catch (error) { /* empty */ }
+  return ITERATION_SUPPORT;
+};
+
+var SPECIES$1 = wellKnownSymbol('species');
+
+// `SpeciesConstructor` abstract operation
+// https://tc39.github.io/ecma262/#sec-speciesconstructor
+var speciesConstructor = function (O, defaultConstructor) {
+  var C = anObject(O).constructor;
+  var S;
+  return C === undefined || (S = anObject(C)[SPECIES$1]) == undefined ? defaultConstructor : aFunction$1(S);
+};
+
+var engineUserAgent = getBuiltIn('navigator', 'userAgent') || '';
+
+var engineIsIos = /(iphone|ipod|ipad).*applewebkit/i.test(engineUserAgent);
+
+var location = global_1.location;
+var set$1 = global_1.setImmediate;
+var clear = global_1.clearImmediate;
+var process = global_1.process;
+var MessageChannel = global_1.MessageChannel;
+var Dispatch = global_1.Dispatch;
+var counter = 0;
+var queue = {};
+var ONREADYSTATECHANGE = 'onreadystatechange';
+var defer, channel, port;
+
+var run = function (id) {
+  // eslint-disable-next-line no-prototype-builtins
+  if (queue.hasOwnProperty(id)) {
+    var fn = queue[id];
+    delete queue[id];
+    fn();
+  }
+};
+
+var runner = function (id) {
+  return function () {
+    run(id);
+  };
+};
+
+var listener = function (event) {
+  run(event.data);
+};
+
+var post = function (id) {
+  // old engines have not location.origin
+  global_1.postMessage(id + '', location.protocol + '//' + location.host);
+};
+
+// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
+if (!set$1 || !clear) {
+  set$1 = function setImmediate(fn) {
+    var args = [];
+    var i = 1;
+    while (arguments.length > i) args.push(arguments[i++]);
+    queue[++counter] = function () {
+      // eslint-disable-next-line no-new-func
+      (typeof fn == 'function' ? fn : Function(fn)).apply(undefined, args);
+    };
+    defer(counter);
+    return counter;
+  };
+  clear = function clearImmediate(id) {
+    delete queue[id];
+  };
+  // Node.js 0.8-
+  if (classofRaw(process) == 'process') {
+    defer = function (id) {
+      process.nextTick(runner(id));
+    };
+  // Sphere (JS game engine) Dispatch API
+  } else if (Dispatch && Dispatch.now) {
+    defer = function (id) {
+      Dispatch.now(runner(id));
+    };
+  // Browsers with MessageChannel, includes WebWorkers
+  // except iOS - https://github.com/zloirock/core-js/issues/624
+  } else if (MessageChannel && !engineIsIos) {
+    channel = new MessageChannel();
+    port = channel.port2;
+    channel.port1.onmessage = listener;
+    defer = functionBindContext(port.postMessage, port, 1);
+  // Browsers with postMessage, skip WebWorkers
+  // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
+  } else if (
+    global_1.addEventListener &&
+    typeof postMessage == 'function' &&
+    !global_1.importScripts &&
+    !fails(post) &&
+    location.protocol !== 'file:'
+  ) {
+    defer = post;
+    global_1.addEventListener('message', listener, false);
+  // IE8-
+  } else if (ONREADYSTATECHANGE in documentCreateElement('script')) {
+    defer = function (id) {
+      html.appendChild(documentCreateElement('script'))[ONREADYSTATECHANGE] = function () {
+        html.removeChild(this);
+        run(id);
+      };
+    };
+  // Rest old browsers
+  } else {
+    defer = function (id) {
+      setTimeout(runner(id), 0);
+    };
+  }
+}
+
+var task = {
+  set: set$1,
+  clear: clear
+};
+
+var getOwnPropertyDescriptor$3 = objectGetOwnPropertyDescriptor.f;
+
+var macrotask = task.set;
+
+
+var MutationObserver = global_1.MutationObserver || global_1.WebKitMutationObserver;
+var process$1 = global_1.process;
+var Promise$1 = global_1.Promise;
+var IS_NODE = classofRaw(process$1) == 'process';
+// Node.js 11 shows ExperimentalWarning on getting `queueMicrotask`
+var queueMicrotaskDescriptor = getOwnPropertyDescriptor$3(global_1, 'queueMicrotask');
+var queueMicrotask = queueMicrotaskDescriptor && queueMicrotaskDescriptor.value;
+
+var flush, head, last, notify, toggle, node, promise, then;
+
+// modern engines have queueMicrotask method
+if (!queueMicrotask) {
+  flush = function () {
+    var parent, fn;
+    if (IS_NODE && (parent = process$1.domain)) parent.exit();
+    while (head) {
+      fn = head.fn;
+      head = head.next;
+      try {
+        fn();
+      } catch (error) {
+        if (head) notify();
+        else last = undefined;
+        throw error;
+      }
+    } last = undefined;
+    if (parent) parent.enter();
+  };
+
+  // Node.js
+  if (IS_NODE) {
+    notify = function () {
+      process$1.nextTick(flush);
+    };
+  // browsers with MutationObserver, except iOS - https://github.com/zloirock/core-js/issues/339
+  } else if (MutationObserver && !engineIsIos) {
+    toggle = true;
+    node = document.createTextNode('');
+    new MutationObserver(flush).observe(node, { characterData: true });
+    notify = function () {
+      node.data = toggle = !toggle;
+    };
+  // environments with maybe non-completely correct, but existent Promise
+  } else if (Promise$1 && Promise$1.resolve) {
+    // Promise.resolve without an argument throws an error in LG WebOS 2
+    promise = Promise$1.resolve(undefined);
+    then = promise.then;
+    notify = function () {
+      then.call(promise, flush);
+    };
+  // for other environments - macrotask based on:
+  // - setImmediate
+  // - MessageChannel
+  // - window.postMessag
+  // - onreadystatechange
+  // - setTimeout
+  } else {
+    notify = function () {
+      // strange IE + webpack dev server bug - use .call(global)
+      macrotask.call(global_1, flush);
+    };
+  }
+}
+
+var microtask = queueMicrotask || function (fn) {
+  var task = { fn: fn, next: undefined };
+  if (last) last.next = task;
+  if (!head) {
+    head = task;
+    notify();
+  } last = task;
+};
+
+var PromiseCapability = function (C) {
+  var resolve, reject;
+  this.promise = new C(function ($$resolve, $$reject) {
+    if (resolve !== undefined || reject !== undefined) throw TypeError('Bad Promise constructor');
+    resolve = $$resolve;
+    reject = $$reject;
+  });
+  this.resolve = aFunction$1(resolve);
+  this.reject = aFunction$1(reject);
+};
+
+// 25.4.1.5 NewPromiseCapability(C)
+var f$5 = function (C) {
+  return new PromiseCapability(C);
+};
+
+var newPromiseCapability = {
+	f: f$5
+};
+
+var promiseResolve = function (C, x) {
+  anObject(C);
+  if (isObject(x) && x.constructor === C) return x;
+  var promiseCapability = newPromiseCapability.f(C);
+  var resolve = promiseCapability.resolve;
+  resolve(x);
+  return promiseCapability.promise;
+};
+
+var hostReportErrors = function (a, b) {
+  var console = global_1.console;
+  if (console && console.error) {
+    arguments.length === 1 ? console.error(a) : console.error(a, b);
+  }
+};
+
+var perform = function (exec) {
+  try {
+    return { error: false, value: exec() };
+  } catch (error) {
+    return { error: true, value: error };
+  }
+};
+
+var process$2 = global_1.process;
+var versions = process$2 && process$2.versions;
+var v8 = versions && versions.v8;
+var match, version;
+
+if (v8) {
+  match = v8.split('.');
+  version = match[0] + match[1];
+} else if (engineUserAgent) {
+  match = engineUserAgent.match(/Edge\/(\d+)/);
+  if (!match || match[1] >= 74) {
+    match = engineUserAgent.match(/Chrome\/(\d+)/);
+    if (match) version = match[1];
+  }
+}
+
+var engineV8Version = version && +version;
+
+var task$1 = task.set;
+
+
+
+
+
+
+
+
+
+
+var SPECIES$2 = wellKnownSymbol('species');
+var PROMISE = 'Promise';
+var getInternalState = internalState.get;
+var setInternalState = internalState.set;
+var getInternalPromiseState = internalState.getterFor(PROMISE);
+var PromiseConstructor = nativePromiseConstructor;
+var TypeError$1 = global_1.TypeError;
+var document$2 = global_1.document;
+var process$3 = global_1.process;
+var $fetch = getBuiltIn('fetch');
+var newPromiseCapability$1 = newPromiseCapability.f;
+var newGenericPromiseCapability = newPromiseCapability$1;
+var IS_NODE$1 = classofRaw(process$3) == 'process';
+var DISPATCH_EVENT = !!(document$2 && document$2.createEvent && global_1.dispatchEvent);
+var UNHANDLED_REJECTION = 'unhandledrejection';
+var REJECTION_HANDLED = 'rejectionhandled';
+var PENDING = 0;
+var FULFILLED = 1;
+var REJECTED = 2;
+var HANDLED = 1;
+var UNHANDLED = 2;
+var Internal, OwnPromiseCapability, PromiseWrapper, nativeThen;
+
+var FORCED$1 = isForced_1(PROMISE, function () {
+  var GLOBAL_CORE_JS_PROMISE = inspectSource(PromiseConstructor) !== String(PromiseConstructor);
+  if (!GLOBAL_CORE_JS_PROMISE) {
+    // V8 6.6 (Node 10 and Chrome 66) have a bug with resolving custom thenables
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=830565
+    // We can't detect it synchronously, so just check versions
+    if (engineV8Version === 66) return true;
+    // Unhandled rejections tracking support, NodeJS Promise without it fails @@species test
+    if (!IS_NODE$1 && typeof PromiseRejectionEvent != 'function') return true;
+  }
+  // We can't use @@species feature detection in V8 since it causes
+  // deoptimization and performance degradation
+  // https://github.com/zloirock/core-js/issues/679
+  if (engineV8Version >= 51 && /native code/.test(PromiseConstructor)) return false;
+  // Detect correctness of subclassing with @@species support
+  var promise = PromiseConstructor.resolve(1);
+  var FakePromise = function (exec) {
+    exec(function () { /* empty */ }, function () { /* empty */ });
+  };
+  var constructor = promise.constructor = {};
+  constructor[SPECIES$2] = FakePromise;
+  return !(promise.then(function () { /* empty */ }) instanceof FakePromise);
+});
+
+var INCORRECT_ITERATION = FORCED$1 || !checkCorrectnessOfIteration(function (iterable) {
+  PromiseConstructor.all(iterable)['catch'](function () { /* empty */ });
+});
+
+// helpers
+var isThenable = function (it) {
+  var then;
+  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
+};
+
+var notify$1 = function (promise, state, isReject) {
+  if (state.notified) return;
+  state.notified = true;
+  var chain = state.reactions;
+  microtask(function () {
+    var value = state.value;
+    var ok = state.state == FULFILLED;
+    var index = 0;
+    // variable length - can't use forEach
+    while (chain.length > index) {
+      var reaction = chain[index++];
+      var handler = ok ? reaction.ok : reaction.fail;
+      var resolve = reaction.resolve;
+      var reject = reaction.reject;
+      var domain = reaction.domain;
+      var result, then, exited;
+      try {
+        if (handler) {
+          if (!ok) {
+            if (state.rejection === UNHANDLED) onHandleUnhandled(promise, state);
+            state.rejection = HANDLED;
+          }
+          if (handler === true) result = value;
+          else {
+            if (domain) domain.enter();
+            result = handler(value); // can throw
+            if (domain) {
+              domain.exit();
+              exited = true;
+            }
+          }
+          if (result === reaction.promise) {
+            reject(TypeError$1('Promise-chain cycle'));
+          } else if (then = isThenable(result)) {
+            then.call(result, resolve, reject);
+          } else resolve(result);
+        } else reject(value);
+      } catch (error) {
+        if (domain && !exited) domain.exit();
+        reject(error);
+      }
+    }
+    state.reactions = [];
+    state.notified = false;
+    if (isReject && !state.rejection) onUnhandled(promise, state);
+  });
+};
+
+var dispatchEvent = function (name, promise, reason) {
+  var event, handler;
+  if (DISPATCH_EVENT) {
+    event = document$2.createEvent('Event');
+    event.promise = promise;
+    event.reason = reason;
+    event.initEvent(name, false, true);
+    global_1.dispatchEvent(event);
+  } else event = { promise: promise, reason: reason };
+  if (handler = global_1['on' + name]) handler(event);
+  else if (name === UNHANDLED_REJECTION) hostReportErrors('Unhandled promise rejection', reason);
+};
+
+var onUnhandled = function (promise, state) {
+  task$1.call(global_1, function () {
+    var value = state.value;
+    var IS_UNHANDLED = isUnhandled(state);
+    var result;
+    if (IS_UNHANDLED) {
+      result = perform(function () {
+        if (IS_NODE$1) {
+          process$3.emit('unhandledRejection', value, promise);
+        } else dispatchEvent(UNHANDLED_REJECTION, promise, value);
+      });
+      // Browsers should not trigger `rejectionHandled` event if it was handled here, NodeJS - should
+      state.rejection = IS_NODE$1 || isUnhandled(state) ? UNHANDLED : HANDLED;
+      if (result.error) throw result.value;
+    }
+  });
+};
+
+var isUnhandled = function (state) {
+  return state.rejection !== HANDLED && !state.parent;
+};
+
+var onHandleUnhandled = function (promise, state) {
+  task$1.call(global_1, function () {
+    if (IS_NODE$1) {
+      process$3.emit('rejectionHandled', promise);
+    } else dispatchEvent(REJECTION_HANDLED, promise, state.value);
+  });
+};
+
+var bind = function (fn, promise, state, unwrap) {
+  return function (value) {
+    fn(promise, state, value, unwrap);
+  };
+};
+
+var internalReject = function (promise, state, value, unwrap) {
+  if (state.done) return;
+  state.done = true;
+  if (unwrap) state = unwrap;
+  state.value = value;
+  state.state = REJECTED;
+  notify$1(promise, state, true);
+};
+
+var internalResolve = function (promise, state, value, unwrap) {
+  if (state.done) return;
+  state.done = true;
+  if (unwrap) state = unwrap;
+  try {
+    if (promise === value) throw TypeError$1("Promise can't be resolved itself");
+    var then = isThenable(value);
+    if (then) {
+      microtask(function () {
+        var wrapper = { done: false };
+        try {
+          then.call(value,
+            bind(internalResolve, promise, wrapper, state),
+            bind(internalReject, promise, wrapper, state)
+          );
+        } catch (error) {
+          internalReject(promise, wrapper, error, state);
+        }
+      });
+    } else {
+      state.value = value;
+      state.state = FULFILLED;
+      notify$1(promise, state, false);
+    }
+  } catch (error) {
+    internalReject(promise, { done: false }, error, state);
+  }
+};
+
+// constructor polyfill
+if (FORCED$1) {
+  // 25.4.3.1 Promise(executor)
+  PromiseConstructor = function Promise(executor) {
+    anInstance(this, PromiseConstructor, PROMISE);
+    aFunction$1(executor);
+    Internal.call(this);
+    var state = getInternalState(this);
+    try {
+      executor(bind(internalResolve, this, state), bind(internalReject, this, state));
+    } catch (error) {
+      internalReject(this, state, error);
+    }
+  };
+  // eslint-disable-next-line no-unused-vars
+  Internal = function Promise(executor) {
+    setInternalState(this, {
+      type: PROMISE,
+      done: false,
+      notified: false,
+      parent: false,
+      reactions: [],
+      rejection: false,
+      state: PENDING,
+      value: undefined
+    });
+  };
+  Internal.prototype = redefineAll(PromiseConstructor.prototype, {
+    // `Promise.prototype.then` method
+    // https://tc39.github.io/ecma262/#sec-promise.prototype.then
+    then: function then(onFulfilled, onRejected) {
+      var state = getInternalPromiseState(this);
+      var reaction = newPromiseCapability$1(speciesConstructor(this, PromiseConstructor));
+      reaction.ok = typeof onFulfilled == 'function' ? onFulfilled : true;
+      reaction.fail = typeof onRejected == 'function' && onRejected;
+      reaction.domain = IS_NODE$1 ? process$3.domain : undefined;
+      state.parent = true;
+      state.reactions.push(reaction);
+      if (state.state != PENDING) notify$1(this, state, false);
+      return reaction.promise;
+    },
+    // `Promise.prototype.catch` method
+    // https://tc39.github.io/ecma262/#sec-promise.prototype.catch
+    'catch': function (onRejected) {
+      return this.then(undefined, onRejected);
+    }
+  });
+  OwnPromiseCapability = function () {
+    var promise = new Internal();
+    var state = getInternalState(promise);
+    this.promise = promise;
+    this.resolve = bind(internalResolve, promise, state);
+    this.reject = bind(internalReject, promise, state);
+  };
+  newPromiseCapability.f = newPromiseCapability$1 = function (C) {
+    return C === PromiseConstructor || C === PromiseWrapper
+      ? new OwnPromiseCapability(C)
+      : newGenericPromiseCapability(C);
+  };
+
+  if ( typeof nativePromiseConstructor == 'function') {
+    nativeThen = nativePromiseConstructor.prototype.then;
+
+    // wrap native Promise#then for native async functions
+    redefine(nativePromiseConstructor.prototype, 'then', function then(onFulfilled, onRejected) {
+      var that = this;
+      return new PromiseConstructor(function (resolve, reject) {
+        nativeThen.call(that, resolve, reject);
+      }).then(onFulfilled, onRejected);
+    // https://github.com/zloirock/core-js/issues/640
+    }, { unsafe: true });
+
+    // wrap fetch result
+    if (typeof $fetch == 'function') _export({ global: true, enumerable: true, forced: true }, {
+      // eslint-disable-next-line no-unused-vars
+      fetch: function fetch(input /* , init */) {
+        return promiseResolve(PromiseConstructor, $fetch.apply(global_1, arguments));
+      }
+    });
+  }
+}
+
+_export({ global: true, wrap: true, forced: FORCED$1 }, {
+  Promise: PromiseConstructor
+});
+
+setToStringTag(PromiseConstructor, PROMISE, false);
+setSpecies(PROMISE);
+
+PromiseWrapper = getBuiltIn(PROMISE);
+
+// statics
+_export({ target: PROMISE, stat: true, forced: FORCED$1 }, {
+  // `Promise.reject` method
+  // https://tc39.github.io/ecma262/#sec-promise.reject
+  reject: function reject(r) {
+    var capability = newPromiseCapability$1(this);
+    capability.reject.call(undefined, r);
+    return capability.promise;
+  }
+});
+
+_export({ target: PROMISE, stat: true, forced:  FORCED$1 }, {
+  // `Promise.resolve` method
+  // https://tc39.github.io/ecma262/#sec-promise.resolve
+  resolve: function resolve(x) {
+    return promiseResolve( this, x);
+  }
+});
+
+_export({ target: PROMISE, stat: true, forced: INCORRECT_ITERATION }, {
+  // `Promise.all` method
+  // https://tc39.github.io/ecma262/#sec-promise.all
+  all: function all(iterable) {
+    var C = this;
+    var capability = newPromiseCapability$1(C);
+    var resolve = capability.resolve;
+    var reject = capability.reject;
+    var result = perform(function () {
+      var $promiseResolve = aFunction$1(C.resolve);
+      var values = [];
+      var counter = 0;
+      var remaining = 1;
+      iterate_1(iterable, function (promise) {
+        var index = counter++;
+        var alreadyCalled = false;
+        values.push(undefined);
+        remaining++;
+        $promiseResolve.call(C, promise).then(function (value) {
+          if (alreadyCalled) return;
+          alreadyCalled = true;
+          values[index] = value;
+          --remaining || resolve(values);
+        }, reject);
+      });
+      --remaining || resolve(values);
+    });
+    if (result.error) reject(result.value);
+    return capability.promise;
+  },
+  // `Promise.race` method
+  // https://tc39.github.io/ecma262/#sec-promise.race
+  race: function race(iterable) {
+    var C = this;
+    var capability = newPromiseCapability$1(C);
+    var reject = capability.reject;
+    var result = perform(function () {
+      var $promiseResolve = aFunction$1(C.resolve);
+      iterate_1(iterable, function (promise) {
+        $promiseResolve.call(C, promise).then(capability.resolve, reject);
+      });
+    });
+    if (result.error) reject(result.value);
+    return capability.promise;
+  }
+});
+
 // babel-minify transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError,
 // so we use an intermediate function.
 function RE(s, f) {
@@ -1130,7 +1912,7 @@ _export({ target: 'RegExp', proto: true, forced: /./.exec !== regexpExec }, {
 
 
 
-var SPECIES = wellKnownSymbol('species');
+var SPECIES$3 = wellKnownSymbol('species');
 
 var REPLACE_SUPPORTS_NAMED_GROUPS = !fails(function () {
   // #replace needs built-in support for named groups.
@@ -1193,7 +1975,7 @@ var fixRegexpWellKnownSymbolLogic = function (KEY, length, exec, sham) {
       // RegExp[@@split] doesn't call the regex's exec method, but first creates
       // a new one. We need to return the patched regex when creating the new one.
       re.constructor = {};
-      re.constructor[SPECIES] = function () { return re; };
+      re.constructor[SPECIES$3] = function () { return re; };
       re.flags = '';
       re[SYMBOL] = /./[SYMBOL];
     }
@@ -1434,16 +2216,6 @@ var isRegexp = function (it) {
   return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : classofRaw(it) == 'RegExp');
 };
 
-var SPECIES$1 = wellKnownSymbol('species');
-
-// `SpeciesConstructor` abstract operation
-// https://tc39.github.io/ecma262/#sec-speciesconstructor
-var speciesConstructor = function (O, defaultConstructor) {
-  var C = anObject(O).constructor;
-  var S;
-  return C === undefined || (S = anObject(C)[SPECIES$1]) == undefined ? defaultConstructor : aFunction$1(S);
-};
-
 var arrayPush = [].push;
 var min$3 = Math.min;
 var MAX_UINT32 = 0xFFFFFFFF;
@@ -1594,7 +2366,7 @@ var isArray = Array.isArray || function isArray(arg) {
   return classofRaw(arg) == 'Array';
 };
 
-var SPECIES$2 = wellKnownSymbol('species');
+var SPECIES$4 = wellKnownSymbol('species');
 
 // `ArraySpeciesCreate` abstract operation
 // https://tc39.github.io/ecma262/#sec-arrayspeciescreate
@@ -1605,7 +2377,7 @@ var arraySpeciesCreate = function (originalArray, length) {
     // cross-realm fallback
     if (typeof C == 'function' && (C === Array || isArray(C.prototype))) C = undefined;
     else if (isObject(C)) {
-      C = C[SPECIES$2];
+      C = C[SPECIES$4];
       if (C === null) C = undefined;
     }
   } return new (C === undefined ? Array : C)(length === 0 ? 0 : length);
@@ -1617,27 +2389,7 @@ var createProperty = function (object, key, value) {
   else object[propertyKey] = value;
 };
 
-var engineUserAgent = getBuiltIn('navigator', 'userAgent') || '';
-
-var process = global_1.process;
-var versions = process && process.versions;
-var v8 = versions && versions.v8;
-var match, version;
-
-if (v8) {
-  match = v8.split('.');
-  version = match[0] + match[1];
-} else if (engineUserAgent) {
-  match = engineUserAgent.match(/Edge\/(\d+)/);
-  if (!match || match[1] >= 74) {
-    match = engineUserAgent.match(/Chrome\/(\d+)/);
-    if (match) version = match[1];
-  }
-}
-
-var engineV8Version = version && +version;
-
-var SPECIES$3 = wellKnownSymbol('species');
+var SPECIES$5 = wellKnownSymbol('species');
 
 var arrayMethodHasSpeciesSupport = function (METHOD_NAME) {
   // We can't use this feature detection in V8 since it causes
@@ -1646,7 +2398,7 @@ var arrayMethodHasSpeciesSupport = function (METHOD_NAME) {
   return engineV8Version >= 51 || !fails(function () {
     var array = [];
     var constructor = array.constructor = {};
-    constructor[SPECIES$3] = function () {
+    constructor[SPECIES$5] = function () {
       return { foo: 1 };
     };
     return array[METHOD_NAME](Boolean).foo !== 1;
@@ -1765,21 +2517,21 @@ var hook = /*#__PURE__*/Object.freeze({
   callWidgetShake: callWidgetShake
 });
 
-var ApiClass = 'bp-apiClass';
+var ApiClass = "bp-apiClass";
 
 function domGetDuration(el) {
   var d = window.getComputedStyle(el, null);
-  d = d ? d['transition-duration'] : '0.1s';
-  d = d.split(',')[0];
+  d = d ? d["transition-duration"] : "0.1s";
+  d = d.split(",")[0];
   d = febs.string.trim(d);
-  d = febs.string.replace(d, 's', '');
+  d = febs.string.replace(d, "s", "");
   d = parseFloat(d);
   d = Math.ceil(d * 1000) || 100;
   return d;
 }
 
 function maskPreventHandler(event) {
-  if (event.type == 'touchmove' || event.type == 'mousewheel') ; else {
+  if (event.type == "touchmove" || event.type == "mousewheel") ; else {
     event.preventDefault();
   }
 
@@ -1797,32 +2549,32 @@ function maskPreventEvent(ee) {
   }
 
   if (febs.utils.browserIsMobile()) {
-    febs.dom.removeEventListener(ee, 'touchmove', maskPreventHandler);
-    febs.dom.addEventListener(ee, 'touchmove', maskPreventHandler);
-    febs.dom.removeEventListener(ee, 'touchup', maskPreventHandler);
-    febs.dom.addEventListener(ee, 'touchup', maskPreventHandler);
-    febs.dom.removeEventListener(ee, 'touchdown', maskPreventHandler);
-    febs.dom.addEventListener(ee, 'touchdown', maskPreventHandler);
+    febs.dom.removeEventListener(ee, "touchmove", maskPreventHandler);
+    febs.dom.addEventListener(ee, "touchmove", maskPreventHandler);
+    febs.dom.removeEventListener(ee, "touchup", maskPreventHandler);
+    febs.dom.addEventListener(ee, "touchup", maskPreventHandler);
+    febs.dom.removeEventListener(ee, "touchdown", maskPreventHandler);
+    febs.dom.addEventListener(ee, "touchdown", maskPreventHandler);
   } else {
-    febs.dom.removeEventListener(ee, 'mousewheel', maskPreventHandler);
-    febs.dom.addEventListener(ee, 'mousewheel', maskPreventHandler);
-    febs.dom.removeEventListener(ee, 'mouseover', maskPreventHandler);
-    febs.dom.addEventListener(ee, 'mouseover', maskPreventHandler);
+    febs.dom.removeEventListener(ee, "mousewheel", maskPreventHandler);
+    febs.dom.addEventListener(ee, "mousewheel", maskPreventHandler);
+    febs.dom.removeEventListener(ee, "mouseover", maskPreventHandler);
+    febs.dom.addEventListener(ee, "mouseover", maskPreventHandler);
   }
 
-  febs.dom.removeEventListener(ee, 'click', maskPreventHandler);
-  febs.dom.addEventListener(ee, 'click', maskPreventHandler);
+  febs.dom.removeEventListener(ee, "click", maskPreventHandler);
+  febs.dom.addEventListener(ee, "click", maskPreventHandler);
 }
 /**
-* @desc: 遮罩层当前的zindex.
-*/
+ * @desc: 遮罩层当前的zindex.
+ */
 
 function getWidgetZIndex(dataMark) {
   var zIndex = 2000;
   var mask = $(".bp-widget[data-mark='".concat(dataMark, "']"));
 
   for (var i = 0; i < mask.length; i++) {
-    var t = Number($(mask[i]).css('z-index')) || 0;
+    var t = Number($(mask[i]).css("z-index")) || 0;
 
     if (t > zIndex) {
       zIndex = t;
@@ -1836,7 +2588,7 @@ function hack(el) {
   var sUserAgent = navigator.userAgent.toLowerCase();
 
   if (sUserAgent.indexOf("baidu") >= 0) {
-    el.css('backdrop-filter', 'none');
+    el.css("backdrop-filter", "none");
   }
 }
 /**
@@ -1845,48 +2597,32 @@ function hack(el) {
 
 
 function restoreFixedScroll(widget) {
-  if (widget.hasClass('bp-widget__bodyFixscroll')) {
-    $('body').addClass('bp-widget__fixscroll');
+  if (widget.hasClass("bp-widget__bodyFixscroll")) {
+    $("body").addClass("bp-widget__fixscroll");
   }
 
-  var ss = widget.attr('data-htmlp');
+  var ss = widget.attr("data-htmlp");
 
   if (ss.length > 0) {
-    var sss = febs.string.replace(ss, 'px', '');
+    var sss = febs.string.replace(ss, "px", "");
     sss = parseInt(sss) || 0;
     callWidgetShake(sss);
-    $('html').css('padding-right', ss);
-  }
-}
-/**
- * 根据前一个widget来移除body上的fixed
- */
-
-function removeFixedScrollByWidget(preWidget) {
-  if (!preWidget.hasClass('bp-widget__bodyFixscroll')) {
-    $('body').removeClass('bp-widget__fixscroll');
-  }
-
-  var ss = preWidget.attr('data-htmlp');
-
-  if (ss.length <= 0) {
-    callWidgetShake(0);
-    $('html').css('padding-right', '');
+    $("html").css("padding-right", ss);
   }
 }
 
 function removeFixedScroll() {
-  $('body').removeClass('bp-widget__fixscroll');
-  var pr = $('html').css('padding-right');
+  $("body").removeClass("bp-widget__fixscroll");
+  var pr = $("html").css("padding-right");
 
   if (pr && pr.length > 0) {
     callWidgetShake(0);
-    $('html').css('padding-right', '');
+    $("html").css("padding-right", "");
   }
 }
 /**
-* @desc: 显示遮罩层.
-*/
+ * @desc: 显示遮罩层.
+ */
 
 
 function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
@@ -1896,20 +2632,31 @@ function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
 
   if (preventEvent) {
     maskPreventEvent(mask);
-  }
+  } // 防止多次调用
+  // bp-widget__showing只是标示 正在显示的的样式名，没有实际样式
 
-  if (mask.hasClass('bp-widget__visible')) {
+
+  if (mask.hasClass("bp-widget__visible") || mask.hasClass("bp-widget__showing")) {
     if (cb) cb();
     return;
   }
 
-  hack(mask); // 防止scroll造成的页面抖动.
-  // let body = $('body');
-  // let html = $('html');
+  hack(mask);
+  var pageLen = $(".bp-navbarView_page").length;
+  var dataMark = "page" + pageLen;
+  var zindex = getWidgetZIndex(dataMark) + 2;
+  mask.css("z-index", zindex);
+  mask.attr("data-mark", dataMark);
+  mask.addClass("bp-widget__showing").removeClass("bp-widget__closing");
+
+  if (showMask) {
+    // 在hideWidget用来辅助判断 是否是显示showMask的widget
+    mask.addClass("bp-widget__maskTmp");
+  }
 
   var hidedScroll = false;
-  var body = $('body');
-  var html = $('html');
+  var body = $("body");
+  var html = $("html");
 
   if (hideBodyScroll) {
     var willFix = false;
@@ -1918,9 +2665,11 @@ function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
     if (showMask || preventEvent) {
       // 桌面端判断垂直滚动条.
       if (!febs.utils.browserIsMobile()) {
-        scrollWidth = window.innerWidth - febs.dom.getViewPort().width;
+        scrollWidth = window.innerWidth - febs.dom.getViewPort().width; // if (scrollWidth > 0) {
+        //   willFix = true;
+        // }
 
-        if (scrollWidth > 0) {
+        if (febs.dom.getDocumentPort().height > febs.dom.getViewPort().height) {
           willFix = true;
         }
       } // 移动端
@@ -1932,88 +2681,57 @@ function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
     }
 
     if (willFix) {
-      body.addClass('bp-widget__fixscroll');
+      body.addClass("bp-widget__fixscroll");
 
       if (scrollWidth > 0) {
         callWidgetShake(scrollWidth);
-        html.css('padding-right', scrollWidth + 'px');
+        html.css("padding-right", scrollWidth + "px");
       }
 
       hidedScroll = true;
-      mask.addClass('bp-widget__willFix');
+      mask.addClass("bp-widget__willFix");
     } else {
-      hidedScroll = body.hasClass('bp-widget__fixscroll');
+      hidedScroll = body.hasClass("bp-widget__fixscroll");
     }
-  } //
-  // polyfill firefox.
+  } // polyfill firefox.
 
 
   if (hidedScroll) {
-    if (navigator.userAgent.indexOf('Firefox') >= 0) {
-      mask.css('overflow-y', 'scroll');
+    if (navigator.userAgent.indexOf("Firefox") >= 0) {
+      mask.css("overflow-y", "scroll");
     }
   } else {
-    if (navigator.userAgent.indexOf('Firefox') >= 0) {
-      mask.css('overflow-y', '');
+    if (navigator.userAgent.indexOf("Firefox") >= 0) {
+      mask.css("overflow-y", "");
     }
-  } // if (body.hasClass('bp-widget__fixscroll')) {
-  //   mask.css('padding-right', html.css('padding-right'));
-  // }
-  // else {
-  //   mask.css('padding-right', '');
-  // }
+  } // 标记.
 
 
-  var pageLen = $('.bp-navbarView_page').length;
-  var dataMark = 'page' + pageLen;
-  var zindex = getWidgetZIndex(dataMark) + 2;
-  mask.css('z-index', zindex); // 标记.
-
-  if (body.hasClass('bp-widget__fixscroll')) {
-    mask.addClass('bp-widget__bodyFixscroll');
+  if (body.hasClass("bp-widget__fixscroll")) {
+    mask.addClass("bp-widget__bodyFixscroll");
   }
 
-  var ss = html.css('padding-right');
+  var ss = html.css("padding-right");
 
-  if (ss.length > 0) {
-    mask.attr('data-htmlp', ss);
+  if (ss && ss.length > 0) {
+    mask.attr("data-htmlp", ss);
   }
 
-  var dialogs = []; // zindex.
-  var masks = $(".bp-widget[data-mark='".concat(dataMark, "']"));
-
-  for (var i = 0; i < masks.length; i++) {
-    var el1 = $(masks[i]);
-    var t = Number(el1.css('z-index')) || 0;
-
-    dialogs.push({
-      zIndex: t,
-      el: el1
-    });
-  } // only one mask.
-
-
-  var preMask;
+  var preMask; // only one mask.
 
   if (showMask) {
-    dialogs.sort(function (a, b) {
-      _newArrowCheck(this, _this);
+    var _widgets = _getSortWidget(dataMark); // 寻找最大的zindex的preMask
 
-      if (a.zIndex == b.zIndex) return 0;
-      return a.zIndex > b.zIndex ? 1 : -1;
-    }.bind(this)); // 寻找最大的zindex.
 
-    for (var _i = dialogs.length - 1; _i >= 0; _i--) {
-      var mask0 = dialogs[_i].el;
+    for (var i = _widgets.length - 1; i >= 0; i--) {
+      var mask0 = _widgets[i].el;
 
-      if (mask0.hasClass('bp-widget__mask') && !mask[0].isEqualNode(mask0[0])) {
+      if (mask0.hasClass("bp-widget__mask") && !mask[0].isEqualNode(mask0[0])) {
         preMask = mask0;
         break;
       }
     }
-  } // if.
-  // mask.children('.bp-widget__content')
-
+  }
 
   bpLibs.dom.probeDom(200, function () {
     _newArrowCheck(this, _this);
@@ -2027,34 +2745,25 @@ function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
     febs.utils.sleep(0).then(function () {
       _newArrowCheck(this, _this2);
 
-      mask.attr('data-mark', dataMark);
-      mask.addClass('bp-widget__invisible');
-      mask.removeClass('bp-widget__maskTmp');
+      mask.addClass("bp-widget__invisible");
+      mask.removeClass("bp-widget__maskTmp");
 
       if (showMask) {
         if (!preMask) {
-          mask.addClass('bp-widget__mask');
+          mask.addClass("bp-widget__mask");
         }
       }
 
-      mask.css('display', 'inherit');
+      mask.css("display", "inherit");
     }.bind(this)).then(function () {
       _newArrowCheck(this, _this2);
 
-      return febs.utils.sleep(10);
-    }.bind(this)).then(function () {
-      _newArrowCheck(this, _this2);
-
-      if (mask.hasClass('bp-widget__closing')) {
-        if (cb) {
-          cb();
-        }
-
-        return;
+      if (mask.hasClass("bp-widget__closing")) {
+        return Promise.reject();
       }
 
       var duration = domGetDuration(mask[0]) || 100;
-      mask.removeClass('bp-widget__invisible').addClass('bp-widget__visible');
+      mask.removeClass("bp-widget__invisible").addClass("bp-widget__visible");
       return duration;
     }.bind(this)).then(function (duration) {
       _newArrowCheck(this, _this2);
@@ -2063,73 +2772,54 @@ function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
     }.bind(this)).then(function () {
       _newArrowCheck(this, _this2);
 
-      if (mask.hasClass('bp-widget__closing')) {
-        if (cb) {
-          cb();
-        }
+      mask.removeClass("bp-widget__showing");
 
-        return;
+      if (mask.hasClass("bp-widget__closing") || mask.hasClass("bp-widget__invisible")) {
+        return Promise.reject();
       }
 
       if (showMask && preMask) {
-        mask.addClass('bp-widget__mask').addClass('bp-widget__maskNoAminate');
+        mask.addClass("bp-widget__mask").addClass("bp-widget__maskNoAminate");
       } else if (showMask) {
-        mask.addClass('bp-widget__mask');
+        mask.addClass("bp-widget__mask");
       }
 
       if (preMask) {
-        preMask.removeClass('bp-widget__mask').addClass('bp-widget__maskTmp').addClass('bp-widget__maskNoAminate');
+        preMask.removeClass("bp-widget__mask").addClass("bp-widget__maskTmp").addClass("bp-widget__maskNoAminate");
       }
 
       if (cb) {
         cb();
       }
+    }.bind(this))["catch"](function () {
+      _newArrowCheck(this, _this2);
     }.bind(this));
   }.bind(this));
 }
 /**
-* @desc: 隐藏所有的api层.
-*/
+ * @desc: 隐藏所有的api层.
+ */
 
 function removeAllApiModal(elementSelector) {
-  var _this3 = this;
-
-  var pageLen = $('.bp-navbarView_page').length;
-  var dataMark = 'page' + pageLen;
-  var apis = $("".concat(elementSelector ? elementSelector : '.' + ApiClass));
+  var pageLen = $(".bp-navbarView_page").length;
+  var dataMark = "page" + pageLen;
+  var apis = $("".concat(elementSelector ? elementSelector : "." + ApiClass));
 
   if (apis.length > 0) {
     apis.remove(); // zindex.
 
-    var dialogs = [];
-    var masks = $(".bp-widget[data-mark='".concat(dataMark, "']"));
-
-    for (var i = 0; i < masks.length; i++) {
-      var el1 = $(masks[i]);
-      var t = Number(el1.css('z-index')) || 0;
-      dialogs.push({
-        zIndex: t,
-        el: el1
-      });
-    } // only one mask.
+    var _widgets = _getSortWidget(dataMark); // 寻找最大的zindex.
 
 
-    dialogs.sort(function (a, b) {
-      _newArrowCheck(this, _this3);
+    for (var i = 0; i < _widgets.length; i++) {
+      var mask0 = _widgets[i].el;
 
-      if (a.zIndex == b.zIndex) return 0;
-      return a.zIndex > b.zIndex ? -1 : 1;
-    }.bind(this)); // 寻找最大的zindex.
-
-    for (var _i2 = 0; _i2 < dialogs.length; _i2++) {
-      var mask0 = dialogs[_i2].el;
-
-      if (mask0.hasClass('bp-widget__mask')) {
+      if (mask0.hasClass("bp-widget__mask")) {
         return;
       }
 
-      if (mask0.hasClass('bp-widget__maskTmp')) {
-        mask0.removeClass('bp-widget__maskTmp').addClass('bp-widget__mask').removeClass('bp-widget__maskNoAminate');
+      if (mask0.hasClass("bp-widget__maskTmp")) {
+        mask0.removeClass("bp-widget__maskTmp").addClass("bp-widget__mask").removeClass("bp-widget__maskNoAminate");
         return;
       }
     }
@@ -2143,98 +2833,101 @@ function removeAllApiModal(elementSelector) {
  */
 
 function hideWidget(el, cb) {
-  var _this4 = this;
+  var mask = $(el); // 防止多次调用
+  // bp-widget__closing只是标示 正在关闭的样式名，没有实际样式
 
-  var mask = $(el);
-
-  if (mask.hasClass('bp-widget__invisible')) {
+  if (mask.hasClass("bp-widget__invisible") || mask.hasClass("bp-widget__closing")) {
     if (cb) cb();
     return;
   }
 
-  if (mask.hasClass('bp-widget__closing')) {
-    if (cb) cb();
-    return;
-  }
+  var pageLen = $(".bp-navbarView_page").length;
+  var dataMark = "page" + pageLen;
+  mask.addClass("bp-widget__closing").removeClass("bp-widget__showing");
+  mask.removeClass("bp-widget__visible").addClass("bp-widget__invisible");
+  mask.attr("data-mark", "");
 
-  mask.addClass('bp-widget__closing');
-  var pageLen = $('.bp-navbarView_page').length;
-  var dataMark = 'page' + pageLen;
-  var curZIndex = Number(mask.css('z-index'));
-  var curMask = mask.hasClass('bp-widget__mask');
-  var curMaskTmp = mask.hasClass('bp-widget__maskTmp');
-  var hasFix = mask.hasClass('bp-widget__willFix'); // zindex.
+  var _zindex = Number(mask.css("z-index")) || 0;
 
-  var dialogs = [];
-  var masks = $(".bp-widget[data-mark='".concat(dataMark, "']")); // let curPageMaskLength = masks.length;
+  var sortWidget = _getSortWidget(dataMark);
 
-  for (var i = 0; i < masks.length; i++) {
-    var el1 = $(masks[i]);
-    var t = Number(el1.css('z-index')) || 0;
+  var l = sortWidget.length;
+  var preMask; // zIndex 小于当前widget 并显示着的弹框 并带有mask 样式的弹框
 
-    dialogs.push({
-      zIndex: t,
-      el: el1
-    });
-  } // only one mask.
+  var postWidget; // zIndex 大于当前widget的弹框
 
+  var isVisibleWidgetHasFixscroll = false; // 除了当前弹框，是否还有其他弹框显示着
 
-  var preMask; // 前一个带遮罩的dialog.
+  if (l) {
+    for (var i = sortWidget.length - 1; i >= 0; i--) {
+      var mask0 = sortWidget[i].el;
+      var mask0ZIndex = sortWidget[i].zIndex;
+      var _el = mask0[0]; // 判断是否是显示的其他弹框
 
-  var preWidget; // 前一个dialog.
+      if (_el.style.display !== "none" && !mask0.hasClass("bp-widget__closing") && !mask0.hasClass("bp-widget__invisible")) {
+        isVisibleWidgetHasFixscroll = true; // 前一个带遮罩的弹框
 
-  dialogs.sort(function (a, b) {
-    _newArrowCheck(this, _this4);
-
-    if (a.zIndex == b.zIndex) return 0;
-    return a.zIndex > b.zIndex ? -1 : 1;
-  }.bind(this)); // 寻找最大的zindex.
-
-  if (!curMaskTmp && curMask) {
-    for (var _i3 = 0; _i3 < dialogs.length; _i3++) {
-      var mask0 = dialogs[_i3].el;
-
-      if (Number(mask0.css('z-index')) < curZIndex) {
-        if (!preWidget) preWidget = mask0;
-
-        if (mask0.hasClass('bp-widget__maskTmp')) {
+        if (!preMask && mask0ZIndex < _zindex && (mask0.hasClass("bp-widget__mask") || mask0.hasClass("bp-widget__maskTmp"))) {
           preMask = mask0;
-          break;
+        } // 前一个弹框
+
+
+        if (!postWidget && mask0ZIndex > _zindex) {
+          postWidget = mask0;
         }
       }
     }
   }
 
-  mask.attr('data-mark', '');
-  mask.removeClass('bp-widget__visible').addClass('bp-widget__invisible');
-  var duration = domGetDuration(mask[0]) || 100;
-
-  if (preMask) {
-    preMask.removeClass('bp-widget__maskTmp').addClass('bp-widget__mask');
+  if (!isVisibleWidgetHasFixscroll) {
+    $("body").removeClass("bp-widget__fixscroll");
+    callWidgetShake(0);
+    $("html").css("padding-right", "");
   }
 
-  setTimeout(function () {
-    mask.css('display', 'none');
-    mask.removeClass('bp-widget__mask').removeClass('bp-widget__closing').removeClass('bp-widget__maskNoAminate');
+  if (!postWidget && preMask) {
+    preMask.removeClass("bp-widget__maskTmp").addClass("bp-widget__maskNoAminate").addClass("bp-widget__mask");
+  }
 
-    if (preMask) {
-      preMask.removeClass('bp-widget__maskNoAminate');
+  var duration = domGetDuration(mask[0]) || 100;
+  setTimeout(function () {
+    mask.css("display", "none");
+    mask.removeClass("bp-widget__closing");
+    mask.removeClass("bp-widget__mask");
+    mask.removeClass("bp-widget__maskNoAminate");
+
+    if (!postWidget && preMask) {
+      preMask.removeClass("bp-widget__maskNoAminate");
     }
 
     if (cb) {
       cb();
     }
+  }, duration);
+} // 取当前页所有widget 并排序；
 
-    if (hasFix) {
-      if (!preWidget) {
-        $('body').removeClass('bp-widget__fixscroll');
-        callWidgetShake(0);
-        $('html').css('padding-right', '');
-      } else {
-        removeFixedScrollByWidget(preWidget);
-      }
-    }
-  }, duration + 10);
+function _getSortWidget(dataMark) {
+  var _this3 = this;
+
+  var masks = $(".bp-widget[data-mark='".concat(dataMark, "']"));
+  var widget = [];
+
+  for (var i = 0; i < masks.length; i++) {
+    var el1 = $(masks[i]);
+    var t = Number(el1.css("z-index")) || 2000;
+    widget.push({
+      zIndex: t,
+      el: el1
+    });
+  }
+
+  widget.sort(function (a, b) {
+    _newArrowCheck(this, _this3);
+
+    if (a.zIndex == b.zIndex) return 0;
+    return a.zIndex > b.zIndex ? 1 : -1;
+  }.bind(this));
+  return widget;
 }
 
 var GlobalDialogComponents = '$BpGlobalDialogComponents';
@@ -2733,758 +3426,6 @@ function VuePlugin () {
     install: install
   };
 }
-
-var nativePromiseConstructor = global_1.Promise;
-
-var redefineAll = function (target, src, options) {
-  for (var key in src) redefine(target, key, src[key], options);
-  return target;
-};
-
-var defineProperty$2 = objectDefineProperty.f;
-
-
-
-var TO_STRING_TAG$2 = wellKnownSymbol('toStringTag');
-
-var setToStringTag = function (it, TAG, STATIC) {
-  if (it && !has(it = STATIC ? it : it.prototype, TO_STRING_TAG$2)) {
-    defineProperty$2(it, TO_STRING_TAG$2, { configurable: true, value: TAG });
-  }
-};
-
-var SPECIES$4 = wellKnownSymbol('species');
-
-var setSpecies = function (CONSTRUCTOR_NAME) {
-  var Constructor = getBuiltIn(CONSTRUCTOR_NAME);
-  var defineProperty = objectDefineProperty.f;
-
-  if (descriptors && Constructor && !Constructor[SPECIES$4]) {
-    defineProperty(Constructor, SPECIES$4, {
-      configurable: true,
-      get: function () { return this; }
-    });
-  }
-};
-
-var anInstance = function (it, Constructor, name) {
-  if (!(it instanceof Constructor)) {
-    throw TypeError('Incorrect ' + (name ? name + ' ' : '') + 'invocation');
-  } return it;
-};
-
-var iterators = {};
-
-var ITERATOR = wellKnownSymbol('iterator');
-var ArrayPrototype = Array.prototype;
-
-// check on default Array iterator
-var isArrayIteratorMethod = function (it) {
-  return it !== undefined && (iterators.Array === it || ArrayPrototype[ITERATOR] === it);
-};
-
-// optional / simple context binding
-var functionBindContext = function (fn, that, length) {
-  aFunction$1(fn);
-  if (that === undefined) return fn;
-  switch (length) {
-    case 0: return function () {
-      return fn.call(that);
-    };
-    case 1: return function (a) {
-      return fn.call(that, a);
-    };
-    case 2: return function (a, b) {
-      return fn.call(that, a, b);
-    };
-    case 3: return function (a, b, c) {
-      return fn.call(that, a, b, c);
-    };
-  }
-  return function (/* ...args */) {
-    return fn.apply(that, arguments);
-  };
-};
-
-var ITERATOR$1 = wellKnownSymbol('iterator');
-
-var getIteratorMethod = function (it) {
-  if (it != undefined) return it[ITERATOR$1]
-    || it['@@iterator']
-    || iterators[classof(it)];
-};
-
-// call something on iterator step with safe closing on error
-var callWithSafeIterationClosing = function (iterator, fn, value, ENTRIES) {
-  try {
-    return ENTRIES ? fn(anObject(value)[0], value[1]) : fn(value);
-  // 7.4.6 IteratorClose(iterator, completion)
-  } catch (error) {
-    var returnMethod = iterator['return'];
-    if (returnMethod !== undefined) anObject(returnMethod.call(iterator));
-    throw error;
-  }
-};
-
-var iterate_1 = createCommonjsModule(function (module) {
-var Result = function (stopped, result) {
-  this.stopped = stopped;
-  this.result = result;
-};
-
-var iterate = module.exports = function (iterable, fn, that, AS_ENTRIES, IS_ITERATOR) {
-  var boundFunction = functionBindContext(fn, that, AS_ENTRIES ? 2 : 1);
-  var iterator, iterFn, index, length, result, next, step;
-
-  if (IS_ITERATOR) {
-    iterator = iterable;
-  } else {
-    iterFn = getIteratorMethod(iterable);
-    if (typeof iterFn != 'function') throw TypeError('Target is not iterable');
-    // optimisation for array iterators
-    if (isArrayIteratorMethod(iterFn)) {
-      for (index = 0, length = toLength(iterable.length); length > index; index++) {
-        result = AS_ENTRIES
-          ? boundFunction(anObject(step = iterable[index])[0], step[1])
-          : boundFunction(iterable[index]);
-        if (result && result instanceof Result) return result;
-      } return new Result(false);
-    }
-    iterator = iterFn.call(iterable);
-  }
-
-  next = iterator.next;
-  while (!(step = next.call(iterator)).done) {
-    result = callWithSafeIterationClosing(iterator, boundFunction, step.value, AS_ENTRIES);
-    if (typeof result == 'object' && result && result instanceof Result) return result;
-  } return new Result(false);
-};
-
-iterate.stop = function (result) {
-  return new Result(true, result);
-};
-});
-
-var ITERATOR$2 = wellKnownSymbol('iterator');
-var SAFE_CLOSING = false;
-
-try {
-  var called = 0;
-  var iteratorWithReturn = {
-    next: function () {
-      return { done: !!called++ };
-    },
-    'return': function () {
-      SAFE_CLOSING = true;
-    }
-  };
-  iteratorWithReturn[ITERATOR$2] = function () {
-    return this;
-  };
-  // eslint-disable-next-line no-throw-literal
-  Array.from(iteratorWithReturn, function () { throw 2; });
-} catch (error) { /* empty */ }
-
-var checkCorrectnessOfIteration = function (exec, SKIP_CLOSING) {
-  if (!SKIP_CLOSING && !SAFE_CLOSING) return false;
-  var ITERATION_SUPPORT = false;
-  try {
-    var object = {};
-    object[ITERATOR$2] = function () {
-      return {
-        next: function () {
-          return { done: ITERATION_SUPPORT = true };
-        }
-      };
-    };
-    exec(object);
-  } catch (error) { /* empty */ }
-  return ITERATION_SUPPORT;
-};
-
-var engineIsIos = /(iphone|ipod|ipad).*applewebkit/i.test(engineUserAgent);
-
-var location = global_1.location;
-var set$1 = global_1.setImmediate;
-var clear = global_1.clearImmediate;
-var process$1 = global_1.process;
-var MessageChannel = global_1.MessageChannel;
-var Dispatch = global_1.Dispatch;
-var counter = 0;
-var queue = {};
-var ONREADYSTATECHANGE = 'onreadystatechange';
-var defer, channel, port;
-
-var run = function (id) {
-  // eslint-disable-next-line no-prototype-builtins
-  if (queue.hasOwnProperty(id)) {
-    var fn = queue[id];
-    delete queue[id];
-    fn();
-  }
-};
-
-var runner = function (id) {
-  return function () {
-    run(id);
-  };
-};
-
-var listener = function (event) {
-  run(event.data);
-};
-
-var post = function (id) {
-  // old engines have not location.origin
-  global_1.postMessage(id + '', location.protocol + '//' + location.host);
-};
-
-// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
-if (!set$1 || !clear) {
-  set$1 = function setImmediate(fn) {
-    var args = [];
-    var i = 1;
-    while (arguments.length > i) args.push(arguments[i++]);
-    queue[++counter] = function () {
-      // eslint-disable-next-line no-new-func
-      (typeof fn == 'function' ? fn : Function(fn)).apply(undefined, args);
-    };
-    defer(counter);
-    return counter;
-  };
-  clear = function clearImmediate(id) {
-    delete queue[id];
-  };
-  // Node.js 0.8-
-  if (classofRaw(process$1) == 'process') {
-    defer = function (id) {
-      process$1.nextTick(runner(id));
-    };
-  // Sphere (JS game engine) Dispatch API
-  } else if (Dispatch && Dispatch.now) {
-    defer = function (id) {
-      Dispatch.now(runner(id));
-    };
-  // Browsers with MessageChannel, includes WebWorkers
-  // except iOS - https://github.com/zloirock/core-js/issues/624
-  } else if (MessageChannel && !engineIsIos) {
-    channel = new MessageChannel();
-    port = channel.port2;
-    channel.port1.onmessage = listener;
-    defer = functionBindContext(port.postMessage, port, 1);
-  // Browsers with postMessage, skip WebWorkers
-  // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
-  } else if (
-    global_1.addEventListener &&
-    typeof postMessage == 'function' &&
-    !global_1.importScripts &&
-    !fails(post) &&
-    location.protocol !== 'file:'
-  ) {
-    defer = post;
-    global_1.addEventListener('message', listener, false);
-  // IE8-
-  } else if (ONREADYSTATECHANGE in documentCreateElement('script')) {
-    defer = function (id) {
-      html.appendChild(documentCreateElement('script'))[ONREADYSTATECHANGE] = function () {
-        html.removeChild(this);
-        run(id);
-      };
-    };
-  // Rest old browsers
-  } else {
-    defer = function (id) {
-      setTimeout(runner(id), 0);
-    };
-  }
-}
-
-var task = {
-  set: set$1,
-  clear: clear
-};
-
-var getOwnPropertyDescriptor$3 = objectGetOwnPropertyDescriptor.f;
-
-var macrotask = task.set;
-
-
-var MutationObserver = global_1.MutationObserver || global_1.WebKitMutationObserver;
-var process$2 = global_1.process;
-var Promise$1 = global_1.Promise;
-var IS_NODE = classofRaw(process$2) == 'process';
-// Node.js 11 shows ExperimentalWarning on getting `queueMicrotask`
-var queueMicrotaskDescriptor = getOwnPropertyDescriptor$3(global_1, 'queueMicrotask');
-var queueMicrotask = queueMicrotaskDescriptor && queueMicrotaskDescriptor.value;
-
-var flush, head, last, notify, toggle, node, promise, then;
-
-// modern engines have queueMicrotask method
-if (!queueMicrotask) {
-  flush = function () {
-    var parent, fn;
-    if (IS_NODE && (parent = process$2.domain)) parent.exit();
-    while (head) {
-      fn = head.fn;
-      head = head.next;
-      try {
-        fn();
-      } catch (error) {
-        if (head) notify();
-        else last = undefined;
-        throw error;
-      }
-    } last = undefined;
-    if (parent) parent.enter();
-  };
-
-  // Node.js
-  if (IS_NODE) {
-    notify = function () {
-      process$2.nextTick(flush);
-    };
-  // browsers with MutationObserver, except iOS - https://github.com/zloirock/core-js/issues/339
-  } else if (MutationObserver && !engineIsIos) {
-    toggle = true;
-    node = document.createTextNode('');
-    new MutationObserver(flush).observe(node, { characterData: true });
-    notify = function () {
-      node.data = toggle = !toggle;
-    };
-  // environments with maybe non-completely correct, but existent Promise
-  } else if (Promise$1 && Promise$1.resolve) {
-    // Promise.resolve without an argument throws an error in LG WebOS 2
-    promise = Promise$1.resolve(undefined);
-    then = promise.then;
-    notify = function () {
-      then.call(promise, flush);
-    };
-  // for other environments - macrotask based on:
-  // - setImmediate
-  // - MessageChannel
-  // - window.postMessag
-  // - onreadystatechange
-  // - setTimeout
-  } else {
-    notify = function () {
-      // strange IE + webpack dev server bug - use .call(global)
-      macrotask.call(global_1, flush);
-    };
-  }
-}
-
-var microtask = queueMicrotask || function (fn) {
-  var task = { fn: fn, next: undefined };
-  if (last) last.next = task;
-  if (!head) {
-    head = task;
-    notify();
-  } last = task;
-};
-
-var PromiseCapability = function (C) {
-  var resolve, reject;
-  this.promise = new C(function ($$resolve, $$reject) {
-    if (resolve !== undefined || reject !== undefined) throw TypeError('Bad Promise constructor');
-    resolve = $$resolve;
-    reject = $$reject;
-  });
-  this.resolve = aFunction$1(resolve);
-  this.reject = aFunction$1(reject);
-};
-
-// 25.4.1.5 NewPromiseCapability(C)
-var f$5 = function (C) {
-  return new PromiseCapability(C);
-};
-
-var newPromiseCapability = {
-	f: f$5
-};
-
-var promiseResolve = function (C, x) {
-  anObject(C);
-  if (isObject(x) && x.constructor === C) return x;
-  var promiseCapability = newPromiseCapability.f(C);
-  var resolve = promiseCapability.resolve;
-  resolve(x);
-  return promiseCapability.promise;
-};
-
-var hostReportErrors = function (a, b) {
-  var console = global_1.console;
-  if (console && console.error) {
-    arguments.length === 1 ? console.error(a) : console.error(a, b);
-  }
-};
-
-var perform = function (exec) {
-  try {
-    return { error: false, value: exec() };
-  } catch (error) {
-    return { error: true, value: error };
-  }
-};
-
-var task$1 = task.set;
-
-
-
-
-
-
-
-
-
-
-var SPECIES$5 = wellKnownSymbol('species');
-var PROMISE = 'Promise';
-var getInternalState = internalState.get;
-var setInternalState = internalState.set;
-var getInternalPromiseState = internalState.getterFor(PROMISE);
-var PromiseConstructor = nativePromiseConstructor;
-var TypeError$1 = global_1.TypeError;
-var document$2 = global_1.document;
-var process$3 = global_1.process;
-var $fetch = getBuiltIn('fetch');
-var newPromiseCapability$1 = newPromiseCapability.f;
-var newGenericPromiseCapability = newPromiseCapability$1;
-var IS_NODE$1 = classofRaw(process$3) == 'process';
-var DISPATCH_EVENT = !!(document$2 && document$2.createEvent && global_1.dispatchEvent);
-var UNHANDLED_REJECTION = 'unhandledrejection';
-var REJECTION_HANDLED = 'rejectionhandled';
-var PENDING = 0;
-var FULFILLED = 1;
-var REJECTED = 2;
-var HANDLED = 1;
-var UNHANDLED = 2;
-var Internal, OwnPromiseCapability, PromiseWrapper, nativeThen;
-
-var FORCED$1 = isForced_1(PROMISE, function () {
-  var GLOBAL_CORE_JS_PROMISE = inspectSource(PromiseConstructor) !== String(PromiseConstructor);
-  if (!GLOBAL_CORE_JS_PROMISE) {
-    // V8 6.6 (Node 10 and Chrome 66) have a bug with resolving custom thenables
-    // https://bugs.chromium.org/p/chromium/issues/detail?id=830565
-    // We can't detect it synchronously, so just check versions
-    if (engineV8Version === 66) return true;
-    // Unhandled rejections tracking support, NodeJS Promise without it fails @@species test
-    if (!IS_NODE$1 && typeof PromiseRejectionEvent != 'function') return true;
-  }
-  // We can't use @@species feature detection in V8 since it causes
-  // deoptimization and performance degradation
-  // https://github.com/zloirock/core-js/issues/679
-  if (engineV8Version >= 51 && /native code/.test(PromiseConstructor)) return false;
-  // Detect correctness of subclassing with @@species support
-  var promise = PromiseConstructor.resolve(1);
-  var FakePromise = function (exec) {
-    exec(function () { /* empty */ }, function () { /* empty */ });
-  };
-  var constructor = promise.constructor = {};
-  constructor[SPECIES$5] = FakePromise;
-  return !(promise.then(function () { /* empty */ }) instanceof FakePromise);
-});
-
-var INCORRECT_ITERATION = FORCED$1 || !checkCorrectnessOfIteration(function (iterable) {
-  PromiseConstructor.all(iterable)['catch'](function () { /* empty */ });
-});
-
-// helpers
-var isThenable = function (it) {
-  var then;
-  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
-};
-
-var notify$1 = function (promise, state, isReject) {
-  if (state.notified) return;
-  state.notified = true;
-  var chain = state.reactions;
-  microtask(function () {
-    var value = state.value;
-    var ok = state.state == FULFILLED;
-    var index = 0;
-    // variable length - can't use forEach
-    while (chain.length > index) {
-      var reaction = chain[index++];
-      var handler = ok ? reaction.ok : reaction.fail;
-      var resolve = reaction.resolve;
-      var reject = reaction.reject;
-      var domain = reaction.domain;
-      var result, then, exited;
-      try {
-        if (handler) {
-          if (!ok) {
-            if (state.rejection === UNHANDLED) onHandleUnhandled(promise, state);
-            state.rejection = HANDLED;
-          }
-          if (handler === true) result = value;
-          else {
-            if (domain) domain.enter();
-            result = handler(value); // can throw
-            if (domain) {
-              domain.exit();
-              exited = true;
-            }
-          }
-          if (result === reaction.promise) {
-            reject(TypeError$1('Promise-chain cycle'));
-          } else if (then = isThenable(result)) {
-            then.call(result, resolve, reject);
-          } else resolve(result);
-        } else reject(value);
-      } catch (error) {
-        if (domain && !exited) domain.exit();
-        reject(error);
-      }
-    }
-    state.reactions = [];
-    state.notified = false;
-    if (isReject && !state.rejection) onUnhandled(promise, state);
-  });
-};
-
-var dispatchEvent = function (name, promise, reason) {
-  var event, handler;
-  if (DISPATCH_EVENT) {
-    event = document$2.createEvent('Event');
-    event.promise = promise;
-    event.reason = reason;
-    event.initEvent(name, false, true);
-    global_1.dispatchEvent(event);
-  } else event = { promise: promise, reason: reason };
-  if (handler = global_1['on' + name]) handler(event);
-  else if (name === UNHANDLED_REJECTION) hostReportErrors('Unhandled promise rejection', reason);
-};
-
-var onUnhandled = function (promise, state) {
-  task$1.call(global_1, function () {
-    var value = state.value;
-    var IS_UNHANDLED = isUnhandled(state);
-    var result;
-    if (IS_UNHANDLED) {
-      result = perform(function () {
-        if (IS_NODE$1) {
-          process$3.emit('unhandledRejection', value, promise);
-        } else dispatchEvent(UNHANDLED_REJECTION, promise, value);
-      });
-      // Browsers should not trigger `rejectionHandled` event if it was handled here, NodeJS - should
-      state.rejection = IS_NODE$1 || isUnhandled(state) ? UNHANDLED : HANDLED;
-      if (result.error) throw result.value;
-    }
-  });
-};
-
-var isUnhandled = function (state) {
-  return state.rejection !== HANDLED && !state.parent;
-};
-
-var onHandleUnhandled = function (promise, state) {
-  task$1.call(global_1, function () {
-    if (IS_NODE$1) {
-      process$3.emit('rejectionHandled', promise);
-    } else dispatchEvent(REJECTION_HANDLED, promise, state.value);
-  });
-};
-
-var bind = function (fn, promise, state, unwrap) {
-  return function (value) {
-    fn(promise, state, value, unwrap);
-  };
-};
-
-var internalReject = function (promise, state, value, unwrap) {
-  if (state.done) return;
-  state.done = true;
-  if (unwrap) state = unwrap;
-  state.value = value;
-  state.state = REJECTED;
-  notify$1(promise, state, true);
-};
-
-var internalResolve = function (promise, state, value, unwrap) {
-  if (state.done) return;
-  state.done = true;
-  if (unwrap) state = unwrap;
-  try {
-    if (promise === value) throw TypeError$1("Promise can't be resolved itself");
-    var then = isThenable(value);
-    if (then) {
-      microtask(function () {
-        var wrapper = { done: false };
-        try {
-          then.call(value,
-            bind(internalResolve, promise, wrapper, state),
-            bind(internalReject, promise, wrapper, state)
-          );
-        } catch (error) {
-          internalReject(promise, wrapper, error, state);
-        }
-      });
-    } else {
-      state.value = value;
-      state.state = FULFILLED;
-      notify$1(promise, state, false);
-    }
-  } catch (error) {
-    internalReject(promise, { done: false }, error, state);
-  }
-};
-
-// constructor polyfill
-if (FORCED$1) {
-  // 25.4.3.1 Promise(executor)
-  PromiseConstructor = function Promise(executor) {
-    anInstance(this, PromiseConstructor, PROMISE);
-    aFunction$1(executor);
-    Internal.call(this);
-    var state = getInternalState(this);
-    try {
-      executor(bind(internalResolve, this, state), bind(internalReject, this, state));
-    } catch (error) {
-      internalReject(this, state, error);
-    }
-  };
-  // eslint-disable-next-line no-unused-vars
-  Internal = function Promise(executor) {
-    setInternalState(this, {
-      type: PROMISE,
-      done: false,
-      notified: false,
-      parent: false,
-      reactions: [],
-      rejection: false,
-      state: PENDING,
-      value: undefined
-    });
-  };
-  Internal.prototype = redefineAll(PromiseConstructor.prototype, {
-    // `Promise.prototype.then` method
-    // https://tc39.github.io/ecma262/#sec-promise.prototype.then
-    then: function then(onFulfilled, onRejected) {
-      var state = getInternalPromiseState(this);
-      var reaction = newPromiseCapability$1(speciesConstructor(this, PromiseConstructor));
-      reaction.ok = typeof onFulfilled == 'function' ? onFulfilled : true;
-      reaction.fail = typeof onRejected == 'function' && onRejected;
-      reaction.domain = IS_NODE$1 ? process$3.domain : undefined;
-      state.parent = true;
-      state.reactions.push(reaction);
-      if (state.state != PENDING) notify$1(this, state, false);
-      return reaction.promise;
-    },
-    // `Promise.prototype.catch` method
-    // https://tc39.github.io/ecma262/#sec-promise.prototype.catch
-    'catch': function (onRejected) {
-      return this.then(undefined, onRejected);
-    }
-  });
-  OwnPromiseCapability = function () {
-    var promise = new Internal();
-    var state = getInternalState(promise);
-    this.promise = promise;
-    this.resolve = bind(internalResolve, promise, state);
-    this.reject = bind(internalReject, promise, state);
-  };
-  newPromiseCapability.f = newPromiseCapability$1 = function (C) {
-    return C === PromiseConstructor || C === PromiseWrapper
-      ? new OwnPromiseCapability(C)
-      : newGenericPromiseCapability(C);
-  };
-
-  if ( typeof nativePromiseConstructor == 'function') {
-    nativeThen = nativePromiseConstructor.prototype.then;
-
-    // wrap native Promise#then for native async functions
-    redefine(nativePromiseConstructor.prototype, 'then', function then(onFulfilled, onRejected) {
-      var that = this;
-      return new PromiseConstructor(function (resolve, reject) {
-        nativeThen.call(that, resolve, reject);
-      }).then(onFulfilled, onRejected);
-    // https://github.com/zloirock/core-js/issues/640
-    }, { unsafe: true });
-
-    // wrap fetch result
-    if (typeof $fetch == 'function') _export({ global: true, enumerable: true, forced: true }, {
-      // eslint-disable-next-line no-unused-vars
-      fetch: function fetch(input /* , init */) {
-        return promiseResolve(PromiseConstructor, $fetch.apply(global_1, arguments));
-      }
-    });
-  }
-}
-
-_export({ global: true, wrap: true, forced: FORCED$1 }, {
-  Promise: PromiseConstructor
-});
-
-setToStringTag(PromiseConstructor, PROMISE, false);
-setSpecies(PROMISE);
-
-PromiseWrapper = getBuiltIn(PROMISE);
-
-// statics
-_export({ target: PROMISE, stat: true, forced: FORCED$1 }, {
-  // `Promise.reject` method
-  // https://tc39.github.io/ecma262/#sec-promise.reject
-  reject: function reject(r) {
-    var capability = newPromiseCapability$1(this);
-    capability.reject.call(undefined, r);
-    return capability.promise;
-  }
-});
-
-_export({ target: PROMISE, stat: true, forced:  FORCED$1 }, {
-  // `Promise.resolve` method
-  // https://tc39.github.io/ecma262/#sec-promise.resolve
-  resolve: function resolve(x) {
-    return promiseResolve( this, x);
-  }
-});
-
-_export({ target: PROMISE, stat: true, forced: INCORRECT_ITERATION }, {
-  // `Promise.all` method
-  // https://tc39.github.io/ecma262/#sec-promise.all
-  all: function all(iterable) {
-    var C = this;
-    var capability = newPromiseCapability$1(C);
-    var resolve = capability.resolve;
-    var reject = capability.reject;
-    var result = perform(function () {
-      var $promiseResolve = aFunction$1(C.resolve);
-      var values = [];
-      var counter = 0;
-      var remaining = 1;
-      iterate_1(iterable, function (promise) {
-        var index = counter++;
-        var alreadyCalled = false;
-        values.push(undefined);
-        remaining++;
-        $promiseResolve.call(C, promise).then(function (value) {
-          if (alreadyCalled) return;
-          alreadyCalled = true;
-          values[index] = value;
-          --remaining || resolve(values);
-        }, reject);
-      });
-      --remaining || resolve(values);
-    });
-    if (result.error) reject(result.value);
-    return capability.promise;
-  },
-  // `Promise.race` method
-  // https://tc39.github.io/ecma262/#sec-promise.race
-  race: function race(iterable) {
-    var C = this;
-    var capability = newPromiseCapability$1(C);
-    var reject = capability.reject;
-    var result = perform(function () {
-      var $promiseResolve = aFunction$1(C.resolve);
-      iterate_1(iterable, function (promise) {
-        $promiseResolve.call(C, promise).then(capability.resolve, reject);
-      });
-    });
-    if (result.error) reject(result.value);
-    return capability.promise;
-  }
-});
 
 var script = {
   components: {},
