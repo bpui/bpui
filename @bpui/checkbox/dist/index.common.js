@@ -1,5 +1,5 @@
 /*!
- * bpui checkbox v0.1.11
+ * bpui checkbox v0.1.12
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */

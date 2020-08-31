@@ -1,8 +1,8 @@
 {
   "description": "navbarView",
   "dependencies": {
-    "@bpui/libs": "^0.2.10",
-    "febs-browser": "^1.0.3"
+    "@bpui/libs": "^0.2.17",
+    "febs-browser": "^1.0.4"
   },
   "devDependencies": {
     "vue-property-decorator": "^8.4.0",
@@ -35,5 +35,5 @@
     }
   ],
   "name": "@bpui/navbar-view",
-  "version": "0.1.13"
+  "version": "0.1.14"
 }

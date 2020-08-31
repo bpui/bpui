@@ -53,7 +53,7 @@ module.exports = {
       .set("ext", resolve("./ext"))
       .set("bpui.js", resolve("./src/bpui"))
       .set("@bpui", resolve("./@bpui"))
-      .set("@bpui/navbar-view", resolve("../components/navbar-view"))
-      .set("./bpui.components", resolve("./bpui.js/src/bpui.components.dev"));
+      // // 开发模式
+      .set("./bpui.components", resolve("./bpui.js/src/bpui.components.dev"))
   }
 };

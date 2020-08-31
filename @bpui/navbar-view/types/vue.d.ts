@@ -10,6 +10,11 @@ declare module 'vue/types/vue' {
      */
     $navbar: bp.NavbarView;
 
+    /**
+     * the same as $navbar.
+     */
+    $bpNavbar: bp.NavbarView;
+
     $route: bp.Location;
     $router: bp.Router;
   }

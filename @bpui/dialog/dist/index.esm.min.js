@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v0.1.22
+ * bpui dialog v0.1.23
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */

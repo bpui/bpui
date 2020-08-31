@@ -1,21 +1,47 @@
 <template>
   <div>
     <h4>form</h4>
-    <span class="span"><router-link to="form/button">button</router-link></span>
-    <span class="span"><router-link to="form/checkbox">checkbox</router-link></span>
-    <span class="span"><router-link to="form/radio">radio</router-link></span>
-    <span class="span"><router-link to="form/switch">switch</router-link></span>
-    <span class="span"><router-link to="form/input">input</router-link></span>
-    <span class="span"><router-link to="form/select">select (temp)</router-link></span>
+    <span class="span">
+      <router-link to="form/button">button</router-link>
+    </span>
+    <span class="span">
+      <router-link to="form/checkbox">checkbox</router-link>
+    </span>
+    <span class="span">
+      <router-link to="form/radio">radio</router-link>
+    </span>
+    <span class="span">
+      <router-link to="form/switch">switch</router-link>
+    </span>
+    <span class="span">
+      <router-link to="form/input">input</router-link>
+    </span>
+    <span class="span">
+      <router-link to="form/select">select (temp)</router-link>
+    </span>
 
     <h4>widget</h4>
-    <span class="span"><router-link to="widget/dialog">dialog</router-link></span>
-    <span class="span"><router-link to="widget/picker">picker</router-link></span>
-    <span class="span"><router-link to="widget/actionsheet">actionsheet</router-link></span>
-    <span class="span"><router-link to="widget/popover">popover</router-link></span>
+    <span class="span">
+      <router-link to="widget/dialog">dialog</router-link>
+    </span>
+    <span class="span">
+      <router-link to="widget/picker">picker</router-link>
+    </span>
+    <span class="span">
+      <router-link to="widget/actionsheet">actionsheet</router-link>
+    </span>
+    <span class="span">
+      <router-link to="widget/popover">popover</router-link>
+    </span>
 
     <h4>navbarView</h4>
-    <span class="span"><router-link to="navbar">navbar</router-link></span>
+    <span class="span">
+      <router-link to="navbar">navbar</router-link>
+    </span>
+    <span class="span"><a href="/bpui/navbar">navbar by href</a></span>
+    <span class="span"><a href="#abc" @click="$router.push('/navbar')">navbar by router</a></span>
+    <span class="span"><a href="#" @click="bpLibs.router.push('/n`avbar')">navbar by
+        bplib.router</a></span>
   </div>
 </template>
 
@@ -32,12 +58,13 @@
     State,
     Mutation
   } from 'vuex-class';
+  import bpui from 'bpui.js';
 
   @Component({
-    components: {
-    }
+    components: {}
   })
   export default class extends Vue {
+    bpLibs = bpui.libs;
 
     //
     // event.
@@ -55,7 +82,7 @@
 
     //
     // data.
-    @Provide() demo2:number = 1;
+    @Provide() demo2: number = 1;
 
     //
     // computed.
@@ -74,21 +101,33 @@
     }
 
     mounted() {
-      console.log('index mounted');
+      console.log('mounted: index');
     }
 
     beforeDestroy() {
-      console.log('index beforeDestroy');
+      console.log('beforeDestroy: index');
+    }
+
+    viewAppear(popData: any) {
+      console.log('viewAppear: index ' + popData);
+      // this.$navbar.setBarLeftItem({icon: 'loading'});
+    }
+
+    viewDisappear() {
+      console.log('viewDisappear: index');
     }
   }
+
 </script>
 
 
 <style lang="scss" scoped>
-.is-title {
-  text-transform: capitalize;
-}
-.span {
-  margin: 10px;
-}
+  .is-title {
+    text-transform: capitalize;
+  }
+
+  .span {
+    margin: 10px;
+  }
+
 </style>

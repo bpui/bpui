@@ -79,14 +79,15 @@ declare namespace bp {
      * @param animate: 所有允许的动画, 例如: slide, fade, lift
      *                 ''   - 无动画.
      *                 null - 默认动画
+     * @param retainPage: 是否保留当前页面dom.
      */
     push(cfg:{
       path: string,
       query?: { [key: string]: any },
       animate?:NavbarViewAnimate,
       data?:any
-    }):void;
-    push(path:string):void;
+    }, retainPage?:boolean):void;
+    push(path:string, retainPage?:boolean):void;
 
     /**
      * @desc: pop a page.

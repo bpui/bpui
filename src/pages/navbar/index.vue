@@ -9,7 +9,8 @@
 
 <template>
   <div>
-    page1 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+    page1
+    1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
     <div style="height:300px"></div>
     <button @click="pushNav">push use api</button>
     <router-link to="/navbar/page2" :data="data">push</router-link><br>
@@ -17,6 +18,8 @@
     <router-link to="/navbar/page2" animate="lift">push with lift</router-link><br>
     <router-link to="/navbar/page2" animate="fade">push with fade</router-link><br>
     <div style="height:800px">ddd</div>
+
+    <a name="abc">abc</a>
   </div>
 </template>
 
@@ -35,10 +38,14 @@
   } from 'vuex-class';
 
   @Component({
-    components: {
-    }
+    components: {}
   })
   export default class extends Vue {
+
+    @Watch("$route")
+    onRouteChange(newp: bp.Router, old: bp.Router) {
+      console.log("routeChange");
+    }
 
     //
     // event.
@@ -56,8 +63,8 @@
 
     //
     // data.
-    @Provide() demo:number = 1;
-    @Provide() data:number[] = [1, 2, 3, 4];
+    @Provide() demo: number = 1;
+    @Provide() data: number[] = [1, 2, 3, 4];
 
     //
     // computed.
@@ -76,27 +83,31 @@
     }
 
     mounted() {
-      console.log('page1 mounted');
+      console.log('mounted: navbar');
     }
 
     beforeDestroy() {
-      console.log('page1 beforeDestroy');
+      console.log('beforeDestroy: navbar');
     }
 
-    viewAppear(popData:any) {
-      console.log('page1 viewAppear: ' + popData);
-      this.$navbar.setBarInfo({title: 'navbar', hidden:false});
+    viewAppear(popData: any) {
+      console.log('viewAppear: navbar ' + popData);
+      this.$navbar.setBarInfo({
+        title: 'navbar',
+        hidden: false
+      });
       // this.$navbar.setBarLeftItem({icon: 'loading'});
     }
-    
+
     viewDisappear() {
-      console.log('page1 viewDisappear');
+      console.log('viewDisappear: navbar');
     }
 
     pushNav() {
       this.$navbar.push('./page2');
     }
   }
+
 </script>
 
 

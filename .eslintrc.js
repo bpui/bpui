@@ -55,6 +55,7 @@ module.exports = {
     'standard/object-curly-even-spacing': 0,
     'standard/no-callback-literal': 0,
     'vue/no-parsing-error': ['off'],
-    'vue/no-unused-vars': 0
+    'vue/no-unused-vars': 0,
+    'no-constant-condition': 0
   }
 }

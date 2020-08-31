@@ -10,8 +10,10 @@
 module.exports = [
   {
     name: 'navbarView',
-    style: function() { return require('../../@bpui/navbar-view/style/_index.scss') },
-    lib: function() { return require('../../@bpui/navbar-view') },
+    // style: function() { return require('../../@bpui/navbar-view/style/_index.scss') },
+    // lib: function() { return require('../../@bpui/navbar-view') },
+    style: function() { return require('../../../components/navbar-view/style/_index.scss') },
+    lib: function() { return require('../../../components/navbar-view') },
   },
   {
     name: 'checkbox',
