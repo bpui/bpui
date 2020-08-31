@@ -1,5 +1,5 @@
 /*!
- * bpui libs v0.2.10
+ * bpui libs v0.2.11
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1757,7 +1757,8 @@ function () {
       return {
         path: path,
         query: query,
-        state: window.history.state ? utils.mergeMap(window.history.state) : null
+        state: window.history.state ? utils.mergeMap(window.history.state) : null,
+        hash: window.location.hash
       };
     },
     enumerable: false,
@@ -1781,19 +1782,42 @@ function () {
         path: path
       };
     } else {
-      l = path;
+      l = utils.mergeMap(path);
+    }
+
+    var hi = l.path.indexOf('#');
+
+    if (hi >= 0) {
+      var hash = l.path.substring(hi);
+      l.path = l.path.substring(0, hi);
+
+      if (hash.length == 1) {
+        hash = null;
+      }
+
+      l.hash = hash;
     }
 
     var srcPath = l.path;
     l.path = stringifyUrl(l.path, l.query);
-    l.path = getPathname(this.basePath, l.path);
+    l.path = getPathname(this.basePath, l.path); // hash.
+
+    if (!string.isEmpty(l.hash)) {
+      if (l.hash[0] != '#' && l.path[l.path.length - 1] != '#') {
+        l.path += '#';
+      }
+
+      l.path += l.hash;
+    }
+
     window.history.pushState(l.state, null, l.path);
 
     if (trigger) {
       var location_1 = {
         path: srcPath,
         query: l.query,
-        state: l.state
+        state: l.state,
+        hash: l.hash
       };
       setTimeout(function () {
         _this._triggerRouteChanged(location_1, null);
@@ -1815,19 +1839,42 @@ function () {
         path: path
       };
     } else {
-      l = path;
+      l = utils.mergeMap(path);
+    }
+
+    var hi = l.path.indexOf('#');
+
+    if (hi >= 0) {
+      var hash = l.path.substring(hi);
+      l.path = l.path.substring(0, hi);
+
+      if (hash.length == 1) {
+        hash = null;
+      }
+
+      l.hash = hash;
     }
 
     var srcPath = l.path;
     l.path = stringifyUrl(l.path, l.query);
-    l.path = getPathname(this.basePath, l.path);
+    l.path = getPathname(this.basePath, l.path); // hash.
+
+    if (!string.isEmpty(l.hash)) {
+      if (l.hash[0] != '#' && l.path[l.path.length - 1] != '#') {
+        l.path += '#';
+      }
+
+      l.path += l.hash;
+    }
+
     window.history.replaceState(l.state, null, l.path);
 
     if (trigger) {
       var location_2 = {
         path: srcPath,
         query: l.query,
-        state: l.state
+        state: l.state,
+        hash: l.hash
       };
       setTimeout(function () {
         _this._triggerRouteChanged(location_2, 1);
@@ -1874,7 +1921,8 @@ function () {
           var location = {
             path: getCurrentRoutePath(_this.basePath),
             query: utils.mergeMap(query),
-            state: history.state
+            state: history.state,
+            hash: window.location.hash
           };
 
           _this._triggerRouteChanged(location, null);
@@ -1909,7 +1957,8 @@ function () {
         listeners[i]({
           path: location.path,
           query: utils.mergeMap(location.query),
-          state: utils.mergeMap(location.state)
+          state: utils.mergeMap(location.state),
+          hash: location.hash
         }, type);
       }
     }

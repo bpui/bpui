@@ -8,7 +8,16 @@
 declare namespace bp {
 
   type Directory<T> = { [key: string]: T };
-  type Location = {path: string, query?: Directory<string>, state?: Directory<any> };
+  type Location = {
+    path: string,
+    query?: Directory<string>,
+    state?: Directory<any>,
+
+    /**
+     * It will container '#', if no empty.
+     */
+    hash?: string,
+  };
 
   /**
    * router接口. (仅需提供如下接口)

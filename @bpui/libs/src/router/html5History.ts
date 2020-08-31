@@ -21,6 +21,9 @@ const InstanceOnRoute = ('$BpInstanceOnRoute');
 //--------------------------------------------------------
 export default class Html5History {
 
+  constructor() {
+  }
+
   /**
    * 历史记录长度.
    */
@@ -48,7 +51,12 @@ export default class Html5History {
     
     let path = utils.getRoutePathNoFile(this.basePath);
 
-    return {path: path, query: query, state: window.history.state? febs.utils.mergeMap(window.history.state): null};
+    return {
+      path: path,
+      query: query,
+      state: window.history.state ? febs.utils.mergeMap(window.history.state) : null,
+      hash: window.location.hash
+    };
   }
 
   /**
@@ -60,17 +68,40 @@ export default class Html5History {
       l = {path:path} as bp.Location;
     }
     else {
-      l = path;
+      l = febs.utils.mergeMap(path);
+    }
+    
+    let hi = l.path.indexOf('#');
+    if (hi >= 0) {
+      let hash = l.path.substring(hi);
+      l.path = l.path.substring(0, hi);
+      if (hash.length == 1) {
+        hash = null;
+      }
+      l.hash = hash;
     }
 
     let srcPath = l.path;
     l.path = url.stringifyUrl(l.path, l.query);
     l.path = utils.getPathname(this.basePath, l.path);
 
+    // hash.
+    if (!febs.string.isEmpty(l.hash)) {
+      if (l.hash[0] != '#' && l.path[l.path.length-1] != '#') {
+        l.path += '#';
+      }
+      l.path += l.hash;
+    }
+
     window.history.pushState(l.state, null, l.path);
     
     if (trigger) {
-      let location = {path: srcPath, query: l.query, state: l.state};
+      let location = {
+        path: srcPath,
+        query: l.query,
+        state: l.state,
+        hash: l.hash,
+      };
       setTimeout(()=>{
         this._triggerRouteChanged(location, null);
       }, 0);
@@ -83,17 +114,40 @@ export default class Html5History {
       l = {path:path} as bp.Location;
     }
     else {
-      l = path;
+      l = febs.utils.mergeMap(path);
+    }
+
+    let hi = l.path.indexOf('#');
+    if (hi >= 0) {
+      let hash = l.path.substring(hi);
+      l.path = l.path.substring(0, hi);
+      if (hash.length == 1) {
+        hash = null;
+      }
+      l.hash = hash;
     }
 
     let srcPath = l.path;
     l.path = url.stringifyUrl(l.path, l.query);
     l.path = utils.getPathname(this.basePath, l.path);
 
+    // hash.
+    if (!febs.string.isEmpty(l.hash)) {
+      if (l.hash[0] != '#' && l.path[l.path.length-1] != '#') {
+        l.path += '#';
+      }
+      l.path += l.hash;
+    }
+
     window.history.replaceState(l.state, null, l.path);
 
     if (trigger) {
-      let location = {path: srcPath, query: l.query, state: l.state};
+      let location = {
+        path: srcPath,
+        query: l.query,
+        state: l.state,
+        hash: l.hash,
+      };
       setTimeout(()=>{
         this._triggerRouteChanged(location, 1);
       }, 0);
@@ -135,7 +189,12 @@ export default class Html5History {
 
         window.addEventListener('popstate', ()=>{
           let query = url.parseUrl(window.location.search);
-          let location = {path: utils.getCurrentRoutePath(this.basePath), query: febs.utils.mergeMap(query), state: history.state}
+          let location = {
+            path: utils.getCurrentRoutePath(this.basePath),
+            query: febs.utils.mergeMap(query),
+            state: history.state,
+            hash: window.location.hash
+          }
           this._triggerRouteChanged(location, null);
         });
       }
@@ -156,13 +215,18 @@ export default class Html5History {
     return this;
   }
 
-  private _triggerRouteChanged(location, type) {
+  _triggerRouteChanged(location, type) {
     if (window[InstanceOnRoute]) {
       let listeners = window[InstanceOnRoute];
 
       for (let i = 0; i < listeners.length; i++) {
         listeners[i](
-          {path: location.path, query: febs.utils.mergeMap(location.query), state: febs.utils.mergeMap(location.state)},
+          {
+            path: location.path,
+            query: febs.utils.mergeMap(location.query),
+            state: febs.utils.mergeMap(location.state),
+            hash: location.hash,
+          },
           type);
       }
     }
