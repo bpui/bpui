@@ -7,9 +7,13 @@
 * Desc: 
 */
 
-import * as febs from 'febs-browser';;
+import * as febs from 'febs-browser';
 
-export function parseUrl(search:string):bp.Directory<string> {
+export function parseUrl(search: string): bp.Directory<string> {
+  if (search.length > 0 && search[0] == '?') {
+    search = search.substr(1);
+  }
+
   let query = {} as any;
   let searchs = search.length == 0? []: search.split('&');
   for (let i=0; i < searchs.length; i++) {
@@ -30,9 +34,13 @@ export function stringifyUrl(pathname:string, query:bp.Directory<string>):string
   if (query) {
     let q = '';
     for (const key in query) {
+      if (febs.string.isEmpty(key)) {
+        continue;
+      }
+
       const element = query[key];
       if (q.length > 0) q += '&';
-      q += encodeURIComponent(key) + '=' + encodeURIComponent(element);
+      q += encodeURIComponent(key) + '=' + encodeURIComponent(element||"");
     }
 
     if (q.length > 0) {

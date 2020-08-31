@@ -65,45 +65,31 @@ export default class Html5History {
   push( path: string|bp.Location, trigger:boolean = true ) : void {
     let l:bp.Location;
     if (typeof path === 'string') {
-      l = {path:path} as bp.Location;
+      l = utils.parsePathname(path) as bp.Location;
     }
     else {
-      l = febs.utils.mergeMap(path);
-    }
-    
-    let hi = l.path.indexOf('#');
-    if (hi >= 0) {
-      let hash = l.path.substring(hi);
-      l.path = l.path.substring(0, hi);
-      if (hash.length == 1) {
-        hash = null;
-      }
-      l.hash = hash;
+      let p = utils.parsePathname(path.path) as bp.Location;
+      l = febs.utils.mergeMap(path, p);
+      l.query = febs.utils.mergeMap(p.query, path.query);
     }
 
-    let srcPath = l.path;
-    l.path = url.stringifyUrl(l.path, l.query);
-    l.path = utils.getPathname(this.basePath, l.path);
-
-    // hash.
+    let rawPath = url.stringifyUrl(l.path, l.query);
+    rawPath = utils.getPathname(this.basePath, rawPath);
     if (!febs.string.isEmpty(l.hash)) {
-      if (l.hash[0] != '#' && l.path[l.path.length-1] != '#') {
-        l.path += '#';
-      }
-      l.path += l.hash;
+      rawPath += l.hash;
     }
 
-    window.history.pushState(l.state, null, l.path);
+    window.history.pushState(l.state, null, rawPath);
     
     if (trigger) {
-      let location = {
-        path: srcPath,
+      let lo = {
+        path: l.path,
         query: l.query,
         state: l.state,
         hash: l.hash,
       };
       setTimeout(()=>{
-        this._triggerRouteChanged(location, null);
+        this._triggerRouteChanged(lo, null);
       }, 0);
     }
   }
@@ -111,45 +97,31 @@ export default class Html5History {
   replace( path: string|bp.Location, trigger:boolean = true ) : void {
     let l:bp.Location;
     if (typeof path === 'string') {
-      l = {path:path} as bp.Location;
+      l = utils.parsePathname(path) as bp.Location;
     }
     else {
-      l = febs.utils.mergeMap(path);
+      let p = utils.parsePathname(path.path) as bp.Location;
+      l = febs.utils.mergeMap(path, p);
+      l.query = febs.utils.mergeMap(p.query, path.query);
     }
 
-    let hi = l.path.indexOf('#');
-    if (hi >= 0) {
-      let hash = l.path.substring(hi);
-      l.path = l.path.substring(0, hi);
-      if (hash.length == 1) {
-        hash = null;
-      }
-      l.hash = hash;
-    }
-
-    let srcPath = l.path;
-    l.path = url.stringifyUrl(l.path, l.query);
-    l.path = utils.getPathname(this.basePath, l.path);
-
-    // hash.
+    let rawPath = url.stringifyUrl(l.path, l.query);
+    rawPath = utils.getPathname(this.basePath, rawPath);
     if (!febs.string.isEmpty(l.hash)) {
-      if (l.hash[0] != '#' && l.path[l.path.length-1] != '#') {
-        l.path += '#';
-      }
-      l.path += l.hash;
+      rawPath += l.hash;
     }
 
-    window.history.replaceState(l.state, null, l.path);
+    window.history.replaceState(l.state, null, rawPath);
 
     if (trigger) {
-      let location = {
-        path: srcPath,
+      let lo = {
+        path: l.path,
         query: l.query,
         state: l.state,
         hash: l.hash,
       };
       setTimeout(()=>{
-        this._triggerRouteChanged(location, 1);
+        this._triggerRouteChanged(lo, 1);
       }, 0);
     }
   }
@@ -175,8 +147,11 @@ export default class Html5History {
     /** 匹配不到指定的路由组件. */
     onError:(err:Error)=>void 
   ): Object {
+    let p = utils.parsePathname(location.path) as bp.Location;
+    let l = febs.utils.mergeMap(location, p);
+    l.query = febs.utils.mergeMap(p.query, location.query);
 
-    return router.getMatchedComponent(location, onLoad, onError);
+    return router.getMatchedComponent(l, onLoad, onError);
   }
 
   /**

@@ -112,3 +112,57 @@ export function getCurrentRoutePath(basePath:string) {
   }
   return path;
 }
+
+/**
+ * parse pathname -> path,query,hash.
+ * @param pathname 
+ */
+export function parsePathname(pathname: string): { path: string, query: bp.Directory<string>, hash: string } {
+  if (!pathname) {
+    return null;
+  }
+
+  let indexQuery = pathname.indexOf('?');
+  let indexHash = pathname.indexOf('#');
+  indexQuery = indexQuery < 0 ? Number.MAX_SAFE_INTEGER : indexQuery;
+  indexHash = indexHash < 0 ? Number.MAX_SAFE_INTEGER : indexHash;
+
+  let path: string;
+  let hash: string;
+  let querys: string;
+  if (indexQuery < indexHash) {
+    path = pathname.substring(0, indexQuery);
+    hash = pathname.substring(indexHash);
+    querys = pathname.substring(indexQuery, indexHash);
+  }
+  else {
+    path = pathname.substring(0, indexHash);
+    hash = pathname.substring(indexHash, indexQuery);
+    querys = pathname.substring(indexQuery);
+  }
+
+  querys = querys || '';
+  querys = querys.substring(1);
+  let arrQuery = querys.split('&');
+  let objQuery = {};
+  for (let i = 0; i < arrQuery.length; i++) {
+    if (febs.string.isEmpty(arrQuery[i])) {
+      continue;
+    }
+    
+    let kv = arrQuery[i].split('=');
+    if (kv.length >= 1) {
+      objQuery[decodeURIComponent(kv[0]||"")] = decodeURIComponent(kv[1]||"");
+    }
+  }
+
+  if (febs.string.isEmpty(hash)) {
+    hash = null;
+  }
+  
+  return {
+    path,
+    hash,
+    query: objQuery
+  }
+}

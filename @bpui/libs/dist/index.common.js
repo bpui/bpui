@@ -1,5 +1,5 @@
 /*!
- * bpui libs v0.2.11
+ * bpui libs v0.2.17
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1349,6 +1349,10 @@ fixRegexpWellKnownSymbolLogic('split', 2, function (SPLIT, nativeSplit, maybeCal
 }, !SUPPORTS_Y);
 
 function parseUrl(search) {
+  if (search.length > 0 && search[0] == '?') {
+    search = search.substr(1);
+  }
+
   var query = {};
   var searchs = search.length == 0 ? [] : search.split('&');
 
@@ -1371,9 +1375,13 @@ function stringifyUrl(pathname, query) {
     var q = '';
 
     for (var key in query) {
+      if (febs.string.isEmpty(key)) {
+        continue;
+      }
+
       var element = query[key];
       if (q.length > 0) q += '&';
-      q += encodeURIComponent(key) + '=' + encodeURIComponent(element);
+      q += encodeURIComponent(key) + '=' + encodeURIComponent(element || "");
     }
 
     if (q.length > 0) {
@@ -1510,6 +1518,244 @@ function _createForOfIteratorHelper(o, allowArrayLike) {
   };
 }
 
+var aPossiblePrototype = function (it) {
+  if (!isObject(it) && it !== null) {
+    throw TypeError("Can't set " + String(it) + ' as a prototype');
+  } return it;
+};
+
+// `Object.setPrototypeOf` method
+// https://tc39.github.io/ecma262/#sec-object.setprototypeof
+// Works with __proto__ only. Old v8 can't work with null proto objects.
+/* eslint-disable no-proto */
+var objectSetPrototypeOf = Object.setPrototypeOf || ('__proto__' in {} ? function () {
+  var CORRECT_SETTER = false;
+  var test = {};
+  var setter;
+  try {
+    setter = Object.getOwnPropertyDescriptor(Object.prototype, '__proto__').set;
+    setter.call(test, []);
+    CORRECT_SETTER = test instanceof Array;
+  } catch (error) { /* empty */ }
+  return function setPrototypeOf(O, proto) {
+    anObject(O);
+    aPossiblePrototype(proto);
+    if (CORRECT_SETTER) setter.call(O, proto);
+    else O.__proto__ = proto;
+    return O;
+  };
+}() : undefined);
+
+// makes subclassing work correct for wrapped built-ins
+var inheritIfRequired = function ($this, dummy, Wrapper) {
+  var NewTarget, NewTargetPrototype;
+  if (
+    // it can work only with native `setPrototypeOf`
+    objectSetPrototypeOf &&
+    // we haven't completely correct pre-ES6 way for getting `new.target`, so use this
+    typeof (NewTarget = dummy.constructor) == 'function' &&
+    NewTarget !== Wrapper &&
+    isObject(NewTargetPrototype = NewTarget.prototype) &&
+    NewTargetPrototype !== Wrapper.prototype
+  ) objectSetPrototypeOf($this, NewTargetPrototype);
+  return $this;
+};
+
+// `Object.keys` method
+// https://tc39.github.io/ecma262/#sec-object.keys
+var objectKeys = Object.keys || function keys(O) {
+  return objectKeysInternal(O, enumBugKeys);
+};
+
+// `Object.defineProperties` method
+// https://tc39.github.io/ecma262/#sec-object.defineproperties
+var objectDefineProperties = descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
+  anObject(O);
+  var keys = objectKeys(Properties);
+  var length = keys.length;
+  var index = 0;
+  var key;
+  while (length > index) objectDefineProperty.f(O, key = keys[index++], Properties[key]);
+  return O;
+};
+
+var html = getBuiltIn('document', 'documentElement');
+
+var GT = '>';
+var LT = '<';
+var PROTOTYPE = 'prototype';
+var SCRIPT = 'script';
+var IE_PROTO = sharedKey('IE_PROTO');
+
+var EmptyConstructor = function () { /* empty */ };
+
+var scriptTag = function (content) {
+  return LT + SCRIPT + GT + content + LT + '/' + SCRIPT + GT;
+};
+
+// Create object with fake `null` prototype: use ActiveX Object with cleared prototype
+var NullProtoObjectViaActiveX = function (activeXDocument) {
+  activeXDocument.write(scriptTag(''));
+  activeXDocument.close();
+  var temp = activeXDocument.parentWindow.Object;
+  activeXDocument = null; // avoid memory leak
+  return temp;
+};
+
+// Create object with fake `null` prototype: use iframe Object with cleared prototype
+var NullProtoObjectViaIFrame = function () {
+  // Thrash, waste and sodomy: IE GC bug
+  var iframe = documentCreateElement('iframe');
+  var JS = 'java' + SCRIPT + ':';
+  var iframeDocument;
+  iframe.style.display = 'none';
+  html.appendChild(iframe);
+  // https://github.com/zloirock/core-js/issues/475
+  iframe.src = String(JS);
+  iframeDocument = iframe.contentWindow.document;
+  iframeDocument.open();
+  iframeDocument.write(scriptTag('document.F=Object'));
+  iframeDocument.close();
+  return iframeDocument.F;
+};
+
+// Check for document.domain and active x support
+// No need to use active x approach when document.domain is not set
+// see https://github.com/es-shims/es5-shim/issues/150
+// variation of https://github.com/kitcambridge/es5-shim/commit/4f738ac066346
+// avoid IE GC bug
+var activeXDocument;
+var NullProtoObject = function () {
+  try {
+    /* global ActiveXObject */
+    activeXDocument = document.domain && new ActiveXObject('htmlfile');
+  } catch (error) { /* ignore */ }
+  NullProtoObject = activeXDocument ? NullProtoObjectViaActiveX(activeXDocument) : NullProtoObjectViaIFrame();
+  var length = enumBugKeys.length;
+  while (length--) delete NullProtoObject[PROTOTYPE][enumBugKeys[length]];
+  return NullProtoObject();
+};
+
+hiddenKeys[IE_PROTO] = true;
+
+// `Object.create` method
+// https://tc39.github.io/ecma262/#sec-object.create
+var objectCreate = Object.create || function create(O, Properties) {
+  var result;
+  if (O !== null) {
+    EmptyConstructor[PROTOTYPE] = anObject(O);
+    result = new EmptyConstructor();
+    EmptyConstructor[PROTOTYPE] = null;
+    // add "__proto__" for Object.getPrototypeOf polyfill
+    result[IE_PROTO] = O;
+  } else result = NullProtoObject();
+  return Properties === undefined ? result : objectDefineProperties(result, Properties);
+};
+
+// a string of all valid unicode whitespaces
+// eslint-disable-next-line max-len
+var whitespaces = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
+
+var whitespace = '[' + whitespaces + ']';
+var ltrim = RegExp('^' + whitespace + whitespace + '*');
+var rtrim = RegExp(whitespace + whitespace + '*$');
+
+// `String.prototype.{ trim, trimStart, trimEnd, trimLeft, trimRight }` methods implementation
+var createMethod$2 = function (TYPE) {
+  return function ($this) {
+    var string = String(requireObjectCoercible($this));
+    if (TYPE & 1) string = string.replace(ltrim, '');
+    if (TYPE & 2) string = string.replace(rtrim, '');
+    return string;
+  };
+};
+
+var stringTrim = {
+  // `String.prototype.{ trimLeft, trimStart }` methods
+  // https://tc39.github.io/ecma262/#sec-string.prototype.trimstart
+  start: createMethod$2(1),
+  // `String.prototype.{ trimRight, trimEnd }` methods
+  // https://tc39.github.io/ecma262/#sec-string.prototype.trimend
+  end: createMethod$2(2),
+  // `String.prototype.trim` method
+  // https://tc39.github.io/ecma262/#sec-string.prototype.trim
+  trim: createMethod$2(3)
+};
+
+var getOwnPropertyNames = objectGetOwnPropertyNames.f;
+var getOwnPropertyDescriptor$2 = objectGetOwnPropertyDescriptor.f;
+var defineProperty$1 = objectDefineProperty.f;
+var trim = stringTrim.trim;
+
+var NUMBER = 'Number';
+var NativeNumber = global_1[NUMBER];
+var NumberPrototype = NativeNumber.prototype;
+
+// Opera ~12 has broken Object#toString
+var BROKEN_CLASSOF = classofRaw(objectCreate(NumberPrototype)) == NUMBER;
+
+// `ToNumber` abstract operation
+// https://tc39.github.io/ecma262/#sec-tonumber
+var toNumber = function (argument) {
+  var it = toPrimitive(argument, false);
+  var first, third, radix, maxCode, digits, length, index, code;
+  if (typeof it == 'string' && it.length > 2) {
+    it = trim(it);
+    first = it.charCodeAt(0);
+    if (first === 43 || first === 45) {
+      third = it.charCodeAt(2);
+      if (third === 88 || third === 120) return NaN; // Number('+0x1') should be NaN, old V8 fix
+    } else if (first === 48) {
+      switch (it.charCodeAt(1)) {
+        case 66: case 98: radix = 2; maxCode = 49; break; // fast equal of /^0b[01]+$/i
+        case 79: case 111: radix = 8; maxCode = 55; break; // fast equal of /^0o[0-7]+$/i
+        default: return +it;
+      }
+      digits = it.slice(2);
+      length = digits.length;
+      for (index = 0; index < length; index++) {
+        code = digits.charCodeAt(index);
+        // parseInt parses a string to a first unavailable symbol
+        // but ToNumber should return NaN if a string contains unavailable symbols
+        if (code < 48 || code > maxCode) return NaN;
+      } return parseInt(digits, radix);
+    }
+  } return +it;
+};
+
+// `Number` constructor
+// https://tc39.github.io/ecma262/#sec-number-constructor
+if (isForced_1(NUMBER, !NativeNumber(' 0o1') || !NativeNumber('0b1') || NativeNumber('+0x1'))) {
+  var NumberWrapper = function Number(value) {
+    var it = arguments.length < 1 ? 0 : value;
+    var dummy = this;
+    return dummy instanceof NumberWrapper
+      // check on 1..constructor(foo) case
+      && (BROKEN_CLASSOF ? fails(function () { NumberPrototype.valueOf.call(dummy); }) : classofRaw(dummy) != NUMBER)
+        ? inheritIfRequired(new NativeNumber(toNumber(it)), dummy, NumberWrapper) : toNumber(it);
+  };
+  for (var keys$1 = descriptors ? getOwnPropertyNames(NativeNumber) : (
+    // ES3:
+    'MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' +
+    // ES2015 (in case, if modules with ES2015 Number statics required before):
+    'EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,' +
+    'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger'
+  ).split(','), j = 0, key; keys$1.length > j; j++) {
+    if (has(NativeNumber, key = keys$1[j]) && !has(NumberWrapper, key)) {
+      defineProperty$1(NumberWrapper, key, getOwnPropertyDescriptor$2(NativeNumber, key));
+    }
+  }
+  NumberWrapper.prototype = NumberPrototype;
+  NumberPrototype.constructor = NumberWrapper;
+  redefine(global_1, NUMBER, NumberWrapper);
+}
+
+// `Number.MAX_SAFE_INTEGER` constant
+// https://tc39.github.io/ecma262/#sec-number.max_safe_integer
+_export({ target: 'Number', stat: true }, {
+  MAX_SAFE_INTEGER: 0x1FFFFFFFFFFFFF
+});
+
 /**
 * @desc: 获得无文件名的path.
 * @description
@@ -1611,6 +1857,61 @@ function getCurrentRoutePath(basePath) {
   }
 
   return path;
+}
+/**
+ * parse pathname -> path,query,hash.
+ * @param pathname
+ */
+
+function parsePathname(pathname) {
+  if (!pathname) {
+    return null;
+  }
+
+  var indexQuery = pathname.indexOf('?');
+  var indexHash = pathname.indexOf('#');
+  indexQuery = indexQuery < 0 ? Number.MAX_SAFE_INTEGER : indexQuery;
+  indexHash = indexHash < 0 ? Number.MAX_SAFE_INTEGER : indexHash;
+  var path;
+  var hash;
+  var querys;
+
+  if (indexQuery < indexHash) {
+    path = pathname.substring(0, indexQuery);
+    hash = pathname.substring(indexHash);
+    querys = pathname.substring(indexQuery, indexHash);
+  } else {
+    path = pathname.substring(0, indexHash);
+    hash = pathname.substring(indexHash, indexQuery);
+    querys = pathname.substring(indexQuery);
+  }
+
+  querys = querys || '';
+  querys = querys.substring(1);
+  var arrQuery = querys.split('&');
+  var objQuery = {};
+
+  for (var i = 0; i < arrQuery.length; i++) {
+    if (febs.string.isEmpty(arrQuery[i])) {
+      continue;
+    }
+
+    var kv = arrQuery[i].split('=');
+
+    if (kv.length >= 1) {
+      objQuery[decodeURIComponent(kv[0] || "")] = decodeURIComponent(kv[1] || "");
+    }
+  }
+
+  if (febs.string.isEmpty(hash)) {
+    hash = null;
+  }
+
+  return {
+    path: path,
+    hash: hash,
+    query: objQuery
+  };
 }
 
 // const GlobalRouterBase = Symbol('$BpGlobalRouterBase');
@@ -1780,49 +2081,31 @@ function () {
     var l;
 
     if (typeof path === 'string') {
-      l = {
-        path: path
-      };
+      l = parsePathname(path);
     } else {
-      l = febs.utils.mergeMap(path);
+      var p = parsePathname(path.path);
+      l = febs.utils.mergeMap(path, p);
+      l.query = febs.utils.mergeMap(p.query, path.query);
     }
 
-    var hi = l.path.indexOf('#');
-
-    if (hi >= 0) {
-      var hash = l.path.substring(hi);
-      l.path = l.path.substring(0, hi);
-
-      if (hash.length == 1) {
-        hash = null;
-      }
-
-      l.hash = hash;
-    }
-
-    var srcPath = l.path;
-    l.path = stringifyUrl(l.path, l.query);
-    l.path = getPathname(this.basePath, l.path); // hash.
+    var rawPath = stringifyUrl(l.path, l.query);
+    rawPath = getPathname(this.basePath, rawPath);
 
     if (!febs.string.isEmpty(l.hash)) {
-      if (l.hash[0] != '#' && l.path[l.path.length - 1] != '#') {
-        l.path += '#';
-      }
-
-      l.path += l.hash;
+      rawPath += l.hash;
     }
 
-    window.history.pushState(l.state, null, l.path);
+    window.history.pushState(l.state, null, rawPath);
 
     if (trigger) {
-      var location_1 = {
-        path: srcPath,
+      var lo_1 = {
+        path: l.path,
         query: l.query,
         state: l.state,
         hash: l.hash
       };
       setTimeout(function () {
-        _this._triggerRouteChanged(location_1, null);
+        _this._triggerRouteChanged(lo_1, null);
       }, 0);
     }
   };
@@ -1837,49 +2120,31 @@ function () {
     var l;
 
     if (typeof path === 'string') {
-      l = {
-        path: path
-      };
+      l = parsePathname(path);
     } else {
-      l = febs.utils.mergeMap(path);
+      var p = parsePathname(path.path);
+      l = febs.utils.mergeMap(path, p);
+      l.query = febs.utils.mergeMap(p.query, path.query);
     }
 
-    var hi = l.path.indexOf('#');
-
-    if (hi >= 0) {
-      var hash = l.path.substring(hi);
-      l.path = l.path.substring(0, hi);
-
-      if (hash.length == 1) {
-        hash = null;
-      }
-
-      l.hash = hash;
-    }
-
-    var srcPath = l.path;
-    l.path = stringifyUrl(l.path, l.query);
-    l.path = getPathname(this.basePath, l.path); // hash.
+    var rawPath = stringifyUrl(l.path, l.query);
+    rawPath = getPathname(this.basePath, rawPath);
 
     if (!febs.string.isEmpty(l.hash)) {
-      if (l.hash[0] != '#' && l.path[l.path.length - 1] != '#') {
-        l.path += '#';
-      }
-
-      l.path += l.hash;
+      rawPath += l.hash;
     }
 
-    window.history.replaceState(l.state, null, l.path);
+    window.history.replaceState(l.state, null, rawPath);
 
     if (trigger) {
-      var location_2 = {
-        path: srcPath,
+      var lo_2 = {
+        path: l.path,
         query: l.query,
         state: l.state,
         hash: l.hash
       };
       setTimeout(function () {
-        _this._triggerRouteChanged(location_2, 1);
+        _this._triggerRouteChanged(lo_2, 1);
       }, 0);
     }
   };
@@ -1905,7 +2170,10 @@ function () {
   onLoad,
   /** 匹配不到指定的路由组件. */
   onError) {
-    return getMatchedComponent(location, onLoad, onError);
+    var p = parsePathname(location.path);
+    var l = febs.utils.mergeMap(location, p);
+    l.query = febs.utils.mergeMap(p.query, location.query);
+    return getMatchedComponent(l, onLoad, onError);
   };
   /**
    * 路由改变事件.
@@ -2181,7 +2449,7 @@ var redefineAll = function (target, src, options) {
   return target;
 };
 
-var defineProperty$1 = objectDefineProperty.f;
+var defineProperty$2 = objectDefineProperty.f;
 
 
 
@@ -2189,7 +2457,7 @@ var TO_STRING_TAG$2 = wellKnownSymbol('toStringTag');
 
 var setToStringTag = function (it, TAG, STATIC) {
   if (it && !has(it = STATIC ? it : it.prototype, TO_STRING_TAG$2)) {
-    defineProperty$1(it, TO_STRING_TAG$2, { configurable: true, value: TAG });
+    defineProperty$2(it, TO_STRING_TAG$2, { configurable: true, value: TAG });
   }
 };
 
@@ -2342,8 +2610,6 @@ var checkCorrectnessOfIteration = function (exec, SKIP_CLOSING) {
   return ITERATION_SUPPORT;
 };
 
-var html = getBuiltIn('document', 'documentElement');
-
 var engineIsIos = /(iphone|ipod|ipad).*applewebkit/i.test(engineUserAgent);
 
 var location = global_1.location;
@@ -2446,7 +2712,7 @@ var task = {
   clear: clear
 };
 
-var getOwnPropertyDescriptor$2 = objectGetOwnPropertyDescriptor.f;
+var getOwnPropertyDescriptor$3 = objectGetOwnPropertyDescriptor.f;
 
 var macrotask = task.set;
 
@@ -2456,7 +2722,7 @@ var process$2 = global_1.process;
 var Promise$1 = global_1.Promise;
 var IS_NODE = classofRaw(process$2) == 'process';
 // Node.js 11 shows ExperimentalWarning on getting `queueMicrotask`
-var queueMicrotaskDescriptor = getOwnPropertyDescriptor$2(global_1, 'queueMicrotask');
+var queueMicrotaskDescriptor = getOwnPropertyDescriptor$3(global_1, 'queueMicrotask');
 var queueMicrotask = queueMicrotaskDescriptor && queueMicrotaskDescriptor.value;
 
 var flush, head, last, notify, toggle, node, promise, then;
@@ -3284,95 +3550,6 @@ _export({ target: 'Array', proto: true, forced: FORCED$1 }, {
   }
 });
 
-// `Object.keys` method
-// https://tc39.github.io/ecma262/#sec-object.keys
-var objectKeys = Object.keys || function keys(O) {
-  return objectKeysInternal(O, enumBugKeys);
-};
-
-// `Object.defineProperties` method
-// https://tc39.github.io/ecma262/#sec-object.defineproperties
-var objectDefineProperties = descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
-  anObject(O);
-  var keys = objectKeys(Properties);
-  var length = keys.length;
-  var index = 0;
-  var key;
-  while (length > index) objectDefineProperty.f(O, key = keys[index++], Properties[key]);
-  return O;
-};
-
-var GT = '>';
-var LT = '<';
-var PROTOTYPE = 'prototype';
-var SCRIPT = 'script';
-var IE_PROTO = sharedKey('IE_PROTO');
-
-var EmptyConstructor = function () { /* empty */ };
-
-var scriptTag = function (content) {
-  return LT + SCRIPT + GT + content + LT + '/' + SCRIPT + GT;
-};
-
-// Create object with fake `null` prototype: use ActiveX Object with cleared prototype
-var NullProtoObjectViaActiveX = function (activeXDocument) {
-  activeXDocument.write(scriptTag(''));
-  activeXDocument.close();
-  var temp = activeXDocument.parentWindow.Object;
-  activeXDocument = null; // avoid memory leak
-  return temp;
-};
-
-// Create object with fake `null` prototype: use iframe Object with cleared prototype
-var NullProtoObjectViaIFrame = function () {
-  // Thrash, waste and sodomy: IE GC bug
-  var iframe = documentCreateElement('iframe');
-  var JS = 'java' + SCRIPT + ':';
-  var iframeDocument;
-  iframe.style.display = 'none';
-  html.appendChild(iframe);
-  // https://github.com/zloirock/core-js/issues/475
-  iframe.src = String(JS);
-  iframeDocument = iframe.contentWindow.document;
-  iframeDocument.open();
-  iframeDocument.write(scriptTag('document.F=Object'));
-  iframeDocument.close();
-  return iframeDocument.F;
-};
-
-// Check for document.domain and active x support
-// No need to use active x approach when document.domain is not set
-// see https://github.com/es-shims/es5-shim/issues/150
-// variation of https://github.com/kitcambridge/es5-shim/commit/4f738ac066346
-// avoid IE GC bug
-var activeXDocument;
-var NullProtoObject = function () {
-  try {
-    /* global ActiveXObject */
-    activeXDocument = document.domain && new ActiveXObject('htmlfile');
-  } catch (error) { /* ignore */ }
-  NullProtoObject = activeXDocument ? NullProtoObjectViaActiveX(activeXDocument) : NullProtoObjectViaIFrame();
-  var length = enumBugKeys.length;
-  while (length--) delete NullProtoObject[PROTOTYPE][enumBugKeys[length]];
-  return NullProtoObject();
-};
-
-hiddenKeys[IE_PROTO] = true;
-
-// `Object.create` method
-// https://tc39.github.io/ecma262/#sec-object.create
-var objectCreate = Object.create || function create(O, Properties) {
-  var result;
-  if (O !== null) {
-    EmptyConstructor[PROTOTYPE] = anObject(O);
-    result = new EmptyConstructor();
-    EmptyConstructor[PROTOTYPE] = null;
-    // add "__proto__" for Object.getPrototypeOf polyfill
-    result[IE_PROTO] = O;
-  } else result = NullProtoObject();
-  return Properties === undefined ? result : objectDefineProperties(result, Properties);
-};
-
 var UNSCOPABLES = wellKnownSymbol('unscopables');
 var ArrayPrototype$1 = Array.prototype;
 
@@ -3455,34 +3632,6 @@ var createIteratorConstructor = function (IteratorConstructor, NAME, next) {
   iterators[TO_STRING_TAG] = returnThis$1;
   return IteratorConstructor;
 };
-
-var aPossiblePrototype = function (it) {
-  if (!isObject(it) && it !== null) {
-    throw TypeError("Can't set " + String(it) + ' as a prototype');
-  } return it;
-};
-
-// `Object.setPrototypeOf` method
-// https://tc39.github.io/ecma262/#sec-object.setprototypeof
-// Works with __proto__ only. Old v8 can't work with null proto objects.
-/* eslint-disable no-proto */
-var objectSetPrototypeOf = Object.setPrototypeOf || ('__proto__' in {} ? function () {
-  var CORRECT_SETTER = false;
-  var test = {};
-  var setter;
-  try {
-    setter = Object.getOwnPropertyDescriptor(Object.prototype, '__proto__').set;
-    setter.call(test, []);
-    CORRECT_SETTER = test instanceof Array;
-  } catch (error) { /* empty */ }
-  return function setPrototypeOf(O, proto) {
-    anObject(O);
-    aPossiblePrototype(proto);
-    if (CORRECT_SETTER) setter.call(O, proto);
-    else O.__proto__ = proto;
-    return O;
-  };
-}() : undefined);
 
 var IteratorPrototype$2 = iteratorsCore.IteratorPrototype;
 var BUGGY_SAFARI_ITERATORS$1 = iteratorsCore.BUGGY_SAFARI_ITERATORS;
@@ -3677,21 +3826,6 @@ var internalMetadata_2 = internalMetadata.fastKey;
 var internalMetadata_3 = internalMetadata.getWeakData;
 var internalMetadata_4 = internalMetadata.onFreeze;
 
-// makes subclassing work correct for wrapped built-ins
-var inheritIfRequired = function ($this, dummy, Wrapper) {
-  var NewTarget, NewTargetPrototype;
-  if (
-    // it can work only with native `setPrototypeOf`
-    objectSetPrototypeOf &&
-    // we haven't completely correct pre-ES6 way for getting `new.target`, so use this
-    typeof (NewTarget = dummy.constructor) == 'function' &&
-    NewTarget !== Wrapper &&
-    isObject(NewTargetPrototype = NewTarget.prototype) &&
-    NewTargetPrototype !== Wrapper.prototype
-  ) objectSetPrototypeOf($this, NewTargetPrototype);
-  return $this;
-};
-
 var collection = function (CONSTRUCTOR_NAME, wrapper, common) {
   var IS_MAP = CONSTRUCTOR_NAME.indexOf('Map') !== -1;
   var IS_WEAK = CONSTRUCTOR_NAME.indexOf('Weak') !== -1;
@@ -3778,7 +3912,7 @@ var collection = function (CONSTRUCTOR_NAME, wrapper, common) {
   return Constructor;
 };
 
-var defineProperty$2 = objectDefineProperty.f;
+var defineProperty$3 = objectDefineProperty.f;
 
 
 
@@ -3920,7 +4054,7 @@ var collectionStrong = {
         return define(this, value = value === 0 ? 0 : value, value);
       }
     });
-    if (descriptors) defineProperty$2(C.prototype, 'size', {
+    if (descriptors) defineProperty$3(C.prototype, 'size', {
       get: function () {
         return getInternalState(this).size;
       }
@@ -4066,7 +4200,7 @@ for (var COLLECTION_NAME in domIterables) {
 var push = [].push;
 
 // `Array.prototype.{ forEach, map, filter, some, every, find, findIndex }` methods implementation
-var createMethod$2 = function (TYPE) {
+var createMethod$3 = function (TYPE) {
   var IS_MAP = TYPE == 1;
   var IS_FILTER = TYPE == 2;
   var IS_SOME = TYPE == 3;
@@ -4102,25 +4236,25 @@ var createMethod$2 = function (TYPE) {
 var arrayIteration = {
   // `Array.prototype.forEach` method
   // https://tc39.github.io/ecma262/#sec-array.prototype.foreach
-  forEach: createMethod$2(0),
+  forEach: createMethod$3(0),
   // `Array.prototype.map` method
   // https://tc39.github.io/ecma262/#sec-array.prototype.map
-  map: createMethod$2(1),
+  map: createMethod$3(1),
   // `Array.prototype.filter` method
   // https://tc39.github.io/ecma262/#sec-array.prototype.filter
-  filter: createMethod$2(2),
+  filter: createMethod$3(2),
   // `Array.prototype.some` method
   // https://tc39.github.io/ecma262/#sec-array.prototype.some
-  some: createMethod$2(3),
+  some: createMethod$3(3),
   // `Array.prototype.every` method
   // https://tc39.github.io/ecma262/#sec-array.prototype.every
-  every: createMethod$2(4),
+  every: createMethod$3(4),
   // `Array.prototype.find` method
   // https://tc39.github.io/ecma262/#sec-array.prototype.find
-  find: createMethod$2(5),
+  find: createMethod$3(5),
   // `Array.prototype.findIndex` method
   // https://tc39.github.io/ecma262/#sec-array.prototype.findIndex
-  findIndex: createMethod$2(6)
+  findIndex: createMethod$3(6)
 };
 
 var $filter = arrayIteration.filter;
@@ -4237,16 +4371,16 @@ _export({ target: 'Array', proto: true, forced: FORCED$2 }, {
 });
 
 var nativeAssign = Object.assign;
-var defineProperty$3 = Object.defineProperty;
+var defineProperty$4 = Object.defineProperty;
 
 // `Object.assign` method
 // https://tc39.github.io/ecma262/#sec-object.assign
 var objectAssign = !nativeAssign || fails(function () {
   // should have correct order of operations (Edge bug)
-  if (descriptors && nativeAssign({ b: 1 }, nativeAssign(defineProperty$3({}, 'a', {
+  if (descriptors && nativeAssign({ b: 1 }, nativeAssign(defineProperty$4({}, 'a', {
     enumerable: true,
     get: function () {
-      defineProperty$3(this, 'b', {
+      defineProperty$4(this, 'b', {
         value: 3,
         enumerable: false
       });
@@ -4295,36 +4429,6 @@ _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES }, {
     return objectKeys(toObject(it));
   }
 });
-
-// a string of all valid unicode whitespaces
-// eslint-disable-next-line max-len
-var whitespaces = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
-
-var whitespace = '[' + whitespaces + ']';
-var ltrim = RegExp('^' + whitespace + whitespace + '*');
-var rtrim = RegExp(whitespace + whitespace + '*$');
-
-// `String.prototype.{ trim, trimStart, trimEnd, trimLeft, trimRight }` methods implementation
-var createMethod$3 = function (TYPE) {
-  return function ($this) {
-    var string = String(requireObjectCoercible($this));
-    if (TYPE & 1) string = string.replace(ltrim, '');
-    if (TYPE & 2) string = string.replace(rtrim, '');
-    return string;
-  };
-};
-
-var stringTrim = {
-  // `String.prototype.{ trimLeft, trimStart }` methods
-  // https://tc39.github.io/ecma262/#sec-string.prototype.trimstart
-  start: createMethod$3(1),
-  // `String.prototype.{ trimRight, trimEnd }` methods
-  // https://tc39.github.io/ecma262/#sec-string.prototype.trimend
-  end: createMethod$3(2),
-  // `String.prototype.trim` method
-  // https://tc39.github.io/ecma262/#sec-string.prototype.trim
-  trim: createMethod$3(3)
-};
 
 var non = '\u200B\u0085\u180E';
 
@@ -7742,8 +7846,8 @@ fixRegexpWellKnownSymbolLogic('match', 1, function (MATCH, nativeMatch, maybeCal
   ];
 });
 
-var defineProperty$4 = objectDefineProperty.f;
-var getOwnPropertyNames = objectGetOwnPropertyNames.f;
+var defineProperty$5 = objectDefineProperty.f;
+var getOwnPropertyNames$1 = objectGetOwnPropertyNames.f;
 
 
 
@@ -7806,15 +7910,15 @@ if (FORCED$3) {
     return result;
   };
   var proxy = function (key) {
-    key in RegExpWrapper || defineProperty$4(RegExpWrapper, key, {
+    key in RegExpWrapper || defineProperty$5(RegExpWrapper, key, {
       configurable: true,
       get: function () { return NativeRegExp[key]; },
       set: function (it) { NativeRegExp[key] = it; }
     });
   };
-  var keys$1 = getOwnPropertyNames(NativeRegExp);
+  var keys$2 = getOwnPropertyNames$1(NativeRegExp);
   var index = 0;
-  while (keys$1.length > index) proxy(keys$1[index++]);
+  while (keys$2.length > index) proxy(keys$2[index++]);
   RegExpPrototype$1.constructor = RegExpWrapper;
   RegExpWrapper.prototype = RegExpPrototype$1;
   redefine(global_1, 'RegExp', RegExpWrapper);
@@ -8199,7 +8303,7 @@ function beforeDestroy(Vue, ctx) {
   }
 }
 
-var defineProperty$5 = objectDefineProperty.f;
+var defineProperty$6 = objectDefineProperty.f;
 
 var FunctionPrototype = Function.prototype;
 var FunctionPrototypeToString = FunctionPrototype.toString;
@@ -8209,7 +8313,7 @@ var NAME = 'name';
 // Function instances `.name` property
 // https://tc39.github.io/ecma262/#sec-function-instances-name
 if (descriptors && !(NAME in FunctionPrototype)) {
-  defineProperty$5(FunctionPrototype, NAME, {
+  defineProperty$6(FunctionPrototype, NAME, {
     configurable: true,
     get: function () {
       try {
