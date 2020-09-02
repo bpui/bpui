@@ -17,8 +17,9 @@
     <router-link to="/navbar/page2" animate="slideOut">push with slideOut</router-link><br>
     <router-link to="/navbar/page2" animate="lift">push with lift</router-link><br>
     <router-link to="/navbar/page2" animate="fade">push with fade</router-link><br>
-    <div style="height:800px">ddd</div>
 
+    <span @click="$router.push('/')">push to /</span>
+    <div style="height:800px">ddd</div>
     <a name="abc">abc</a>
   </div>
 </template>
@@ -88,6 +89,7 @@
 
     beforeDestroy() {
       console.log('beforeDestroy: navbar');
+      console.log('');
     }
 
     viewAppear(popData: any) {

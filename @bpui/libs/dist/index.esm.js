@@ -1,5 +1,5 @@
 /*!
- * bpui libs v0.2.17
+ * bpui libs v0.2.18
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -7703,16 +7703,18 @@ function registerSvgIcon(iconName, filePath) {
 * @desc: 注册字体图标.
 *         e.g. registerFontIcon(iconName, 'bp-iconBack');
 * @param className: 可以指定一个类名或一组类名.
+* @param familyClassName: 指定的字体类名.
 * @return 返回当前的图标, 可以继续添加子图标.
 */
 
 
-function registerFontIcon(iconName, className) {
+function registerFontIcon(iconName, className, familyClassName) {
   clearIcon(iconName);
   Instance().icons[iconName] = true;
   var children = [];
   Instance().icons_font[iconName] = {
     className: className,
+    familyClassName: familyClassName,
     children: children
   };
   return children;
@@ -8418,6 +8420,10 @@ var bpIcon = {
       dataRender.style.backgroundImage = "url(".concat(icon.value, ")");
       return createElement('i', dataRender, this.$slots["default"]);
     } else {
+      if (icon.value.familyClassName && icon.value.familyClassName.length > 0) {
+        dataRender["class"] = [icon.value.familyClassName];
+      }
+
       dataRender["class"].push(icon.value.className);
       var children = [];
 

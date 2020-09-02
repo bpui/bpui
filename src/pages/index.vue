@@ -39,7 +39,8 @@
       <router-link to="navbar">navbar</router-link>
     </span>
     <span class="span"><a href="/bpui/navbar">navbar by href</a></span>
-    <span class="span"><a href="#abc" @click="$router.push('/navbar')">navbar by router</a></span>
+    <span class="span"><a href="#abc" @click="$router.push('/navbar')">navbar#abc by router</a></span>
+    <span class="span"><a @click="$router.push('/navbar')">navbar by router</a></span>
     <span class="span"><a href="#" @click="bpLibs.router.push('/n`avbar')">navbar by
         bplib.router</a></span>
   </div>
@@ -106,6 +107,7 @@
 
     beforeDestroy() {
       console.log('beforeDestroy: index');
+      console.log('');
     }
 
     viewAppear(popData: any) {

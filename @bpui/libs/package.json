@@ -49,5 +49,5 @@
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
   "name": "@bpui/libs",
-  "version": "0.2.17"
+  "version": "0.2.18"
 }

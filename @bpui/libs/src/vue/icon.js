@@ -36,7 +36,8 @@ export default {
       console.log('icon: ' + this.name + ' isn\'t registered');
       return createElement('i', { class: ['bp-icon'], style: {} }, this.$slots.default);
     }
-    icon = icon||{value:''};
+    icon = icon || { value: '' };
+    
     let dataRender = { class: ['bp-icon'], style: {} };
 
     if (this.width) {
@@ -76,6 +77,10 @@ export default {
       return createElement('i', dataRender, this.$slots.default);
     }
     else {
+      if (icon.value.familyClassName && icon.value.familyClassName.length > 0) {
+        dataRender.class = [icon.value.familyClassName];
+      }
+
       dataRender.class.push(icon.value.className);
 
       let children = [];

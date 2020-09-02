@@ -1,8 +1,8 @@
 {
   "description": "popover",
   "dependencies": {
-    "@bpui/dialog": "^0.1.23",
-    "@bpui/libs": "^0.2.17"
+    "@bpui/dialog": "^0.1.24",
+    "@bpui/libs": "^0.2.18"
   },
   "directories": {},
   "keywords": [],
@@ -35,5 +35,5 @@
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
   "name": "@bpui/popover",
-  "version": "0.1.6"
+  "version": "0.1.7"
 }

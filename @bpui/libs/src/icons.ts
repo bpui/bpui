@@ -55,7 +55,7 @@ function list(): string[]/*IterableIterator<string>*/ {
 /**
 * @desc: 获取图标. 
 */
-function getIcon(iconName:string):{type:'svg'|'font', value:string} {
+function getIcon(iconName:string):{type:'svg'|'font', value:any} {
   let srcName = Instance().icons_alias[iconName];
   if (srcName) {
     iconName = srcName;
@@ -97,13 +97,14 @@ function registerSvgIcon(iconName:string, filePath:string) {
 * @desc: 注册字体图标.
 *         e.g. registerFontIcon(iconName, 'bp-iconBack');
 * @param className: 可以指定一个类名或一组类名.
+* @param familyClassName: 指定的字体类名.
 * @return 返回当前的图标, 可以继续添加子图标.
 */
-function registerFontIcon(iconName:string, className:string):string[] {
+function registerFontIcon(iconName:string, className:string, familyClassName?:string):string[] {
   clearIcon(iconName);
   Instance().icons[iconName] = true;
   let children = [];
-  Instance().icons_font[iconName] = {className, children};
+  Instance().icons_font[iconName] = {className, familyClassName, children};
   return children;
 }
 
