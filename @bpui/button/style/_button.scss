@@ -33,7 +33,7 @@ button,
   padding: .38rem .48rem;
   margin: 2px;
   line-height: 1.25em;
-  border-radius: .25rem;
+  border-radius: $bpButtonBorderRadius;
   transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
   white-space: nowrap;
   word-wrap: break-word;

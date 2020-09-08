@@ -8,11 +8,16 @@
 /* 字体 */
 $bpButtonFontSize: 1rem;
 $bpButtonFontWeight: 400;
+$bpButtonBorderRadius: .25rem;
 
 /* 颜色 */
 $bpButtonTextColor: (
+  /* .bp-btnPrimary */
   Primary: $bpColorPrimary,
+  /* .bp-btnWarning */
   Warning: $bpColorWarn,
+  /* custom */
+
 );
 
 /* 背景颜色 */
