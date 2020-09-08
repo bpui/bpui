@@ -6,12 +6,12 @@
 */
 
 /* 字体 */
-$bpActionsheetFontSize: 1.0rem;
+$bpActionsheetFontSize: 1.0rem !default;
 
 /* 尺寸 */
-$bpActionsheetRadius: 8px;
+$bpActionsheetRadius: 8px !default;
 
 /* 对话框颜色 */
-$bpActionsheetBgColor: hsla(0,0%,100%,.99);
-$bpActionsheetBorderColor: $bpBorderColor;
-$bpActionsheetTextColor: $bpColorPrimary;
+$bpActionsheetBgColor: hsla(0,0%,100%,.99) !default;
+$bpActionsheetBorderColor: $bpBorderColor !default;
+$bpActionsheetTextColor: $bpColorPrimary !default;

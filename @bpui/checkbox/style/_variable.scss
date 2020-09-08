@@ -6,16 +6,16 @@
 */
 
 /* 字体 */
-$bpCheckboxFontSize: 0.9rem;
-$bpCheckboxFontWeight: 400;
+$bpCheckboxFontSize: 0.9rem !default;
+$bpCheckboxFontWeight: 400 !default;
 
 /* 尺寸 */
-$bpCheckboxSize: 18px;
-$bpCheckboxRadius: 2px;
+$bpCheckboxSize: 18px !default;
+$bpCheckboxRadius: 2px !default;
 
 /* 颜色 */
-$bpCheckboxBgColor: $bpColorPrimary;
+$bpCheckboxBgColor: $bpColorPrimary !default;
 /* 中间勾标记的颜色 */
-$bpCheckboxTickColor: #fff;
+$bpCheckboxTickColor: #fff !default;
 /* label颜色 */
-$bpCheckboxLabelColor: #606266;
+$bpCheckboxLabelColor: #606266 !default;

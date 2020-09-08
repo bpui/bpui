@@ -6,16 +6,16 @@
 */
 
 /* 字体 */
-$bpSwitchFontSize: 0.9rem;
-$bpSwitchFontWeight: 400;
+$bpSwitchFontSize: 0.9rem !default;
+$bpSwitchFontWeight: 400 !default;
 
 /* 尺寸 */
-$bpSwitchSize: 32px;
+$bpSwitchSize: 32px !default;
 
 /* 颜色 */
-$bpSwitchBgOnColor: $bpColorPrimary;
-$bpSwitchBgOffColor: #fff;
+$bpSwitchBgOnColor: $bpColorPrimary !default;
+$bpSwitchBgOffColor: #fff !default;
 /* 中间标记的颜色 */
-$bpSwitchTickColor: #fff;
+$bpSwitchTickColor: #fff !default;
 /* label颜色 */
-$bpSwitchLabelColor: #606266;
+$bpSwitchLabelColor: #606266 !default;

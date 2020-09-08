@@ -16,7 +16,7 @@ export default function (Vue:any, components?:ComponentName[]):void {
 
   // 加载必须加载的库.
   (function() { require('@bpui/libs/style/class.scss') })();
-  (function() { require('@bpui/button/style/_index.scss') })();
+  // (function() { require('@bpui/button/style/_index.scss') })();
 
   // 需要注册.
   Vue.use(libs.VuePlugin());
@@ -27,11 +27,14 @@ export default function (Vue:any, components?:ComponentName[]):void {
     for (var i = 0; i < Components.length; i++) {
       var element:any = Components[i];
       components.push(element.name);
-      loadComponents.push(componentInstance.getComponent(element.name));
+      var cc = componentInstance.getComponent(element.name);
+      if (cc) {
+        loadComponents.push(cc);
+      }
     }
   }
 
-  for (var i = 0; i < components.length; i++) {
+  for (var i = 0; i < loadComponents.length; i++) {
     var _de = loadComponents[i].default || loadComponents[i];
     if (_de) {
       if (typeof _de.init === 'function') {

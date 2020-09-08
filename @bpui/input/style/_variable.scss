@@ -6,11 +6,11 @@
 */
 
 /* 字体 */
-$bpInputFontSize: 1rem;
-$bpInputFontWeight: 400;
+$bpInputFontSize: 1rem !default;
+$bpInputFontWeight: 400 !default;
 
 /* 颜色 */
-$bpInputBorderColor: $bpColorPrimary;
-$bpInputBgColor: #fff;
-$bpInputTextColor: #424242;
-$bpInputTextWarnColor: $bpColorWarn;
+$bpInputBorderColor: $bpColorPrimary !default;
+$bpInputBgColor: #fff !default;
+$bpInputTextColor: #424242 !default;
+$bpInputTextWarnColor: $bpColorWarn !default;

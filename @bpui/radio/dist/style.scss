@@ -8,23 +8,23 @@
 */
 
 /* 系统字体 */
-$bpFont: -apple-system-font,"PingFang SC","Microsoft YaHei",sans-serif;  
-$bpFontSize: 17px;
+$bpFont: -apple-system-font,"PingFang SC","Microsoft YaHei",sans-serif !default;  
+$bpFontSize: 17px !default;
 
 /* 主色 */
-$bpColorPrimary: #07C160;
+$bpColorPrimary: #07C160 !default;
 /* 警告色 */
-$bpColorWarn: #FA5151;
+$bpColorWarn: #FA5151 !default;
 /* 背景色 */
-$bpBgColor: #F7F7F7;
+$bpBgColor: #F7F7F7 !default;
 /* 文本颜色 */
-$bpTextColor: #111;
+$bpTextColor: #111 !default;
 /* 副文本颜色 */
-$bpTextColorSecondary: #333;
+$bpTextColorSecondary: #333 !default;
 /* 链接文本颜色 */
-$bpLinkColor: #576B95;
+$bpLinkColor: #576B95 !default;
 /* 边框颜色 */
-$bpBorderColor: rgba(0,0,0,.1);
+$bpBorderColor: rgba(0,0,0,.1) !default;
 
 
 // 不支持圆角
@@ -542,20 +542,20 @@ label {
 */
 
 /* 字体 */
-$bpRadioFontSize: 0.9rem;
-$bpRadioFontWeight: 400;
+$bpRadioFontSize: 0.9rem !default;
+$bpRadioFontWeight: 400 !default;
 
 /* 尺寸 */
-$bpRadioSize: 18px;
-$bpRadioRadius: 50%;
-$bpRadioInnerSize: 6px;
+$bpRadioSize: 18px !default;
+$bpRadioRadius: 50% !default;
+$bpRadioInnerSize: 6px !default;
 
 /* 颜色 */
-$bpRadioBgColor: $bpColorPrimary;
+$bpRadioBgColor: $bpColorPrimary !default;
 /* 中间标记的颜色 */
-$bpRadioTickColor: #fff;
+$bpRadioTickColor: #fff !default;
 /* label颜色 */
-$bpRadioLabelColor: #606266;
+$bpRadioLabelColor: #606266 !default;
 
 
 .bp-radio {

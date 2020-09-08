@@ -6,9 +6,9 @@
 */
 
 /* 字体 */
-$bpButtonFontSize: 1rem;
-$bpButtonFontWeight: 400;
-$bpButtonBorderRadius: .25rem;
+$bpButtonFontSize: 1rem !default;
+$bpButtonFontWeight: 400 !default;
+$bpButtonBorderRadius: .25rem !default;
 
 /* 颜色 */
 $bpButtonTextColor: (
@@ -18,7 +18,7 @@ $bpButtonTextColor: (
   Warning: $bpColorWarn,
   /* custom */
 
-);
+) !default;
 
 /* 背景颜色 */
-$bpButtonBgColor: $bpBgColor;
+$bpButtonBgColor: $bpBgColor !default;

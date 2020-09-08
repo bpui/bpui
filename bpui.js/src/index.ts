@@ -20,6 +20,9 @@ function registerApp(
   // register app.
   libs.registerApp(routes.routePath, routes.basePath);
 
+  // // register css
+  // componentInstance.requireComponentStyle(components);
+
   // Thank the user in console.
   console.log('%c[bpui v' + pkg.version + '] Thanks for visited! 😊', 'color: #e95420;');
 }

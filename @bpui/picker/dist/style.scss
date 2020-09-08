@@ -8,23 +8,23 @@
 */
 
 /* 系统字体 */
-$bpFont: -apple-system-font,"PingFang SC","Microsoft YaHei",sans-serif;  
-$bpFontSize: 17px;
+$bpFont: -apple-system-font,"PingFang SC","Microsoft YaHei",sans-serif !default;  
+$bpFontSize: 17px !default;
 
 /* 主色 */
-$bpColorPrimary: #07C160;
+$bpColorPrimary: #07C160 !default;
 /* 警告色 */
-$bpColorWarn: #FA5151;
+$bpColorWarn: #FA5151 !default;
 /* 背景色 */
-$bpBgColor: #F7F7F7;
+$bpBgColor: #F7F7F7 !default;
 /* 文本颜色 */
-$bpTextColor: #111;
+$bpTextColor: #111 !default;
 /* 副文本颜色 */
-$bpTextColorSecondary: #333;
+$bpTextColorSecondary: #333 !default;
 /* 链接文本颜色 */
-$bpLinkColor: #576B95;
+$bpLinkColor: #576B95 !default;
 /* 边框颜色 */
-$bpBorderColor: rgba(0,0,0,.1);
+$bpBorderColor: rgba(0,0,0,.1) !default;
 
 
 // 不支持圆角
@@ -198,23 +198,23 @@ ipad pro  1024~1366
 */
 
 /* 系统字体 */
-$bpFont: -apple-system-font,"PingFang SC","Microsoft YaHei",sans-serif;  
-$bpFontSize: 17px;
+$bpFont: -apple-system-font,"PingFang SC","Microsoft YaHei",sans-serif !default;  
+$bpFontSize: 17px !default;
 
 /* 主色 */
-$bpColorPrimary: #07C160;
+$bpColorPrimary: #07C160 !default;
 /* 警告色 */
-$bpColorWarn: #FA5151;
+$bpColorWarn: #FA5151 !default;
 /* 背景色 */
-$bpBgColor: #F7F7F7;
+$bpBgColor: #F7F7F7 !default;
 /* 文本颜色 */
-$bpTextColor: #111;
+$bpTextColor: #111 !default;
 /* 副文本颜色 */
-$bpTextColorSecondary: #333;
+$bpTextColorSecondary: #333 !default;
 /* 链接文本颜色 */
-$bpLinkColor: #576B95;
+$bpLinkColor: #576B95 !default;
 /* 边框颜色 */
-$bpBorderColor: rgba(0,0,0,.1);
+$bpBorderColor: rgba(0,0,0,.1) !default;
 
 
 // 不支持圆角
@@ -733,25 +733,25 @@ label {
 */
 
 /* 字体 */
-$bpDialogTitleFontSize: 1.1rem;
-$bpDialogTitleFontWeight: 400;
-$bpDialogFontSize: 0.9rem;
+$bpDialogTitleFontSize: 1.1rem !default;
+$bpDialogTitleFontWeight: 400 !default;
+$bpDialogFontSize: 0.9rem !default;
 
 /* 尺寸 */
-$bpDialogRadius: 6px;
+$bpDialogRadius: 6px !default;
 
 /* 对话框颜色 */
-$bpDialogBgColor: rgba(255, 255, 255, 0.90);
-$bpDialogTitleColor: darken($bpTextColor, 10%);
-$bpDialogTextColor: $bpTextColor;
-$bpDialogCloseColor: #b3b3b3;
+$bpDialogBgColor: rgba(255, 255, 255, 0.90) !default;
+$bpDialogTitleColor: darken($bpTextColor, 10%) !default;
+$bpDialogTextColor: $bpTextColor !default;
+$bpDialogCloseColor: #b3b3b3 !default;
 
-$bpDialogAnimateDurtion: 0.2s;
+$bpDialogAnimateDurtion: 0.2s !default;
 
 /* loading */
-$bpLoadingRadius: 8px;
-$bpLoadingBgColor: rgba(43, 43, 43, 0.92);
-$bpLoadingTextColor: #d4d4d4;
+$bpLoadingRadius: 8px !default;
+$bpLoadingBgColor: rgba(43, 43, 43, 0.92) !default;
+$bpLoadingTextColor: #d4d4d4 !default;
 
 /**
 * Copyright (c) 2020 Copyright bp All Rights Reserved.
@@ -1142,18 +1142,18 @@ $bpLoadingTextColor: #d4d4d4;
 */
 
 /* 字体 */
-$bpPickerToolbarFontSize: 1.0rem;
-$bpPickerToolbarFontWeight: 400;
-$bpPickerFontSize: 1.0rem;
+$bpPickerToolbarFontSize: 1.0rem !default;
+$bpPickerToolbarFontWeight: 400 !default;
+$bpPickerFontSize: 1.0rem !default;
 
 /* 尺寸 */
-$bpPickerRadius: 6px;
+$bpPickerRadius: 6px !default;
 
 /* 对话框颜色 */
-$bpPickerBgColor: rgba(255, 255, 255, 0.90);
-$bpPickerBorderColor: $bpBorderColor;
-$bpPickerToolbarColor: darken($bpTextColor, 10%);
-$bpPickerTextColor: $bpTextColor;
+$bpPickerBgColor: rgba(255, 255, 255, 0.90) !default;
+$bpPickerBorderColor: $bpBorderColor !default;
+$bpPickerToolbarColor: darken($bpTextColor, 10%) !default;
+$bpPickerTextColor: $bpTextColor !default;
 
 /**
 * Copyright (c) 2020 Copyright bp All Rights Reserved.

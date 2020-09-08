@@ -2,7 +2,7 @@
   "description": "bpui",
   "dependencies": {
     "@bpui/actionsheet": "^0.1.10",
-    "@bpui/button": "^0.1.14",
+    "@bpui/button": "^0.1.15",
     "@bpui/checkbox": "^0.1.13",
     "@bpui/dialog": "^0.1.24",
     "@bpui/input": "^0.1.17",
@@ -28,8 +28,13 @@
     "dist",
     "src",
     "style",
-    "types"
+    "types",
+    "bin",
+    "postinstall.js"
   ],
+  "bin": {
+    "bpui": "./bin/index.js"
+  },
   "license": "MIT",
   "main": "src/index.ts",
   "types": "types/index.d.ts",
@@ -39,6 +44,9 @@
       "email": "bpoint.lee@gmail.com"
     }
   ],
+  "scripts": {
+    "postinstall": "node ./postinstall"
+  },
   "name": "bpui.js",
-  "version": "0.1.24"
+  "version": "0.2.3"
 }

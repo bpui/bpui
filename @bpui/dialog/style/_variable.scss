@@ -6,22 +6,22 @@
 */
 
 /* 字体 */
-$bpDialogTitleFontSize: 1.1rem;
-$bpDialogTitleFontWeight: 400;
-$bpDialogFontSize: 0.9rem;
+$bpDialogTitleFontSize: 1.1rem !default;
+$bpDialogTitleFontWeight: 400 !default;
+$bpDialogFontSize: 0.9rem !default;
 
 /* 尺寸 */
-$bpDialogRadius: 6px;
+$bpDialogRadius: 6px !default;
 
 /* 对话框颜色 */
-$bpDialogBgColor: rgba(255, 255, 255, 0.90);
-$bpDialogTitleColor: darken($bpTextColor, 10%);
-$bpDialogTextColor: $bpTextColor;
-$bpDialogCloseColor: #b3b3b3;
+$bpDialogBgColor: rgba(255, 255, 255, 0.90) !default;
+$bpDialogTitleColor: darken($bpTextColor, 10%) !default;
+$bpDialogTextColor: $bpTextColor !default;
+$bpDialogCloseColor: #b3b3b3 !default;
 
-$bpDialogAnimateDurtion: 0.2s;
+$bpDialogAnimateDurtion: 0.2s !default;
 
 /* loading */
-$bpLoadingRadius: 8px;
-$bpLoadingBgColor: rgba(43, 43, 43, 0.92);
-$bpLoadingTextColor: #d4d4d4;
+$bpLoadingRadius: 8px !default;
+$bpLoadingBgColor: rgba(43, 43, 43, 0.92) !default;
+$bpLoadingTextColor: #d4d4d4 !default;

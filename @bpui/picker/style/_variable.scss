@@ -6,15 +6,15 @@
 */
 
 /* 字体 */
-$bpPickerToolbarFontSize: 1.0rem;
-$bpPickerToolbarFontWeight: 400;
-$bpPickerFontSize: 1.0rem;
+$bpPickerToolbarFontSize: 1.0rem !default;
+$bpPickerToolbarFontWeight: 400 !default;
+$bpPickerFontSize: 1.0rem !default;
 
 /* 尺寸 */
-$bpPickerRadius: 6px;
+$bpPickerRadius: 6px !default;
 
 /* 对话框颜色 */
-$bpPickerBgColor: rgba(255, 255, 255, 0.90);
-$bpPickerBorderColor: $bpBorderColor;
-$bpPickerToolbarColor: darken($bpTextColor, 10%);
-$bpPickerTextColor: $bpTextColor;
+$bpPickerBgColor: rgba(255, 255, 255, 0.90) !default;
+$bpPickerBorderColor: $bpBorderColor !default;
+$bpPickerToolbarColor: darken($bpTextColor, 10%) !default;
+$bpPickerTextColor: $bpTextColor !default;

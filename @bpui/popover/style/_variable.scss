@@ -6,12 +6,12 @@
 */
 
 /* 字体 */
-$bpPopoverFontSize: 1.0rem;
+$bpPopoverFontSize: 1.0rem !default;
 
 /* 尺寸 */
-$bpPopoverRadius: 12px;
+$bpPopoverRadius: 12px !default;
 
 /* 对话框颜色 */
-$bpPopoverBgColor: rgba(0, 0, 0, 0.6);
-$bpPopoverBorderColor: $bpBorderColor;
-$bpPopoverTextColor: #eee;
+$bpPopoverBgColor: rgba(0, 0, 0, 0.6) !default;
+$bpPopoverBorderColor: $bpBorderColor !default;
+$bpPopoverTextColor: #eee !default;
