@@ -108,18 +108,23 @@ function build(pkg) {
         rollupVue({
           // defaultLang: 'ts',
         }),
-      ];
+  ];
+  
+  let prefix = '@bpui/';
+  if (pkg == 'bpui.js') {
+    prefix = '';
+  }
 
-  if (febs.file.fileIsExist(path.join(__dirname, '..', `@bpui/${pkg}/tsconfig.json`))) {
+  if (febs.file.fileIsExist(path.join(__dirname, '..', `${prefix}${pkg}/tsconfig.json`))) {
     plugins.splice(1, 0, rollupTypescript2({
-          tsconfig: path.join(__dirname, '..', `@bpui/${pkg}/tsconfig.json`),
+          tsconfig: path.join(__dirname, '..', `${prefix}${pkg}/tsconfig.json`),
         }));
   }
 
   let buildScss;
-  if (febs.file.fileIsExist(path.join(__dirname, '..', `@bpui/${pkg}/style/unpkg.scss`))) {
+  if (febs.file.fileIsExist(path.join(__dirname, '..', `${prefix}${pkg}/style/unpkg.scss`))) {
     buildScss = ()=>rollup.rollup({
-        input: path.join(__dirname, '..', `@bpui/${pkg}/style/unpkg.scss`),
+        input: path.join(__dirname, '..', `${prefix}${pkg}/style/unpkg.scss`),
         plugins: plugins.concat(
           rollupSassBundle(),
         ),
@@ -127,9 +132,9 @@ function build(pkg) {
       })
   }
   let buildCss;
-  if (febs.file.fileIsExist(path.join(__dirname, '..', `@bpui/${pkg}/style/unpkg.scss`))) {
+  if (febs.file.fileIsExist(path.join(__dirname, '..', `${prefix}${pkg}/style/unpkg.scss`))) {
     buildCss = ()=>rollup.rollup({
-        input: path.join(__dirname, '..', `@bpui/${pkg}/style/unpkg.scss`),
+        input: path.join(__dirname, '..', `${prefix}${pkg}/style/unpkg.scss`),
         plugins: plugins.concat(
           rollupSass({
             output: true
@@ -160,7 +165,7 @@ function build(pkg) {
 
   let bundleUmd = (bundle, min, style)=>{bundle.write({
         globals: globals,
-        file: path.join(__dirname, '..', `@bpui/${pkg}/dist/${style?'style':'index'}.${min?'min.':''}js`),
+        file: path.join(__dirname, '..', `${prefix}${pkg}/dist/${style?'style':'index'}.${min?'min.':''}js`),
         format: 'umd',
         name: libName,
         sourcemap: !min,
@@ -171,7 +176,7 @@ function build(pkg) {
   }
   let bundleCjs = (bundle, min, style)=>{bundle.write({
         globals,
-        file: path.join(__dirname, '..', `@bpui/${pkg}/dist/${style?'style':'index'}.common.${min?'min.':''}js`),
+        file: path.join(__dirname, '..', `${prefix}${pkg}/dist/${style?'style':'index'}.common.${min?'min.':''}js`),
         format: 'cjs',
         name: libName,
         sourcemap: !min,
@@ -182,7 +187,7 @@ function build(pkg) {
   }
   let bundleEsm = (bundle, min, style)=>{bundle.write({
         globals,
-        file: path.join(__dirname, '..', `@bpui/${pkg}/dist/${style?'style':'index'}.esm.${min?'min.':''}js`),
+        file: path.join(__dirname, '..', `${prefix}${pkg}/dist/${style?'style':'index'}.esm.${min?'min.':''}js`),
         format: 'esm',
         name: libName,
         sourcemap: !min,
@@ -240,13 +245,19 @@ function getLibName(pkg) {
 }
 
 function getInputMain(pkg) {
-  if (!fs.existsSync(path.join(__dirname, '..', `@bpui/${pkg}/dist`))) {
-    fs.mkdirSync(path.join(__dirname, '..', `@bpui/${pkg}/dist`))
+    
+  let prefix = '@bpui/';
+  if (pkg == 'bpui.js') {
+    prefix = '';
   }
 
-  let inputMain = path.join(__dirname, '..', `@bpui/${pkg}/src/index.ts`);
+  if (!fs.existsSync(path.join(__dirname, '..', `${prefix}${pkg}/dist`))) {
+    fs.mkdirSync(path.join(__dirname, '..', `${prefix}${pkg}/dist`))
+  }
+
+  let inputMain = path.join(__dirname, '..', `${prefix}${pkg}/src/index.ts`);
   if (!febs.file.fileIsExist(inputMain)) {
-    inputMain = path.join(__dirname, '..', `@bpui/${pkg}/src/index.js`);
+    inputMain = path.join(__dirname, '..', `${prefix}${pkg}/src/index.js`);
   }
   return inputMain;
 }

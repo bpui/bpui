@@ -54,4 +54,4 @@ export interface Hook {
    */
   removeWidgetShake(foo:(paddingRight:number)=>void):void;
 }
-export const hook:Hook;
+export const hook: Hook;

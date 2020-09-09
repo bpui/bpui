@@ -1,7 +1,7 @@
 
 import libs from '@bpui/libs';
 import vuePlugins from './vuePlugins';
-import { ComponentName } from '../types';
+import { ComponentName, setNavbarDefaultCfg, registerDialogComponents } from '../types';
 var componentInstance = require('./componentInstance');
 var pkg = require('../package.json');
 
@@ -54,6 +54,8 @@ export default class Instance {
   //
   static get bpNavbarView() { return componentInstance.getComponent('navbarView').default.bpNavbarView; }
   static get bpNavbar() { return componentInstance.getComponent('navbarView').default.bpNavbar; }
+  static get setNavbarDefaultCfg():typeof setNavbarDefaultCfg { return componentInstance.getComponent('navbarView').default.setNavbarDefaultCfg; }
+
   //
   static get bpCheckbox() { return componentInstance.getComponent('checkbox').default.bpCheckbox }
   //
@@ -69,7 +71,7 @@ export default class Instance {
   }
   static get apiWidget() { return componentInstance.getComponent('dialog').default.apiWidget }
   static get bpWidget() { return componentInstance.getComponent('dialog').default.bpWidget }
-  static get registerDialogComponents() { return componentInstance.getComponent('dialog').default.registerDialogComponents }
+  static get registerDialogComponents(): typeof registerDialogComponents { return componentInstance.getComponent('dialog').default.registerDialogComponents }
   //
   static get bpPicker() { return componentInstance.getComponent('picker').default.bpPicker }
   static get PickerDateDatasource() { return componentInstance.getComponent('picker').default.PickerDateDatasource }
