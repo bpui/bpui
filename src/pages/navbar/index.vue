@@ -18,7 +18,7 @@
     <router-link to="/navbar/page2" animate="lift">push with lift</router-link><br>
     <router-link to="/navbar/page2" animate="fade">push with fade</router-link><br>
 
-    <span @click="$router.push('/')">push to /</span>
+    <span @click="$navbar.push({path: '/'}, true)">push to /</span>
     <div style="height:800px">ddd</div>
     <a name="abc">abc</a>
   </div>
@@ -81,6 +81,10 @@
     constructor() {
       super();
       // this.$router.getMatchedComponents()
+    }
+
+    created() {
+      console.log('created: navbar');
     }
 
     mounted() {

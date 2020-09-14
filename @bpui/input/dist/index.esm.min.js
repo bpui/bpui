@@ -1,5 +1,5 @@
 /*!
- * bpui input v0.1.18
+ * bpui input v0.1.19
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */

@@ -1,5 +1,5 @@
 /*!
- * bpui libs v0.2.19
+ * bpui libs v0.2.20
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1402,6 +1402,28 @@
 	  return pathname;
 	}
 
+	var defineProperty$1 = objectDefineProperty.f;
+
+	var FunctionPrototype = Function.prototype;
+	var FunctionPrototypeToString = FunctionPrototype.toString;
+	var nameRE = /^\s*function ([^ (]*)/;
+	var NAME = 'name';
+
+	// Function instances `.name` property
+	// https://tc39.github.io/ecma262/#sec-function-instances-name
+	if (descriptors && !(NAME in FunctionPrototype)) {
+	  defineProperty$1(FunctionPrototype, NAME, {
+	    configurable: true,
+	    get: function () {
+	      try {
+	        return FunctionPrototypeToString.call(this).match(nameRE)[1];
+	      } catch (error) {
+	        return '';
+	      }
+	    }
+	  });
+	}
+
 	function _typeof(obj) {
 	  "@babel/helpers - typeof";
 
@@ -1686,7 +1708,7 @@
 
 	var getOwnPropertyNames = objectGetOwnPropertyNames.f;
 	var getOwnPropertyDescriptor$2 = objectGetOwnPropertyDescriptor.f;
-	var defineProperty$1 = objectDefineProperty.f;
+	var defineProperty$2 = objectDefineProperty.f;
 	var trim = stringTrim.trim;
 
 	var NUMBER = 'Number';
@@ -1744,7 +1766,7 @@
 	    'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger'
 	  ).split(','), j = 0, key; keys$1.length > j; j++) {
 	    if (has(NativeNumber, key = keys$1[j]) && !has(NumberWrapper, key)) {
-	      defineProperty$1(NumberWrapper, key, getOwnPropertyDescriptor$2(NativeNumber, key));
+	      defineProperty$2(NumberWrapper, key, getOwnPropertyDescriptor$2(NativeNumber, key));
 	    }
 	  }
 	  NumberWrapper.prototype = NumberPrototype;
@@ -1980,9 +2002,20 @@
 
 	    var _loop_2 = function _loop_2(j) {
 	      if (routes[j].path == noFileRouter) {
-	        if (routes[j].component) {
-	          onLoad(routes[j].component, function (component) {
-	            routes[j].component = component;
+	        if (routes[j].component || routes[j].name) {
+	          onLoad({
+	            name: routes[j].name,
+	            component: routes[j].component
+	          }, function (component) {
+	            if (component) {
+	              if (component.component) {
+	                routes[j].component = component.component;
+	              }
+
+	              if (component.name) {
+	                routes[j].name = component.name;
+	              }
+	            }
 	          });
 	        } else {
 	          if (onError) onError(new Error("cannot find component: " + routes[j].path));
@@ -2009,8 +2042,15 @@
 
 
 	  if (window[GlobalRouter404]) {
-	    onLoad(window[GlobalRouter404], function (component) {
-	      window[GlobalRouter404] = component;
+	    onLoad({
+	      component: window[GlobalRouter404],
+	      name: null
+	    }, function (component) {
+	      if (component) {
+	        if (component.component) {
+	          window[GlobalRouter404] = component.component;
+	        }
+	      }
 	    });
 	  }
 
@@ -2342,10 +2382,14 @@
 
 	function vibrate(pattern) {
 	  if (navigator) {
-	    var _vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+	    var canVibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
 
-	    if (!_vibrate && __debug) {
-	      console.log("vibrate not supported");
+	    if (!canVibrate) {
+	      if (__debug) {
+	        console.log("vibrate not supported");
+	      }
+
+	      return;
 	    }
 
 	    navigator.vibrate(pattern);
@@ -2451,7 +2495,7 @@
 	  return target;
 	};
 
-	var defineProperty$2 = objectDefineProperty.f;
+	var defineProperty$3 = objectDefineProperty.f;
 
 
 
@@ -2459,7 +2503,7 @@
 
 	var setToStringTag = function (it, TAG, STATIC) {
 	  if (it && !has(it = STATIC ? it : it.prototype, TO_STRING_TAG$2)) {
-	    defineProperty$2(it, TO_STRING_TAG$2, { configurable: true, value: TAG });
+	    defineProperty$3(it, TO_STRING_TAG$2, { configurable: true, value: TAG });
 	  }
 	};
 
@@ -3914,7 +3958,7 @@
 	  return Constructor;
 	};
 
-	var defineProperty$3 = objectDefineProperty.f;
+	var defineProperty$4 = objectDefineProperty.f;
 
 
 
@@ -4056,7 +4100,7 @@
 	        return define(this, value = value === 0 ? 0 : value, value);
 	      }
 	    });
-	    if (descriptors) defineProperty$3(C.prototype, 'size', {
+	    if (descriptors) defineProperty$4(C.prototype, 'size', {
 	      get: function () {
 	        return getInternalState(this).size;
 	      }
@@ -4373,16 +4417,16 @@
 	});
 
 	var nativeAssign = Object.assign;
-	var defineProperty$4 = Object.defineProperty;
+	var defineProperty$5 = Object.defineProperty;
 
 	// `Object.assign` method
 	// https://tc39.github.io/ecma262/#sec-object.assign
 	var objectAssign = !nativeAssign || fails(function () {
 	  // should have correct order of operations (Edge bug)
-	  if (descriptors && nativeAssign({ b: 1 }, nativeAssign(defineProperty$4({}, 'a', {
+	  if (descriptors && nativeAssign({ b: 1 }, nativeAssign(defineProperty$5({}, 'a', {
 	    enumerable: true,
 	    get: function () {
-	      defineProperty$4(this, 'b', {
+	      defineProperty$5(this, 'b', {
 	        value: 3,
 	        enumerable: false
 	      });
@@ -7850,7 +7894,7 @@
 	  ];
 	});
 
-	var defineProperty$5 = objectDefineProperty.f;
+	var defineProperty$6 = objectDefineProperty.f;
 	var getOwnPropertyNames$1 = objectGetOwnPropertyNames.f;
 
 
@@ -7914,7 +7958,7 @@
 	    return result;
 	  };
 	  var proxy = function (key) {
-	    key in RegExpWrapper || defineProperty$5(RegExpWrapper, key, {
+	    key in RegExpWrapper || defineProperty$6(RegExpWrapper, key, {
 	      configurable: true,
 	      get: function () { return NativeRegExp[key]; },
 	      set: function (it) { NativeRegExp[key] = it; }
@@ -8305,28 +8349,6 @@
 	    ctx[s_timer].dispose();
 	    ctx[s_timer] = null;
 	  }
-	}
-
-	var defineProperty$6 = objectDefineProperty.f;
-
-	var FunctionPrototype = Function.prototype;
-	var FunctionPrototypeToString = FunctionPrototype.toString;
-	var nameRE = /^\s*function ([^ (]*)/;
-	var NAME = 'name';
-
-	// Function instances `.name` property
-	// https://tc39.github.io/ecma262/#sec-function-instances-name
-	if (descriptors && !(NAME in FunctionPrototype)) {
-	  defineProperty$6(FunctionPrototype, NAME, {
-	    configurable: true,
-	    get: function () {
-	      try {
-	        return FunctionPrototypeToString.call(this).match(nameRE)[1];
-	      } catch (error) {
-	        return '';
-	      }
-	    }
-	  });
 	}
 
 	var bpIcon = {

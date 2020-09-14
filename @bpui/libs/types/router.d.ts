@@ -56,15 +56,18 @@ declare namespace bp {
 
     /**
      * 获得对应location的一个页面组件. (返回的是组件类, 而非创建出来的实例)
+     * 
+     * @param onLoad  加载完成的回调.
+     *      - component: 加载完成的组件, 可能为组件对象或注册的组件唯一标识.
+     *      - onLoaded: 如果是异步加载,在生成完成时, 可以调用onLoaded将加载完成的组件回传, 下次加载时,将直接返回加载后的组件.
+     * @param onError 匹配不到指定的路由组件的回调.
      */
     getMatchedComponent( 
       location: Location, 
-      /** 
-       *  加载完成. 
-       *  如果是异步加载,在生成完成时, 可以调用onLoaded将加载完成的组件回传, 下次加载时,将直接返回加载后的组件.
-       */
-      onLoad:(component:any, onLoaded?:(component:any)=>void)=>void,
-      /** 匹配不到指定的路由组件. */
+      onLoad: (
+        component: { name: string, component: any },
+        onLoaded?: (component: { name?: string, component: any }) => void
+      ) => void,
       onError:(err:Error)=>void
     ): void;
 

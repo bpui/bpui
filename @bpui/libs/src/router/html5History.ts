@@ -143,7 +143,7 @@ export default class Html5History {
   getMatchedComponent( 
     location: bp.Location,
     /** 加载完成. */
-    onLoad:(component:any, onLoaded?:(component:any)=>void)=>void,
+    onLoad:(component:{name: string, component: any}, onLoaded?:(component: {name?: string, component: any})=>void)=>void,
     /** 匹配不到指定的路由组件. */
     onError:(err:Error)=>void 
   ): Object {

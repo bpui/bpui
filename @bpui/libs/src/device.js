@@ -25,13 +25,16 @@ export {
 */
 function vibrate(pattern) {
   if (navigator) {
-    let vibrate = navigator.vibrate ||
+    let canVibrate = navigator.vibrate ||
                     navigator.webkitVibrate ||
                     navigator.mozVibrate ||
                     navigator.msVibrate;
   
-    if(!vibrate && __debug) {
-      console.log("vibrate not supported");
+    if (!canVibrate) {
+      if (__debug) {
+        console.log("vibrate not supported");
+      }
+      return;
     }
 
     navigator.vibrate(pattern);
