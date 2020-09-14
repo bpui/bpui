@@ -3,7 +3,7 @@
 * Copyright (c) 2020 Copyright bp All Rights Reserved.
 * Author: lipengxiang
 * Date: 2020-02-27 15:05
-* Desc: 
+* Desc:
 */
  -->
 
@@ -33,7 +33,7 @@
     <bp-input type="int" max="100" min="8" value="123456111"></bp-input>
     <bp-input prefixIcon="loading" type="float" max="100" value="123456111"></bp-input>
     <bp-input suffixIcon="loading" type="float" max="100" value="123456111"></bp-input>
-    
+
   </div>
 </template>
 

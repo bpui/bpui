@@ -7,7 +7,7 @@
 * Desc: 所有的组件.
 */
 
-import Components from './bpui.components';
+import Components from './bpui.components.dev';
 
 // const SymComponent = Symbol('$BpSymCompon?ent');
 var SymComponent = ('$BpSymComponent');

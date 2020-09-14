@@ -10,10 +10,10 @@
 module.exports = [
   {
     name: 'navbarView',
-    // style: function() { return require('../../@bpui/navbar-view/style/_index.scss') },
-    // lib: function() { return require('../../@bpui/navbar-view') },
-    style: function() { return require('../../../components/navbar-view/style/_index.scss') },
-    lib: function() { return require('../../../components/navbar-view') },
+    style: function() { return require('../../@bpui/navbar-view/style/_index.scss') },
+    lib: function() { return require('../../@bpui/navbar-view') },
+    // style: function() { return require('../../../components/navbar-view/style/_index.scss') },
+    // lib: function() { return require('../../../components/navbar-view') },
   },
   {
     name: 'checkbox',
@@ -58,5 +58,10 @@ module.exports = [
   {
     name: 'button',
     style: function() { return require('../../@bpui/button/style/_index.scss') },
+  },
+  {
+    name: 'select',
+    style: function() { return require('../../@bpui/select/style/_index.scss') },
+    lib: function() { return require('../../@bpui/select/src/index') },
   },
 ]
