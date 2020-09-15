@@ -47,10 +47,14 @@ function done(args, workDir) {
 
   console.log('');
   console.log('');
-  console.log('> Success: Copy all components styles to `src/bpui/style`');
+  console.log('**************************************************************');
+  console.log('> Success: Copy all components styles to `src/bpui/style`     ');
   console.log('>    import \'src/bpui/style\'');
+  console.log('**************************************************************');
   console.log('');
   console.log('> Can run \'./node_modules/bpui.js/bin/index.js init\' to copy styles agent.')
+  console.log('');
+  console.log('');
 }
 
 
