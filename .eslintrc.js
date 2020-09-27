@@ -7,7 +7,7 @@ module.exports = {
     node: true
   },
   // https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style
-  extends: ['standard', 'plugin:vue/essential', 'eslint:recommended', '@vue/typescript'],
+  // extends: ['standard', 'plugin:vue/essential', 'eslint:recommended', '@vue/typescript'],
   // required to lint *.vue files
   plugins: ['html'],
   globals: {

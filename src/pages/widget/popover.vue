@@ -53,7 +53,7 @@
 
   @Component({
     components: {
-      bpPopover: bpui.bpPopover,
+      bpPopover: bpui.bpPopover as any,
     }
   })
   export default class extends Vue {

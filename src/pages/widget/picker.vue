@@ -44,7 +44,7 @@
 
   @Component({
     components: {
-      bpPicker: bpui.bpPicker,
+      bpPicker: bpui.bpPicker as any,
     }
   })
   export default class extends Vue {

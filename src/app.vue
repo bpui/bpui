@@ -13,7 +13,7 @@ import bpui from 'bpui.js';
 
 @Component({
   components: {
-    bpNavbarView: bpui.bpNavbarView,
+    bpNavbarView: bpui.bpNavbarView as any,
   }
 })
 export default class extends Vue {

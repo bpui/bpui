@@ -1,12 +1,3 @@
-<!--
-/**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
-* Author: lipengxiang
-* Date: 2020-02-27 15:05
-* Desc: 
-*/
- -->
-
 <template>
   <div>
     <h4>placeholder</h4>
@@ -24,8 +15,10 @@
     <bp-input type="tel" value="15888888888"></bp-input>
 
     <h4>textarea</h4>
-    <bp-input type="textarea" rows="2" maxlength="100" v-model="text1"></bp-input>
+    <bp-input ref="aa" type="textarea" rows="2" maxlength="100" v-model="text1"></bp-input>
     <div>{{text1}}</div>
+
+    <button @click="onClick">focus</button>
 
     <input autocomplete="off">
 
@@ -98,6 +91,14 @@
         console.log(this.text);
         this.text = '11121212';
       });
+    }
+
+    onClick() {
+      let aa:any = this.$refs.aa;
+      setTimeout(()=>{
+        aa.focus();
+      }, 100);
+      
     }
   }
 </script>

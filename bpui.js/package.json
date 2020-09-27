@@ -5,7 +5,7 @@
     "@bpui/button": "^0.1.17",
     "@bpui/checkbox": "^0.1.15",
     "@bpui/dialog": "^0.1.26",
-    "@bpui/input": "^0.1.19",
+    "@bpui/input": "^0.1.20",
     "@bpui/libs": "^0.2.20",
     "@bpui/navbar-view": "^0.1.20",
     "@bpui/picker": "^0.1.30",
@@ -49,5 +49,5 @@
     "postinstall": "node ./postinstall"
   },
   "name": "bpui.js",
-  "version": "0.2.10"
+  "version": "0.2.11"
 }

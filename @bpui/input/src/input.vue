@@ -13,7 +13,7 @@
     'bp-input__warn': isInputWrong,
     'bp-input__textarea': type === 'textarea',
     'bp-input__disabled': disabled !== undefined && disabled !== false,
-    'bp-input__focus': focus
+    'bp-input__focus': isFocus
   }">
     <bp-icon v-if="prefixIcon" width="25px" class="bp-input__prefixIcon" :name="prefixIcon" @click="_onPrefixIcon" />
 
@@ -112,7 +112,7 @@
         regInput: null,
         defaultValue: null,
         isUnsigned: false,
-        focus: false,
+        isFocus: false,
         typelen: 0,
         floatStep: null,
         _min: Number.MIN_SAFE_INTEGER,
@@ -566,7 +566,7 @@
           this.isInputWrong = false;
           this.$emit('focus', event);
 
-          this.focus = true;
+          this.isFocus = true;
 
           // mobile side scroll.
           if (febs.utils.browserIsMobile()) {
@@ -588,7 +588,7 @@
         el.off('blur');
         el.on('blur', (event) => {
 
-          this.focus = false;
+          this.isFocus = false;
           
           if (febs.utils.browserIsMobile()) {
             $('body').off('touchstart', autoHide);
@@ -769,6 +769,15 @@
           return;
           // return value;
         }
+      },
+      focus: function() {
+        let elem = $(this.$el);
+        if (this.type === 'textarea') {
+          elem = $(elem.children('textarea')[0]);
+        } else {
+          elem = $(elem.children('input')[0]);
+        }
+        elem[0].focus();
       },
       /**
        * @desc 设置or获取文本

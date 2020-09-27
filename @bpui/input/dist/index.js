@@ -1,5 +1,5 @@
 /*!
- * bpui input v0.1.19
+ * bpui input v0.1.20
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1491,7 +1491,7 @@
         regInput: null,
         defaultValue: null,
         isUnsigned: false,
-        focus: false,
+        isFocus: false,
         typelen: 0,
         floatStep: null,
         _min: Number.MIN_SAFE_INTEGER,
@@ -2030,7 +2030,7 @@
 
           this.isInputWrong = false;
           this.$emit('focus', event);
-          this.focus = true; // mobile side scroll.
+          this.isFocus = true; // mobile side scroll.
 
           if (febs.utils.browserIsMobile()) {
             setTimeout(function () {
@@ -2054,7 +2054,7 @@
 
           _newArrowCheck(this, _this14);
 
-          this.focus = false;
+          this.isFocus = false;
 
           if (febs.utils.browserIsMobile()) {
             $('body').off('touchstart', autoHide);
@@ -2236,6 +2236,17 @@
           if (callback) callback(value);
           return; // return value;
         }
+      },
+      focus: function focus() {
+        var elem = $(this.$el);
+
+        if (this.type === 'textarea') {
+          elem = $(elem.children('textarea')[0]);
+        } else {
+          elem = $(elem.children('input')[0]);
+        }
+
+        elem[0].focus();
       },
 
       /**
@@ -2547,7 +2558,7 @@
         "bp-input__warn": _vm.isInputWrong,
         "bp-input__textarea": _vm.type === "textarea",
         "bp-input__disabled": _vm.disabled !== undefined && _vm.disabled !== false,
-        "bp-input__focus": _vm.focus
+        "bp-input__focus": _vm.isFocus
       }
     }, [_vm.prefixIcon ? _c("bp-icon", {
       staticClass: "bp-input__prefixIcon",

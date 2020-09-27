@@ -59,7 +59,7 @@
 
   @Component({
     components: {
-      bpActionsheet: bpui.bpActionsheet,
+      bpActionsheet: bpui.bpActionsheet as any,
     }
   })
   export default class extends Vue {
