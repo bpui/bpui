@@ -33,7 +33,7 @@
       "scripthost"
     ],
     "typeRoots": [
-      "src/bpui"
+      "src/bpui",
     ]
   },
   "include": [
