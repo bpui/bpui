@@ -36,12 +36,18 @@ export default {
   name: "",
   components: {},
   props: {
-    checked: { default: false },
-    disabled: { default: false, type: Boolean },
-  },
-  model: {
-    prop: "checked",
-    event: "change"
+    checked: {
+      default: null,
+      type: Boolean
+    },
+    disabled: {
+      default: false,
+      type: Boolean
+    },
+    value: {
+      default: null,
+      type: Boolean,
+    }
   },
   data() {
     return {
@@ -49,21 +55,39 @@ export default {
       isChecked: false
     };
   },
+  watch: {
+    value: function (val, oldVal) {
+      this.isChecked = val;
+    },
+    checked: function (val, oldVal) {
+      if (this.value === true || this.value === false) {
+        return;
+      }
+
+      this.isChecked = val;
+    },
+  },
   computed: {
     isDisabled() {
       return this.disabled || this.disabled !== false;
     }
   },
   created() {
-    this.isChecked = this.checked;
+    if (this.checked === 'checked' || this.checked===true) {
+      this.isChecked = true; 
+    }
+    else if (this.checked !== false) {
+      this.isChecked = this.value;
+    }
   },
   beforeDestroy() {},
   beforeMount() {},
   mounted() {},
   methods: {
     handelChange(e) {
-      this.$emit("change", e.target.checked);
       this.isChecked = e.target.checked;
+      this.$emit('input', this.isChecked);
+      this.$emit("change", this.isChecked);
     }
   }
 };

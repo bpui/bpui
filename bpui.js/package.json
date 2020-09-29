@@ -3,7 +3,7 @@
   "dependencies": {
     "@bpui/actionsheet": "^0.1.12",
     "@bpui/button": "^0.1.17",
-    "@bpui/checkbox": "^0.1.15",
+    "@bpui/checkbox": "^0.1.16",
     "@bpui/dialog": "^0.1.26",
     "@bpui/input": "^0.1.20",
     "@bpui/libs": "^0.2.20",
@@ -11,7 +11,7 @@
     "@bpui/picker": "^0.1.30",
     "@bpui/popover": "^0.1.9",
     "@bpui/radio": "^0.1.14",
-    "@bpui/switch": "^0.1.13"
+    "@bpui/switch": "^0.1.15"
   },
   "devDependencies": {},
   "directories": {},
@@ -49,5 +49,5 @@
     "postinstall": "node ./postinstall"
   },
   "name": "bpui.js",
-  "version": "0.2.11"
+  "version": "0.2.12"
 }

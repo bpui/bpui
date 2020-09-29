@@ -16,7 +16,7 @@
       <span class="bp-checkbox__inner" :class="[hovering?'bp-checkbox__inner_hover':'',isChecked?'bp-checkbox__inner_checked':'']">
         <bp-icon v-if="isChecked" name='bp-checkbox_checked'/>
       </span>
-      <input type="checkbox" class="bp-checkbox__original" :checked="checked" @change="handelChange"
+      <input type="checkbox" class="bp-checkbox__original" :checked="isChecked" @change="handelChange"
         v-bind="$attrs" :disabled="isDisabled" />
     </span>
     <span class="bp-checkbox__label" v-if="$slots.default"><slot name="default" /></span>
@@ -28,16 +28,29 @@
     components: {},
     props: {
       checked: {
-        default: false
+        default: null,
+        type: Boolean
       },
       disabled: {
         default: false,
         type: Boolean
       },
+      value: {
+        default: null,
+        type: Boolean,
+      }
     },
-    model: {
-      prop: "checked",
-      event: "change"
+    watch: {
+      value: function (val, oldVal) {
+        this.isChecked = val;
+      },
+      checked: function (val, oldVal) {
+        if (this.value === true || this.value === false) {
+          return;
+        }
+
+        this.isChecked = val;
+      },
     },
     data() {
       return {
@@ -51,15 +64,21 @@
       }
     },
     created() {
-      this.isChecked = this.checked;
+      if (this.checked === 'checked' || this.checked===true) {
+        this.isChecked = true; 
+      }
+      else if (this.checked !== false) {
+        this.isChecked = this.value;
+      }
     },
     beforeDestroy() {},
     beforeMount() {},
     mounted() {},
     methods: {
       handelChange(e) {
-        this.$emit("change", e.target.checked);
         this.isChecked = e.target.checked;
+        this.$emit('input', this.isChecked);
+        this.$emit("change", this.isChecked);
       }
     }
   };

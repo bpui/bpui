@@ -1,5 +1,5 @@
 /*!
- * bpui switch v0.1.13
+ * bpui switch v0.1.15
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -48,16 +48,17 @@
     components: {},
     props: {
       checked: {
-        "default": false
+        "default": null,
+        type: Boolean
       },
       disabled: {
         "default": false,
         type: Boolean
+      },
+      value: {
+        "default": null,
+        type: Boolean
       }
-    },
-    model: {
-      prop: "checked",
-      event: "change"
     },
     data: function data() {
       return {
@@ -65,21 +66,38 @@
         isChecked: false
       };
     },
+    watch: {
+      value: function value(val, oldVal) {
+        this.isChecked = val;
+      },
+      checked: function checked(val, oldVal) {
+        if (this.value === true || this.value === false) {
+          return;
+        }
+
+        this.isChecked = val;
+      }
+    },
     computed: {
       isDisabled: function isDisabled() {
         return this.disabled || this.disabled !== false;
       }
     },
     created: function created() {
-      this.isChecked = this.checked;
+      if (this.checked === 'checked' || this.checked === true) {
+        this.isChecked = true;
+      } else if (this.checked !== false) {
+        this.isChecked = this.value;
+      }
     },
     beforeDestroy: function beforeDestroy() {},
     beforeMount: function beforeMount() {},
     mounted: function mounted() {},
     methods: {
       handelChange: function handelChange(e) {
-        this.$emit("change", e.target.checked);
         this.isChecked = e.target.checked;
+        this.$emit('input', this.isChecked);
+        this.$emit("change", this.isChecked);
       }
     }
   };

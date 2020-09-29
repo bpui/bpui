@@ -10,10 +10,12 @@
 <template>
   <div>
     <h4>example</h4>
-    <bp-checkbox v-model="checked" >chk1</bp-checkbox>
-    <bp-checkbox checked="checked" >chk2</bp-checkbox>
+    <bp-checkbox v-model="checked" @change="onChange">chk1</bp-checkbox>
+    <bp-checkbox :checked="checked" >chk2</bp-checkbox>
     <bp-checkbox disabled="disabled" >chk3</bp-checkbox>
     <bp-checkbox :checked="true" disabled="disabled" >chk4</bp-checkbox>
+
+    <button @click="checked=false">unchecked chk1</button>
   </div>
 </template>
 
@@ -72,6 +74,10 @@
     }
 
     mounted() {
+    }
+
+    onChange(v) {
+      console.log(v, this.checked);
     }
   }
 </script>

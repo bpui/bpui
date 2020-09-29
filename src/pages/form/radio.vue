@@ -15,6 +15,8 @@
       <bp-radio value="2">选项2</bp-radio>
     </bp-radio-group>
 
+    <button @click="value1=2">sel 选项2</button>
+
     <h4>disabled</h4>
     <bp-radio-group disabled="disabled">
       <bp-radio value="1">选项1</bp-radio>

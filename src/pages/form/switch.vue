@@ -10,8 +10,10 @@
 <template>
   <div>
     <h4>example</h4>
-    <bp-switch v-model="checked" >normal</bp-switch>
+    <bp-switch v-model="checked" @change="onChange">normal</bp-switch>
     <bp-switch disabled="disabled" >disabled</bp-switch>
+
+    <button @click="checked=false">unchecked swtich1</button>
   </div>
 </template>
 
@@ -70,6 +72,10 @@
     }
 
     mounted() {
+    }
+    
+    onChange(v) {
+      console.log(v, this.checked);
     }
   }
 </script>

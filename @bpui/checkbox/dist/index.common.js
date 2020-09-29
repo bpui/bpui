@@ -1,5 +1,5 @@
 /*!
- * bpui checkbox v0.1.15
+ * bpui checkbox v0.1.16
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -39,16 +39,29 @@ var script = {
   components: {},
   props: {
     checked: {
-      "default": false
+      "default": null,
+      type: Boolean
     },
     disabled: {
       "default": false,
       type: Boolean
+    },
+    value: {
+      "default": null,
+      type: Boolean
     }
   },
-  model: {
-    prop: "checked",
-    event: "change"
+  watch: {
+    value: function value(val, oldVal) {
+      this.isChecked = val;
+    },
+    checked: function checked(val, oldVal) {
+      if (this.value === true || this.value === false) {
+        return;
+      }
+
+      this.isChecked = val;
+    }
   },
   data: function data() {
     return {
@@ -62,15 +75,20 @@ var script = {
     }
   },
   created: function created() {
-    this.isChecked = this.checked;
+    if (this.checked === 'checked' || this.checked === true) {
+      this.isChecked = true;
+    } else if (this.checked !== false) {
+      this.isChecked = this.value;
+    }
   },
   beforeDestroy: function beforeDestroy() {},
   beforeMount: function beforeMount() {},
   mounted: function mounted() {},
   methods: {
     handelChange: function handelChange(e) {
-      this.$emit("change", e.target.checked);
       this.isChecked = e.target.checked;
+      this.$emit('input', this.isChecked);
+      this.$emit("change", this.isChecked);
     }
   }
 };
@@ -860,7 +878,7 @@ var __vue_render__ = function __vue_render__() {
       disabled: _vm.isDisabled
     },
     domProps: {
-      checked: _vm.checked
+      checked: _vm.isChecked
     },
     on: {
       change: _vm.handelChange
