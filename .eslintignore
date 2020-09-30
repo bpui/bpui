@@ -1,6 +1,0 @@
-/ext
-/babel.config.js
-/config.js
-/vue.config.js
-/@bpui/**/*
-/src/router/_tmpConfig.ts
