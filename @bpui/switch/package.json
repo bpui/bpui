@@ -1,7 +1,7 @@
 {
   "description": "switch button",
   "dependencies": {
-    "@bpui/libs": "^0.2.20"
+    "@bpui/libs": "^0.2.21"
   },
   "directories": {},
   "keywords": [],
@@ -38,5 +38,5 @@
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
   "name": "@bpui/switch",
-  "version": "0.1.15"
+  "version": "0.1.16"
 }

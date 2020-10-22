@@ -1,5 +1,5 @@
 /*!
- * bpui picker v0.1.30
+ * bpui picker v0.1.31
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */

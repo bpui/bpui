@@ -1,5 +1,5 @@
 /*!
- * bpui actionsheet v0.1.12
+ * bpui actionsheet v0.1.13
  * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
