@@ -114,28 +114,38 @@
     }
 
     showAlert():void {
+      // @ts-ignore
       this.$bpWidget.showAlert({content:'aaaa', confirm:(id)=>{
+        // @ts-ignore
         this.$bpWidget.hideAlert(id);
       }})
     }
 
     showConfirm():void {
+      // @ts-ignore
       this.$bpWidget.showConfirm({content:'确定取消?', cancel:(id)=>{
+        // @ts-ignore
         this.$bpWidget.hideConfirm(id);
       }, confirm:(id)=>{
+        // @ts-ignore
         this.$bpWidget.showAlert('确认');
       }})
     }
     
     showLoading():void {
+      // @ts-ignore
       this.$bpWidget.showLoading('hide in 4s');
       this.$timer.sleep(1000)
+                  // @ts-ignore
                  .then(()=>{ this.$bpWidget.showLoading('hide in 3s'); })
                  .then(()=>this.$timer.sleep(1000))
+                 // @ts-ignore
                  .then(()=>{ this.$bpWidget.showLoading('hide in 2s'); })
                  .then(()=>this.$timer.sleep(1000))
+                 // @ts-ignore
                  .then(()=>{ this.$bpWidget.showLoading('hide in 1s'); })
                  .then(()=>this.$timer.sleep(1000))
+                 // @ts-ignore
                  .then(()=>{ this.$bpWidget.hideLoading(); });
     }
   }

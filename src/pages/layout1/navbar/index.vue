@@ -13,7 +13,7 @@
     1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
     <div style="height:300px"></div>
     <button @click="pushNav">push use api</button>
-    <router-link to="/navbar/page2" :data="data">push</router-link><br>
+    <router-link to="./page2" :data="data">push</router-link><br>
     <router-link to="/navbar/page2" animate="slideOut">push with slideOut</router-link><br>
     <router-link to="/navbar/page2" animate="lift">push with lift</router-link><br>
     <router-link to="/navbar/page2" animate="fade">push with fade</router-link><br>

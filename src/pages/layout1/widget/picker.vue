@@ -99,18 +99,22 @@
 
     onConfirm2() {
       console.log('confirm', this.value2);
+      // @ts-ignore
       this.$bpWidget.showAlert( JSON.stringify(this.value2));
     }
     onChange2(value) {
       console.log('change', value);
+      // @ts-ignore
       this.$bpWidget.showToast(JSON.stringify(value));
     }
     onConfirm1() {
       console.log('confirm', this.value1, this.picker1.getValue());
+      // @ts-ignore
       this.$bpWidget.showAlert(this.value1);
     }
     onChange1(value) {
       console.log('change', value);
+      // @ts-ignore
       this.$bpWidget.showToast(value);
     }
   }
