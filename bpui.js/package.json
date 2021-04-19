@@ -7,7 +7,7 @@
     "@bpui/dialog": "^0.1.27",
     "@bpui/input": "^0.1.21",
     "@bpui/libs": "^0.2.21",
-    "@bpui/navbar-view": "^0.1.22",
+    "@bpui/navbar-view": "^0.1.23",
     "@bpui/picker": "^0.1.31",
     "@bpui/popover": "^0.1.10",
     "@bpui/radio": "^0.1.15",
@@ -48,5 +48,5 @@
     "postinstall": "node ./postinstall"
   },
   "name": "bpui.js",
-  "version": "0.2.14"
+  "version": "0.2.15"
 }
