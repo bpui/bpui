@@ -29,6 +29,11 @@
     <button @click="$bpWidget.showToast({content:'hello world2!', pos:'center', durable: 4000})">toast center</button>
     <button @click="$bpWidget.showToast({content:'创建成功!', pos:'center', icon: 'ok'})">toast center (icon)</button>
  
+    <!-- api custom -->
+    <h4>api custom</h4>
+    <button @click="showCustom">show custom</button>
+
+
     <!-- dialog1 -->
     <bp-dialog :visible.sync="visible1" title="hello">
       <div style="height:1000px">
@@ -68,6 +73,7 @@
   } from "vuex-class";
 
   import bpui from 'bpui.js';
+  import customDialog from './customDialog.vue';
 
   @Component({
     components: {
@@ -147,6 +153,15 @@
                  .then(()=>this.$timer.sleep(1000))
                  // @ts-ignore
                  .then(()=>{ this.$bpWidget.hideLoading(); });
+    }
+    
+    showCustom():void {
+      bpui.registerDialogCustom("test", customDialog);
+      let dialogId = bpui.apiWidget.showCustom("test");
+
+      setTimeout(()=>{
+        bpui.apiWidget.hideCustom(dialogId);
+      }, 5000);
     }
   }
 </script>

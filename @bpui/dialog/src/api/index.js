@@ -10,10 +10,12 @@
 import * as apiDialog from './dialog';
 import * as apiLoading from './loading';
 import * as apiToast from './toast';
+import * as apiCustom from './custom';
 
 
 export default {
   ...apiDialog,
   ...apiLoading,
   ...apiToast,
+  ...apiCustom,
 }

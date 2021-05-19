@@ -15,7 +15,7 @@ import * as hook from './utils/hooks';
 
 import * as mask from './utils/mask';
 
-import {registerDialogComponents} from './register';
+import {registerDialogComponents, registerDialogCustom} from './register';
 import apiWidget from './api';
 import defaultAlert from './components/alert.vue';
 import defaultConfirm from './components/confirm.vue';
@@ -78,6 +78,7 @@ export default {
   hook,
 
   registerDialogComponents,
+  registerDialogCustom,
   apiWidget,
 
   bpDialog,

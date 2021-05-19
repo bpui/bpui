@@ -35,7 +35,7 @@
 
   @Component({
     components: {
-      bpSwitch: bpui.bpSwitch
+      bpSwitch: bpui.bpSwitch as any
     }
   })
   export default class extends Vue {

@@ -3,6 +3,13 @@ declare namespace bp {
   type DialogID = any;
 
   export interface WidgetApi {
+
+    /**
+     * 显示/隐藏自定义模态对话框.
+     */
+    showCustom(name: string): DialogID;
+    hideCustom(id: DialogID): void;
+
     /**
     * @desc: show toast.
     */

@@ -1,6 +1,6 @@
 /*!
- * bpui dialog v0.1.27
- * Copyright (c) 2020 Copyright bpoint.lee@live.com All Rights Reserved.
+ * bpui dialog v0.1.30
+ * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 
@@ -2930,7 +2930,10 @@ function _getSortWidget(dataMark) {
   return widget;
 }
 
+// const GlobalDialogCustoms = Symbol('$BpGlobalDialogCustoms');
+
 var GlobalDialogComponents = '$BpGlobalDialogComponents';
+var GlobalDialogCustoms = '$BpGlobalDialogCustoms';
 /**
 * @desc: 注册警告框等组件.
 */
@@ -2942,10 +2945,31 @@ confirm:any,
 loading:any,
 }*/
 ) {
-  window[GlobalDialogComponents] = febs.utils.mergeMap(cfg);
+  window[GlobalDialogComponents] = febs.utils.mergeMap(window[GlobalDialogComponents], cfg);
 }
 function getComponents() {
   return window[GlobalDialogComponents];
+}
+/**
+* @desc: 注册自定义模式对话框组件.
+* @param name 组件名称, 如果已经存在则覆盖
+* @return 表明注册的名称是否不存在; 如果已经存在则覆盖, 并返回false.
+*/
+
+function registerDialogCustom(name, component) {
+  var g = window[GlobalDialogCustoms] = window[GlobalDialogCustoms] || {};
+
+  if (g.hasOwnProperty(name)) {
+    g[name] = component;
+    return false;
+  }
+
+  g[name] = component;
+  return true;
+}
+function getCustomComponent(name) {
+  var g = window[GlobalDialogCustoms];
+  return g ? g[name] : null;
 }
 
 var ApiClass$1 = 'bp-apiClass';
@@ -3406,7 +3430,70 @@ var apiToast = /*#__PURE__*/Object.freeze({
   showToast: showToast
 });
 
-var apiWidget = _objectSpread2(_objectSpread2(_objectSpread2({}, apiDialog), apiLoading), apiToast);
+var ApiClass$4 = 'bp-apiClass';
+var ModalCustomClass = 'bp-modalCustomClass';
+/**
+* @desc: 隐藏对话框
+*/
+
+function hideCustom(id)
+/* :void*/
+{
+  var _this = this;
+
+  if (id) {
+    id.vm.hide().then(function (res) {
+      _newArrowCheck(this, _this);
+
+      $(".".concat(id.id)).remove();
+    }.bind(this));
+  } else {
+    removeAllApiModal('.' + ModalCustomClass);
+  }
+}
+/**
+* @desc: 显示警告框.
+*/
+
+function showCustom(name) {
+  var _this2 = this;
+
+  var c = getCustomComponent(name);
+
+  if (!c) {
+    throw new Error('dialog custom component is null: ' + name);
+  }
+
+  var id = 'c' + febs.crypt.uuid();
+  $("<div id=\"".concat(id, "\"></div>")).appendTo($('body')); // 创建实例.
+
+  var vm = new Vue({
+    render: function render(h) {
+      _newArrowCheck(this, _this2);
+
+      return h(c, {
+        "class": [ApiClass$4, ModalCustomClass, id]
+      });
+    }.bind(this)
+  }).$mount("#".concat(id));
+  vm.$children[0].$children[0].show().then(function (res) {
+    _newArrowCheck(this, _this2);
+  }.bind(this)); // var vnode = render.call(vm._renderProxy, vm.$createElement);
+  // console.log(alert.render.call(getRenderProxy(), getCreateElement()))
+
+  return {
+    vm: vm.$children[0].$children[0],
+    id: id
+  };
+}
+
+var apiCustom = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  hideCustom: hideCustom,
+  showCustom: showCustom
+});
+
+var apiWidget = _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({}, apiDialog), apiLoading), apiToast), apiCustom);
 
 var _Vue;
 
@@ -4226,6 +4313,7 @@ var index = {
   VuePlugin: VuePlugin,
   hook: hook,
   registerDialogComponents: registerDialogComponents,
+  registerDialogCustom: registerDialogCustom,
   apiWidget: apiWidget,
   bpDialog: __vue_component__$1,
   bpWidget: __vue_component__
