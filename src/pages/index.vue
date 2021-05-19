@@ -38,7 +38,7 @@
     <span class="span">
       <router-link to="navbar">navbar</router-link>
     </span>
-    <span class="span"><a href="/bpui/layout1/navbar">navbar by href</a></span>
+    <span class="span"><a href="/bpui/navbar">navbar by href</a></span>
     <span class="span"><a href="#abc" @click="$router.push('./navbar')">navbar#abc by router</a></span>
     <span class="span"><a @click="$router.push('./navbar')">navbar by router</a></span>
     <span class="span"><a href="#" @click="$navbar.push({path: './navbar'}, true)">navbar by

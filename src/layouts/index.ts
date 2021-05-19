@@ -11,6 +11,6 @@ import layout1 from './layout1.vue';
 import layout2 from './layout2.vue';
 
 export default {
-  layout1,
+  default: layout1,
   layout2
 };
