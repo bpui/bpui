@@ -36,5 +36,5 @@
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
   "name": "@bpui/dialog",
-  "version": "0.1.30"
+  "version": "0.1.31"
 }

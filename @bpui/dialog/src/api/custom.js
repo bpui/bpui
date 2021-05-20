@@ -32,7 +32,7 @@ export function hideCustom(id) /* :void*/ {
 /**
 * @desc: 显示警告框.
 */
-export function showCustom(name) {
+export function showCustom(name, cfg) {
   let c = register.getCustomComponent(name);
   if (!c) {
     throw new Error('dialog custom component is null: ' + name);
@@ -40,10 +40,11 @@ export function showCustom(name) {
 
   let id = 'c' + febs.crypt.uuid();
   $(`<div id="${id}"></div>`).appendTo($('body'));
+  cfg = cfg || {};
 
   // 创建实例.
   let vm = new Vue({
-    render: h => h(c, {class:[ApiClass, ModalCustomClass, id]})
+    render: h => h(c, { class: [ApiClass, ModalCustomClass, id], ...cfg }),
   }).$mount(`#${id}`);
   vm.$children[0].$children[0].show().then(res=>{});
 

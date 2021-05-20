@@ -9,7 +9,7 @@
 
 <template>
   <bp-dialog :maskClose="true" :showClose="false">
-    <div slot="title">hello2</div>
+    <div slot="title">{{title}}</div>
   </bp-dialog>
 </template>
 
@@ -17,6 +17,7 @@
   import {
     Component,
     Vue,
+    Prop,
   } from "vue-property-decorator";
 
   import bpui from 'bpui.js';
@@ -27,6 +28,7 @@
     }
   })
   export default class extends Vue {
+    @Prop({default: 'title2'}) title:string;
   }
 </script>
 

@@ -157,7 +157,7 @@
     
     showCustom():void {
       bpui.registerDialogCustom("test", customDialog);
-      let dialogId = bpui.apiWidget.showCustom("test");
+      let dialogId = bpui.apiWidget.showCustom("test", {props: {title:'will close in 5s'}});
 
       setTimeout(()=>{
         bpui.apiWidget.hideCustom(dialogId);

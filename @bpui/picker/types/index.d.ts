@@ -7,7 +7,7 @@ import Vue, {VueConstructor} from 'vue';
 /**
  * components.
  */
-export interface Picker extends VueConstructor, bp.Picker {}
+export interface Picker extends VueConstructor<Vue>, bp.Picker {}
 export const bpPicker: Picker
 
 

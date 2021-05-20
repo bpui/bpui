@@ -8,9 +8,9 @@ import './vue';
 /**
  * dialog.
  */
-export interface Dialog extends VueConstructor, bp.Widget {}
+export interface Dialog extends VueConstructor<Vue>, bp.Widget {}
 export const bpDialog: Dialog;
-export interface Widget extends VueConstructor, bp.Widget {}
+export interface Widget extends VueConstructor<Vue>, bp.Widget {}
 export const bpWidget: Widget;
 
 /**

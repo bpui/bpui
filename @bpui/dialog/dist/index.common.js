@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v0.1.30
+ * bpui dialog v0.1.31
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3455,7 +3455,7 @@ function hideCustom(id)
 * @desc: 显示警告框.
 */
 
-function showCustom(name) {
+function showCustom(name, cfg) {
   var _this2 = this;
 
   var c = getCustomComponent(name);
@@ -3465,15 +3465,16 @@ function showCustom(name) {
   }
 
   var id = 'c' + febs.crypt.uuid();
-  $("<div id=\"".concat(id, "\"></div>")).appendTo($('body')); // 创建实例.
+  $("<div id=\"".concat(id, "\"></div>")).appendTo($('body'));
+  cfg = cfg || {}; // 创建实例.
 
   var vm = new Vue({
     render: function render(h) {
       _newArrowCheck(this, _this2);
 
-      return h(c, {
+      return h(c, _objectSpread2({
         "class": [ApiClass$4, ModalCustomClass, id]
-      });
+      }, cfg));
     }.bind(this)
   }).$mount("#".concat(id));
   vm.$children[0].$children[0].show().then(function (res) {
