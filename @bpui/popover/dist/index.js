@@ -1,5 +1,5 @@
 /*!
- * bpui popover v0.1.14
+ * bpui popover v0.1.15
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1141,7 +1141,8 @@
 	      maskClose: _vm.maskClose,
 	      mask: _vm.mask,
 	      preventEvent: false,
-	      hideBodyScroll: false
+	      hideBodyScroll: false,
+	      appendToBody: true
 	    },
 	    on: {
 	      "update:visible": function updateVisible($event) {

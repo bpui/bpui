@@ -12,10 +12,82 @@ import bpLibs from '@bpui/libs';
 
 export const POS_CENTER = 120
 export const POS_CELL_HEIGHT = 40
+const WHEEL_STEP = 80
 
 function bee() {
-  return;
-  bpLibs.device.vibrate(50);
+  bpLibs.device.vibrate(10);
+}
+
+
+export function mobile_onWheel_picker(event) {
+  // start.
+  event = event || window.event
+
+  let delta;
+  let agent = navigator.userAgent;
+  if (/.*Firefox.*/.test(agent)) {
+    delta = event.detail;
+  }
+  else {
+    delta = event.wheelDelta
+  }
+
+  var target = event.currentTarget
+  if (target) {
+    var tt = $(target)
+      .parent('.bp-picker__group')
+      .children('.bp-picker__content')
+    tt = $(tt[0])
+
+    if (!tt[0]) {
+      return false
+    }
+
+    //
+    // start.
+    tt = tt[0]
+
+    var oldOffset = picker_getOffset($(tt))
+    var offset = oldOffset;
+    if (!tt.__picker_wheel) {
+      tt.__picker_wheel = 0;
+    }
+    tt.__picker_wheel += delta;
+
+    //
+    // end.
+    var ttt = $(tt)
+
+    // !move.
+    if (tt.__picker_wheel > WHEEL_STEP) {
+      offset += POS_CELL_HEIGHT / 2 + 1;
+      tt.__picker_wheel %= WHEEL_STEP;
+    }
+    else if (tt.__picker_wheel < -WHEEL_STEP) {
+      offset -= POS_CELL_HEIGHT / 2 + 1;
+      tt.__picker_wheel %= WHEEL_STEP;
+    }
+    else {
+      event.preventDefault()
+      event.stopPropagation()
+      event.cancelBubble = true
+
+      return false
+    }
+
+    offset = picker_setOffset(ttt, offset)
+    if (oldOffset != offset) {
+      bee();
+      ttt.trigger('change')
+    }
+
+  console.log(offset);
+    event.preventDefault()
+    event.stopPropagation()
+    event.cancelBubble = true
+
+    return false
+  }
 }
 
 //

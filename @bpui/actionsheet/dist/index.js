@@ -1,14 +1,14 @@
 /*!
- * bpui actionsheet v0.1.17
+ * bpui actionsheet v0.1.19
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('@bpui/dialog')) :
-  typeof define === 'function' && define.amd ? define(['@bpui/dialog'], factory) :
-  (global = global || self, global.bpActionsheet = factory(global.bpDialog));
-}(this, (function (bpDialog) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('@bpui/dialog'), require('febs-browser')) :
+  typeof define === 'function' && define.amd ? define(['@bpui/dialog', 'febs-browser'], factory) :
+  (global = global || self, global.bpActionsheet = factory(global.bpDialog, global.febs));
+}(this, (function (bpDialog, febs) { 'use strict';
 
   bpDialog = bpDialog && Object.prototype.hasOwnProperty.call(bpDialog, 'default') ? bpDialog['default'] : bpDialog;
 
@@ -30,14 +30,36 @@
       preventEvent: {
         "default": true,
         type: Boolean
+      },
+      forcePhoneStyle: {
+        "default": false,
+        type: Boolean | String,
+        validator: function validator(value) {
+          return typeof value === 'boolean' || value === 'true' || value === 'false';
+        }
+      },
+      appendToBody: {
+        "default": true,
+        type: Boolean | String,
+        validator: function validator(value) {
+          return typeof value === 'boolean' || value === 'true' || value === 'false';
+        }
       }
     },
     data: function data() {
-      return {};
+      return {
+        tabletClass: null
+      };
     },
     watch: {},
     created: function created() {},
-    beforeMount: function beforeMount() {},
+    beforeMount: function beforeMount() {
+      var forcePhoneStyle = this.forcePhoneStyle === true || this.forcePhoneStyle === 'true';
+
+      if (!febs.utils.browserIsPhone() && !forcePhoneStyle) {
+        this.tabletClass = 'bp-actionsheet__tablet';
+      }
+    },
     beforeDestroy: function beforeDestroy() {},
     mounted: function mounted() {},
     methods: {
@@ -811,6 +833,7 @@
 
     return _c("div", {
       staticClass: "bp-widget bp-actionsheet",
+      "class": _vm.tabletClass,
       on: {
         click: _vm.onClickMask
       }

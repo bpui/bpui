@@ -9,7 +9,7 @@
  -->
 
 <template>
-  <div class="bp-widget bp-actionsheet" @click="onClickMask">
+  <div class="bp-widget bp-actionsheet" :class="tabletClass" @click="onClickMask">
     <div class="bp-widget__content">
       <div class="bp-widget__contentWrap">
         <div class="bp-actionsheet__main" :class="pageClass" :style="pageStyle" @click.stop>
@@ -22,6 +22,7 @@
 
 <script>
   import bpDialog from '@bpui/dialog';
+  import * as febs from 'febs-browser';
 
   export default {
     mixins: [bpDialog.bpWidget],
@@ -37,16 +38,31 @@
         default: true,
         type: Boolean,
       },
+      forcePhoneStyle: {
+        default: false,
+        type: Boolean|String,
+        validator: function(value) { return typeof value === 'boolean' || value === 'true' || value === 'false'; }
+      },
+      appendToBody: {
+        default: true,
+        type: Boolean|String,
+        validator: function(value) { return typeof value === 'boolean' || value === 'true' || value === 'false'; }
+      },
     },
     data() {
       return {
-      };
+        tabletClass: null,
+      }
     },
     watch: {
     },
     created() {
     },
     beforeMount() {
+      let forcePhoneStyle = this.forcePhoneStyle === true || this.forcePhoneStyle === 'true';
+      if (!febs.utils.browserIsPhone() && !forcePhoneStyle) {
+        this.tabletClass = 'bp-actionsheet__tablet';
+      }
     },
     beforeDestroy() {
     },

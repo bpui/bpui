@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v0.1.31
+ * bpui dialog v0.1.34
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3374,7 +3374,16 @@
     if (cfg.durable == 0) cfg.durable = 4000; // 创建实例.
 
     var id = 'c' + febs.crypt.uuid();
-    $("<div id=\"".concat(id, "\"></div>")).appendTo($('body')); // if (window[GlobalToastTimeout]) {
+
+    if (cfg.pos == 'top') {
+      if (!$('.bp-toast-wrap')[0]) {
+        $("<div class=\"bp-toast-wrap\"></div>").appendTo($('body'));
+      }
+
+      $("<div id=\"".concat(id, "\"></div>")).appendTo($('.bp-toast-wrap'));
+    } else {
+      $("<div id=\"".concat(id, "\"></div>")).appendTo($('body'));
+    } // if (window[GlobalToastTimeout]) {
     //   clearTimeout(window[GlobalToastTimeout].tm);
     //   let _id = window[GlobalToastTimeout].id;
     //   let _vm = window[GlobalToast];
@@ -3386,6 +3395,7 @@
     //     });
     //   }
     // }
+
 
     var vm = new Vue({
       render: function render(h) {
@@ -3536,8 +3546,20 @@
         "default": true,
         type: Boolean
       },
+      appendToBody: {
+        "default": false,
+        type: Boolean | String,
+        validator: function validator(value) {
+          return typeof value === 'boolean' || value === 'true' || value === 'false';
+        }
+      },
       pageClass: String | Array,
       pageStyle: String | Array | Object
+    },
+    data: function data() {
+      return {
+        uuid: null
+      };
     },
     watch: {
       visible: function visible(val) {
@@ -3554,8 +3576,18 @@
         }
       }
     },
+    beforeMount: function beforeMount() {
+      if (this.appendToBody && this.appendToBody != 'false') {
+        this.uuid = 'bp-widget-' + febs.crypt.uuid();
+      }
+    },
     mounted: function mounted() {
       var _this2 = this;
+
+      if (this.appendToBody && this.appendToBody != 'false') {
+        $(this.$el).attr('id', this.uuid);
+        $('body').append(this.$el);
+      }
 
       if (this.visible) {
         this.show().then(function () {
@@ -3569,7 +3601,15 @@
       if (this.visible) {
         this.hide().then(function () {
           _newArrowCheck(this, _this3);
+
+          if (this.uuid) {
+            $('#' + this.uuid).remove();
+          }
         }.bind(this));
+      } else {
+        if (this.uuid) {
+          $('#' + this.uuid).remove();
+        }
       }
     },
     methods: {
@@ -3820,6 +3860,13 @@
       maskClose: Boolean,
       pageClass: String | Array,
       pageStyle: String | Array | Object,
+      appendToBody: {
+        "default": false,
+        type: Boolean | String,
+        validator: function validator(value) {
+          return typeof value === 'boolean' || value === 'true' || value === 'false';
+        }
+      },
       showClose: {
         "default": true,
         type: Boolean
@@ -3903,6 +3950,7 @@
         mask: _vm.mask,
         pageClass: _vm.pageClass,
         pageStyle: _vm.pageStyle,
+        appendToBody: _vm.appendToBody,
         preventEvent: true
       },
       on: {

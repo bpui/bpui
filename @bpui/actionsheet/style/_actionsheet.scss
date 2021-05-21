@@ -37,7 +37,7 @@
 
   .bp-widget__content {
     position: relative !important;
-    display: block !important;
+    display: flex !important;
     right: 0 !important;
     bottom: 0 !important;
     left: 0 !important;
@@ -144,5 +144,15 @@
         color: $bpColorWarn;
       }
     }
+  }
+}
+
+/** tablet */
+.bp-actionsheet.bp-actionsheet__tablet {
+  .bp-widget__contentWrap {
+    justify-self: center;
+    align-self: center;
+    bottom: auto;
+    top: auto;
   }
 }

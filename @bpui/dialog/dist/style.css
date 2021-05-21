@@ -694,6 +694,7 @@ label {
 */
 .bp-widget.bp-loading {
   user-select: none;
+  z-index: 3002;
 }
 .bp-widget.bp-loading .bp-widget__content {
   width: auto;
@@ -733,19 +734,49 @@ label {
 * Date: 2020-02-28 17:01
 * Desc: 
 */
-.bp-widget.bp-toast {
+.bp-toast-wrap {
+  z-index: 3002;
   user-select: none;
   height: 0px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  overflow: visible !important;
   pointer-events: none;
   touch-action: none;
+  position: fixed !important;
+  top: 0 !important;
+  overflow: visible !important;
+}
+
+.bp-widget.bp-toast {
+  display: flex !important;
+  position: static !important;
+  flex-direction: column !important;
   align-items: center;
+  top: initial !important;
+  bottom: initial !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: initial !important;
+  overflow: visible !important;
+}
+.bp-widget.bp-toast.bp-widget__visible {
+  margin-top: 0px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  -webkit-transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s, margin-top 0.2s 0s;
+  -moz-transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s, margin-top 0.2s 0s;
+  transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s, margin-top 0.2s 0s;
+}
+.bp-widget.bp-toast.bp-widget__invisible {
+  margin-top: -40px !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  -webkit-transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s, margin-top 0.2s 0s;
+  -moz-transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s, margin-top 0.2s 0s;
+  transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s, margin-top 0.2s 0s;
 }
 .bp-widget.bp-toast .bp-widget__content {
   margin: 5px auto 0px auto;
   width: auto;
+  position: static;
   max-width: 250px;
   min-width: 100px;
   display: block;
@@ -783,10 +814,22 @@ label {
 
 .bp-widget.bp-toast__center {
   user-select: none;
-  top: 0;
-  bottom: 0;
+  display: flex !important;
+  position: fixed !important;
+  flex-direction: column !important;
+  overflow: visible !important;
+  pointer-events: none;
+  touch-action: none;
+  align-items: center;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
   height: auto !important;
   justify-content: center;
+}
+.bp-widget.bp-toast__center .bp-widget__content {
+  margin: 0px auto 0px auto;
 }
 .bp-widget.bp-toast__center .bp-widget__content > div {
   min-height: 100px;

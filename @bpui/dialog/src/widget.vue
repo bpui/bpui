@@ -24,6 +24,7 @@
 
 <script>
   import * as maskUtils from './utils/mask';
+  import * as febs from 'febs-browser';
 
   export default {
     components: {
@@ -46,9 +47,19 @@
         default: true,
         type: Boolean,
       },
+      appendToBody: {
+        default: false,
+        type: Boolean|String,
+        validator: function(value) { return typeof value === 'boolean' || value === 'true' || value === 'false'; }
+      },
       pageClass: String|Array,
       pageStyle: String|Array|Object,
       
+    },
+    data() {
+      return {
+        uuid: null,
+      }
     },
     watch: {
       visible(val) {
@@ -60,14 +71,32 @@
         }
       }
     },
+    beforeMount() {
+      if (this.appendToBody && this.appendToBody != 'false') {
+        this.uuid = 'bp-widget-' + febs.crypt.uuid();
+      }
+    },
     mounted() {
+      if (this.appendToBody && this.appendToBody != 'false') {
+        $(this.$el).attr('id', this.uuid);
+        $('body').append(this.$el);
+      }
       if (this.visible) {
         this.show().then(()=>{});
       }
     },
     beforeDestroy() {
       if (this.visible) {
-        this.hide().then(()=>{});
+        this.hide().then(()=>{
+          if (this.uuid) {
+            $('#'+this.uuid).remove();
+          }
+        });
+      }
+      else {
+        if (this.uuid) {
+          $('#'+this.uuid).remove();
+        }
       }
     },
     methods: {

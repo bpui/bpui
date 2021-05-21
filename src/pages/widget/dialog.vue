@@ -35,7 +35,7 @@
 
 
     <!-- dialog1 -->
-    <bp-dialog :visible.sync="visible1" title="hello">
+    <bp-dialog :top="true" :visible.sync="visible1" title="hello" appendToBody="true">
       <div style="height:1000px">
       dialog1
       </div>
@@ -167,4 +167,5 @@
 </script>
 
 <style lang="scss">
+
 </style>

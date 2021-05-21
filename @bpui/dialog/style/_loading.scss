@@ -8,6 +8,7 @@
 
 .bp-widget.bp-loading {
   user-select: none;
+  z-index: 3002;
   
   .bp-widget__content {
     width: auto;

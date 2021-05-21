@@ -45,7 +45,16 @@ export function showToast(cfg/*:string|{
 
   // 创建实例.
   let id = 'c' + febs.crypt.uuid();
-  $(`<div id="${id}"></div>`).appendTo($('body'));
+
+  if (cfg.pos == 'top') {
+    if (!$('.bp-toast-wrap')[0]) {
+      $(`<div class="bp-toast-wrap"></div>`).appendTo($('body'));
+    }
+    $(`<div id="${id}"></div>`).appendTo($('.bp-toast-wrap'));
+  }
+  else {
+    $(`<div id="${id}"></div>`).appendTo($('body'));
+  }
 
   // if (window[GlobalToastTimeout]) {
   //   clearTimeout(window[GlobalToastTimeout].tm);

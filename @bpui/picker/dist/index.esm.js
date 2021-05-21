@@ -1,5 +1,5 @@
 /*!
- * bpui picker v0.1.35
+ * bpui picker v0.1.36
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -2526,8 +2526,77 @@ _export({ target: 'String', proto: true, forced: stringTrimForced('trim') }, {
 
 var POS_CENTER = 120;
 var POS_CELL_HEIGHT = 40;
-// event.
+var WHEEL_STEP = 80;
 
+function bee() {
+  bpLibs.device.vibrate(10);
+}
+
+function mobile_onWheel_picker(event) {
+  // start.
+  event = event || window.event;
+  var delta;
+  var agent = navigator.userAgent;
+
+  if (/.*Firefox.*/.test(agent)) {
+    delta = event.detail;
+  } else {
+    delta = event.wheelDelta;
+  }
+
+  var target = event.currentTarget;
+
+  if (target) {
+    var tt = $(target).parent('.bp-picker__group').children('.bp-picker__content');
+    tt = $(tt[0]);
+
+    if (!tt[0]) {
+      return false;
+    } //
+    // start.
+
+
+    tt = tt[0];
+    var oldOffset = picker_getOffset($(tt));
+    var offset = oldOffset;
+
+    if (!tt.__picker_wheel) {
+      tt.__picker_wheel = 0;
+    }
+
+    tt.__picker_wheel += delta; //
+    // end.
+
+    var ttt = $(tt); // !move.
+
+    if (tt.__picker_wheel > WHEEL_STEP) {
+      offset += POS_CELL_HEIGHT / 2 + 1;
+      tt.__picker_wheel %= WHEEL_STEP;
+    } else if (tt.__picker_wheel < -WHEEL_STEP) {
+      offset -= POS_CELL_HEIGHT / 2 + 1;
+      tt.__picker_wheel %= WHEEL_STEP;
+    } else {
+      event.preventDefault();
+      event.stopPropagation();
+      event.cancelBubble = true;
+      return false;
+    }
+
+    offset = picker_setOffset(ttt, offset);
+
+    if (oldOffset != offset) {
+      bee();
+      ttt.trigger('change');
+    }
+
+    console.log(offset);
+    event.preventDefault();
+    event.stopPropagation();
+    event.cancelBubble = true;
+    return false;
+  }
+} //
+// event.
 
 function mobile_onTouchstart_picker(event) {
   event = event || window.event;
@@ -2684,6 +2753,7 @@ function mobile_onTouchend_picker(event) {
   offset = picker_setOffset(ttt, offset);
 
   if (oldOffset != offset) {
+    bee();
     ttt.trigger('change');
   }
 }
@@ -2758,6 +2828,19 @@ var script = {
     },
     pageClass: String | Array,
     pageStyle: String | Array | Object,
+    toolbarPos: {
+      type: String,
+      validator: function validator(value) {
+        return value === 'top' || value === 'bottom';
+      }
+    },
+    forcePhoneStyle: {
+      "default": false,
+      type: Boolean | String,
+      validator: function validator(value) {
+        return typeof value === 'boolean' || value === 'true' || value === 'false';
+      }
+    },
     cancelBtnText: {
       type: String,
       "default": '取消'
@@ -2783,6 +2866,8 @@ var script = {
   },
   data: function data() {
     return {
+      isMobile: null,
+      tabletClass: null,
       visibleReal: false,
       visibleRealByProperty: false,
 
@@ -2895,6 +2980,13 @@ var script = {
     this.timer = new bpLibs.Timer();
   },
   beforeMount: function beforeMount() {
+    this.isMobile = utils.browserIsMobile();
+    var forcePhoneStyle = this.forcePhoneStyle === true || this.forcePhoneStyle === 'true';
+
+    if (!utils.browserIsPhone() && !forcePhoneStyle) {
+      this.tabletClass = 'bp-picker__tablet';
+    }
+
     if (!this.datasource) {
       throw new Error('picker must have datasource');
     }
@@ -3124,6 +3216,18 @@ var script = {
           dom.addEventListener(elBd[_i], namestart, mobile_onTouchstart_picker, true); // elBd[i].addEventListener(namemove, mobile_onTouchmove_picker, true);
           // elBd[i].addEventListener(nameend, mobile_onTouchend_picker, true);
           // elBd[i].addEventListener(namecancel, mobile_onTouchcancel_picker, true);
+
+          if (!this.isMobile) {
+            var agent = navigator.userAgent;
+
+            if (/.*Firefox.*/.test(agent)) {
+              dom.removeEventListener(elBd[_i], 'DOMMouseScroll', mobile_onWheel_picker, true);
+              dom.addEventListener(elBd[_i], 'DOMMouseScroll', mobile_onWheel_picker, true);
+            } else {
+              dom.removeEventListener(elBd[_i], 'mousewheel', mobile_onWheel_picker, true);
+              dom.addEventListener(elBd[_i], 'mousewheel', mobile_onWheel_picker, true);
+            }
+          }
         }
       } // if.
 
@@ -3459,11 +3563,13 @@ var __vue_render__ = function __vue_render__() {
   return _c("bp-widget", {
     ref: "widget",
     staticClass: "bp-picker",
+    "class": _vm.tabletClass,
     attrs: {
       visible: _vm.visibleReal,
       maskClose: _vm.maskClose,
       mask: _vm.mask,
-      preventEvent: true
+      preventEvent: true,
+      appendToBody: true
     },
     on: {
       "update:visible": function updateVisible($event) {
@@ -3474,9 +3580,9 @@ var __vue_render__ = function __vue_render__() {
     staticClass: "bp-widget__contentWrap",
     "class": _vm.pageClass,
     style: _vm.pageStyle
-  }, [_vm.$slots["toolbar"] ? _c("div", {
+  }, [_vm.$slots["toolbar"] && (_vm.toolbarPos ? _vm.toolbarPos == "top" : !_vm.tabletClass) ? _c("div", {
     staticClass: "bp-picker__toolbar bp-ellipsis"
-  }, [_vm._t("toolbar")], 2) : _c("div", {
+  }, [_vm._t("toolbar")], 2) : (_vm.toolbarPos ? _vm.toolbarPos == "top" : !_vm.tabletClass) ? _c("div", {
     ref: "agentToolbar",
     staticClass: "bp-picker__toolbar bp-ellipsis"
   }, [_c("button", {
@@ -3490,7 +3596,7 @@ var __vue_render__ = function __vue_render__() {
     on: {
       click: _vm._onConfirm
     }
-  }, [_vm._v(_vm._s(_vm.confirmBtnText))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.confirmBtnText))])]) : _vm._e(), _vm._v(" "), _c("div", {
     ref: "agentMain",
     staticClass: "bp-picker__main"
   }, [_c("div", {
@@ -3601,7 +3707,23 @@ var __vue_render__ = function __vue_render__() {
     }, [_vm._v(_vm._s(item.label))]);
   }), 0), _vm._v(" "), _c("div", {
     staticClass: "bp-picker__mask"
-  })])])])]);
+  })])]), _vm._v(" "), _vm.$slots["toolbar"] && (_vm.toolbarPos ? _vm.toolbarPos == "bottom" : _vm.tabletClass) ? _c("div", {
+    staticClass: "bp-picker__toolbar bp-ellipsis"
+  }, [_vm._t("toolbar")], 2) : (_vm.toolbarPos ? _vm.toolbarPos == "bottom" : _vm.tabletClass) ? _c("div", {
+    ref: "agentToolbar",
+    staticClass: "bp-picker__toolbar bp-ellipsis"
+  }, [_c("button", {
+    staticClass: "bp-picker__cancelBtn",
+    on: {
+      click: function click($event) {
+        _vm.visibleReal = false;
+      }
+    }
+  }, [_vm._v(_vm._s(_vm.cancelBtnText))]), _vm._v(" "), _c("button", {
+    on: {
+      click: _vm._onConfirm
+    }
+  }, [_vm._v(_vm._s(_vm.confirmBtnText))])]) : _vm._e()])]);
 };
 
 var __vue_staticRenderFns__ = [];

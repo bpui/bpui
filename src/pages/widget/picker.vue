@@ -14,9 +14,12 @@
     <button @click="visible1=true">show1</button>
     <button @click="()=>{visible1=true; value1=2;}">show1</button>
     <button @click="visible2=true">show2</button>
+    <button @click="visible3=true">show phone style</button>
  
     <!-- picker1 -->
     <bp-picker ref="picker1" v-model="value1" :visible.sync="visible1" @confirm="onConfirm1"  @change="onChange1" :datasource="[{label:'1',value:1}, {label:'2',value:2}, {label:'2',value:2}, {label:'2',value:2}, {label:'2',value:2}]" />
+    
+    <bp-picker forcePhoneStyle="true" v-model="value1" :visible.sync="visible3" @confirm="onConfirm1"  @change="onChange1" :datasource="[{label:'1',value:1}, {label:'2',value:2}, {label:'2',value:2}, {label:'2',value:2}, {label:'2',value:2}]" />
 
     <!-- picker2 -->
     <!-- <bp-picker ref="picker2" v-model="value2" :visible.sync="visible2" @confirm="onConfirm2" @change="onChange2" :datasource="[{label:'1',value:1, children:[{label:'22',value:2}]}, {label:'2',value:2}, {label:'2',value:2}]" /> -->
@@ -69,6 +72,7 @@
     // data.
     @Provide() visible1:boolean = false;
     @Provide() visible2:boolean = false;
+    @Provide() visible3:boolean = false;
     @Provide() value1 = null;
     @Provide() value2 = [];
     @Provide() PickerTimeDatasource = new bpui.PickerTimeDatasource({hourText:'h', minuteText:'m'});

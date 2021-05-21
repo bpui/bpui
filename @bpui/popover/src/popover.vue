@@ -16,6 +16,7 @@
     :mask="mask" 
     :preventEvent="false"
     :hideBodyScroll="false"
+    :appendToBody="true"
   >
     <div class="bp-popover__main" ref="main" :direction="directionData" :style="pStyle"  
       :class="pageClass"

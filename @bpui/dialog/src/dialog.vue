@@ -21,6 +21,7 @@
     :mask="mask" 
     :pageClass="pageClass" 
     :pageStyle="pageStyle"
+    :appendToBody="appendToBody"
     :preventEvent="true">
     <div v-if="$slots['title']" class="bp-dialog__title bp-ellipsis"  @click.stop>
       <slot name="title" />
@@ -57,6 +58,11 @@
       maskClose: Boolean,
       pageClass: String|Array,
       pageStyle: String|Array|Object,
+      appendToBody: {
+        default: false,
+        type: Boolean|String,
+        validator: function(value) { return typeof value === 'boolean' || value === 'true' || value === 'false'; }
+      },
 
       showClose: {
         default: true,

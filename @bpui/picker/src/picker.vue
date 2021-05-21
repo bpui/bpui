@@ -15,19 +15,20 @@
  -->
 
 <template>
-  <bp-widget ref="widget" class="bp-picker" 
+  <bp-widget ref="widget" class="bp-picker" :class="tabletClass"
     :visible.sync="visibleReal" 
     :maskClose="maskClose" 
     :mask="mask" 
-    :preventEvent="true">
+    :preventEvent="true"
+    :appendToBody="true">
     
     <div class="bp-widget__contentWrap"
       :class="pageClass" 
       :style="pageStyle">
-      <div v-if="$slots['toolbar']" class="bp-picker__toolbar bp-ellipsis" >
+      <div v-if="$slots['toolbar'] && (toolbarPos?toolbarPos=='top':(!tabletClass))" class="bp-picker__toolbar bp-ellipsis" >
         <slot name="toolbar" />
       </div>
-      <div v-else class="bp-picker__toolbar bp-ellipsis" ref="agentToolbar">
+      <div v-else-if="(toolbarPos?toolbarPos=='top':(!tabletClass))" class="bp-picker__toolbar bp-ellipsis" ref="agentToolbar">
         <button class="bp-picker__cancelBtn" @click="visibleReal=false">{{cancelBtnText}}</button>
         <button @click="_onConfirm">{{confirmBtnText}}</button>
       </div>
@@ -66,12 +67,20 @@
           <div class="bp-picker__mask"></div>
         </div>
       </div>
+
+      <div v-if="$slots['toolbar'] && (toolbarPos?toolbarPos=='bottom':(tabletClass))" class="bp-picker__toolbar bp-ellipsis" >
+        <slot name="toolbar" />
+      </div>
+      <div v-else-if="(toolbarPos?toolbarPos=='bottom':(tabletClass))" class="bp-picker__toolbar bp-ellipsis" ref="agentToolbar">
+        <button class="bp-picker__cancelBtn" @click="visibleReal=false">{{cancelBtnText}}</button>
+        <button @click="_onConfirm">{{confirmBtnText}}</button>
+      </div>
     </div>
   </bp-widget>
 </template>
 
 <script>
-  import * as febs from 'febs-browser';;
+  import * as febs from 'febs-browser';
   import bpLibs from '@bpui/libs';
   import bpDialog from '@bpui/dialog';
   import * as utils from './utils/arr';
@@ -87,6 +96,7 @@
     picker_getOffset,
     POS_CENTER,
     POS_CELL_HEIGHT,
+    mobile_onWheel_picker,
   } from './event';
 
   export default {
@@ -106,7 +116,18 @@
       },
       pageClass: String|Array,
       pageStyle: String|Array|Object,
-      
+
+      toolbarPos: {
+        type: String,
+        validator: function(value) { return value === 'top' || value === 'bottom'; }
+      },
+
+      forcePhoneStyle: {
+        default: false,
+        type: Boolean|String,
+        validator: function(value) { return typeof value === 'boolean' || value === 'true' || value === 'false'; }
+      },
+
       cancelBtnText: {
         type: String,
         default: '取消',
@@ -131,6 +152,8 @@
     },
     data() {
       return {
+        isMobile: null,
+        tabletClass: null,
         visibleReal: false,
         visibleRealByProperty: false,
         /**
@@ -227,6 +250,13 @@
       this.timer = new bpLibs.Timer();
     },
     beforeMount() {
+      this.isMobile = febs.utils.browserIsMobile();
+
+      let forcePhoneStyle = this.forcePhoneStyle === true || this.forcePhoneStyle === 'true';
+      if (!febs.utils.browserIsPhone() && !forcePhoneStyle) {
+        this.tabletClass = 'bp-picker__tablet';
+      }
+
       if (!this.datasource) {
         throw new Error('picker must have datasource');
       }
@@ -444,6 +474,18 @@
             // elBd[i].addEventListener(namemove, mobile_onTouchmove_picker, true);
             // elBd[i].addEventListener(nameend, mobile_onTouchend_picker, true);
             // elBd[i].addEventListener(namecancel, mobile_onTouchcancel_picker, true);
+
+            if (!this.isMobile) {
+              let agent = navigator.userAgent;
+              if (/.*Firefox.*/.test(agent)) {
+                febs.dom.removeEventListener(elBd[i], 'DOMMouseScroll', mobile_onWheel_picker, true);
+                febs.dom.addEventListener(elBd[i], 'DOMMouseScroll', mobile_onWheel_picker, true);
+              }
+              else {
+                febs.dom.removeEventListener(elBd[i], 'mousewheel', mobile_onWheel_picker, true);
+                febs.dom.addEventListener(elBd[i], 'mousewheel', mobile_onWheel_picker, true);
+              }
+            }
           }
         } // if.
       },

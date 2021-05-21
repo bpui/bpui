@@ -1,10 +1,11 @@
 /*!
- * bpui actionsheet v0.1.17
+ * bpui actionsheet v0.1.19
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 
 import bpDialog from '@bpui/dialog';
+import { utils } from 'febs-browser';
 
 function _newArrowCheck(innerThis, boundThis) {
   if (innerThis !== boundThis) {
@@ -24,14 +25,36 @@ var script = {
     preventEvent: {
       "default": true,
       type: Boolean
+    },
+    forcePhoneStyle: {
+      "default": false,
+      type: Boolean | String,
+      validator: function validator(value) {
+        return typeof value === 'boolean' || value === 'true' || value === 'false';
+      }
+    },
+    appendToBody: {
+      "default": true,
+      type: Boolean | String,
+      validator: function validator(value) {
+        return typeof value === 'boolean' || value === 'true' || value === 'false';
+      }
     }
   },
   data: function data() {
-    return {};
+    return {
+      tabletClass: null
+    };
   },
   watch: {},
   created: function created() {},
-  beforeMount: function beforeMount() {},
+  beforeMount: function beforeMount() {
+    var forcePhoneStyle = this.forcePhoneStyle === true || this.forcePhoneStyle === 'true';
+
+    if (!utils.browserIsPhone() && !forcePhoneStyle) {
+      this.tabletClass = 'bp-actionsheet__tablet';
+    }
+  },
   beforeDestroy: function beforeDestroy() {},
   mounted: function mounted() {},
   methods: {
@@ -805,6 +828,7 @@ var __vue_render__ = function __vue_render__() {
 
   return _c("div", {
     staticClass: "bp-widget bp-actionsheet",
+    "class": _vm.tabletClass,
     on: {
       click: _vm.onClickMask
     }
