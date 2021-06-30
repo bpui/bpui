@@ -35,5 +35,5 @@
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
   "name": "@bpui/input",
-  "version": "0.1.21"
+  "version": "0.1.22"
 }

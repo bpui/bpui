@@ -1,9 +1,13 @@
 <template>
   <div>
     <h4>placeholder</h4>
-    <bp-input placeholder="placeholder" v-model="text" @change="textChange++"></bp-input>
-    {{text}}<br>
-    @change: {{textChange}} 次
+    <bp-input
+      placeholder="placeholder"
+      v-model="text"
+      @change="textChange++"
+    ></bp-input>
+    {{ text }}<br />
+    @change: {{ textChange }} 次
 
     <h4>disabled/readonly</h4>
     <bp-input disabled value="disabled"></bp-input>
@@ -15,92 +19,105 @@
     <bp-input type="tel" value="15888888888"></bp-input>
 
     <h4>textarea</h4>
-    <bp-input ref="aa" type="textarea" rows="2" maxlength="100" v-model="text1"></bp-input>
-    <div>{{text1}}</div>
+    <bp-input
+      ref="aa"
+      type="textarea"
+      rows="2"
+      maxlength="100"
+      v-model="text1"
+    ></bp-input>
+    <div>{{ text1 }}</div>
 
     <button @click="onClick">focus</button>
 
-    <input autocomplete="off">
+    <input autocomplete="off" />
 
     <h4>number</h4>
-    <bp-input type="int" max="100" min="8" value="123456111"></bp-input>
-    <bp-input prefixIcon="loading" type="float" max="100" value="123456111"></bp-input>
-    <bp-input suffixIcon="loading" type="float" max="100" value="123456111"></bp-input>
-    
+    <bp-input type="int" min="8" v-model="temNum"></bp-input>
+    <bp-input
+      prefixIcon="loading"
+      type="float"
+      max="100"
+      value="123456111"
+    ></bp-input>
+    <bp-input
+      suffixIcon="loading"
+      type="float"
+      max="100"
+      value="123456111"
+    ></bp-input>
   </div>
 </template>
 
 <script lang="ts">
-  import {
-    Component,
-    Vue,
-    Prop,
-    Watch,
-    Provide,
-    Emit
-  } from "vue-property-decorator";
-  import {
-    State,
-    Mutation
-  } from "vuex-class";
+import {
+  Component,
+  Vue,
+  Prop,
+  Watch,
+  Provide,
+  Emit,
+} from "vue-property-decorator";
+import { State, Mutation } from "vuex-class";
 
-  import bpui from 'bpui.js';
+import bpui from "bpui.js";
 
-  @Component({
-    components: {
-      bpInput: bpui.bpInput
-    }
-  })
-  export default class extends Vue {
-    //
-    // event.
-    @Emit()
-    demoEvent(type: string) {}
+@Component({
+  components: {
+    bpInput: bpui.bpInput,
+  },
+})
+export default class extends Vue {
+  //
+  // event.
+  @Emit()
+  demoEvent(type: string) {}
 
-    //
-    // state.
-    // @State(state=>state.demo) demo:DEMO_TYPE;
+  //
+  // state.
+  // @State(state=>state.demo) demo:DEMO_TYPE;
 
-    //
-    // Prop
-    // @Prop({ type: number }) demo: number;
+  //
+  // Prop
+  // @Prop({ type: number }) demo: number;
 
-    //
-    // data.
-    @Provide() text:string = '';
-    @Provide() text1:string = '345354';
-    @Provide() textChange:number = 0;
+  //
+  // data.
+  @Provide() text: string = "";
+  @Provide() text1: string = "345354";
+  @Provide() textChange: number = 0;
 
-    //
-    // computed.
-    // get demo() { return xxxx; }
+  temNum = 1123;
 
-    //
-    // watch.
-    // @Watch('child')
-    // onChildChanged(val: string, oldVal: string) { }
+  //
+  // computed.
+  // get demo() { return xxxx; }
 
-    //
-    // lifecycle hook.
-    constructor() {
-      super();
-    }
+  //
+  // watch.
+  // @Watch('child')
+  // onChildChanged(val: string, oldVal: string) { }
 
-    mounted() {
-      this.$timer.sleep(5000).then(()=>{
-        console.log(this.text);
-        this.text = '11121212';
-      });
-    }
-
-    onClick() {
-      let aa:any = this.$refs.aa;
-      setTimeout(()=>{
-        aa.focus();
-      }, 100);
-      
-    }
+  //
+  // lifecycle hook.
+  constructor() {
+    super();
   }
+
+  mounted() {
+    this.$timer.sleep(5000).then(() => {
+      console.log(this.text);
+      this.text = "11121212";
+    });
+  }
+
+  onClick() {
+    let aa: any = this.$refs.aa;
+    setTimeout(() => {
+      aa.focus();
+    }, 100);
+  }
+}
 </script>
 
 <style lang="scss">
