@@ -561,16 +561,16 @@ label {
 .bp-widget.bp-widget__visible {
   opacity: 1 !important;
   visibility: visible !important;
-  -webkit-transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s;
-  -moz-transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s;
-  transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s;
+  -webkit-transition: opacity 0.1s 0s, visibility 0s 0s, background-color 0.1s 0s;
+  -moz-transition: opacity 0.1s 0s, visibility 0s 0s, background-color 0.1s 0s;
+  transition: opacity 0.1s 0s, visibility 0s 0s, background-color 0.1s 0s;
 }
 .bp-widget.bp-widget__invisible {
   opacity: 0 !important;
   visibility: hidden !important;
-  -webkit-transition: opacity 0.2s 0s, visibility 0.2s 0s, background-color 0.2s 0s;
-  -moz-transition: opacity 0.2s 0s, visibility 0.2s 0s, background-color 0.2s 0s;
-  transition: opacity 0.2s 0s, visibility 0.2s 0s, background-color 0.2s 0s;
+  -webkit-transition: opacity 0.1s 0s, visibility 0.1s 0s, background-color 0.1s 0s;
+  -moz-transition: opacity 0.1s 0s, visibility 0.1s 0s, background-color 0.1s 0s;
+  transition: opacity 0.1s 0s, visibility 0.1s 0s, background-color 0.1s 0s;
 }
 
 /** 掩码层 */
@@ -618,15 +618,15 @@ label {
   top: 0px;
 }
 .bp-dialog.bp-widget__invisible > div {
-  top: -40px;
+  top: -30px;
 }
 .bp-dialog .bp-widget__content {
   -webkit-transition-property: top;
   -moz-transition-property: top;
   transition-property: top;
-  -webkit-transition-duration: 0.2s;
-  -moz-transition-duration: 0.2s;
-  transition-duration: 0.2s;
+  -webkit-transition-duration: 0.1s;
+  -moz-transition-duration: 0.1s;
+  transition-duration: 0.1s;
   box-shadow: 0px 0px 2px 1px rgba(165, 165, 165, 0.17);
   min-width: 200px;
   max-width: 98vw;
@@ -806,23 +806,23 @@ label {
   margin-top: 0px !important;
   opacity: 1 !important;
   visibility: visible !important;
-  -webkit-transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s, margin-top 0.2s 0s;
-  -moz-transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s, margin-top 0.2s 0s;
-  transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s, margin-top 0.2s 0s;
+  -webkit-transition: opacity 0.1s 0s, visibility 0s 0s, background-color 0.1s 0s, margin-top 0.1s 0s;
+  -moz-transition: opacity 0.1s 0s, visibility 0s 0s, background-color 0.1s 0s, margin-top 0.1s 0s;
+  transition: opacity 0.1s 0s, visibility 0s 0s, background-color 0.1s 0s, margin-top 0.1s 0s;
 }
 .bp-widget.bp-toast.bp-widget__invisible {
   margin-top: -40px !important;
   opacity: 0 !important;
   visibility: hidden !important;
-  -webkit-transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s, margin-top 0.2s 0s;
-  -moz-transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s, margin-top 0.2s 0s;
-  transition: opacity 0.2s 0s, visibility 0s 0s, background-color 0.2s 0s, margin-top 0.2s 0s;
+  -webkit-transition: opacity 0.1s 0s, visibility 0s 0s, background-color 0.1s 0s, margin-top 0.1s 0s;
+  -moz-transition: opacity 0.1s 0s, visibility 0s 0s, background-color 0.1s 0s, margin-top 0.1s 0s;
+  transition: opacity 0.1s 0s, visibility 0s 0s, background-color 0.1s 0s, margin-top 0.1s 0s;
 }
 .bp-widget.bp-toast .bp-widget__content {
   margin: 5px auto 0px auto;
   width: auto;
   position: static;
-  max-width: 250px;
+  max-width: 80vw;
   min-width: 100px;
   display: block;
 }
@@ -855,6 +855,7 @@ label {
 }
 .bp-widget.bp-toast .bp-toast__text {
   padding: 5px 0px;
+  word-break: break-all;
 }
 
 .bp-widget.bp-toast__center {

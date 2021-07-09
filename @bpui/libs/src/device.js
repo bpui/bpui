@@ -18,6 +18,11 @@ export {
   browserIsIE,
   browserIEVer,
   browserIsSupportHtml5,
+  browserIsSafari,
+  browserIsOpera,
+  browserIsFirefox,
+  browserIsChrome,
+  browserIsEdge,
 }
 
 /**
@@ -81,3 +86,9 @@ const browserIEVer = febs.utils.browserIEVer;
  * @desc: the browser is support html5.
  */
 const browserIsSupportHtml5 = febs.utils.browserIsSupportHtml5;
+
+const browserIsSafari = febs.utils.browserIsSafari;
+const browserIsOpera = febs.utils.browserIsOpera;
+const browserIsFirefox = febs.utils.browserIsFirefox;
+const browserIsChrome = febs.utils.browserIsChrome;
+const browserIsEdge = febs.utils.browserIsEdge;

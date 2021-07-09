@@ -2,6 +2,17 @@
 
 ```html
 
-<bp-narbar-view />
+<bp-navbar-view />
 
+```
+
+style
+
+```css
+/* scss */
+import '@bpui/libs/style';
+import '@bpui/navbar-view/style';
+
+/* css */
+<link href="~@bpui/navbar-view/dist/style.css" rel="stylesheet" type="text/css"/>
 ```

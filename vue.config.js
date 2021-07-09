@@ -52,6 +52,7 @@ module.exports = {
       .set("@", resolve("./src"))
       .set("ext", resolve("./ext"))
       .set("bpui.js", resolve("./src/bpui"))
+      // .set("bpui.js", resolve("./bpui.js"))
       .set("@bpui", resolve("./@bpui"))
       // 开发模式
       .set("./bpui.components", resolve("./bpui.js/src/bpui.components.dev"))

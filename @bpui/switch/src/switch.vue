@@ -19,11 +19,12 @@
        ]"
       ></span>
       <input
+        ref="input"
         type="checkbox"
         class="bp-switch__original"
         :checked="checked"
         :disabled="isDisabled"
-        @change="handelChange"
+        @change="handleChange"
         v-bind="$attrs"
       />
     </span>
@@ -82,9 +83,11 @@ export default {
   },
   beforeDestroy() {},
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    this.$refs.input.checked = this.isChecked;
+  },
   methods: {
-    handelChange(e) {
+    handleChange(e) {
       this.isChecked = e.target.checked;
       this.$emit('input', this.isChecked);
       this.$emit("change", this.isChecked);

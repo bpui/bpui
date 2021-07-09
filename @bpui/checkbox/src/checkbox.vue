@@ -16,7 +16,7 @@
       <span class="bp-checkbox__inner" :class="[hovering?'bp-checkbox__inner_hover':'',isChecked?'bp-checkbox__inner_checked':'']">
         <bp-icon v-if="isChecked" name='bp-checkbox_checked'/>
       </span>
-      <input type="checkbox" class="bp-checkbox__original" :checked="isChecked" @change="handelChange"
+      <input ref="input" type="checkbox" class="bp-checkbox__original" :checked="isChecked" @change="handelChange"
         v-bind="$attrs" :disabled="isDisabled" />
     </span>
     <span class="bp-checkbox__label" v-if="$slots.default"><slot name="default" /></span>
@@ -73,7 +73,9 @@
     },
     beforeDestroy() {},
     beforeMount() {},
-    mounted() {},
+    mounted() {
+      this.$refs.input.checked = this.isChecked;
+    },
     methods: {
       handelChange(e) {
         this.isChecked = e.target.checked;
