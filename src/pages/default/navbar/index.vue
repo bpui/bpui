@@ -98,7 +98,7 @@
 
     viewAppear(popData: any) {
       console.log('viewAppear: navbar ' + popData);
-      this.$navbar.setBarInfo({
+      (this as any).$navbar.setBarInfo({
         title: 'navbar',
         hidden: false
       });
@@ -110,7 +110,7 @@
     }
 
     pushNav() {
-      this.$navbar.push('./page2');
+      (this as any).$navbar.push('./page2');
     }
   }
 

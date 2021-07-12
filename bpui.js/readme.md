@@ -1,15 +1,13 @@
 
-```js
+see https://bpui.github.io
 
-/**
- * js
- */
-import bpui from 'bpui.js';
+# Stage
 
-bpui.registerApp({ routePath: router }, App);
+```bash
 
-/**
- * scss style
- */
-@import '~bpui.js/style';
+# install cli.
+npm i bpui-cli -g
+
+# generate a project.
+bpui init
 ```

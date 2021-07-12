@@ -41,7 +41,7 @@ export default class extends Vue {
 
 
   mounted() {
-    this.onRouteChange(this.$route);
+    this.onRouteChange((this as any).$route);
   }
 }
 </script>

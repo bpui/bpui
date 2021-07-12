@@ -8,6 +8,8 @@
  */
 const path = require("path");
 const config = require("./config");
+const webpackSplitChunks = require('@bpui/build-cli/_scripts/webpack-splitChunks')
+const webpackConfig = require('@bpui/build-cli/_scripts/webpack-config')
 
 function resolve(dir) {
   return path.join(__dirname, dir);
@@ -17,6 +19,7 @@ module.exports = {
   outputDir: "_dist",
   publicPath: "/bpui",
   filenameHashing: true,
+  productionSourceMap: process.env.NODE_ENV === 'development',
   devServer: {
     host: config.Host,
     port: config.Port,
@@ -46,8 +49,11 @@ module.exports = {
   ],
   // configureWebpack: {},
   chainWebpack: config => {
+    webpackConfig.initResolveAlias(config);
+    webpackConfig.initBundleAnalyzer(config);
+    webpackConfig.initPluginPreload(config);
+
     config.resolve.alias
-      .set("febs", "febs-browser")
       .set("assets", resolve("src/assets"))
       .set("@", resolve("./src"))
       .set("ext", resolve("./ext"))

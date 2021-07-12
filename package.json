@@ -6,9 +6,10 @@
     "bundle": "sh ./scripts/bundleAll.bash",
     "prepare": "node ./scripts/installAllNpm",
     "build-router": "bpui-build router",
-    "build": "bpui-build build",
-    "build:dev": "bpui-build build:dev",
-    "dev": "bpui-build debug"
+    "build:analyzer": "bpui-build router && BPUI_ANALYZER=1 vue-cli-service build",
+    "build": "bpui-build router && vue-cli-service build",
+    "build:dev": "bpui-build router && vue-cli-service build --mode development",
+    "dev": "bpui-build router && vue-cli-service serve"
   },
   "dependencies": {
     "animate.css": "3.5.2",
@@ -21,7 +22,7 @@
     "vuex-class": "^0.3.2"
   },
   "devDependencies": {
-    "@bpui/build-cli": "^0.0.2",
+    "@bpui/build-cli": "^0.0.6",
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
     "@rollup/plugin-typescript": "^3.0.0",
@@ -35,7 +36,8 @@
     "rollup-plugin-sass": "^1.2.2",
     "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-typescript2": "^0.26.0",
-    "rollup-plugin-vue": "^5.1.6"
+    "rollup-plugin-vue": "^5.1.6",
+    "webpack-bundle-analyzer": "^3.9.0"
   },
   "types": "types/index.d.ts",
   "browserslist": [
