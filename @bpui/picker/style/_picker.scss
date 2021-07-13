@@ -1,5 +1,5 @@
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2020-02-28 17:01
 * Desc: 
@@ -224,6 +224,7 @@ $bpPickerIndicatorHeight: 40px;
         }
 
         .bp-picker__item {
+          position: relative;
           padding: 0;
           height: $bpPickerIndicatorHeight;
           line-height: $bpPickerIndicatorHeight;
@@ -232,6 +233,40 @@ $bpPickerIndicatorHeight: 40px;
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
+
+          &.bp-picker__item-disabled,
+          &:disabled,
+          &[disabled=disabled] {
+            opacity: 0.2;
+          }
+
+          .bp-picker__item_uncheck {
+            width: 22px;
+            height: 22px;
+            box-sizing: border-box;
+            position: absolute;
+            right: 30px;
+            top: ($bpPickerIndicatorHeight - 22px) / 2;
+            border-radius: 4px;
+            border: 1px solid $bpPickerCheckBorderColor;
+          }
+
+          .bp-picker__item_check {
+            width: 16px;
+            height: 16px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid $bpPickerCheckBorderColor;
+            box-sizing: content-box;
+            padding: 2px;
+            position: absolute;
+            right: 30px;
+            top: ($bpPickerIndicatorHeight - 22px) / 2;
+
+            &::before {
+              color: $bpPickerCheckColor;
+            }
+          }
         }
       }
     }

@@ -1,6 +1,6 @@
 /*!
- * bpui input v1.1.12
- * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
+ * bpui input v1.1.15
+ * Copyright (c) 2021 Copyright bpuioint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 

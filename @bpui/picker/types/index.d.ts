@@ -9,6 +9,8 @@ import Vue, {VueConstructor} from 'vue';
  */
 export interface Picker extends VueConstructor<Vue>, bp.Picker {}
 export const bpPicker: Picker
+export interface PickerCell extends VueConstructor<Vue>, bp.PickerCell {}
+export const bpPickerCell: PickerCell
 
 
 export class PickerDataSourceBase implements bp.PickerDataSource {

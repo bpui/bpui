@@ -1,6 +1,6 @@
 /*!
- * bpui picker v1.1.17
- * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
+ * bpui picker v1.1.20
+ * Copyright (c) 2021 Copyright bpuioint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 
@@ -9,7 +9,7 @@
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var febs = require('febs-browser');
-var bpLibs = _interopDefault(require('@bpui/libs'));
+var bpLibs$1 = _interopDefault(require('@bpui/libs'));
 var bpDialog = _interopDefault(require('@bpui/dialog'));
 
 function _typeof(obj) {
@@ -91,8 +91,92 @@ var descriptors = !fails(function () {
   return Object.defineProperty({}, 1, { get: function () { return 7; } })[1] != 7;
 });
 
+var $propertyIsEnumerable = {}.propertyIsEnumerable;
+// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+
+// Nashorn ~ JDK8 bug
+var NASHORN_BUG = getOwnPropertyDescriptor && !$propertyIsEnumerable.call({ 1: 2 }, 1);
+
+// `Object.prototype.propertyIsEnumerable` method implementation
+// https://tc39.es/ecma262/#sec-object.prototype.propertyisenumerable
+var f = NASHORN_BUG ? function propertyIsEnumerable(V) {
+  var descriptor = getOwnPropertyDescriptor(this, V);
+  return !!descriptor && descriptor.enumerable;
+} : $propertyIsEnumerable;
+
+var objectPropertyIsEnumerable = {
+	f: f
+};
+
+var createPropertyDescriptor = function (bitmap, value) {
+  return {
+    enumerable: !(bitmap & 1),
+    configurable: !(bitmap & 2),
+    writable: !(bitmap & 4),
+    value: value
+  };
+};
+
+var toString = {}.toString;
+
+var classofRaw = function (it) {
+  return toString.call(it).slice(8, -1);
+};
+
+var split = ''.split;
+
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
+var indexedObject = fails(function () {
+  // throws an error in rhino, see https://github.com/mozilla/rhino/issues/346
+  // eslint-disable-next-line no-prototype-builtins -- safe
+  return !Object('z').propertyIsEnumerable(0);
+}) ? function (it) {
+  return classofRaw(it) == 'String' ? split.call(it, '') : Object(it);
+} : Object;
+
+// `RequireObjectCoercible` abstract operation
+// https://tc39.es/ecma262/#sec-requireobjectcoercible
+var requireObjectCoercible = function (it) {
+  if (it == undefined) throw TypeError("Can't call method on " + it);
+  return it;
+};
+
+// toObject with fallback for non-array-like ES3 strings
+
+
+
+var toIndexedObject = function (it) {
+  return indexedObject(requireObjectCoercible(it));
+};
+
 var isObject = function (it) {
   return typeof it === 'object' ? it !== null : typeof it === 'function';
+};
+
+// `ToPrimitive` abstract operation
+// https://tc39.es/ecma262/#sec-toprimitive
+// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+// and the second argument - flag - preferred type is a string
+var toPrimitive = function (input, PREFERRED_STRING) {
+  if (!isObject(input)) return input;
+  var fn, val;
+  if (PREFERRED_STRING && typeof (fn = input.toString) == 'function' && !isObject(val = fn.call(input))) return val;
+  if (typeof (fn = input.valueOf) == 'function' && !isObject(val = fn.call(input))) return val;
+  if (!PREFERRED_STRING && typeof (fn = input.toString) == 'function' && !isObject(val = fn.call(input))) return val;
+  throw TypeError("Can't convert object to primitive value");
+};
+
+// `ToObject` abstract operation
+// https://tc39.es/ecma262/#sec-toobject
+var toObject = function (argument) {
+  return Object(requireObjectCoercible(argument));
+};
+
+var hasOwnProperty = {}.hasOwnProperty;
+
+var has = Object.hasOwn || function hasOwn(it, key) {
+  return hasOwnProperty.call(toObject(it), key);
 };
 
 var document$1 = global_1.document;
@@ -111,23 +195,28 @@ var ie8DomDefine = !descriptors && !fails(function () {
   }).a != 7;
 });
 
+// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+var $getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+
+// `Object.getOwnPropertyDescriptor` method
+// https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
+var f$1 = descriptors ? $getOwnPropertyDescriptor : function getOwnPropertyDescriptor(O, P) {
+  O = toIndexedObject(O);
+  P = toPrimitive(P, true);
+  if (ie8DomDefine) try {
+    return $getOwnPropertyDescriptor(O, P);
+  } catch (error) { /* empty */ }
+  if (has(O, P)) return createPropertyDescriptor(!objectPropertyIsEnumerable.f.call(O, P), O[P]);
+};
+
+var objectGetOwnPropertyDescriptor = {
+	f: f$1
+};
+
 var anObject = function (it) {
   if (!isObject(it)) {
     throw TypeError(String(it) + ' is not an object');
   } return it;
-};
-
-// `ToPrimitive` abstract operation
-// https://tc39.es/ecma262/#sec-toprimitive
-// instead of the ES6 spec version, we didn't implement @@toPrimitive case
-// and the second argument - flag - preferred type is a string
-var toPrimitive = function (input, PREFERRED_STRING) {
-  if (!isObject(input)) return input;
-  var fn, val;
-  if (PREFERRED_STRING && typeof (fn = input.toString) == 'function' && !isObject(val = fn.call(input))) return val;
-  if (typeof (fn = input.valueOf) == 'function' && !isObject(val = fn.call(input))) return val;
-  if (!PREFERRED_STRING && typeof (fn = input.toString) == 'function' && !isObject(val = fn.call(input))) return val;
-  throw TypeError("Can't convert object to primitive value");
 };
 
 // eslint-disable-next-line es/no-object-defineproperty -- safe
@@ -135,7 +224,7 @@ var $defineProperty = Object.defineProperty;
 
 // `Object.defineProperty` method
 // https://tc39.es/ecma262/#sec-object.defineproperty
-var f = descriptors ? $defineProperty : function defineProperty(O, P, Attributes) {
+var f$2 = descriptors ? $defineProperty : function defineProperty(O, P, Attributes) {
   anObject(O);
   P = toPrimitive(P, true);
   anObject(Attributes);
@@ -148,16 +237,7 @@ var f = descriptors ? $defineProperty : function defineProperty(O, P, Attributes
 };
 
 var objectDefineProperty = {
-	f: f
-};
-
-var createPropertyDescriptor = function (bitmap, value) {
-  return {
-    enumerable: !(bitmap & 1),
-    configurable: !(bitmap & 2),
-    writable: !(bitmap & 4),
-    value: value
-  };
+	f: f$2
 };
 
 var createNonEnumerableProperty = descriptors ? function (object, key, value) {
@@ -180,115 +260,6 @@ var store = global_1[SHARED] || setGlobal(SHARED, {});
 
 var sharedStore = store;
 
-var shared = createCommonjsModule(function (module) {
-(module.exports = function (key, value) {
-  return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
-})('versions', []).push({
-  version: '3.15.2',
-  mode:  'global',
-  copyright: '© 2021 Denis Pushkarev (zloirock.ru)'
-});
-});
-
-// `RequireObjectCoercible` abstract operation
-// https://tc39.es/ecma262/#sec-requireobjectcoercible
-var requireObjectCoercible = function (it) {
-  if (it == undefined) throw TypeError("Can't call method on " + it);
-  return it;
-};
-
-// `ToObject` abstract operation
-// https://tc39.es/ecma262/#sec-toobject
-var toObject = function (argument) {
-  return Object(requireObjectCoercible(argument));
-};
-
-var hasOwnProperty = {}.hasOwnProperty;
-
-var has = Object.hasOwn || function hasOwn(it, key) {
-  return hasOwnProperty.call(toObject(it), key);
-};
-
-var id = 0;
-var postfix = Math.random();
-
-var uid = function (key) {
-  return 'Symbol(' + String(key === undefined ? '' : key) + ')_' + (++id + postfix).toString(36);
-};
-
-var path = global_1;
-
-var aFunction = function (variable) {
-  return typeof variable == 'function' ? variable : undefined;
-};
-
-var getBuiltIn = function (namespace, method) {
-  return arguments.length < 2 ? aFunction(path[namespace]) || aFunction(global_1[namespace])
-    : path[namespace] && path[namespace][method] || global_1[namespace] && global_1[namespace][method];
-};
-
-var engineUserAgent = getBuiltIn('navigator', 'userAgent') || '';
-
-var process = global_1.process;
-var versions = process && process.versions;
-var v8 = versions && versions.v8;
-var match, version;
-
-if (v8) {
-  match = v8.split('.');
-  version = match[0] < 4 ? 1 : match[0] + match[1];
-} else if (engineUserAgent) {
-  match = engineUserAgent.match(/Edge\/(\d+)/);
-  if (!match || match[1] >= 74) {
-    match = engineUserAgent.match(/Chrome\/(\d+)/);
-    if (match) version = match[1];
-  }
-}
-
-var engineV8Version = version && +version;
-
-/* eslint-disable es/no-symbol -- required for testing */
-
-
-
-// eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
-var nativeSymbol = !!Object.getOwnPropertySymbols && !fails(function () {
-  var symbol = Symbol();
-  // Chrome 38 Symbol has incorrect toString conversion
-  // `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
-  return !String(symbol) || !(Object(symbol) instanceof Symbol) ||
-    // Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
-    !Symbol.sham && engineV8Version && engineV8Version < 41;
-});
-
-/* eslint-disable es/no-symbol -- required for testing */
-
-
-var useSymbolAsUid = nativeSymbol
-  && !Symbol.sham
-  && typeof Symbol.iterator == 'symbol';
-
-var WellKnownSymbolsStore = shared('wks');
-var Symbol$1 = global_1.Symbol;
-var createWellKnownSymbol = useSymbolAsUid ? Symbol$1 : Symbol$1 && Symbol$1.withoutSetter || uid;
-
-var wellKnownSymbol = function (name) {
-  if (!has(WellKnownSymbolsStore, name) || !(nativeSymbol || typeof WellKnownSymbolsStore[name] == 'string')) {
-    if (nativeSymbol && has(Symbol$1, name)) {
-      WellKnownSymbolsStore[name] = Symbol$1[name];
-    } else {
-      WellKnownSymbolsStore[name] = createWellKnownSymbol('Symbol.' + name);
-    }
-  } return WellKnownSymbolsStore[name];
-};
-
-var TO_STRING_TAG = wellKnownSymbol('toStringTag');
-var test = {};
-
-test[TO_STRING_TAG] = 'z';
-
-var toStringTagSupport = String(test) === '[object z]';
-
 var functionToString = Function.toString;
 
 // this helper broken in `core-js@3.4.1-3.4.4`, so we can't use `shared` helper
@@ -303,6 +274,23 @@ var inspectSource = sharedStore.inspectSource;
 var WeakMap = global_1.WeakMap;
 
 var nativeWeakMap = typeof WeakMap === 'function' && /native code/.test(inspectSource(WeakMap));
+
+var shared = createCommonjsModule(function (module) {
+(module.exports = function (key, value) {
+  return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
+})('versions', []).push({
+  version: '3.15.2',
+  mode:  'global',
+  copyright: '© 2021 Denis Pushkarev (zloirock.ru)'
+});
+});
+
+var id = 0;
+var postfix = Math.random();
+
+var uid = function (key) {
+  return 'Symbol(' + String(key === undefined ? '' : key) + ')_' + (++id + postfix).toString(36);
+};
 
 var keys = shared('keys');
 
@@ -407,100 +395,15 @@ var TEMPLATE = String(String).split('String');
 });
 });
 
-var toString = {}.toString;
+var path = global_1;
 
-var classofRaw = function (it) {
-  return toString.call(it).slice(8, -1);
+var aFunction = function (variable) {
+  return typeof variable == 'function' ? variable : undefined;
 };
 
-var TO_STRING_TAG$1 = wellKnownSymbol('toStringTag');
-// ES3 wrong here
-var CORRECT_ARGUMENTS = classofRaw(function () { return arguments; }()) == 'Arguments';
-
-// fallback for IE11 Script Access Denied error
-var tryGet = function (it, key) {
-  try {
-    return it[key];
-  } catch (error) { /* empty */ }
-};
-
-// getting tag from ES6+ `Object.prototype.toString`
-var classof = toStringTagSupport ? classofRaw : function (it) {
-  var O, tag, result;
-  return it === undefined ? 'Undefined' : it === null ? 'Null'
-    // @@toStringTag case
-    : typeof (tag = tryGet(O = Object(it), TO_STRING_TAG$1)) == 'string' ? tag
-    // builtinTag case
-    : CORRECT_ARGUMENTS ? classofRaw(O)
-    // ES3 arguments fallback
-    : (result = classofRaw(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : result;
-};
-
-// `Object.prototype.toString` method implementation
-// https://tc39.es/ecma262/#sec-object.prototype.tostring
-var objectToString = toStringTagSupport ? {}.toString : function toString() {
-  return '[object ' + classof(this) + ']';
-};
-
-// `Object.prototype.toString` method
-// https://tc39.es/ecma262/#sec-object.prototype.tostring
-if (!toStringTagSupport) {
-  redefine(Object.prototype, 'toString', objectToString, { unsafe: true });
-}
-
-var $propertyIsEnumerable = {}.propertyIsEnumerable;
-// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
-
-// Nashorn ~ JDK8 bug
-var NASHORN_BUG = getOwnPropertyDescriptor && !$propertyIsEnumerable.call({ 1: 2 }, 1);
-
-// `Object.prototype.propertyIsEnumerable` method implementation
-// https://tc39.es/ecma262/#sec-object.prototype.propertyisenumerable
-var f$1 = NASHORN_BUG ? function propertyIsEnumerable(V) {
-  var descriptor = getOwnPropertyDescriptor(this, V);
-  return !!descriptor && descriptor.enumerable;
-} : $propertyIsEnumerable;
-
-var objectPropertyIsEnumerable = {
-	f: f$1
-};
-
-var split = ''.split;
-
-// fallback for non-array-like ES3 and non-enumerable old V8 strings
-var indexedObject = fails(function () {
-  // throws an error in rhino, see https://github.com/mozilla/rhino/issues/346
-  // eslint-disable-next-line no-prototype-builtins -- safe
-  return !Object('z').propertyIsEnumerable(0);
-}) ? function (it) {
-  return classofRaw(it) == 'String' ? split.call(it, '') : Object(it);
-} : Object;
-
-// toObject with fallback for non-array-like ES3 strings
-
-
-
-var toIndexedObject = function (it) {
-  return indexedObject(requireObjectCoercible(it));
-};
-
-// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-var $getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
-
-// `Object.getOwnPropertyDescriptor` method
-// https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
-var f$2 = descriptors ? $getOwnPropertyDescriptor : function getOwnPropertyDescriptor(O, P) {
-  O = toIndexedObject(O);
-  P = toPrimitive(P, true);
-  if (ie8DomDefine) try {
-    return $getOwnPropertyDescriptor(O, P);
-  } catch (error) { /* empty */ }
-  if (has(O, P)) return createPropertyDescriptor(!objectPropertyIsEnumerable.f.call(O, P), O[P]);
-};
-
-var objectGetOwnPropertyDescriptor = {
-	f: f$2
+var getBuiltIn = function (namespace, method) {
+  return arguments.length < 2 ? aFunction(path[namespace]) || aFunction(global_1[namespace])
+    : path[namespace] && path[namespace][method] || global_1[namespace] && global_1[namespace][method];
 };
 
 var ceil = Math.ceil;
@@ -697,6 +600,132 @@ var _export = function (options, source) {
     redefine(target, key, sourceProperty, options);
   }
 };
+
+var arrayMethodIsStrict = function (METHOD_NAME, argument) {
+  var method = [][METHOD_NAME];
+  return !!method && fails(function () {
+    // eslint-disable-next-line no-useless-call,no-throw-literal -- required for testing
+    method.call(null, argument || function () { throw 1; }, 1);
+  });
+};
+
+/* eslint-disable es/no-array-prototype-indexof -- required for testing */
+
+var $indexOf = arrayIncludes.indexOf;
+
+
+var nativeIndexOf = [].indexOf;
+
+var NEGATIVE_ZERO = !!nativeIndexOf && 1 / [1].indexOf(1, -0) < 0;
+var STRICT_METHOD = arrayMethodIsStrict('indexOf');
+
+// `Array.prototype.indexOf` method
+// https://tc39.es/ecma262/#sec-array.prototype.indexof
+_export({ target: 'Array', proto: true, forced: NEGATIVE_ZERO || !STRICT_METHOD }, {
+  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
+    return NEGATIVE_ZERO
+      // convert -0 to +0
+      ? nativeIndexOf.apply(this, arguments) || 0
+      : $indexOf(this, searchElement, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+
+var engineUserAgent = getBuiltIn('navigator', 'userAgent') || '';
+
+var process = global_1.process;
+var versions = process && process.versions;
+var v8 = versions && versions.v8;
+var match, version;
+
+if (v8) {
+  match = v8.split('.');
+  version = match[0] < 4 ? 1 : match[0] + match[1];
+} else if (engineUserAgent) {
+  match = engineUserAgent.match(/Edge\/(\d+)/);
+  if (!match || match[1] >= 74) {
+    match = engineUserAgent.match(/Chrome\/(\d+)/);
+    if (match) version = match[1];
+  }
+}
+
+var engineV8Version = version && +version;
+
+/* eslint-disable es/no-symbol -- required for testing */
+
+
+
+// eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
+var nativeSymbol = !!Object.getOwnPropertySymbols && !fails(function () {
+  var symbol = Symbol();
+  // Chrome 38 Symbol has incorrect toString conversion
+  // `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
+  return !String(symbol) || !(Object(symbol) instanceof Symbol) ||
+    // Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
+    !Symbol.sham && engineV8Version && engineV8Version < 41;
+});
+
+/* eslint-disable es/no-symbol -- required for testing */
+
+
+var useSymbolAsUid = nativeSymbol
+  && !Symbol.sham
+  && typeof Symbol.iterator == 'symbol';
+
+var WellKnownSymbolsStore = shared('wks');
+var Symbol$1 = global_1.Symbol;
+var createWellKnownSymbol = useSymbolAsUid ? Symbol$1 : Symbol$1 && Symbol$1.withoutSetter || uid;
+
+var wellKnownSymbol = function (name) {
+  if (!has(WellKnownSymbolsStore, name) || !(nativeSymbol || typeof WellKnownSymbolsStore[name] == 'string')) {
+    if (nativeSymbol && has(Symbol$1, name)) {
+      WellKnownSymbolsStore[name] = Symbol$1[name];
+    } else {
+      WellKnownSymbolsStore[name] = createWellKnownSymbol('Symbol.' + name);
+    }
+  } return WellKnownSymbolsStore[name];
+};
+
+var TO_STRING_TAG = wellKnownSymbol('toStringTag');
+var test = {};
+
+test[TO_STRING_TAG] = 'z';
+
+var toStringTagSupport = String(test) === '[object z]';
+
+var TO_STRING_TAG$1 = wellKnownSymbol('toStringTag');
+// ES3 wrong here
+var CORRECT_ARGUMENTS = classofRaw(function () { return arguments; }()) == 'Arguments';
+
+// fallback for IE11 Script Access Denied error
+var tryGet = function (it, key) {
+  try {
+    return it[key];
+  } catch (error) { /* empty */ }
+};
+
+// getting tag from ES6+ `Object.prototype.toString`
+var classof = toStringTagSupport ? classofRaw : function (it) {
+  var O, tag, result;
+  return it === undefined ? 'Undefined' : it === null ? 'Null'
+    // @@toStringTag case
+    : typeof (tag = tryGet(O = Object(it), TO_STRING_TAG$1)) == 'string' ? tag
+    // builtinTag case
+    : CORRECT_ARGUMENTS ? classofRaw(O)
+    // ES3 arguments fallback
+    : (result = classofRaw(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : result;
+};
+
+// `Object.prototype.toString` method implementation
+// https://tc39.es/ecma262/#sec-object.prototype.tostring
+var objectToString = toStringTagSupport ? {}.toString : function toString() {
+  return '[object ' + classof(this) + ']';
+};
+
+// `Object.prototype.toString` method
+// https://tc39.es/ecma262/#sec-object.prototype.tostring
+if (!toStringTagSupport) {
+  redefine(Object.prototype, 'toString', objectToString, { unsafe: true });
+}
 
 var nativePromiseConstructor = global_1.Promise;
 
@@ -1535,7 +1564,7 @@ _export({ target: PROMISE, stat: true, forced: INCORRECT_ITERATION }, {
 });
 
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2020-03-04 16:18
 * Desc: 
@@ -2746,7 +2775,7 @@ var POS_CELL_HEIGHT = 40;
 var WHEEL_STEP = 80;
 
 function bee() {
-  bpLibs.device.vibrate(10);
+  bpLibs$1.device.vibrate(10);
 }
 
 function mobile_onWheel_picker(event) {
@@ -3030,7 +3059,7 @@ function picker_getOffset(pickerDom) {
 
 var script = {
   components: {
-    bpIcon: bpLibs.VueObject.bpIcon,
+    bpIcon: bpLibs$1.VueObject.bpIcon,
     bpWidget: bpDialog.bpWidget
   },
   props: {
@@ -3045,6 +3074,8 @@ var script = {
     },
     pageClass: String | Array,
     pageStyle: String | Array | Object,
+    // 仅对一维数据源有效.
+    multiple: Boolean,
     toolbarPos: {
       type: String,
       validator: function validator(value) {
@@ -3072,7 +3103,7 @@ var script = {
      */
     datasource: {
       validator: function validator(value) {
-        return _typeof(value) === 'object' || Array.isArray(value);
+        return !value || _typeof(value) === 'object' || Array.isArray(value);
       }
     },
     value: {
@@ -3091,6 +3122,7 @@ var script = {
       /**
        * @desc: 数据源.
        */
+      items0Checked: null,
       items0: null,
       items1: null,
       items2: null,
@@ -3117,6 +3149,34 @@ var script = {
 
       if (t === 'string' || t === 'number') {
         this.value0 = v;
+
+        if (this.multiple && this.groupCount == 1) {
+          for (var i = 0; i < this.items0Checked.length; i++) {
+            if (this.items0[i].value === v) {
+              this.items0Checked[i] = true;
+            } else {
+              this.items0Checked[i] = false;
+            }
+          } // by solt.
+
+
+          if (!this.datasource) {
+            for (var _i = 0; _i < this.$slots["default"].length; _i++) {
+              var c = this.$slots["default"][_i];
+
+              if (c.componentOptions.tag === 'bp-picker-cell') {
+                if (this.items0[_i].value === v) {
+                  c.componentInstance.check = true;
+                } else {
+                  c.componentInstance.check = false;
+                }
+              }
+            }
+          } // if.
+
+        } // if.
+
+
         this.$nextTick(function () {
           _newArrowCheck(this, _this);
 
@@ -3127,12 +3187,45 @@ var script = {
           return;
         }
 
+        if (this.multiple && this.groupCount == 1) {
+          var arr = [];
+          arr.length = this.items0Checked.length;
+
+          for (var _i2 = 0; _i2 < arr.length; _i2++) {
+            for (var j = 0; j < v.length; j++) {
+              if (this.items0[_i2].value === v[j]) {
+                arr[_i2] = true;
+                break;
+              }
+            }
+          }
+
+          this.items0Checked = arr; // by solt.
+
+          if (!this.datasource) {
+            for (var _i3 = 0; _i3 < this.$slots["default"].length; _i3++) {
+              var _c = this.$slots["default"][_i3];
+
+              if (_c.componentOptions.tag === 'bp-picker-cell') {
+                if (arr.indexOf(_c.componentInstance.value) >= 0) {
+                  _c.componentInstance.check = true;
+                } else {
+                  _c.componentInstance.check = false;
+                }
+              }
+            }
+          } // if.
+
+
+          return;
+        }
+
         this.$nextTick(function () {
           _newArrowCheck(this, _this);
 
-          for (var i = 0; i < v.length && i < this.groupCount; i++) {
-            this['value' + i] = v[i];
-            this.setSelect(i, v[i], false);
+          for (var _i4 = 0; _i4 < v.length && _i4 < this.groupCount; _i4++) {
+            this['value' + _i4] = v[_i4];
+            this.setSelect(_i4, v[_i4], false);
           }
         }.bind(this));
       } else {
@@ -3194,7 +3287,7 @@ var script = {
     }
   },
   created: function created() {
-    this.timer = new bpLibs.Timer();
+    this.timer = new bpLibs$1.Timer();
   },
   beforeMount: function beforeMount() {
     this.isMobile = febs.utils.browserIsMobile();
@@ -3205,7 +3298,9 @@ var script = {
     }
 
     if (!this.datasource) {
-      throw new Error('picker must have datasource');
+      if (!this.$slots["default"]) {
+        throw new Error('picker must have datasource');
+      }
     }
 
     this._initRealDatasource(this.datasource);
@@ -3219,7 +3314,30 @@ var script = {
     this.timer.dispose();
     this.timer = null;
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    // febs.dom.addEventListener(this.$refs.content0, 'click', this._onClickGroup0Current);
+    //  by slot and multiple.
+    if (!this.datasource && this.multiple && this.groupCount == 1) {
+      for (var i = 0; i < this.$slots["default"].length; i++) {
+        var c = this.$slots["default"][i];
+
+        if (c.componentOptions.tag === 'bp-picker-cell') {
+          c.componentInstance.multiple = true;
+
+          if (Array.isArray(this.value)) {
+            if (this.value.indexOf(c.componentOptions.propsData.value) >= 0) {
+              c.componentInstance.check = true;
+              this.items0Checked[i] = true;
+            }
+          } else if (c.componentOptions.propsData.value == this.value) {
+            c.componentInstance.check = true;
+            this.items0Checked[i] = true;
+          }
+        }
+      }
+    } // if.
+
+  },
   methods: {
     /**
      * @desc: 显示
@@ -3277,7 +3395,9 @@ var script = {
                 i = picker_getOffset(ee);
 
                 if (offset != i) {
-                  this.realDatasource.picker_changed(groupIndex, this);
+                  if (this.realDatasource) {
+                    this.realDatasource.picker_changed(groupIndex, this);
+                  }
                 }
 
                 if (trigger) {
@@ -3291,6 +3411,27 @@ var script = {
       } // if.
 
     },
+    _getSelectIndex: function _getSelectIndex() {
+      var groupIndex = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var ee = this.$refs.agentMain;
+
+      if (ee) {
+        ee = $(ee);
+        ee = $(ee.children(".bp-picker__group")[groupIndex]);
+        ee = $(ee.children('.bp-picker__content')[0]); // let ee = this.$refs['items'+i];
+
+        if (ee) {
+          ee = $(ee);
+          var offset = picker_getOffset(ee);
+          offset -= POS_CENTER;
+          offset = parseInt(-offset / POS_CELL_HEIGHT);
+          return offset;
+        } // if.
+
+      }
+
+      return 0;
+    },
 
     /**
      * @desc: 获得当前界面上选中的元素的值.
@@ -3302,27 +3443,13 @@ var script = {
       var data = this['items' + groupIndex];
 
       if (data) {
-        var ee = this.$refs.agentMain;
+        var index = this._getSelectIndex(groupIndex);
 
-        if (ee) {
-          ee = $(ee);
-          ee = $(ee.children(".bp-picker__group")[groupIndex]);
-          ee = $(ee.children('.bp-picker__content')[0]); // let ee = this.$refs['items'+i];
-
-          if (ee) {
-            ee = $(ee);
-            var offset = picker_getOffset(ee);
-            offset -= POS_CENTER;
-            offset = parseInt(-offset / POS_CELL_HEIGHT);
-
-            if (data[offset]) {
-              return febs.utils.mergeMap(data[offset]);
-            }
-          } // if.
-
+        if (data[index]) {
+          return febs.utils.mergeMap(data[index]);
         }
 
-        return data[0] ? data[0] : {};
+        return data[0] ? febs.utils.mergeMap(data[0]) : {};
       } // if.
 
 
@@ -3332,7 +3459,17 @@ var script = {
       var v;
 
       if (this.groupCount == 1) {
-        v = this.value0;
+        if (this.multiple && this.groupCount == 1) {
+          v = [];
+
+          for (var i = 0; i < this.items0Checked.length; i++) {
+            if (this.items0Checked[i]) {
+              v.push(this.items0[i].value);
+            }
+          }
+        } else {
+          v = this.value0;
+        }
       } else if (this.groupCount == 2) {
         v = [this.value0, this.value1];
       } else if (this.groupCount == 3) {
@@ -3365,22 +3502,68 @@ var script = {
       var v;
 
       if (this.groupCount == 1) {
-        this.value0 = this.getSelect(0).value;
-        v = this.value0;
+        if (this.multiple && this.groupCount == 1) {
+          v = [];
+
+          for (var i = 0; i < this.items0Checked.length; i++) {
+            if (this.items0Checked[i]) {
+              v.push(this.items0[i].value);
+            }
+          }
+        } else {
+          var item0 = this.getSelect(0);
+
+          if (!!item0.disabled) {
+            return;
+          }
+
+          this.value0 = item0.value;
+          v = this.value0;
+        }
       } else if (this.groupCount == 2) {
-        this.value0 = this.getSelect(0).value;
-        this.value1 = this.getSelect(1).value;
+        var _item = this.getSelect(0);
+
+        var item1 = this.getSelect(1);
+
+        if (!!_item.disabled || !!item1.disabled) {
+          return;
+        }
+
+        this.value0 = _item.value;
+        this.value1 = item1.value;
         v = [this.value0, this.value1];
       } else if (this.groupCount == 3) {
-        this.value0 = this.getSelect(0).value;
-        this.value1 = this.getSelect(1).value;
-        this.value2 = this.getSelect(2).value;
+        var _item2 = this.getSelect(0);
+
+        var _item3 = this.getSelect(1);
+
+        var item2 = this.getSelect(2);
+
+        if (!!_item2.disabled || !!_item3.disabled || !!item2.disabled) {
+          return;
+        }
+
+        this.value0 = _item2.value;
+        this.value1 = _item3.value;
+        this.value2 = item2.value;
         v = [this.value0, this.value1, this.value2];
       } else {
-        this.value0 = this.getSelect(0).value;
-        this.value1 = this.getSelect(1).value;
-        this.value2 = this.getSelect(2).value;
-        this.value3 = this.getSelect(3).value;
+        var _item4 = this.getSelect(0);
+
+        var _item5 = this.getSelect(1);
+
+        var _item6 = this.getSelect(2);
+
+        var item3 = this.getSelect(3);
+
+        if (!!_item4.disabled || !!_item5.disabled || !!_item6.disabled || !!item3.disabled) {
+          return;
+        }
+
+        this.value0 = _item4.value;
+        this.value1 = _item5.value;
+        this.value2 = _item6.value;
+        this.value3 = item3.value;
         v = [this.value0, this.value1, this.value2, this.value3];
       }
 
@@ -3388,8 +3571,39 @@ var script = {
       this.$emit('input', v);
       this.$emit('confirm', this);
     },
-    _bindEvent: function _bindEvent() {
+    _onClickGroup0Start: function _onClickGroup0Start() {
+      if (this.multiple && this.groupCount == 1) {
+        this.preIndexClickGroup0 = this._getSelectIndex(0);
+      }
+    },
+    _onClickGroup0End: function _onClickGroup0End() {
       var _this3 = this;
+
+      if (this.multiple && this.groupCount == 1) {
+        bpLibs$1.dom.probeDom(100, function () {
+          _newArrowCheck(this, _this3);
+
+          return getComputedStyle(this.$refs.content1).transition.indexOf('none') != 0;
+        }.bind(this), function () {
+          _newArrowCheck(this, _this3);
+
+          var curIndexClickGroup0 = this._getSelectIndex(0);
+
+          if (curIndexClickGroup0 == this.preIndexClickGroup0) {
+            if (!!!this.items0[curIndexClickGroup0].disabled) {
+              var check = !!!this.items0Checked[curIndexClickGroup0];
+              this.$set(this.items0Checked, curIndexClickGroup0, check);
+
+              if (!this.datasource) {
+                this.$slots["default"][curIndexClickGroup0].componentInstance.check = check;
+              }
+            }
+          }
+        }.bind(this));
+      }
+    },
+    _bindEvent: function _bindEvent() {
+      var _this4 = this;
 
       var elHd = this.$refs.agentToolbar;
       var elMain = $(this.$refs.agentMain);
@@ -3399,10 +3613,13 @@ var script = {
       if (elBc[0]) {
         for (var i = 0; i < elBc.length; i++) {
           $(elBc[i]).off('change').on('change', function (event) {
-            _newArrowCheck(this, _this3);
+            _newArrowCheck(this, _this4);
 
             var group = parseInt($(event.currentTarget).attr('data-group'));
-            this.realDatasource.picker_changed(group, this);
+
+            if (this.realDatasource) {
+              this.realDatasource.picker_changed(group, this);
+            }
 
             this._onChange();
           }.bind(this));
@@ -3425,24 +3642,31 @@ var script = {
           namecancel = 'mouseout';
         }
 
-        for (var _i = 0; _i < elBd.length; _i++) {
-          febs.dom.removeEventListener(elBd[_i], namestart, mobile_onTouchstart_picker, true);
-          febs.dom.removeEventListener(elBd[_i], namemove, mobile_onTouchmove_picker, true);
-          febs.dom.removeEventListener(elBd[_i], nameend, mobile_onTouchend_picker, true);
-          febs.dom.removeEventListener(elBd[_i], namecancel, mobile_onTouchcancel_picker, true);
-          febs.dom.addEventListener(elBd[_i], namestart, mobile_onTouchstart_picker, true); // elBd[i].addEventListener(namemove, mobile_onTouchmove_picker, true);
+        for (var _i5 = 0; _i5 < elBd.length; _i5++) {
+          febs.dom.removeEventListener(elBd[_i5], namestart, this._onClickGroup0Start, true);
+          febs.dom.removeEventListener(elBd[_i5], nameend, this._onClickGroup0End, true);
+          febs.dom.removeEventListener(elBd[_i5], namestart, mobile_onTouchstart_picker, true);
+          febs.dom.removeEventListener(elBd[_i5], namemove, mobile_onTouchmove_picker, true);
+          febs.dom.removeEventListener(elBd[_i5], nameend, mobile_onTouchend_picker, true);
+          febs.dom.removeEventListener(elBd[_i5], namecancel, mobile_onTouchcancel_picker, true);
+          febs.dom.addEventListener(elBd[_i5], namestart, mobile_onTouchstart_picker, true); // elBd[i].addEventListener(namemove, mobile_onTouchmove_picker, true);
           // elBd[i].addEventListener(nameend, mobile_onTouchend_picker, true);
           // elBd[i].addEventListener(namecancel, mobile_onTouchcancel_picker, true);
+
+          if (_i5 == 0 && this.multiple && this.groupCount == 1) {
+            febs.dom.addEventListener(elBd[_i5], namestart, this._onClickGroup0Start, true);
+            febs.dom.addEventListener(elBd[_i5], nameend, this._onClickGroup0End, true);
+          }
 
           if (!this.isMobile) {
             var agent = navigator.userAgent;
 
             if (/.*Firefox.*/.test(agent)) {
-              febs.dom.removeEventListener(elBd[_i], 'DOMMouseScroll', mobile_onWheel_picker, true);
-              febs.dom.addEventListener(elBd[_i], 'DOMMouseScroll', mobile_onWheel_picker, true);
+              febs.dom.removeEventListener(elBd[_i5], 'DOMMouseScroll', mobile_onWheel_picker, true);
+              febs.dom.addEventListener(elBd[_i5], 'DOMMouseScroll', mobile_onWheel_picker, true);
             } else {
-              febs.dom.removeEventListener(elBd[_i], 'mousewheel', mobile_onWheel_picker, true);
-              febs.dom.addEventListener(elBd[_i], 'mousewheel', mobile_onWheel_picker, true);
+              febs.dom.removeEventListener(elBd[_i5], 'mousewheel', mobile_onWheel_picker, true);
+              febs.dom.addEventListener(elBd[_i5], 'mousewheel', mobile_onWheel_picker, true);
             }
           }
         }
@@ -3455,22 +3679,81 @@ var script = {
     * @return Promise. - resolve(value)
     */
     refreshDatasource: function refreshDatasource(groupIndex) {
-      var _this4 = this;
+      var _this5 = this;
 
       var trigger = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-      return new Promise(function (resolve, reject) {
-        var _this5 = this;
 
-        _newArrowCheck(this, _this4);
+      // 使用solt的单数据源.
+      if (!this.realDatasource) {
+        if (!this.$slots["default"]) {
+          throw new Error('picker missing datasource or children cells');
+        }
+
+        return new Promise(function (resolve, reject) {
+          var _this6 = this;
+
+          _newArrowCheck(this, _this5);
+
+          var value = this.value;
+          var datasource = [];
+
+          try {
+            for (var i = 0; i < this.$slots["default"].length; i++) {
+              var c = this.$slots["default"][i];
+
+              if (c.tag.indexOf('bpPickerCell') >= 0) {
+                datasource.push({
+                  value: c.componentOptions.propsData.value,
+                  disabled: c.componentOptions.propsData.disabled
+                });
+              } else {
+                throw new Error('picker children must be bp-picker-cell');
+              }
+            }
+
+            if (this.groupCount == 1 && this.multiple && groupIndex == 0) {
+              this.items0Checked = this.items0Checked || [];
+              this.items0Checked.length = datasource.length;
+            }
+
+            this['items' + 0] = datasource;
+            this.$nextTick(function () {
+              var _this7 = this;
+
+              _newArrowCheck(this, _this6);
+
+              setTimeout(function () {
+                _newArrowCheck(this, _this7);
+
+                this.setSelect(groupIndex, value, trigger);
+                resolve(value);
+
+                this._bindEvent();
+
+                if (trigger && needEvent) {// this._bindEvent($(`.bp-picker__agent[data-picker-agent="${this.uuid}"]`));
+                }
+              }.bind(this), 0);
+            }.bind(this));
+          } catch (e) {
+            reject(e);
+          }
+        }.bind(this));
+      } // 使用datasource的数据源.
+
+
+      return new Promise(function (resolve, reject) {
+        var _this8 = this;
+
+        _newArrowCheck(this, _this5);
 
         var needEvent = false;
         var value;
 
         try {
           this.realDatasource.picker_datasource(groupIndex, this, function (ds) {
-            var _this6 = this;
+            var _this9 = this;
 
-            _newArrowCheck(this, _this5);
+            _newArrowCheck(this, _this8);
 
             try {
               value = ds.value;
@@ -3480,18 +3763,24 @@ var script = {
               }
 
               if (!(!!this['items' + groupIndex] && !!ds.datasource)) needEvent = true;
+
+              if (this.groupCount == 1 && this.multiple && groupIndex == 0) {
+                this.items0Checked = this.items0Checked || [];
+                this.items0Checked.length = ds.datasource.length;
+              }
+
               this['items' + groupIndex] = ds.datasource;
             } catch (e) {
               reject(e);
             }
 
             this.$nextTick(function () {
-              var _this7 = this;
+              var _this10 = this;
 
-              _newArrowCheck(this, _this6);
+              _newArrowCheck(this, _this9);
 
               setTimeout(function () {
-                _newArrowCheck(this, _this7);
+                _newArrowCheck(this, _this10);
 
                 this.setSelect(groupIndex, value, trigger);
                 resolve(value);
@@ -3513,47 +3802,69 @@ var script = {
      * @desc: 重新获取整个数据.
      */
     _refreshDatasource: function _refreshDatasource() {
-      var _this8 = this;
+      var _this11 = this;
 
       var trigger = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-      this.realDatasource.picker_datasource_groups(function (groupCount) {
-        var _this9 = this;
 
-        _newArrowCheck(this, _this8);
+      if (this.realDatasource) {
+        this.realDatasource.picker_datasource_groups(function (groupCount) {
+          var _this12 = this;
 
-        if (groupCount <= 0 || groupCount > 4) {
-          throw new Error('picker group count must in [1,4]');
-        }
+          _newArrowCheck(this, _this11);
 
-        this.groupCount = groupCount;
-        var p = new Promise(function (resolve) {
-          _newArrowCheck(this, _this9);
+          if (groupCount <= 0 || groupCount > 4) {
+            throw new Error('picker group count must in [1,4]');
+          }
 
-          return resolve();
+          this.groupCount = groupCount;
+          var p = new Promise(function (resolve) {
+            _newArrowCheck(this, _this12);
+
+            return resolve();
+          }.bind(this));
+
+          for (var i = 0; i < groupCount; i++) {
+            p = p.then(febs.utils.sleep(1).then(this.refreshDatasource(i, trigger)));
+          }
+
+          this.$nextTick(function () {
+            var _this13 = this;
+
+            _newArrowCheck(this, _this12);
+
+            p.then(function () {
+              _newArrowCheck(this, _this13);
+
+              this._bindEvent();
+            }.bind(this));
+          }.bind(this));
         }.bind(this));
-
-        for (var i = 0; i < groupCount; i++) {
-          p = p.then(febs.utils.sleep(1).then(this.refreshDatasource(i, trigger)));
-        }
-
+      } else {
+        this.groupCount = 1;
+        var p = febs.utils.sleep(1).then(this.refreshDatasource(0, trigger));
         this.$nextTick(function () {
-          var _this10 = this;
+          var _this14 = this;
 
-          _newArrowCheck(this, _this9);
+          _newArrowCheck(this, _this11);
 
           p.then(function () {
-            _newArrowCheck(this, _this10);
+            _newArrowCheck(this, _this14);
 
             this._bindEvent();
           }.bind(this));
         }.bind(this));
-      }.bind(this));
+      }
     },
 
     /**
      * @desc: 初始化真实datasource.
      */
     _initRealDatasource: function _initRealDatasource(datasource) {
+      if (!datasource) {
+        this.realDatasource = null;
+        return;
+      }
+
       if (Array.isArray(datasource)) {
         // 判断是几列数据.
         var colNum = 1;
@@ -3841,16 +4152,24 @@ var __vue_render__ = function __vue_render__() {
     attrs: {
       "data-group": "0"
     }
-  }, _vm._l(_vm.items0, function (item, index) {
+  }, [_vm.$slots["default"] ? [_vm._t("default")] : _vm._l(_vm.items0, function (item, index) {
     return _c("div", {
       key: "_1" + index,
       "class": "bp-picker__item" + (item.disabled ? " bp-picker__item-disabled" : ""),
       attrs: {
         "data-value": item.value
       }
-    }, [_vm._v(_vm._s(item.label))]);
-  }), 0), _vm._v(" "), _c("div", {
-    staticClass: "bp-picker__mask"
+    }, [_vm._v(_vm._s(item.label) + "\n              "), _vm.multiple && _vm.items0Checked ? [_vm.items0Checked[index] ? _c("bp-icon", {
+      staticClass: "bp-picker__item_check",
+      attrs: {
+        name: "bp-picker_check"
+      }
+    }) : _c("i", {
+      staticClass: "bp-picker__item_uncheck"
+    })] : _vm._e()], 2);
+  })], 2), _vm._v(" "), _c("div", {
+    staticClass: "bp-picker__mask",
+    style: _vm.multiple && _vm.groupCount == 1 ? "cursor:pointer" : null
   })]), _vm._v(" "), _c("div", {
     staticClass: "bp-picker__group",
     style: {
@@ -3975,6 +4294,90 @@ var __vue_component__ = /*#__PURE__*/normalizeComponent({
   render: __vue_render__,
   staticRenderFns: __vue_staticRenderFns__
 }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, false, undefined, undefined, undefined);
+
+var script$1 = {
+  name: 'bpPickerCell',
+  components: {
+    bpIcon: bpLibs$1.VueObject.bpIcon
+  },
+  props: {
+    value: {
+      validator: function validator(value) {
+        var t = _typeof(value);
+
+        return t === 'string' || t === 'number';
+      },
+      required: true
+    },
+    disabled: {
+      validator: function validator(value) {
+        return !value || value === "disabled" || value === true;
+      }
+    }
+  },
+  data: function data() {
+    return {
+      // 仅对一维数据源有效.
+      multiple: false,
+      // 仅对一维数据源有效.
+      check: false
+    };
+  }
+};
+
+/* script */
+var __vue_script__$1 = script$1;
+/* template */
+
+var __vue_render__$1 = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c("div", {
+    staticClass: "bp-picker__item",
+    "class": {
+      "bp-picker__item-disabled": _vm.disabled
+    },
+    attrs: {
+      "data-value": _vm.value
+    }
+  }, [_vm._t("default"), _vm._v(" "), _vm.multiple ? [_vm.check ? _c("bp-icon", {
+    staticClass: "bp-picker__item_check",
+    attrs: {
+      name: "bp-picker_check"
+    }
+  }) : _c("i", {
+    staticClass: "bp-picker__item_uncheck"
+  })] : _vm._e()], 2);
+};
+
+var __vue_staticRenderFns__$1 = [];
+__vue_render__$1._withStripped = true;
+/* style */
+
+var __vue_inject_styles__$1 = undefined;
+/* scoped */
+
+var __vue_scope_id__$1 = undefined;
+/* module identifier */
+
+var __vue_module_identifier__$1 = undefined;
+/* functional template */
+
+var __vue_is_functional_template__$1 = false;
+/* style inject */
+
+/* style inject SSR */
+
+/* style inject shadow dom */
+
+var __vue_component__$1 = /*#__PURE__*/normalizeComponent({
+  render: __vue_render__$1,
+  staticRenderFns: __vue_staticRenderFns__$1
+}, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, false, undefined, undefined, undefined);
 
 var floor$3 = Math.floor;
 
@@ -4621,8 +5024,15 @@ var _default$4 = /*#__PURE__*/function () {
   return _default;
 }();
 
+function init() {
+  bpLibs.icons.registerAliasIcon('bp-picker_check', 'ok');
+}
+
+init();
 var index = {
+  init: init,
   bpPicker: __vue_component__,
+  bpPickerCell: __vue_component__$1,
   PickerDateDatasource: _default$3,
   PickerDoubleDatasource: _default$1,
   PickerSingleDatasource: _default,

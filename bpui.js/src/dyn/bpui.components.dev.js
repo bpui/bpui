@@ -1,7 +1,7 @@
 'use strict';
 
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2020-02-24 21:53
 * Desc: 所有的组件.
@@ -73,5 +73,10 @@ module.exports = [
   {
     name: 'button',
     style: function() { return require('../../../@bpui/button/style/_index.scss') },
+  },
+  {
+    name: 'select',
+    style: function() { return require('../../../@bpui/select/style/_index.scss') },
+    lib: function() { return import('../../../@bpui/select') },
   },
 ]

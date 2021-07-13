@@ -189,6 +189,10 @@ Object.defineProperty(Instance, 'bpPicker', {
   get: function () { return componentInstance.getComponent('picker').default.bpPicker; },
   enumerable: true
 });
+Object.defineProperty(Instance, 'bpPickerCell', {
+  get: function () { return componentInstance.getComponent('picker').default.bpPickerCell; },
+  enumerable: true
+});
 Object.defineProperty(Instance, 'PickerDateDatasource', {
   get: function () { return componentInstance.getComponent('picker').default.PickerDateDatasource; },
   enumerable: true
@@ -235,6 +239,14 @@ Object.defineProperty(Instance, 'bpImageCropPreviewTablet', {
 });
 Object.defineProperty(Instance, 'bpImageCropPreview', {
   get: function () { return componentInstance.getComponent('uploader').default.bpImageCropPreview; },
+  enumerable: true
+});
+Object.defineProperty(Instance, 'bpSelect', {
+  get: function () { return componentInstance.getComponent('select').default.bpSelect; },
+  enumerable: true
+});
+Object.defineProperty(Instance, 'bpSelectOption', {
+  get: function () { return componentInstance.getComponent('select').default.bpSelectOption; },
   enumerable: true
 });
 

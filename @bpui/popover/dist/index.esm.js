@@ -1,6 +1,6 @@
 /*!
- * bpui popover v1.1.13
- * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
+ * bpui popover v1.1.15
+ * Copyright (c) 2021 Copyright bpuioint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 
@@ -823,7 +823,8 @@ var script = {
         this.visibleReal = v;
 
         if (v != oldV && v) {
-          this._show(this.direction); // this._show('top');
+          this._onTriggerShow(null); // this._show(this.direction);
+          // this._show('top');
           // this._show('bottom');
           // this._show('left');
           // this._show('right');
@@ -886,9 +887,9 @@ var script = {
           el = v;
         }
 
-        $(el).off('mouseover', this._onTrigger);
+        $(el).off('mouseover', this._onTriggerShow);
         $(el).off('mouseleave', this._onTriggerHide);
-        $(el).off('click', this._onTrigger);
+        $(el).off('click', this._onTriggerShow);
 
         if (this.ges) {
           this.ges.dispose();
@@ -912,14 +913,14 @@ var script = {
 
         if (this.trigger == 'hover') {
           if (bpLibs.device.browserIsMobile()) {
-            $(el).on('click', this._onTrigger);
+            $(el).on('click', this._onTriggerShow);
           } else {
-            $(el).on('mouseover', this._onTrigger);
+            $(el).on('mouseover', this._onTriggerShow);
             $(el).on('mouseleave', this._onTriggerHide);
           }
         } else if (this.trigger == 'click') {
           var eventName = bpLibs.device.browserIsMobile() ? 'click' : 'click';
-          $(el).off(eventName, this._onTrigger).on(eventName, this._onTrigger);
+          $(el).off(eventName, this._onTriggerShow).on(eventName, this._onTriggerShow);
         } else if (this.trigger == 'long-press') {
           this.ges = new bpLibs.Gesture(el);
           this.ges.enablePressRecognizer({
@@ -930,12 +931,12 @@ var script = {
 
             bpLibs.device.vibrate(10);
 
-            this._onTrigger(ev);
+            this._onTriggerShow(ev);
           }.bind(this));
         }
       }
     },
-    _onTrigger: function _onTrigger(ev) {
+    _onTriggerShow: function _onTriggerShow(ev) {
       var _this3 = this;
 
       this.visibleReal = true;
@@ -979,7 +980,6 @@ var script = {
 
       if (directionData == 'top') {
         this.directionData = 'top';
-        this.offsetTop -= port.height;
         this.offsetTop -= 8;
       } else if (directionData == 'bottom') {
         this.directionData = 'bottom';
@@ -992,17 +992,17 @@ var script = {
         this.offsetLeft = offset.left + port.width;
       } else {
         if (offset.top + port.height / 2 > viewPort.height / 2) {
+          directionData = 'top';
           this.directionData = 'top';
-          this.offsetTop -= port.height;
           this.offsetTop -= 8;
         } else {
+          directionData = 'bottom';
           this.directionData = 'bottom';
           this.offsetTop += port.height;
         }
       }
 
-      this.offsetTop = parseInt(this.offsetTop);
-      this.offsetTop += 'px'; // arrow.
+      this.offsetTop = parseInt(this.offsetTop); // arrow.
 
       var arrowOffset;
 
@@ -1033,7 +1033,7 @@ var script = {
           }
 
           this.offsetTop = parseInt(mainOffset + docOffset.top) + 'px';
-          this.offsetLeft = directionData == 'right' ? offset.left + port.width - 6 : offset.left - main.clientWidth - 6;
+          this.offsetLeft = directionData == 'right' ? offset.left + port.width + 6 : offset.left - main.clientWidth - 6 - 6;
           this.offsetLeft += docOffset.left;
           this.offsetLeft = parseInt(this.offsetLeft);
           this.offsetLeft += 'px';
@@ -1051,6 +1051,13 @@ var script = {
           this.offsetArrowRight = null;
         } else {
           var cw = parseInt(main.clientWidth || 50);
+          var ch = parseInt(main.clientHeight || 50);
+
+          if (directionData == 'top') {
+            this.offsetTop -= ch + 6;
+          }
+
+          this.offsetTop += 'px';
 
           var _mainOffset = parseInt(arrowOffset - cw / 2);
 

@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Copyright (c) 2017 Copyright bp All Rights Reserved.
+ * Copyright (c) 2017 Copyright bpui All Rights Reserved.
  * Author: lipengxiang
  * Date: 2019-06-14 17:18
  * Desc:
@@ -65,6 +65,6 @@ module.exports = {
       .set("@bpui", resolve("./@bpui"))
       // 开发模式
       .set("./dyn/bpui.components", resolve("./bpui.js/src/dyn/bpui.components.dev"))
-      .set("./static/bpui.components", resolve("./bpui.js/src/static/bpui.components.dev"))
+      .set("./static/bpui.components", resolve("./bpui.js/src/static/bpui.components.dev"));
   }
 };

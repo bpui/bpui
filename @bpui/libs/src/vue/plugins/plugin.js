@@ -1,7 +1,7 @@
 'use strict';
 
 /**
-* Copyright (c) 2017 Copyright bp All Rights Reserved.
+* Copyright (c) 2017 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2018-08-16 18:06
 * Desc: 

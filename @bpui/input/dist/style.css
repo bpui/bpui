@@ -454,7 +454,7 @@ label {
 }
 
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2020-02-13 15:45
 * Desc: 
@@ -463,11 +463,11 @@ label {
 /* 颜色 */
 /* 附加文本 */
 .bp-input {
+  width: 250px;
+  display: inline-flex;
   position: relative;
   margin: 2px;
-  display: flex;
   align-items: center;
-  border-width: 2px;
   border-style: inset;
   border-color: initial;
   border-image: initial;
@@ -480,6 +480,9 @@ label {
   margin-left: 10px;
   cursor: pointer;
   flex-grow: 0;
+  height: 16px !important;
+  width: 16px !important;
+  font-size: 16px !important;
   background-color: transparent;
 }
 .bp-input .bp-input__suffixIcon {
@@ -526,8 +529,6 @@ label {
   -webkit-rtl-ordering: logical;
   cursor: text;
   margin: 0em;
-  font-size: 1rem;
-  font-weight: 400;
   padding: 1px;
   width: 100%;
 }
@@ -539,7 +540,6 @@ label {
   border: none;
   color: #424242;
   display: inline-block;
-  font-size: inherit;
   height: 40px;
   line-height: 40px;
   outline: none;
@@ -548,22 +548,29 @@ label {
   flex-grow: 1;
   width: 100%;
   background-color: #ffffff;
+  font-size: 1rem;
+  font-weight: 400;
 }
 .bp-input .bp-input__inner:focus {
   outline: none;
 }
 .bp-input.bp-input__focus {
   border-color: #07C160;
-  background: #ffffff !important;
+  background: #ffffff;
 }
 .bp-input.bp-input__focus .bp-input__inner {
-  background: #ffffff !important;
+  background: #ffffff;
+  color: #424242;
 }
 .bp-input.bp-input__warn {
   border-color: #FA5151;
 }
 .bp-input.bp-input__warn textarea,
 .bp-input.bp-input__warn input {
+  color: #FA5151;
+}
+.bp-input.bp-input__warn.bp-input__focus textarea,
+.bp-input.bp-input__warn.bp-input__focus input {
   color: #FA5151;
 }
 .bp-input.bp-input__warn .bp-input__warnIcon {
@@ -575,14 +582,18 @@ label {
   cursor: pointer;
   height: 30px;
   width: 30px;
-  position: relative;
   display: flex;
+  flex-shrink: 0;
   justify-content: center;
   align-items: center;
 }
 .bp-input .bp-input_clearIcon div {
   height: 16px;
   width: 16px;
+  min-height: 16px;
+  min-width: 16px;
+  max-height: 16px;
+  max-width: 16px;
   border-radius: 50%;
   background: #b7b7b7;
   display: flex;
@@ -606,6 +617,7 @@ label {
   display: flex;
   align-items: center;
   vertical-align: bottom;
+  padding-bottom: 30px;
 }
 .bp-input.bp-input__textarea .bp-input_clearIcon {
   align-self: flex-start;
@@ -616,6 +628,8 @@ label {
   padding: 5px 15px;
   line-height: 1.5;
   height: auto;
+  font-size: 1rem;
+  font-weight: 400;
 }
 .bp-input .bp-input__counter {
   text-align: right;
@@ -623,7 +637,7 @@ label {
   bottom: 5px;
   right: 5px;
   color: #adadad;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 .bp-input.bp-input__disabled {
   opacity: 0.5;

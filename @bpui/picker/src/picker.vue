@@ -1,6 +1,6 @@
 <!--
 /**
-* Copyright (c) 2017 Copyright bp All Rights Reserved.
+* Copyright (c) 2017 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2018-06-13 15:04
 * Desc: 
@@ -39,10 +39,20 @@
         <div class="bp-picker__group" data-picker="0" :style="{display:groupCount>0?'inherit':'none'}">
           <div class="bp-picker__indicator"></div>
           <div ref="content0" class="bp-picker__content" data-group="0" :style="'transform: translate3d(0px, 102px, 0px); transition: all 0.3s;'">
-            <div v-for="(item, index) in items0" :class="'bp-picker__item' + (item.disabled?' bp-picker__item-disabled':'')"
-              :data-value="item.value" :key="'_1'+index">{{item.label}}</div>
+            <template v-if="$slots.default">
+              <slot name="default"/>
+            </template>
+            <template v-else>
+              <div v-for="(item, index) in items0" :class="'bp-picker__item' + (item.disabled?' bp-picker__item-disabled':'')"
+                :data-value="item.value" :key="'_1'+index">{{item.label}}
+                <template v-if="multiple && items0Checked">
+                  <bp-icon v-if="items0Checked[index]" class="bp-picker__item_check" name="bp-picker_check"/>
+                  <i v-else class="bp-picker__item_uncheck"/>
+                </template>
+              </div>
+            </template>
           </div>
-          <div class="bp-picker__mask"></div>
+          <div class="bp-picker__mask" :style="multiple&&groupCount==1?'cursor:pointer':null"></div>
         </div>
         <div class="bp-picker__group" data-picker="1" :style="{display:groupCount>1?'inherit':'none'}">
           <div class="bp-picker__indicator"></div>
@@ -118,6 +128,8 @@
       },
       pageClass: String|Array,
       pageStyle: String|Array|Object,
+      // 仅对一维数据源有效.
+      multiple: Boolean,
 
       toolbarPos: {
         type: String,
@@ -143,7 +155,7 @@
        */
       datasource: {
         validator: function (value) {
-          return (typeof value === 'object') || Array.isArray(value);
+          return !value || (typeof value === 'object') || Array.isArray(value);
         }
       },
       value: {
@@ -161,6 +173,7 @@
         /**
          * @desc: 数据源.
          */
+        items0Checked: null,
         items0: null,
         items1: null,
         items2: null,
@@ -186,6 +199,30 @@
         
         if (t === 'string' || t === 'number') {
           this.value0 = v;
+          if (this.multiple && this.groupCount == 1) {
+            for (let i = 0; i < this.items0Checked.length; i++) {
+              if (this.items0[i].value === v) {
+                this.items0Checked[i] = true;
+              } else {
+                this.items0Checked[i] = false;
+              }
+            }
+
+            // by solt.
+            if (!this.datasource) {
+              for (let i = 0; i < this.$slots.default.length; i++) {
+                let c = this.$slots.default[i];
+                if (c.componentOptions.tag === 'bp-picker-cell') {
+                  if (this.items0[i].value === v) {
+                    c.componentInstance.check = true;
+                  } else {
+                    c.componentInstance.check = false;
+                  }
+                }
+              }
+            } // if.
+          } // if.
+
           this.$nextTick(()=>{
             this.setSelect(0, v, false);
           });
@@ -193,6 +230,38 @@
           if (utils.isArrayEqual(v, vOld)) {
             return;
           }
+
+          if (this.multiple && this.groupCount == 1) {
+            let arr = [];
+            arr.length = this.items0Checked.length;
+            for (let i = 0; i < arr.length; i++) {
+              for (let j = 0; j < v.length; j++) {
+                if (this.items0[i].value === v[j]) {
+                  arr[i] = true;
+                  break;
+                }
+              }
+            }
+            this.items0Checked = arr;
+
+            // by solt.
+            if (!this.datasource) {
+              for (let i = 0; i < this.$slots.default.length; i++) {
+                let c = this.$slots.default[i];
+                if (c.componentOptions.tag === 'bp-picker-cell') {
+                  if (arr.indexOf(c.componentInstance.value) >= 0) {
+                    c.componentInstance.check = true;
+                  }
+                  else {
+                    c.componentInstance.check = false;
+                  }
+                }
+              }
+            } // if.
+
+            return;
+          }
+
           this.$nextTick(()=>{
             for (let i = 0; i < v.length && i < this.groupCount; i++) {
               this['value'+i] = v[i];
@@ -260,7 +329,9 @@
       }
 
       if (!this.datasource) {
-        throw new Error('picker must have datasource');
+        if (!this.$slots.default) {
+          throw new Error('picker must have datasource');
+        }
       }
       this._initRealDatasource(this.datasource);
       this._refreshDatasource(false);
@@ -273,6 +344,27 @@
       this.timer = null;
     },
     mounted() {
+      // febs.dom.addEventListener(this.$refs.content0, 'click', this._onClickGroup0Current);
+
+      //  by slot and multiple.
+      if (!this.datasource && this.multiple && this.groupCount == 1) {
+        for (let i = 0; i < this.$slots.default.length; i++) {
+          let c = this.$slots.default[i];
+          if (c.componentOptions.tag === 'bp-picker-cell') {
+            c.componentInstance.multiple = true;
+            if (Array.isArray(this.value)) {
+              if (this.value.indexOf(c.componentOptions.propsData.value) >= 0) {
+                c.componentInstance.check = true;
+                this.items0Checked[i] = true;
+              }
+            }
+            else if (c.componentOptions.propsData.value == this.value) {
+              c.componentInstance.check = true;
+              this.items0Checked[i] = true;
+            }
+          }
+        }
+      } // if.
     },
     methods: {
       /**
@@ -322,7 +414,9 @@
                   picker_setOffset(ee, i);
                   i = picker_getOffset(ee);
                   if (offset != i) {
-                    this.realDatasource.picker_changed(groupIndex, this);
+                    if (this.realDatasource) {
+                      this.realDatasource.picker_changed(groupIndex, this);
+                    }
                   }
                   if (trigger) {
                     this._onChange();
@@ -333,36 +427,38 @@
           }
         } // if.
       },
+      _getSelectIndex(groupIndex = 0) {
+        let ee = this.$refs.agentMain;
+        if (ee) {
+          ee = $(ee);
+          ee = $(ee.children(`.bp-picker__group`)[groupIndex]);
+          ee = $(ee.children('.bp-picker__content')[0]);
+
+          // let ee = this.$refs['items'+i];
+          if (ee) {
+            ee = $(ee);
+            let offset = picker_getOffset(ee);
+            offset -= POS_CENTER;
+            offset = parseInt(-offset / POS_CELL_HEIGHT);
+            return offset;
+          } // if.
+        }
+        return 0;
+      },
       /**
        * @desc: 获得当前界面上选中的元素的值.
        * @param groupIndex: 明确指定后可以获得指定组的值.
        * @return 值.
        */
       getSelect(groupIndex = 0) {
-        let value = [];
-
         let data = this['items' + groupIndex];
         if (data) {
-          let ee = this.$refs.agentMain;
-          if (ee) {
-            ee = $(ee);
-            ee = $(ee.children(`.bp-picker__group`)[groupIndex]);
-            ee = $(ee.children('.bp-picker__content')[0]);
-
-            // let ee = this.$refs['items'+i];
-            if (ee) {
-              ee = $(ee);
-              let offset = picker_getOffset(ee);
-              offset -= POS_CENTER;
-              offset = parseInt(-offset / POS_CELL_HEIGHT);
-
-              if (data[offset]) {
-                return febs.utils.mergeMap(data[offset]);
-              }
-            } // if.
+          let index = this._getSelectIndex(groupIndex);
+          if (data[index]) {
+            return febs.utils.mergeMap(data[index]);
           }
 
-          return data[0]?data[0]:{};
+          return data[0]?febs.utils.mergeMap(data[0]):{};
         } // if.
         
         return {};
@@ -370,7 +466,17 @@
       getValue() {
         let v;
         if (this.groupCount == 1) {
-          v = this.value0;
+          if (this.multiple && this.groupCount == 1) {
+            v = [];
+            for (let i = 0; i < this.items0Checked.length; i++) {
+              if (this.items0Checked[i]) {
+                v.push(this.items0[i].value);
+              }
+            }
+          }
+          else {
+            v = this.value0;
+          }
         }
         else if (this.groupCount == 2) {
           v = [this.value0, this.value1];
@@ -406,32 +512,90 @@
       _onConfirm() {
         let v;
         if (this.groupCount == 1) {
-          this.value0 = this.getSelect(0).value;
-          v = this.value0;
+          if (this.multiple && this.groupCount == 1) {
+            v = [];
+            for (let i = 0; i < this.items0Checked.length; i++) {
+              if (this.items0Checked[i]) {
+                v.push(this.items0[i].value);
+              }
+            }
+          }
+          else {
+            let item0 = this.getSelect(0);
+            if (!!item0.disabled) {
+              return;
+            }
+
+            this.value0 = item0.value;
+            v = this.value0;
+          }
         }
         else if (this.groupCount == 2) {
-          this.value0 = this.getSelect(0).value;
-          this.value1 = this.getSelect(1).value;
+          let item0 = this.getSelect(0);
+          let item1 = this.getSelect(1);
+          if (!!item0.disabled || !!item1.disabled) {
+            return;
+          }
+
+          this.value0 = item0.value;
+          this.value1 = item1.value;
           v = [this.value0, this.value1];
         }
         else if (this.groupCount == 3) {
-          this.value0 = this.getSelect(0).value;
-          this.value1 = this.getSelect(1).value;
-          this.value2 = this.getSelect(2).value;
+          let item0 = this.getSelect(0);
+          let item1 = this.getSelect(1);
+          let item2 = this.getSelect(2);
+          if (!!item0.disabled || !!item1.disabled || !!item2.disabled) {
+            return;
+          }
+
+          this.value0 = item0.value;
+          this.value1 = item1.value;
+          this.value2 = item2.value;
           v = [this.value0, this.value1, this.value2]
         }
         else {
-          this.value0 = this.getSelect(0).value;
-          this.value1 = this.getSelect(1).value;
-          this.value2 = this.getSelect(2).value;
-          this.value3 = this.getSelect(3).value;
+          let item0 = this.getSelect(0);
+          let item1 = this.getSelect(1);
+          let item2 = this.getSelect(2);
+          let item3 = this.getSelect(3);
+          if (!!item0.disabled || !!item1.disabled || !!item2.disabled || !!item3.disabled) {
+            return;
+          }
+
+          this.value0 = item0.value;
+          this.value1 = item1.value;
+          this.value2 = item2.value;
+          this.value3 = item3.value;
           v = [this.value0, this.value1, this.value2, this.value3]
         }
 
         this.noEmitUpdateWatch = true;
         this.$emit('input', v);
-
         this.$emit('confirm', this);
+      },
+      _onClickGroup0Start() {
+        if (this.multiple && this.groupCount == 1) {
+          this.preIndexClickGroup0 = this._getSelectIndex(0);
+        }
+      },
+      _onClickGroup0End() {
+        if (this.multiple && this.groupCount == 1) {
+          bpLibs.dom.probeDom(100, ()=>{
+            return getComputedStyle(this.$refs.content1).transition.indexOf('none') != 0;
+          }, ()=>{
+            let curIndexClickGroup0 = this._getSelectIndex(0);
+            if (curIndexClickGroup0 == this.preIndexClickGroup0) {
+              if (!!!this.items0[curIndexClickGroup0].disabled) {
+                let check = !!!this.items0Checked[curIndexClickGroup0];
+                this.$set(this.items0Checked, curIndexClickGroup0, check);
+                if (!this.datasource) {
+                  this.$slots.default[curIndexClickGroup0].componentInstance.check = check;
+                }
+              }
+            }
+          });
+        }
       },
       _bindEvent() {
         let elHd = this.$refs.agentToolbar;
@@ -444,7 +608,10 @@
           for (let i = 0; i < elBc.length; i++) {
             $(elBc[i]).off('change').on('change', (event) => {
               let group = parseInt($(event.currentTarget).attr('data-group'));
-              this.realDatasource.picker_changed(group, this);
+
+              if (this.realDatasource) {
+                this.realDatasource.picker_changed(group, this);
+              }
 
               this._onChange();
             });
@@ -467,6 +634,9 @@
           }
 
           for (let i = 0; i < elBd.length; i++) {
+            febs.dom.removeEventListener(elBd[i], namestart, this._onClickGroup0Start, true);
+            febs.dom.removeEventListener(elBd[i], nameend, this._onClickGroup0End, true);
+
             febs.dom.removeEventListener(elBd[i], namestart, mobile_onTouchstart_picker, true);
             febs.dom.removeEventListener(elBd[i], namemove, mobile_onTouchmove_picker, true);
             febs.dom.removeEventListener(elBd[i], nameend, mobile_onTouchend_picker, true);
@@ -476,6 +646,11 @@
             // elBd[i].addEventListener(namemove, mobile_onTouchmove_picker, true);
             // elBd[i].addEventListener(nameend, mobile_onTouchend_picker, true);
             // elBd[i].addEventListener(namecancel, mobile_onTouchcancel_picker, true);
+
+            if (i == 0 && this.multiple && this.groupCount == 1) {
+              febs.dom.addEventListener(elBd[i], namestart, this._onClickGroup0Start, true);
+              febs.dom.addEventListener(elBd[i], nameend, this._onClickGroup0End, true);
+            }
 
             if (!this.isMobile) {
               let agent = navigator.userAgent;
@@ -496,6 +671,54 @@
        * @return Promise. - resolve(value)
        */
       refreshDatasource(groupIndex, trigger = true) {
+
+        // 使用solt的单数据源.
+        if (!this.realDatasource) {
+          if (!this.$slots.default) {
+            throw new Error('picker missing datasource or children cells');
+          }
+
+          return new Promise((resolve, reject) => {
+            let value = this.value;
+            let datasource = [];
+            try {
+              for (let i = 0; i < this.$slots.default.length; i++) {
+                let c = this.$slots.default[i];
+                if (c.tag.indexOf('bpPickerCell') >= 0) {
+                  datasource.push({
+                    value: c.componentOptions.propsData.value,
+                    disabled: c.componentOptions.propsData.disabled,
+                  });
+                }
+                else {
+                  throw new Error('picker children must be bp-picker-cell');
+                }
+              }
+
+              if (this.groupCount == 1 && this.multiple && groupIndex == 0) {
+                this.items0Checked = this.items0Checked || [];
+                this.items0Checked.length = datasource.length;
+              }
+
+              this['items' + 0] = datasource;
+
+              this.$nextTick(() => {
+                setTimeout(() => {
+                  this.setSelect(groupIndex, value, trigger);
+                  resolve(value);
+                  this._bindEvent();
+                  if (trigger && needEvent) {
+                    // this._bindEvent($(`.bp-picker__agent[data-picker-agent="${this.uuid}"]`));
+                  }
+                }, 0);
+              });
+            } catch (e) {
+              reject(e);
+            }
+          });
+        }
+
+        // 使用datasource的数据源.
         return new Promise((resolve, reject) => {
           let needEvent = false;
           let value;
@@ -509,6 +732,11 @@
 
                 if (!((!!this['items' + groupIndex]) && (!!ds.datasource)))
                   needEvent = true;
+
+                if (this.groupCount == 1 && this.multiple && groupIndex == 0) {
+                  this.items0Checked = this.items0Checked || [];
+                  this.items0Checked.length = ds.datasource.length;
+                }
 
                 this['items' + groupIndex] = ds.datasource;
               } catch (e) {
@@ -535,30 +763,46 @@
        * @desc: 重新获取整个数据.
        */
       _refreshDatasource(trigger = true) {
-        this.realDatasource.picker_datasource_groups((groupCount) => {
-          if (groupCount <= 0 || groupCount > 4) {
-            throw new Error('picker group count must in [1,4]');
-          }
+        if (this.realDatasource) {
+          this.realDatasource.picker_datasource_groups((groupCount) => {
+            if (groupCount <= 0 || groupCount > 4) {
+              throw new Error('picker group count must in [1,4]');
+            }
 
-          this.groupCount = groupCount;
+            this.groupCount = groupCount;
 
-          let p = new Promise((resolve)=>resolve());
+            let p = new Promise((resolve)=>resolve());
 
-          for (let i = 0; i < groupCount; i++) {
-            p = p.then(febs.utils.sleep(1).then(this.refreshDatasource(i, trigger)));
-          }
+            for (let i = 0; i < groupCount; i++) {
+              p = p.then(febs.utils.sleep(1).then(this.refreshDatasource(i, trigger)));
+            }
+
+            this.$nextTick(() => {
+              p.then(() => {
+                this._bindEvent();
+              });
+            });
+          });
+        } else {
+          this.groupCount = 1;
+          let p = febs.utils.sleep(1).then(this.refreshDatasource(0, trigger));
 
           this.$nextTick(() => {
             p.then(() => {
               this._bindEvent();
             });
           });
-        });
+        }
       },
       /**
        * @desc: 初始化真实datasource.
        */
       _initRealDatasource(datasource) {
+        if (!datasource) {
+          this.realDatasource = null;
+          return;
+        }
+
         if (Array.isArray(datasource)) {
           // 判断是几列数据.
           let colNum = 1;

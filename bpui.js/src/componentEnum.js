@@ -11,4 +11,5 @@ exports.ComponentName = {
   actionsheet: 'actionsheet',
   popover: 'popover',
   uploader: 'uploader',
+  select: 'select',
 }

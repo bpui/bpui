@@ -1,6 +1,6 @@
 /*!
  * bpui dialog v1.1.13
- * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
+ * Copyright (c) 2021 Copyright bpuioint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 
@@ -4179,7 +4179,8 @@
     },
     data: function data() {
       return {
-        uuid: null
+        uuid: null,
+        _show: false
       };
     },
     watch: {
@@ -4187,13 +4188,17 @@
         var _this = this;
 
         if (val) {
-          this.show().then(function () {
-            _newArrowCheck(this, _this);
-          }.bind(this));
+          if (!this._show) {
+            this.show().then(function () {
+              _newArrowCheck(this, _this);
+            }.bind(this));
+          }
         } else {
-          this.hide().then(function () {
-            _newArrowCheck(this, _this);
-          }.bind(this));
+          if (this._show) {
+            this.hide().then(function () {
+              _newArrowCheck(this, _this);
+            }.bind(this));
+          }
         }
       }
     },
@@ -4204,6 +4209,8 @@
     },
     mounted: function mounted() {
       var _this2 = this;
+
+      this._show = this.visible;
 
       if (this.appendToBody && this.appendToBody != 'false') {
         $(this.$el).attr('id', this.uuid);
@@ -4249,8 +4256,9 @@
           showWidget(this.$el, this.mask, this.preventEvent, this.hideBodyScroll, function () {
             _newArrowCheck(this, _this5);
 
-            this.$emit('update:visible', true);
+            this._show = true;
             resolve();
+            this.$emit('update:visible', true);
 
             if (this.vibrateWhenShow) {
               bpLibs.device.vibrate(10);
@@ -4274,8 +4282,9 @@
           hideWidget(this.$el, function () {
             _newArrowCheck(this, _this7);
 
-            this.$emit('update:visible', false);
+            this._show = false;
             resolve();
+            this.$emit('update:visible', false);
           }.bind(this));
         }.bind(this));
       },

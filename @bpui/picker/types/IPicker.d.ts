@@ -1,7 +1,7 @@
 /// <reference types="@bpui/dialog" />
 
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2020-02-17 14:42
 * Desc: 
@@ -72,5 +72,25 @@ declare namespace bp {
      */
     refreshDatasource(groupIndex:number, trigger:boolean):Promise<void>;
     refreshDatasource(groupIndex:number):Promise<void>;
+  }
+
+  interface PickerCell {
+    /**
+     * 当前cell值.
+     */
+    value: string | number;
+
+    /**
+     * 是否是多选状态 (仅一维数据源有效)
+     */
+    multiple: boolean,
+    /**
+     * 是否是多选选中状态 (仅一维数据源有效)
+     */
+    checked: boolean,
+    /**
+     * 是否是禁用.
+     */
+    disabled: boolean;
   }
 }

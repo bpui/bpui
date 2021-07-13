@@ -1,7 +1,7 @@
 'use strict';
 
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2020-02-18 23:43
 * Desc: basePath 以 / 结尾, / 开头

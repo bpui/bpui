@@ -1,7 +1,7 @@
 'use strict';
 
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2020-02-24 22:46
 * Desc: 
@@ -13,6 +13,8 @@ var Components = require('./dyn/bpui.components');
 var componentInstance = require('./dyn/componentInstance');
 var componentStore = require('./componentStore');
 
+const INIT_KEY = '$$uiSysInited';
+
 export default async function (Vue/*:any*/, components/*?:string[]*/) // :Promise<void>
 {
 
@@ -20,7 +22,10 @@ export default async function (Vue/*:any*/, components/*?:string[]*/) // :Promis
   (function() { require('@bpui/libs/style/class.scss') })();
 
   // 需要注册.
-  Vue.use(libs.VuePlugin());
+  if (!window[INIT_KEY]) {
+    Vue.use(libs.VuePlugin());
+  }
+
   let loadComponents = []/* as any[]*/;
   if (!components) {
     components = [];
@@ -50,15 +55,19 @@ export default async function (Vue/*:any*/, components/*?:string[]*/) // :Promis
     }
   }
 
-  for (let i = 0; i < loadComponents.length; i++) {
-    let _de = loadComponents[i].default || loadComponents[i];
-    if (_de) {
-      if (typeof _de.init === 'function') {
-        _de.init();
-      }
-      if (typeof _de.VuePlugin === 'function') {
-        Vue.use(_de.VuePlugin());
+  if (!window[INIT_KEY]) {
+    for (let i = 0; i < loadComponents.length; i++) {
+      let _de = loadComponents[i].default || loadComponents[i];
+      if (_de) {
+        if (typeof _de.init === 'function') {
+          _de.init();
+        }
+        if (typeof _de.VuePlugin === 'function') {
+          Vue.use(_de.VuePlugin());
+        }
       }
     }
   }
+
+  window[INIT_KEY] = true;
 }

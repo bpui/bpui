@@ -1836,7 +1836,7 @@ button[warning].bp-btnFill:hover,
 }
 
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2020-02-13 15:45
 * Desc: 
@@ -1845,7 +1845,7 @@ button[warning].bp-btnFill:hover,
 /* 尺寸 */
 /* 对话框颜色 */
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2020-02-28 17:01
 * Desc: 
@@ -2047,6 +2047,7 @@ button[warning].bp-btnFill:hover,
   margin: 0;
 }
 .bp-widget.bp-picker .bp-picker__main .bp-picker__group .bp-picker__content .bp-picker__item {
+  position: relative;
   padding: 0;
   height: 40px;
   line-height: 40px;
@@ -2055,6 +2056,34 @@ button[warning].bp-btnFill:hover,
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+.bp-widget.bp-picker .bp-picker__main .bp-picker__group .bp-picker__content .bp-picker__item.bp-picker__item-disabled, .bp-widget.bp-picker .bp-picker__main .bp-picker__group .bp-picker__content .bp-picker__item:disabled, .bp-widget.bp-picker .bp-picker__main .bp-picker__group .bp-picker__content .bp-picker__item[disabled=disabled] {
+  opacity: 0.2;
+}
+.bp-widget.bp-picker .bp-picker__main .bp-picker__group .bp-picker__content .bp-picker__item .bp-picker__item_uncheck {
+  width: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  position: absolute;
+  right: 30px;
+  top: 9px;
+  border-radius: 4px;
+  border: 1px solid #d4d4d4;
+}
+.bp-widget.bp-picker .bp-picker__main .bp-picker__group .bp-picker__content .bp-picker__item .bp-picker__item_check {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #d4d4d4;
+  box-sizing: content-box;
+  padding: 2px;
+  position: absolute;
+  right: 30px;
+  top: 9px;
+}
+.bp-widget.bp-picker .bp-picker__main .bp-picker__group .bp-picker__content .bp-picker__item .bp-picker__item_check::before {
+  color: #07C160;
 }
 
 .bp-widget.bp-picker.bp-picker__tablet .bp-widget__contentWrap {

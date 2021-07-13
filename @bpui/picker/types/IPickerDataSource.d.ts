@@ -1,7 +1,7 @@
 /// <reference path="./IPicker.d.ts" />
 
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2020-02-17 14:42
 * Desc: 

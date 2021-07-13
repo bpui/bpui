@@ -529,7 +529,7 @@ label {
 
 
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2020-02-13 15:45
 * Desc: 
@@ -539,12 +539,18 @@ label {
 $bpInputFontSize: 1rem !default;
 $bpInputFontWeight: 400 !default;
 
+$bpInputWidth: 250px;
+
 /* 颜色 */
 $bpInputBgColor: #ffffff !default;
-$bpInputFocusBorderColor: $bpColorPrimary !default;
-$bpInputFocusBgColor: #ffffff !default;
+$bpInputBorderColor: #dcdfe6 !default;
 $bpInputTextColor: #424242 !default;
 $bpInputTextWarnColor: $bpColorWarn !default;
+
+$bpInputFocusBgColor: #ffffff !default;
+$bpInputFocusBorderColor: $bpColorPrimary !default;
+$bpInputFocusTextColor: $bpInputTextColor !default;
+$bpInputFocusTextWarnColor: $bpInputTextWarnColor !default;
 
 /* 附加文本 */
 $bpInputAdditionLabelColor: #7b7b7b;
@@ -552,16 +558,16 @@ $bpInputAdditionLabelWidth: 34px;
 
 
 .bp-input {
+    width: $bpInputWidth;
+    display: inline-flex;
     position: relative;
     margin: 2px;
-    display: flex;
     align-items: center;
-    border-width: 2px;
     border-style: inset;
     border-color: initial;
     border-image: initial;
     border-radius: 4px;
-    border: 1px solid #dcdfe6;
+    border: 1px solid $bpInputBorderColor;
     background-color: $bpInputBgColor;
     transition: background-color .2s cubic-bezier(.645, .045, .355, 1), border .2s cubic-bezier(.645, .045, .355, 1);
 
@@ -569,6 +575,9 @@ $bpInputAdditionLabelWidth: 34px;
         margin-left: 10px;
         cursor: pointer;
         flex-grow: 0;
+        height: 16px !important;
+        width: 16px !important;
+        font-size: 16px !important;
         background-color: transparent;
     }
 
@@ -619,8 +628,6 @@ $bpInputAdditionLabelWidth: 34px;
         -webkit-rtl-ordering: logical;
         cursor: text;
         margin: 0em;
-        font-size: $bpInputFontSize;
-        font-weight: $bpInputFontWeight;
         padding: 1px;
         width: 100%;
     }
@@ -633,7 +640,6 @@ $bpInputAdditionLabelWidth: 34px;
         border: none;
         color: $bpInputTextColor;
         display: inline-block;
-        font-size: inherit;
         height: 40px;
         line-height: 40px;
         outline: none;
@@ -642,6 +648,8 @@ $bpInputAdditionLabelWidth: 34px;
         flex-grow: 1;
         width: 100%;
         background-color: $bpInputBgColor;
+        font-size: $bpInputFontSize;
+        font-weight: $bpInputFontWeight;
 
         &:focus {
             outline: none;
@@ -650,10 +658,11 @@ $bpInputAdditionLabelWidth: 34px;
 
     &.bp-input__focus {
         border-color: $bpInputFocusBorderColor;
-        background: $bpInputFocusBgColor !important;
+        background: $bpInputFocusBgColor;
 
         .bp-input__inner {
-            background: $bpInputFocusBgColor !important;
+            background: $bpInputFocusBgColor;
+            color: $bpInputFocusTextColor;
         }
     }
 
@@ -663,6 +672,13 @@ $bpInputAdditionLabelWidth: 34px;
         textarea,
         input {
             color: $bpInputTextWarnColor;
+        }
+
+        &.bp-input__focus {
+            textarea,
+            input {
+                color: $bpInputFocusTextWarnColor;
+            }
         }
 
         .bp-input__warnIcon {
@@ -678,14 +694,18 @@ $bpInputAdditionLabelWidth: 34px;
         cursor: pointer;
         height: 30px;
         width: 30px;
-        position: relative;
         display: flex;
+        flex-shrink: 0;
         justify-content: center;
         align-items: center;
 
         div {
             height: 16px;
             width: 16px;
+            min-height: 16px;
+            min-width: 16px;
+            max-height: 16px;
+            max-width: 16px;
             border-radius: 50%;
             background: #b7b7b7;
             display: flex;
@@ -713,6 +733,7 @@ $bpInputAdditionLabelWidth: 34px;
         display: flex;
         align-items: center;
         vertical-align: bottom;
+        padding-bottom: 30px;
 
         .bp-input_clearIcon {
             align-self: flex-start;
@@ -724,6 +745,8 @@ $bpInputAdditionLabelWidth: 34px;
             padding: 5px 15px;
             line-height: 1.5;
             height: auto;
+            font-size: $bpInputFontSize;
+            font-weight: $bpInputFontWeight;
         }
     }
 
@@ -733,7 +756,7 @@ $bpInputAdditionLabelWidth: 34px;
         bottom: 5px;
         right: 5px;
         color: #adadad;
-        font-size: 0.9rem;
+        font-size: $bpInputFontSize;
     }
 
     // disabled

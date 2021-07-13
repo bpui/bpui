@@ -36,6 +36,9 @@ let external = [
       '@bpui/switch',
       '@bpui/actionsheet',
       '@bpui/popover',
+      '@bpui/tabbar',
+      '@bpui/table-view',
+      '@bpui/uploader',
       '@types/hammerjs',
     ]
 let globals = {
@@ -55,6 +58,9 @@ let globals = {
   '@bpui/switch': 'bpSwitch',
   '@bpui/actionsheet': 'bpActionsheet',
   '@bpui/popover': 'bpPopover',
+  '@bpui/tabbar': 'bpTabbar',
+  '@bpui/table-view': 'bpTableView',
+  '@bpui/uploader': 'bpUploader',
 }
 
 const banner =(name)=>

@@ -1,7 +1,7 @@
 'use strict';
 
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2018-06-28 16:22
 * Desc: timer用于在一个component内进行setTimeout等延时操作, 并且在组件销毁时清理定时器, 避免出现错误.

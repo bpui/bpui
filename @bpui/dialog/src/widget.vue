@@ -1,6 +1,6 @@
 <!--
 /**
-* Copyright (c) 2017 Copyright bp All Rights Reserved.
+* Copyright (c) 2017 Copyright bpui All Rights Reserved.
 * Author: lipengxiang
 * Date: 2018-06-13 15:04
 * Desc: 
@@ -64,15 +64,20 @@
     data() {
       return {
         uuid: null,
+        _show: false,
       }
     },
     watch: {
       visible(val) {
         if (val) {
-          this.show().then(()=>{});
+          if (!this._show) {
+            this.show().then(()=>{});
+          }
         }
         else {
-          this.hide().then(()=>{});
+          if (this._show) {
+            this.hide().then(()=>{});
+          }
         }
       }
     },
@@ -82,6 +87,7 @@
       }
     },
     mounted() {
+      this._show = this.visible;
       if (this.appendToBody && this.appendToBody != 'false') {
         $(this.$el).attr('id', this.uuid);
         $('body').append(this.$el);
@@ -112,8 +118,9 @@
       show: function () {
         return new Promise((resolve)=>{
           maskUtils.showWidget(this.$el, this.mask, this.preventEvent, this.hideBodyScroll, ()=>{
-            this.$emit('update:visible', true);
+            this._show = true;
             resolve();
+            this.$emit('update:visible', true);
 
             if (this.vibrateWhenShow) {
               bpLibs.device.vibrate(10);
@@ -129,8 +136,9 @@
       hide: function () {
         return new Promise((resolve)=>{
           maskUtils.hideWidget(this.$el, ()=>{
-            this.$emit('update:visible', false);
+            this._show = false;
             resolve();
+            this.$emit('update:visible', false);
           });
         })
       },

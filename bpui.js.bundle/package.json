@@ -1,20 +1,21 @@
 {
   "description": "bpui components bundle",
   "dependencies": {
-    "@bpui/actionsheet": "~1.1.13",
-    "@bpui/button": "~1.1.9",
-    "@bpui/checkbox": "~1.1.10",
-    "@bpui/dialog": "~1.1.12",
-    "@bpui/input": "~1.1.12",
-    "@bpui/libs": "~1.1.7",
-    "@bpui/navbar-view": "~1.1.6",
-    "@bpui/picker": "~1.1.17",
-    "@bpui/popover": "~1.1.12",
-    "@bpui/radio": "~1.1.7",
-    "@bpui/switch": "~1.1.6",
-    "@bpui/tabbar": "~1.1.5",
-    "@bpui/table-view": "~1.1.10",
-    "@bpui/uploader": "~1.1.12"
+    "@bpui/actionsheet": "^1.1.14",
+    "@bpui/button": "^1.1.9",
+    "@bpui/checkbox": "^1.1.10",
+    "@bpui/dialog": "^1.1.13",
+    "@bpui/input": "^1.1.15",
+    "@bpui/libs": "^1.1.7",
+    "@bpui/navbar-view": "^1.1.6",
+    "@bpui/picker": "^1.1.20",
+    "@bpui/popover": "^1.1.15",
+    "@bpui/radio": "^1.1.7",
+    "@bpui/select": "~1.1.1",
+    "@bpui/switch": "^1.1.6",
+    "@bpui/tabbar": "^1.1.5",
+    "@bpui/table-view": "^1.1.10",
+    "@bpui/uploader": "^1.1.13"
   },
   "directories": {},
   "keywords": [
@@ -36,5 +37,5 @@
     }
   ],
   "name": "bpui.js.bundle",
-  "version": "1.1.21"
+  "version": "1.1.24"
 }

@@ -1,6 +1,6 @@
 <!--
 /**
-* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Copyright (c) 2020 Copyright bpui All Rights Reserved.
 * Author: lanck
 * Date: 2020-02-10 16:46
 * Desc: bp-button 案列
