@@ -54,16 +54,18 @@ export default class extends Vue {
 .container {
   @include bp-isTablet {
     width: calc(100vw - 20px);
+    max-width: 800px;
     height: auto;
   }
   div {
     width: auto;
   }
+  border: none;
 }
 
 h4 {
   background: #eee;
-  width: 30%;
+  // width: 30%;
 }
 
 </style>

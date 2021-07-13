@@ -1,0 +1,21 @@
+/**
+* Copyright (c) 2020 Copyright bp All Rights Reserved.
+* Author: lipengxiang
+* Date: 2020-02-13 15:45
+* Desc: 
+*/
+
+/* 字体 */
+$bpSelectFontSize: $bpInputFontSize !default;
+$bpSelectFontWeight: $bpInputFontWeight !default;
+
+/* 颜色 */
+$bpSelectBorderColor: $bpInputBorderColor !default;
+$bpSelectBgColor: $bpInputBgColor !default;
+$bpSelectTextColor: $bpInputTextColor !default;
+
+$bpSelectDropdownBorderColor: #dcdfe6 !default;
+$bpSelectDropdownBgColor: $bpSelectBgColor !default;
+$bpSelectDropdownHoverBgColor: #f5f7fa !default;
+$bpSelectDropdownTextColor: #353535 !default;
+$bpSelectDropdownActiveColor: $bpColorPrimary !default;

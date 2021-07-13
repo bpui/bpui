@@ -85,6 +85,8 @@ export default class Instance {
   static get bpActionsheet() { return componentInstance.getComponent('actionsheet').default.bpActionsheet }
   //
   static get bpPopover() { return componentInstance.getComponent('popover').default.bpPopover }
+  //
+  static get bpSelect() { return componentInstance.getComponent('select').default.bpSelect }
 }
 
 

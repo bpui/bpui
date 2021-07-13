@@ -1,0 +1,262 @@
+
+@import "~@bpui/libs/style/variable";
+@import "~@bpui/input/style/variable";
+@import "./variable";
+
+.bp-select{
+  position: relative;
+  font-size: $bpSelectFontSize;
+  font-weight: $bpSelectFontWeight;
+  color: $bpSelectTextColor;
+
+  .bp-select__arrowDown {
+    position: absolute;
+    right: 10px;
+    top: (42px - 12px) / 2;
+    backface-visibility: visible;
+    transition: transform .3s;
+    transform: rotate(0deg);
+
+    &.bp-select__arrowDownR {
+      transform: rotate(180deg);
+    }
+  }
+
+  .bp-select__main{
+    position: relative;
+    box-sizing: border-box;
+    height: 42px;
+    padding: 0 15px;
+    border-radius: 4px;
+    border: 1px solid $bpSelectBorderColor;
+    background-color: $bpSelectBgColor;
+    &.is-cascader{
+      height: 42px;
+    }
+    &.is-multiple{
+      height: auto;
+      min-height: 42px;
+      line-height: 32px;
+      padding-top: 4px;
+      padding-bottom: 4px;
+      .bp-select__mainContain{
+        line-height: 32px;
+      }
+      .bp-select__query{
+        input{
+          height: 32px;
+          line-height: 32px;
+        }
+      }
+    }
+    &.is-single{
+      height: 42px;
+    }
+    .bp-select__mainContain{
+      min-height: 0;
+      line-height: 40px;
+
+      &.bp-select__mainContain__emptyOption {
+        color: #bdbdbd;
+      }
+    }
+    .bp-select__query{
+      input{
+        box-sizing: border-box;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        border: none;
+        box-shadow: none;
+        outline: none;
+        vertical-align: top;
+      }
+      &.is-single{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        padding: 0 15px;
+      }
+      &.is-multiple{
+        display: block;
+        width: 100%;
+        padding: 0;
+      }
+    }
+    .bp-select__tag{
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+      line-height: 24px;
+      padding: 0 15px 0 10px;
+      margin-right: 6px;
+      margin-bottom: 4px;
+      border-radius: 4px;
+      border: 1px solid #dcdfe6;
+      background-color: #f5f5f5;
+      &>i{
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        width: 16px;
+        height: 16px;
+        border-radius: 8px;
+        box-sizing: border-box;
+        border: 1px solid #dcdfe6;
+        background-color: #f5f5f5;
+        transition: background-color 0.3s;
+        cursor: pointer;
+        &:hover{
+          background-color: #fefefe;
+        }
+        &::before{
+          transform: rotate(45deg) translate(0, -50%);
+        }
+        &::after{
+          transform: rotate(-45deg) translate(0, -50%);
+        }
+        &::before,
+        &::after{
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 2px;
+          width: 10px;
+          height: 1px;
+          background-color: #dcdfe6;
+        }
+      }
+    }
+  }
+}
+
+
+.bp-selectDropdown {
+
+  $selectListWidth: 200px;
+
+  overflow: hidden; 
+  font-size: $bpSelectFontSize;
+  font-weight: $bpSelectFontWeight;
+  color: $bpSelectDropdownTextColor;
+
+    .bp-selectList{
+      border: 1px solid $bpSelectDropdownBorderColor;
+      border-right: none;
+      border-radius: 0px;
+      background-color: $bpSelectDropdownBgColor;
+      width: $selectListWidth;
+      height: 204px;
+      box-sizing: content-box;
+      padding: 6px 0px;
+      overflow-y: auto;
+      overflow-x: hidden;
+ 
+      &:last-child {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        border-right: 1px solid $bpSelectDropdownBorderColor;
+      }
+      &:first-child {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+      }
+
+      &__scroller{
+        margin-right: -17px;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+      &__inner{
+        width: 200px;
+      }
+
+      .bp-select__option{
+          line-height: 34px;
+          height: 34px;
+          padding: 0 20px;
+          cursor: pointer;
+          &.is-active{
+              color: $bpSelectDropdownActiveColor;
+          }
+          &:hover{
+              background-color: $bpSelectDropdownHoverBgColor;
+          }
+          &.is-emptyOption {
+              background-color: #f5f5f5;
+              color: #666;
+          }
+      }
+    }
+
+
+    .bp-selectDropdown__arrow {
+        border-width: 6px;
+        filter: drop-shadow(0 2px 12px rgba(0,0,0,.03));
+
+        &:after {
+          content: " ";
+          border-width: 6px;
+        }
+    }
+
+    .bp-selectDropdown__arrow,.bp-selectDropdown__arrow:after {
+        position: absolute;
+        display: block;
+        width: 0px !important;
+        height: 0px !important;
+        min-width: 0;
+        min-height: 0;
+        border-color: transparent;
+        border-width: 6px;
+        border-style: solid;
+    }
+
+    &[x-placement^=bottom-start] {
+        margin-top: 12px;
+        .bp-selectDropdown__arrow {
+            filter: drop-shadow(0 2px 12px rgba(0,0,0,.03));
+            top: 0px;
+            left: $selectListWidth / 2 - 6px;
+            border-bottom-color: $bpSelectDropdownBorderColor;
+            border-top-width: 0px;
+            margin-right: 3px;
+
+            &:after {
+                border-bottom-color: $bpSelectDropdownBgColor;
+                border-top-width: 0px;
+                content: " ";
+                margin-left: -6px;
+                top: 1px;
+            }
+        }
+        .bp-selectList {
+            margin-top: 6px;
+        }
+    }
+
+    &[x-placement^=top-start] {
+        margin-bottom: 12px;
+        .bp-selectDropdown__arrow {
+            filter: drop-shadow(0 2px 12px rgba(0,0,0,.03));
+            bottom: 0px;
+            left: $selectListWidth / 2 - 6px;
+            border-top-color: $bpSelectDropdownBorderColor;
+            border-bottom-width: 0px;
+            margin-right: 3px;
+
+            &:after {
+                border-top-color: $bpSelectDropdownBgColor;
+                border-bottom-width: 0px;
+                content: " ";
+                margin-left: -6px;
+                bottom: 1px;
+            }
+        }
+        .bp-selectList {
+            margin-bottom: 6px;
+        }
+    }
+}

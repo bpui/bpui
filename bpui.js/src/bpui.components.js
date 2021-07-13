@@ -57,4 +57,9 @@ module.exports = [
     name: 'button',
     style: function() { return require('@bpui/button/style/_index.scss') },
   },
+  {
+    name: 'select',
+    style: function() { return require('@bpui/select/style/_index.scss') },
+    lib: function() { return require('@bpui/select') },
+  },
 ]

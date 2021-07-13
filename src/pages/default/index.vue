@@ -17,7 +17,7 @@
       <router-link to="form/input">input</router-link>
     </span>
     <span class="span">
-      <router-link to="form/select">select (temp)</router-link>
+      <router-link to="form/select">select</router-link>
     </span>
 
     <h4>widget</h4>

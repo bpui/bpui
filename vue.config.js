@@ -62,5 +62,6 @@ module.exports = {
       .set("@bpui", resolve("./@bpui"))
       // 开发模式
       .set("./bpui.components", resolve("./bpui.js/src/bpui.components.dev"))
+      .set("@bpui/select", resolve("./@bpui/select"))
   }
 };

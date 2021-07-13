@@ -11,7 +11,7 @@
   <div>
     <div>layout1</div>
     <div>
-      <navbarView pageClass="layout1-navbarView"></navbarView>
+      <navbarView pageClass="layout1-navbarView" class="container"></navbarView>
     </div>
   </div>
 </template>
