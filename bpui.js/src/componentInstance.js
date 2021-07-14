@@ -8,36 +8,33 @@
 */
 
 import Components from './bpui.components';
+var componentStore = require('./componentStore');
 
-// const SymComponent = Symbol('$BpSymCompon?ent');
-var SymComponent = ('$BpSymComponent');
-
-export function setComponent(name, com) {
-  if (!window[SymComponent]) {
-    window[SymComponent] = {};
-  }
-  window[SymComponent][name] = com;
-}
-
-export function getComponent(name) {
-  if (!window[SymComponent]) {
-    window[SymComponent] = {};
+export function getComponent(name, cb) {
+  var com = componentStore.getComponent(name);
+  if (com) {
+    return com;
   }
 
-  if (window[SymComponent][name]) {
-    return window[SymComponent][name];
+  if (!cb) {
+    throw new Error('Can\'t get module: ' + name);
   }
 
   for (var i = 0; i < Components.length; i++) {
     if (Components[i].name == name) {
       // if (Components[i].style) Components[i].style();
       if (Components[i].lib) {
-        var lib = Components[i].lib();
-        setComponent(name, lib);
-        return lib;
+        Components[i].lib().then((module) => {
+          componentStore.setComponent(name, module);
+          cb(null, module);
+        }).catch(e => {
+          throw new Error('Can\'t get module: ' + name, e);
+        });
+        return;
       }
       else {
-        return null;
+        cb(null)
+        return;
       }
     }
   }

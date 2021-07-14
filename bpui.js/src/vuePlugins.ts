@@ -8,29 +8,43 @@
 */
 
 import libs from '@bpui/libs';
-import { ComponentName } from '../types';
+import * as febs from 'febs-browser';
 var Components = require('./bpui.components');
 var componentInstance = require('./componentInstance');
+var componentStore = require('./componentStore');
 
-export default function (Vue:any, components?:ComponentName[]):void {
+export default async function (Vue:any, components?:string[]):Promise<void> {
 
   // 加载必须加载的库.
   (function() { require('@bpui/libs/style/class.scss') })();
   // (function() { require('@bpui/button/style/_index.scss') })();
 
+
   // 需要注册.
   Vue.use(libs.VuePlugin());
-
   var loadComponents = [] as any[];
   if (!components) {
     components = [];
     for (var i = 0; i < Components.length; i++) {
       var element:any = Components[i];
       components.push(element.name);
-      var cc = componentInstance.getComponent(element.name);
+    }
+  } else {
+    components = Array.from(new Set(components));
+  }
+  
+  for (var i = 0; i < components.length; i++) {
+    var element: any = components[i];
+
+    var comm = componentStore.getComponent(element);
+    if (!comm) {
+      var cc = await febs.utils.promisify(componentInstance.getComponent, componentInstance)(element);
       if (cc) {
         loadComponents.push(cc);
+        componentStore.setComponent(element, cc);
       }
+    } else {
+      loadComponents.push(comm);
     }
   }
 

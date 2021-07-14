@@ -1,21 +1,32 @@
 
 import libs from '@bpui/libs';
 import vuePlugins from './vuePlugins';
-import { ComponentName, setNavbarDefaultCfg, registerDialogComponents, registerDialogCustom } from '../types';
 var componentInstance = require('./componentInstance');
 var pkg = require('../package.json');
+
+const ComponentName1 = {
+  navbarView: 'navbarView',
+  checkbox: 'checkbox',
+  radio: 'radio',
+  switch: 'switch',
+  input: 'input',
+  dialog: 'dialog',
+  picker: 'picker',
+  actionsheet: 'actionsheet',
+  popover: 'popover',
+}
+
+function registerComponents(App:any, components?:string[]):Promise<void> {
+  // vue.
+  return vuePlugins(App, components);
+}
 
 function registerApp(
   routes: {
     routePath: Array< {path:string,component:any,[key:string]:any} >,
     basePath?: string,
   },
-  App:any,
-  components?:ComponentName[]
 ): void {
-
-  // vue.
-  vuePlugins(App, components);
 
   // register app.
   libs.registerApp(routes.routePath, routes.basePath);
@@ -33,28 +44,36 @@ class Hook {
    * 回调方法中的paddingRight参数表示发生抖动时页面中fixed元素应该在原有paddingRight值上增加的像素值.
    */
   addWidgetShake(foo:(paddingRight:number)=>void):void {
-    componentInstance.getComponent('dialog').default.hook.addWidgetShake(foo);
+    componentInstance.getComponent('dialog', (err, ms) => {
+      ms.default.hook.addWidgetShake(foo);
+    })
   }
 
   /**
    * 移除页面抖动hook.
    */
   removeWidgetShake(foo:(paddingRight:number)=>void):void {
-    componentInstance.getComponent('dialog').default.hook.removeWidgetShake(foo);
+    componentInstance.getComponent('dialog', (err, ms) => {
+      ms.default.hook.removeWidgetShake(foo);
+    })
   }
 }
 
 export default class Instance {
+  static registerComponents = registerComponents;
   static registerApp = registerApp;
   static libs = libs;
+  static ComponentName = ComponentName1;
 
   // 
   static get hook() { return new Hook(); }
 
   //
-  static get bpNavbarView() { return componentInstance.getComponent('navbarView').default.bpNavbarView; }
+  static get bpNavbarView() {
+    return componentInstance.getComponent('navbarView').default.bpNavbarView;
+  }
   static get bpNavbar() { return componentInstance.getComponent('navbarView').default.bpNavbar; }
-  static get setNavbarDefaultCfg():typeof setNavbarDefaultCfg { return componentInstance.getComponent('navbarView').default.setNavbarDefaultCfg; }
+  static get setNavbarDefaultCfg():any { return componentInstance.getComponent('navbarView').default.setNavbarDefaultCfg; }
 
   //
   static get bpCheckbox() { return componentInstance.getComponent('checkbox').default.bpCheckbox }
@@ -71,8 +90,8 @@ export default class Instance {
   }
   static get apiWidget() { return componentInstance.getComponent('dialog').default.apiWidget }
   static get bpWidget() { return componentInstance.getComponent('dialog').default.bpWidget }
-  static get registerDialogComponents(): typeof registerDialogComponents { return componentInstance.getComponent('dialog').default.registerDialogComponents }
-  static get registerDialogCustom(): typeof registerDialogCustom { return componentInstance.getComponent('dialog').default.registerDialogCustom }
+  static get registerDialogComponents(): any { return componentInstance.getComponent('dialog').default.registerDialogComponents }
+  static get registerDialogCustom(): any { return componentInstance.getComponent('dialog').default.registerDialogCustom }
 
   //
   static get bpPicker() { return componentInstance.getComponent('picker').default.bpPicker }

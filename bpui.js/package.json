@@ -1,17 +1,10 @@
 {
   "description": "bpui",
   "dependencies": {
-    "@bpui/actionsheet": "^0.1.20",
-    "@bpui/button": "^0.1.19",
-    "@bpui/checkbox": "^0.1.18",
-    "@bpui/dialog": "^0.1.35",
-    "@bpui/input": "^0.1.23",
-    "@bpui/libs": "^0.2.22",
-    "@bpui/navbar-view": "^0.1.24",
-    "@bpui/picker": "^0.1.37",
-    "@bpui/popover": "^0.1.16",
-    "@bpui/radio": "^0.1.16",
-    "@bpui/switch": "^0.1.17"
+    "@bpui/libs": "^0.2.22"
+  },
+  "devDependencies": {
+    "febs": "^1.2.10"
   },
   "directories": {},
   "keywords": [],
@@ -21,7 +14,7 @@
   "homepage": "https://github.com/bpui/bpui.js#readme",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/bpui/bpui.js.git"
+    "url": "git+ssh://git@github.com/bpui/bpui.git"
   },
   "files": [
     "bin",
@@ -44,9 +37,8 @@
     }
   ],
   "scripts": {
-    "prepublishOnly": "node ../scripts/bundle.js",
     "postinstall": "node ./postinstall"
   },
   "name": "bpui.js",
-  "version": "0.2.24"
+  "version": "1.0.0"
 }

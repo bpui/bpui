@@ -1,13 +1,13 @@
-import '@bpui/libs';
-export * from '@bpui/navbar-view';
-export * from '@bpui/checkbox';
-export * from '@bpui/radio';
-export * from '@bpui/switch';
-export * from '@bpui/input';
-export * from '@bpui/dialog';
-export * from '@bpui/picker';
-export * from '@bpui/actionsheet';
-export * from '@bpui/popover';
+import '@bpui/libs/types';
+export * from '@bpui/navbar-view/types';
+export * from '@bpui/checkbox/types';
+export * from '@bpui/radio/types';
+export * from '@bpui/switch/types';
+export * from '@bpui/input/types';
+export * from '@bpui/dialog/types';
+export * from '@bpui/picker/types';
+export * from '@bpui/actionsheet/types';
+export * from '@bpui/popover/types';
 
 export enum ComponentName {
   navbarView = 'navbarView',
@@ -23,22 +23,27 @@ export enum ComponentName {
 
 export const libs: typeof bp.bpLibs;
 
+/**
+* @desc: 注册动态组件.
+ * @param App: 传递Vue.
+ * @param components: 按需加载指定的组件. 不提供则加载所有组件.
+ *                    会自动加载所指定的组件的插件.
+*/
+export function registerComponents(
+  App:any,
+  components?:ComponentName[]
+): Promise<void>;
 
 /**
  * @desc: 注册app.
  * @param routes: 此app所需的routes结构.
  *      path='*' 的路由为404路由.
- * @param App: 传递Vue.
- * @param components: 按需加载指定的组件. 不提供则加载所有组件.
- *                    会自动加载所指定的组件的插件.
  */
 export function registerApp(
   routes: {
     routePath: Array< {path:string,component:any,[key:string]:any} >,
     basePath?: string,
   },
-  App:any,
-  components?:ComponentName[]
 ): void;
 
 
