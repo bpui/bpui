@@ -7,9 +7,12 @@ var componentEnum = require('../src/componentEnum');
 
 var components = [
   "libs",
-  "button",
-  ...componentEnum.ComponentName
+  "button"
 ];
+
+for (const key in componentEnum.ComponentName) {
+  components.push(componentEnum.ComponentName[key]);
+}
 
 function done(args, workDir) {
   workDir = workDir || process.cwd();
