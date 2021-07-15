@@ -10,10 +10,16 @@ export function VuePlugin(): any
 
 /**
  * set navbarview default config.
- * @param cfg.retainPageInPush: default retain page dom in `push` method.
  */
 export function setNavbarDefaultCfg(cfg: {
-  retainPageInPush: boolean
+  /**
+   * default retain page dom in `push` method.
+   */
+  retainPageInPush?: boolean,
+  /**
+   * It will refresh page when change routes between different layouts.
+   */
+  allLayouts?: string[],
 }): void;
 
 export const bpNavbarView: NavbarView
