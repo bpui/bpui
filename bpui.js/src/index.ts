@@ -3,18 +3,7 @@ import libs from '@bpui/libs';
 import vuePlugins from './vuePlugins';
 var componentInstance = require('./componentInstance');
 var pkg = require('../package.json');
-
-const ComponentName1 = {
-  navbarView: 'navbarView',
-  checkbox: 'checkbox',
-  radio: 'radio',
-  switch: 'switch',
-  input: 'input',
-  dialog: 'dialog',
-  picker: 'picker',
-  actionsheet: 'actionsheet',
-  popover: 'popover',
-}
+var componentEnum = require('./componentEnum');
 
 function registerComponents(App:any, components?:string[]):Promise<void> {
   // vue.
@@ -36,6 +25,20 @@ function registerApp(
 
   // Thank the user in console.
   console.log('%c[bpui v' + pkg.version + '] Thanks for visited! 😊', 'color: #e95420;');
+}
+
+function getLayout(layouts:any, newRoute:any, oldRoute:any):any {
+  let newRoutePath = newRoute.path;
+  if (newRoutePath[0] == '/') newRoutePath = newRoutePath.substring(1);
+  for (let p in layouts) {
+    if (p[0] == '/') p = p.substring(1);
+    if (newRoutePath == p || newRoutePath.indexOf(p + '/') >= 0) {
+      return (layouts as any)[p];
+    }
+  }
+
+  // 默认值.
+  return (layouts as any)['default'];
 }
 
 class Hook {
@@ -63,7 +66,8 @@ export default class Instance {
   static registerComponents = registerComponents;
   static registerApp = registerApp;
   static libs = libs;
-  static ComponentName = ComponentName1;
+  static ComponentName = componentEnum.ComponentName;
+  static getLayout = getLayout;
 
   // 
   static get hook() { return new Hook(); }

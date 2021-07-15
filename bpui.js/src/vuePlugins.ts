@@ -31,6 +31,9 @@ export default async function (Vue:any, components?:string[]):Promise<void> {
     }
   } else {
     components = Array.from(new Set(components));
+    if (components.indexOf('navbarView') < 0) {
+      components.push('navbarView');
+    }
   }
   
   for (var i = 0; i < components.length; i++) {

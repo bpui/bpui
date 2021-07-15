@@ -3,19 +3,12 @@
 var path = require("path");
 var file = require("./fileUtils");
 var febs = require("febs");
+var componentEnum = require('../src/componentEnum');
 
 var components = [
   "libs",
   "button",
-  "navbar-view",
-  "checkbox",
-  "radio",
-  "switch",
-  "input",
-  "dialog",
-  "picker",
-  "actionsheet",
-  "popover"
+  ...componentEnum.ComponentName
 ];
 
 function done(args, workDir) {

@@ -46,6 +46,14 @@ export function registerApp(
   },
 ): void;
 
+/**
+ * 通过route来获得适合的layout组件.
+ * @param layouts 
+ * @param newRoute 
+ * @param oldRoute 
+ */
+export function getLayout(layouts: any, newRoute: bp.Location, oldRoute: bp.Location): any;
+
 
 export interface Hook {
   /**
