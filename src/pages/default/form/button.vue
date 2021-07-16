@@ -10,29 +10,30 @@
 <template>
   <div>
     <!-- primary -->
-    <h4>primary button</h4>
-    <button>
-      default
-    </button>
-    <button class="bp-btnPrimary">
-      primary
-    </button>
+    <h4>button</h4>
+    <button>default</button>
+    <button>primary</button>
+    <button class="bp-btnInfo">info</button>
+    <button class="bp-btnWarning">warning</button>
 
-    <!-- warning -->
-    <h4>warning button</h4>
-    <button class="bp-btnWarning bp-btnBorder">
-      warning
-    </button>
+    <!-- solid -->
+    <h4>solid style</h4>
+    <button class="bp-btnSolid">primary</button>
+    <button class="bp-btnSolid bp-btnInfo">info</button>
+    <button class="bp-btnSolid bp-btnWarning">warning</button>
 
     <!-- border -->
     <h4>border style</h4>
-    <button class="bp-btnBorder">
-      border
-    </button>
+    <button class="bp-btnBorder">primary</button>
+    <button class="bp-btnBorder bp-btnInfo">info</button>
+    <button class="bp-btnBorder bp-btnWarning">warning</button>
 
     <!-- disable -->
     <h4>disable button</h4>
     <button disabled="disabled">
+      disabled
+    </button>
+    <button class="bp-btnSolid" disabled="disabled">
       disabled
     </button>
     <button class="bp-btnBorder" disabled="disabled">
@@ -46,7 +47,7 @@
       </bp-icon>
       text
     </button>
-    <button class="bp-btnBorder">
+    <button class="bp-btnSolid">
       text
       <bp-icon width="20px" name="heartFill">
       </bp-icon>

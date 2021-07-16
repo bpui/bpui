@@ -146,7 +146,7 @@ export default class Html5History {
     onLoad:(component:{name: string, component: any}, onLoaded?:(component: {name?: string, component: any})=>void)=>void,
     /** 匹配不到指定的路由组件. */
     onError:(err:Error)=>void 
-  ): Object {
+  ): void|false {
     let p = utils.parsePathname(location.path) as bp.Location;
     let l = febs.utils.mergeMap(location, p);
     l.query = febs.utils.mergeMap(p.query, location.query);

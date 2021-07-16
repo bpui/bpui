@@ -49,6 +49,10 @@ module.exports = {
   ],
   // configureWebpack: {},
   chainWebpack: config => {
+    if (process.env.NODE_ENV == 'development') {
+      config.devtool('#cheap-module-eval-source-map');
+    }
+    
     webpackConfig.initResolveAlias(config);
     webpackConfig.initBundleAnalyzer(config);
     webpackConfig.initPluginPreload(config);

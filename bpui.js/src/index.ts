@@ -108,6 +108,12 @@ export default class Instance {
   static get bpActionsheet() { return componentInstance.getComponent('actionsheet').default.bpActionsheet }
   //
   static get bpPopover() { return componentInstance.getComponent('popover').default.bpPopover }
+  //
+  static get bpFileUploader() { return componentInstance.getComponent('uploader').default.bpFileUploader }
+  static get bpImageCropUploader() { return componentInstance.getComponent('uploader').default.bpImageCropUploader }
+  static get bpImageCropPreviewMobile() { return componentInstance.getComponent('uploader').default.bpImageCropPreviewMobile }
+  static get bpImageCropPreviewTablet() { return componentInstance.getComponent('uploader').default.bpImageCropPreviewTablet }
+  static get bpImageCropPreview() { return componentInstance.getComponent('uploader').default.bpImageCropPreview }
 }
 
 

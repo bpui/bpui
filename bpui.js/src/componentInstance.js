@@ -28,7 +28,7 @@ export function getComponent(name, cb) {
           componentStore.setComponent(name, module);
           cb(null, module);
         }).catch(e => {
-          throw new Error('Can\'t get module: ' + name, e);
+          throw new Error('Can\'t get module: ' + name + ';\r' + (e?e.toString():''), e);
         });
         return;
       }

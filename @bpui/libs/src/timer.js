@@ -170,7 +170,7 @@ export default class Timer {
   clearAllAnimationFrame() {
     for(let t of this._requestAniList) {
       if (t) {
-        Timer.cancelAnimationFrame(t);
+        cancelAnimationFrame(t);
       }
     }
     this._requestAniList = [];

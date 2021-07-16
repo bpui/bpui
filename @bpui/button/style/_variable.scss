@@ -11,14 +11,45 @@ $bpButtonFontWeight: 400 !default;
 $bpButtonBorderRadius: .25rem !default;
 
 /* 颜色 */
-$bpButtonTextColor: (
+$bpButtonColor: (
   /* .bp-btnPrimary */
   Primary: $bpColorPrimary,
   /* .bp-btnWarning */
   Warning: $bpColorWarn,
+  /* .bp-btnInfo */
+  Info: $bpTextColorSecondary,
   /* custom */
-
 ) !default;
 
-/* 背景颜色 */
-$bpButtonBgColor: $bpBgColor !default;
+/* 实心按钮背景颜色 */
+$bpButtonSolidBgColor: (
+  /* .bp-btnPrimary */
+  Primary: $bpColorPrimary,
+  /* .bp-btnWarning */
+  Warning: $bpColorWarn,
+  /* .bp-btnInfo */
+  Info: $bpBgColor,
+  /* custom */
+) !default;
+
+/** 实心按钮边框色 */
+$bpButtonSolidBorderColor: (
+  /* .bp-btnPrimary */
+  Primary: $bpColorPrimary,
+  /* .bp-btnWarning */
+  Warning: $bpColorWarn,
+  /* .bp-btnInfo */
+  Info: $bpColorPrimary,
+  /* custom */
+) !default;
+
+/** 实心按钮文本色 */
+$bpButtonSolidTextColor: (
+  /* .bp-btnPrimary */
+  Primary: $bpBgColor,
+  /* .bp-btnWarning */
+  Warning: $bpBgColor,
+  /* .bp-btnInfo */
+  Info: $bpColorPrimary,
+  /* custom */
+) !default;

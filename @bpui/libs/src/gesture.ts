@@ -21,10 +21,19 @@ class GestureRecognizerImp implements bp.GestureRecognizer {
   }
 
   /**
+   * 与指定手势同时发生. 在需要同时识别多个手势时使用.
+   */
+  recognizeWith(ges:bp.GestureRecognizer):bp.GestureRecognizer {
+    this.recognizer.recognizeWith((ges as GestureRecognizerImp).recognizer);
+    return this;
+  }
+
+  /**
    * @desc: 在指定手势识别失败后才识别到.
    */
-  requireFailure(ges:bp.GestureRecognizer):void {
+  requireFailure(ges:bp.GestureRecognizer):bp.GestureRecognizer {
     this.recognizer.requireFailure((ges as GestureRecognizerImp).recognizer);
+    return this;
   }
 }
 
@@ -46,8 +55,8 @@ export default class GestureImp /*implements bp.Gesture*/ {
   swipeRecognizers:GestureRecognizerImp[];
   swipeHandles:Map<bp.GestureListener, HammerListener>;
 
-  constructor(dom:HTMLElement|SVGElement) {
-    this.ges = new hammer.Manager(dom);
+  constructor(dom?:HTMLElement|SVGElement) {
+    this.ges = new hammer.Manager(dom||window.document.body);
     this.tapHandles = new Map();
     this.tapRecognizers = [null, null, null];
     this.panHandles = new Map();
@@ -57,6 +66,27 @@ export default class GestureImp /*implements bp.Gesture*/ {
     this.pressHandles = new Map();
     this.swipeHandles = new Map();
     this.swipeRecognizers = [null, null, null];
+  }
+
+  dispose(): void {
+    this.off('tap');
+    this.off('pan');
+    this.off('pinch');
+    this.off('rotate');
+    this.off('press');
+    this.off('swipe');
+    this.disablePanRecognizer({pointers:1});
+    this.disablePanRecognizer({pointers:2});
+    this.disablePanRecognizer({ pointers: 3 });
+    this.disablePinchRecognizer();
+    this.disablePressRecognizer();
+    this.disableRotateRecognizer();
+    this.disableSwipeRecognizer({ pointers: 1 });
+    this.disableSwipeRecognizer({ pointers: 2 });
+    this.disableSwipeRecognizer({ pointers: 3 });
+    this.disableTapRecognizer({ tapCount: 1 });
+    this.disableTapRecognizer({ tapCount: 2 });
+    this.disableTapRecognizer({ tapCount: 3 });
   }
 
   /**

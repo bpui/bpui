@@ -16,9 +16,13 @@ declare namespace bp {
   */
   interface GestureRecognizer {
     /**
+     * 与指定手势同时发生. 在需要同时识别多个手势时使用.
+     */
+    recognizeWith(otherGes:GestureRecognizer):GestureRecognizer;
+    /**
      * @desc: 在指定手势识别失败后才识别到.
      */
-    requireFailure(ges:GestureRecognizer):void;
+    requireFailure(otherGes:GestureRecognizer):GestureRecognizer;
   }
 
   /**
@@ -85,7 +89,16 @@ declare namespace bp {
   *       只提供默认的手势, 不提供自定义手势的添加方法.
   */
   interface Gesture {
-    new(dom:HTMLElement|SVGElement):Gesture;
+
+    /**
+     * dom 默认为 window.document.body
+     */
+    new(dom?: HTMLElement | SVGElement): Gesture;
+    
+    /**
+     * 清理所有设置.
+     */
+    dispose(): void;
 
     /**
     * @desc: 添加tap手势识别.
@@ -106,17 +119,16 @@ declare namespace bp {
     /**
     * @desc: 添加pan手势识别.
     * @description 默认手势enable操作会重置默认手势的requireFailure关系.
-    * @param direction: 只能为left,right,up,down; 不能为组合.
     * @return: 对同一个direction值, 只能添加一个手势识别对象; 重复添加, 将返回上一次添加的识别对象.
     */
     enablePanRecognizer(cfg:{
-      pointers: number,
+      pointers: 1|2|3,
     }):GestureRecognizer;
     /**
     * @desc: 取消pan手势识别.
     */
     disablePanRecognizer(cfg:{
-      pointers: number,
+      pointers: 1|2|3,
     }): void;
 
     /**
@@ -162,13 +174,13 @@ declare namespace bp {
     enableSwipeRecognizer(cfg?:{
       velocity?:number,  // (default: 0.3) Minimal velocity required before recognizing, unit is in px per ms.
       distance?:number,  // (default: 10) Minimal distance required before recognizing
-      pointers?:number,  // (default: 1)
+      pointers?:1|2|3,  // (default: 1)
     }): GestureRecognizer;
     /**
     * @desc: 取消swipe手势识别.
     */
     disableSwipeRecognizer(cfg?:{
-      pointers: number,
+      pointers: 1|2|3,
     }): void;
 
     /**

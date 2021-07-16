@@ -69,7 +69,7 @@ export function getMatchedComponent(
   location: bp.Location, 
   onLoad:(component:{name: string, component: any}, onLoaded?:(component: {name?: string, component: any})=>void)=>void,
   onError:(err:Error)=>void
-): Object {
+): void|false {
   if (!window[GlobalRouter]) {
     window[GlobalRouter] = [];
   }
@@ -81,17 +81,19 @@ export function getMatchedComponent(
 
     for (let j = 0; j < routes.length; j++) {
       if (routes[j].path == noFileRouter) {
-        if (routes[j].component||routes[j].name) {
-          onLoad({ name: routes[j].name, component: routes[j].component }, (component) => {
-            if (component) {
-              if (component.component) {
-                routes[j].component = component.component;
+        if (routes[j].component || routes[j].name) {
+          if (onLoad) {
+            onLoad({ name: routes[j].name, component: routes[j].component }, (component) => {
+              if (component) {
+                if (component.component) {
+                  routes[j].component = component.component;
+                }
+                if (component.name) {
+                  routes[j].name = component.name;
+                }
               }
-              if (component.name) {
-                routes[j].name = component.name;
-              }
-            }
-          });
+            });
+          }
         }
         else {
           if (onError)
@@ -104,14 +106,17 @@ export function getMatchedComponent(
   
   // 404.
   if (window[GlobalRouter404]) {
-    onLoad({ component: window[GlobalRouter404], name: null }, (component) => {
-            if (component) {
-              if (component.component) {
-                window[GlobalRouter404] = component.component;
-              }
-            }
-          });
+    if (onLoad) {
+      onLoad({ component: window[GlobalRouter404], name: null }, (component) => {
+        if (component) {
+          if (component.component) {
+            window[GlobalRouter404] = component.component;
+          }
+        }
+      });
+    }
+    return;
   }
 
-  return null;
+  return false;
 }

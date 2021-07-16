@@ -1,5 +1,5 @@
 /*!
- * bpui libs v0.2.22
+ * bpui libs v0.2.23
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -2046,20 +2046,22 @@
 	    var _loop_2 = function _loop_2(j) {
 	      if (routes[j].path == noFileRouter) {
 	        if (routes[j].component || routes[j].name) {
-	          onLoad({
-	            name: routes[j].name,
-	            component: routes[j].component
-	          }, function (component) {
-	            if (component) {
-	              if (component.component) {
-	                routes[j].component = component.component;
-	              }
+	          if (onLoad) {
+	            onLoad({
+	              name: routes[j].name,
+	              component: routes[j].component
+	            }, function (component) {
+	              if (component) {
+	                if (component.component) {
+	                  routes[j].component = component.component;
+	                }
 
-	              if (component.name) {
-	                routes[j].name = component.name;
+	                if (component.name) {
+	                  routes[j].name = component.name;
+	                }
 	              }
-	            }
-	          });
+	            });
+	          }
 	        } else {
 	          if (onError) onError(new Error("cannot find component: " + routes[j].path));
 	        }
@@ -2085,19 +2087,23 @@
 
 
 	  if (window[GlobalRouter404]) {
-	    onLoad({
-	      component: window[GlobalRouter404],
-	      name: null
-	    }, function (component) {
-	      if (component) {
-	        if (component.component) {
-	          window[GlobalRouter404] = component.component;
+	    if (onLoad) {
+	      onLoad({
+	        component: window[GlobalRouter404],
+	        name: null
+	      }, function (component) {
+	        if (component) {
+	          if (component.component) {
+	            window[GlobalRouter404] = component.component;
+	          }
 	        }
-	      }
-	    });
+	      });
+	    }
+
+	    return;
 	  }
 
-	  return null;
+	  return false;
 	}
 
 	var InstanceOnRoute = '$BpInstanceOnRoute'; //--------------------------------------------------------
@@ -3607,7 +3613,7 @@
 	          var t = _step3.value;
 
 	          if (t) {
-	            Timer.cancelAnimationFrame(t);
+	            cancelAnimationFrame(t);
 	          }
 	        }
 	      } catch (err) {
@@ -7403,12 +7409,22 @@
 	    this.recognizer = recognizer;
 	  }
 	  /**
+	   * 与指定手势同时发生. 在需要同时识别多个手势时使用.
+	   */
+
+
+	  GestureRecognizerImp.prototype.recognizeWith = function (ges) {
+	    this.recognizer.recognizeWith(ges.recognizer);
+	    return this;
+	  };
+	  /**
 	   * @desc: 在指定手势识别失败后才识别到.
 	   */
 
 
 	  GestureRecognizerImp.prototype.requireFailure = function (ges) {
 	    this.recognizer.requireFailure(ges.recognizer);
+	    return this;
 	  };
 
 	  return GestureRecognizerImp;
@@ -7423,7 +7439,7 @@
 	/** @class */
 	function () {
 	  function GestureImp(dom) {
-	    this.ges = new hammer.Manager(dom);
+	    this.ges = new hammer.Manager(dom || window.document.body);
 	    this.tapHandles = new Map();
 	    this.tapRecognizers = [null, null, null];
 	    this.panHandles = new Map();
@@ -7434,6 +7450,45 @@
 	    this.swipeHandles = new Map();
 	    this.swipeRecognizers = [null, null, null];
 	  }
+
+	  GestureImp.prototype.dispose = function () {
+	    this.off('tap');
+	    this.off('pan');
+	    this.off('pinch');
+	    this.off('rotate');
+	    this.off('press');
+	    this.off('swipe');
+	    this.disablePanRecognizer({
+	      pointers: 1
+	    });
+	    this.disablePanRecognizer({
+	      pointers: 2
+	    });
+	    this.disablePanRecognizer({
+	      pointers: 3
+	    });
+	    this.disablePinchRecognizer();
+	    this.disablePressRecognizer();
+	    this.disableRotateRecognizer();
+	    this.disableSwipeRecognizer({
+	      pointers: 1
+	    });
+	    this.disableSwipeRecognizer({
+	      pointers: 2
+	    });
+	    this.disableSwipeRecognizer({
+	      pointers: 3
+	    });
+	    this.disableTapRecognizer({
+	      tapCount: 1
+	    });
+	    this.disableTapRecognizer({
+	      tapCount: 2
+	    });
+	    this.disableTapRecognizer({
+	      tapCount: 3
+	    });
+	  };
 	  /**
 	  * @desc: 事件监听.
 	  */

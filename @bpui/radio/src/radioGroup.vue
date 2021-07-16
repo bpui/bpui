@@ -1,6 +1,6 @@
 <!--
 /**
-* Copyright (c) 2017 Copyright tj All Rights Reserved.
+* Copyright (c) 2017 Copyright bp All Rights Reserved.
 * Author: xieliangkai
 * Date: 2020-02-23 01:00
 * Desc: bp-raido-group

@@ -20,7 +20,10 @@
         "src/bpui/*"
       ],
       "@bpui/*": [
-        "@bpui/*"
+        "./@bpui/*"
+      ],
+      "@bpui/libs": [
+        "./@bpui/libs"
       ],
       "@/*": [
         "*"
@@ -43,7 +46,7 @@
     "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
-    "@bpui"
-  ]
+    "./node_modules",
+    "./@bpui"
+  ]  
 }

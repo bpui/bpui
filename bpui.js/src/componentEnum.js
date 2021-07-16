@@ -8,4 +8,5 @@ exports.ComponentName = {
   picker: 'picker',
   actionsheet: 'actionsheet',
   popover: 'popover',
+  uploader: 'uploader',
 }

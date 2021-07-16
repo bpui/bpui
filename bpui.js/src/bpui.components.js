@@ -54,6 +54,11 @@ module.exports = [
     lib: function () { return import('@bpui/popover') },
   },
   {
+    name: 'uploader',
+    style: function() { require(['@bpui/uploader/style/_index.scss']) },
+    lib: function () { return import('@bpui/uploader') },
+  },
+  {
     name: 'button',
     style: function () { return require(['@bpui/button/style/_index.scss']) },
   },

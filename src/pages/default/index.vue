@@ -17,6 +17,9 @@
       <router-link to="form/input">input</router-link>
     </span>
     <span class="span">
+      <router-link to="form/uploader">uploader</router-link>
+    </span>
+    <span class="span">
       <router-link to="form/select">select (temp)</router-link>
     </span>
 
@@ -134,6 +137,7 @@
 
   .span {
     margin: 10px;
+    display: inline-block;
   }
 
 </style>

@@ -1,6 +1,6 @@
 <!--
 /**
-* Copyright (c) 2017 Copyright tj All Rights Reserved.
+* Copyright (c) 2017 Copyright bp All Rights Reserved.
 * Author: xieliangkai
 * Date: 2020-02-22 00:24
 * Desc:  bp-switch

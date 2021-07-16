@@ -8,6 +8,7 @@ export * from '@bpui/dialog/types';
 export * from '@bpui/picker/types';
 export * from '@bpui/actionsheet/types';
 export * from '@bpui/popover/types';
+export * from '@bpui/uploader/types';
 
 export enum ComponentName {
   navbarView = 'navbarView',
@@ -19,6 +20,7 @@ export enum ComponentName {
   picker = 'picker',
   actionsheet = 'actionsheet',
   popover = 'popover',
+  uploader = 'uploader',
 }
 
 export const libs: typeof bp.bpLibs;

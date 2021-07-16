@@ -8,6 +8,8 @@
 </template>
 
 <script lang="ts">
+
+// @ts-nocheck
 import { Component, Vue, Watch, Provide } from "vue-property-decorator";
 import { State, Mutation, namespace } from "vuex-class";
 import bpui from 'bpui.js';
@@ -44,6 +46,8 @@ export default class extends Vue {
     this.onRouteChange((this as any).$route);
   }
 }
+
+// @ts-check
 </script>
 
 
