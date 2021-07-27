@@ -1,5 +1,5 @@
 /*!
- * bpui input v0.1.23
+ * bpui input v0.2.0
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -127,6 +127,22 @@
         }
       }
     });
+  }
+
+  function _typeof(obj) {
+    "@babel/helpers - typeof";
+
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function (obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
   }
 
   function _newArrowCheck(innerThis, boundThis) {
@@ -1325,6 +1341,20 @@
     }
   });
 
+  var floor$1 = Math.floor;
+
+  // `Number.isInteger` method implementation
+  // https://tc39.es/ecma262/#sec-number.isinteger
+  var isInteger = function isInteger(it) {
+    return !isObject(it) && isFinite(it) && floor$1(it) === it;
+  };
+
+  // `Number.isInteger` method
+  // https://tc39.es/ecma262/#sec-number.isinteger
+  _export({ target: 'Number', stat: true }, {
+    isInteger: isInteger
+  });
+
   var TO_STRING_TAG = wellKnownSymbol('toStringTag');
   var test = {};
 
@@ -1541,11 +1571,14 @@
           return !value || value === "readonly" || value === true;
         }
       },
-      value: {// validator: function (value) {
-        //   if (!value) return true;
-        //   let tt = typeof value;
-        //   return tt === "string" || tt === "number" || value instanceof Date;
-        // },
+      value: {
+        validator: function validator(value) {
+          if (!value) return true;
+
+          var tt = _typeof(value);
+
+          return tt === "string" || tt === "number";
+        }
       },
       prefixIcon: String,
       suffixIcon: String,
@@ -1632,6 +1665,15 @@
 
           this.init();
         }.bind(this));
+      },
+      max: function max(val) {
+        this.init();
+      },
+      min: function min(val) {
+        this.init();
+      },
+      pattern: function pattern(val) {
+        this.init();
       }
     },
     beforeMount: function beforeMount() {
@@ -1676,12 +1718,14 @@
 
 
         if (febs.utils.browserIsIE()) {
-          febs.utils.sleep(100).then(function () {
+          this.$timer.sleep(100).then(function () {
             _newArrowCheck(this, _this2);
 
             this.text(this.value || "");
           }.bind(this));
         }
+
+        this.text(this.value || '');
       },
       _initOther: function _initOther() {
         var _this3 = this;
@@ -1716,11 +1760,11 @@
           el.val(vv);
         }.bind(this), this.value, false, false);
 
-        this._handleChange(el);
+        this._handleChange_text(el);
 
         this._handleFocusBlur(el);
 
-        this._handleKeydownKeyup(el);
+        this._handleKeydownKeyup_text(el);
 
         this._handleInput(el);
       },
@@ -1742,11 +1786,11 @@
           this.typelen = this.value.length;
         }
 
-        this._handleChange(el);
+        this._handleChange_text(el);
 
         this._handleFocusBlur(el);
 
-        this._handleKeydownKeyup(el);
+        this._handleKeydownKeyup_text(el);
 
         this._handleInput(el);
       },
@@ -1833,8 +1877,8 @@
 
         var el;
         el = $($(this.$el).children("input")[0]);
-        this._min = Number.isNaN(parseInt(this.min)) ? Number.MIN_SAFE_INTEGER : parseInt(this.min);
-        this._max = Number.isNaN(parseInt(this.max)) ? Number.MAX_SAFE_INTEGER : parseInt(this.max);
+        this._min = Number.isNaN(parseFloat(this.min)) ? Number.MIN_SAFE_INTEGER : parseFloat(this.min);
+        this._max = Number.isNaN(parseFloat(this.max)) ? Number.MAX_SAFE_INTEGER : parseFloat(this.max);
         this.value; // 进行一次验证.
 
         this.validate(function (vv) {
@@ -1843,15 +1887,13 @@
           el.val(vv);
         }.bind(this), this.value, false, false);
 
-        this._handleChangeIntFloat(el);
+        this._handleChange_number(el);
 
         this._handleFocusBlur(el);
 
-        this._handleKeydownKeyupIntFloat(el);
+        this._handleKeydownKeyup_number(el);
 
-        if (!febs.utils.browserIsMobile()) {
-          this._handleInput(el);
-        }
+        this._handleInput(el);
       },
       _handleInput: function _handleInput(el) {
         var _this6 = this;
@@ -1863,6 +1905,7 @@
 
           _newArrowCheck(this, _this6);
 
+          console.debug('event ' + event.type);
           var elem = $(event.currentTarget);
           var value = elem.val() || "";
 
@@ -1887,13 +1930,15 @@
           }
         }.bind(this));
       },
-      _handleKeydownKeyup: function _handleKeydownKeyup(el) {
+      _handleKeydownKeyup_text: function _handleKeydownKeyup_text(el) {
         var _this8 = this;
 
         // keydown, keyup.
         el.off("keydown");
         el.on("keydown", function (event) {
           _newArrowCheck(this, _this8);
+
+          console.debug('event text ' + event.type);
 
           if (event.key.length > 1) {
             return true;
@@ -1919,6 +1964,7 @@
           el.on("keyup", function (event) {
             _newArrowCheck(this, _this8);
 
+            console.debug('event textarea ' + event.type);
             var vv = $(event.currentTarget).val() || "";
             this.typelen = vv.length;
             this.$emit("keyup", event);
@@ -1928,11 +1974,12 @@
           el.on("keyup", function (event) {
             _newArrowCheck(this, _this8);
 
+            console.debug('event ' + event.type);
             this.$emit("keyup", event);
           }.bind(this));
         }
       },
-      _handleKeydownKeyupIntFloat: function _handleKeydownKeyupIntFloat(el) {
+      _handleKeydownKeyup_number: function _handleKeydownKeyup_number(el) {
         var _this9 = this;
 
         // number.
@@ -1942,6 +1989,7 @@
 
           _newArrowCheck(this, _this9);
 
+          console.debug('event number ' + event.type);
           var key = event.key || event.data;
 
           if (key && key.length > 1) {
@@ -2038,7 +2086,7 @@
           else if (key == "." && this.isFloat) {
               if (value.indexOf(".") < 0) {
                 if (isEmpty) {
-                  value = "0";
+                  value = "0.";
                   elem.val(value);
                 } // update value.
 
@@ -2084,10 +2132,11 @@
         el.on("keyup", function (event) {
           _newArrowCheck(this, _this9);
 
+          console.debug('event number ' + event.type);
           this.$emit("keyup", event);
         }.bind(this));
       },
-      _handleChange: function _handleChange(el) {
+      _handleChange_text: function _handleChange_text(el) {
         var _this11 = this;
 
         // change.
@@ -2095,6 +2144,7 @@
         el.on("change", function (event) {
           _newArrowCheck(this, _this11);
 
+          console.debug('event text ' + event.type);
           var elem = $(event.currentTarget);
           var value = elem.val() || "";
           this.validate(null, value);
@@ -2102,7 +2152,7 @@
           this.$emit("change", value);
         }.bind(this));
       },
-      _handleChangeIntFloat: function _handleChangeIntFloat(el) {
+      _handleChange_number: function _handleChange_number(el) {
         var _this12 = this;
 
         el.off("change");
@@ -2111,6 +2161,7 @@
 
           _newArrowCheck(this, _this12);
 
+          console.debug('event number ' + event.type);
           var elem = $(event.currentTarget);
           var value = elem.val() || "";
           this.validate(function (vv) {
@@ -2142,6 +2193,7 @@
 
           _newArrowCheck(this, _this14);
 
+          console.debug('event ' + event.type);
           this.isInputWrong = false;
           this.$emit("focus", event);
           this.isFocus = true; // mobile side scroll.
@@ -2168,6 +2220,7 @@
 
           _newArrowCheck(this, _this14);
 
+          console.debug('event ' + event.type);
           this.isFocus = false;
 
           if (febs.utils.browserIsMobile()) {
@@ -2182,9 +2235,20 @@
 
             // type.
             if (this.isInt || this.isFloat) {
-              oldValue = Number(oldValue);
-              newValue = Number(newValue);
-              elem.val(newValue);
+              oldValue = Number(oldValue) || 0;
+              newValue = Number(newValue) || 0;
+
+              if (this.isFloat) {
+                if (Number.isInteger(newValue)) {
+                  newValue = newValue.toString() + '.0';
+                }
+
+                elem.val(newValue);
+                newValue = Number(newValue);
+              } else {
+                newValue = Math.floor(newValue);
+                elem.val(newValue);
+              }
             }
 
             if (oldValue != newValue) {
@@ -2269,10 +2333,10 @@
           }
 
           if (!matches || !matches[0]) {
-            var v = value;
+            var v1 = value;
 
-            if (!(v.length == 0 && isInputing)) {
-              v = this.defaultValue;
+            if (!(v1.length == 0 && isInputing)) {
+              v1 = this.defaultValue;
             }
 
             if (changeInputWrong) {
@@ -2280,38 +2344,38 @@
               this.$emit("error");
             }
 
-            if (callback) callback(this.defaultValue);
+            if (callback) callback(v1);
             return; // return this.defaultValue;
           } else {
-            var _value = matches[0];
-            var _v = _value;
+            value = matches[0];
+            var v2 = value;
 
-            if (this.isFloat || this.isInt) {
-              _v = parseFloat(_value) || 0;
-
-              if (_v > this._max) {
-                _v = this._max; // return this._max;
-              }
-
-              if (_v < this._min) {
-                _v = this._min; // return this._min;
+            if (this.isFloat) {
+              if (value.length > 0) {
+                if (value[0] == ".") value = "0" + value;else if (!isInputing) {
+                  if (value[value.length - 1] == ".") value += "0";else if (value.indexOf(".") < 0) value += ".0";
+                }
+                v2 = value;
+              } else if (!isInputing) {
+                v2 = this.defaultValue;
               }
             }
 
-            if (this.isFloat) {
-              if (_value.length > 0) {
-                if (_value[0] == ".") _value = "0" + _value;else if (!isInputing) {
-                  if (_value[_value.length - 1] == ".") _value += "0";else if (_value.indexOf(".") < 0) _value += ".0";
-                }
-                _v = _value;
-              } else if (!isInputing) {
-                _v = this.defaultValue;
+            if (this.isFloat || this.isInt) {
+              v2 = Number(v2) || 0;
+
+              if (v2 > this._max) {
+                v2 = this._max; // return this._max;
+              }
+
+              if (v2 < this._min) {
+                v2 = this._min; // return this._min;
               }
             }
 
             if (changeInputWrong) {
               if (this.validator) {
-                this.validator(parseFloat(_v), function (valid) {
+                this.validator(parseFloat(v2), function (valid) {
                   _newArrowCheck(this, _this17);
 
                   if (!valid) {
@@ -2326,7 +2390,7 @@
               }
             }
 
-            if (callback) callback(_v);
+            if (callback) callback(v2);
             return; // return value;
           }
         } else {
@@ -2387,7 +2451,18 @@
             this.validate(function (newContent) {
               _newArrowCheck(this, _this18);
 
-              elem.val(newContent);
+              newContent = Number(newContent) || 0;
+
+              if (this.isFloat) {
+                if (Number.isInteger(newContent)) {
+                  newContent = newContent.toString() + '.0';
+                }
+
+                elem.val(newContent);
+              } else {
+                newContent = Math.floor(newContent);
+                elem.val(newContent);
+              }
             }.bind(this), content);
           } else {
             this.validate(null, content);

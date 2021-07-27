@@ -92,11 +92,11 @@ export default {
       },
     },
     value: {
-      // validator: function (value) {
-      //   if (!value) return true;
-      //   let tt = typeof value;
-      //   return tt === "string" || tt === "number" || value instanceof Date;
-      // },
+      validator: function (value) {
+        if (!value) return true;
+        let tt = typeof value;
+        return tt === "string" || tt === "number";
+      },
     },
     prefixIcon: String,
     suffixIcon: String,
@@ -192,6 +192,15 @@ export default {
         this.init();
       });
     },
+    max: function (val) {
+      this.init();
+    },
+    min: function (val) {
+      this.init();
+    },
+    pattern: function (val) {
+      this.init();
+    },
   },
   beforeMount() {
     this.value2 = this.value;
@@ -226,10 +235,12 @@ export default {
 
       // 防止ie上刷新后保留input内容.
       if (febs.utils.browserIsIE()) {
-        febs.utils.sleep(100).then(() => {
+        this.$timer.sleep(100).then(() => {
           this.text(this.value || "");
         });
       }
+
+      this.text(this.value||'');
     },
     _initOther() {
       switch (this.type) {
@@ -266,9 +277,9 @@ export default {
         false
       );
 
-      this._handleChange(el);
+      this._handleChange_text(el);
       this._handleFocusBlur(el);
-      this._handleKeydownKeyup(el);
+      this._handleKeydownKeyup_text(el);
       this._handleInput(el);
     },
     _initTextarea() {
@@ -295,9 +306,9 @@ export default {
         this.typelen = this.value.length;
       }
 
-      this._handleChange(el);
+      this._handleChange_text(el);
       this._handleFocusBlur(el);
-      this._handleKeydownKeyup(el);
+      this._handleKeydownKeyup_text(el);
       this._handleInput(el);
     },
     _initIntFloat() {
@@ -378,12 +389,12 @@ export default {
       // validate.
       let el;
       el = $($(this.$el).children("input")[0]);
-      this._min = Number.isNaN(parseInt(this.min))
+      this._min = Number.isNaN(parseFloat(this.min))
         ? Number.MIN_SAFE_INTEGER
-        : parseInt(this.min);
-      this._max = Number.isNaN(parseInt(this.max))
+        : parseFloat(this.min);
+      this._max = Number.isNaN(parseFloat(this.max))
         ? Number.MAX_SAFE_INTEGER
-        : parseInt(this.max);
+        : parseFloat(this.max);
       this.value;
       // 进行一次验证.
       this.validate(
@@ -395,17 +406,17 @@ export default {
         false
       );
 
-      this._handleChangeIntFloat(el);
+      this._handleChange_number(el);
       this._handleFocusBlur(el);
-      this._handleKeydownKeyupIntFloat(el);
-      if (!febs.utils.browserIsMobile()) {
-        this._handleInput(el);
-      }
+      this._handleKeydownKeyup_number(el);
+      this._handleInput(el);
     },
     _handleInput(el) {
       // input.
       el.off("input");
       el.on("input", (event) => {
+        console.debug('event ' + event.type);
+
         let elem = $(event.currentTarget);
         let value = elem.val() || "";
 
@@ -433,10 +444,13 @@ export default {
         }
       });
     },
-    _handleKeydownKeyup(el) {
+    _handleKeydownKeyup_text(el) {
       // keydown, keyup.
       el.off("keydown");
       el.on("keydown", (event) => {
+
+        console.debug('event text ' + event.type);
+
         if (event.key.length > 1) {
           return true;
         }
@@ -459,6 +473,9 @@ export default {
       if (this.type == "textarea") {
         el.off("keyup");
         el.on("keyup", (event) => {
+          
+          console.debug('event textarea ' + event.type);
+
           let vv = $(event.currentTarget).val() || "";
           this.typelen = vv.length;
           this.$emit("keyup", event);
@@ -466,14 +483,18 @@ export default {
       } else {
         el.off("keyup");
         el.on("keyup", (event) => {
+          console.debug('event ' + event.type);
           this.$emit("keyup", event);
         });
       }
     },
-    _handleKeydownKeyupIntFloat(el) {
+    _handleKeydownKeyup_number(el) {
       // number.
       el.off(febs.utils.browserIsMobile() ? "input" : "keydown");
       el.on(febs.utils.browserIsMobile() ? "input" : "keydown", (event) => {
+
+        console.debug('event number ' + event.type);
+
         let key = event.key || event.data;
         if (key && key.length > 1) {
           return true;
@@ -572,7 +593,7 @@ export default {
         else if (key == "." && this.isFloat) {
           if (value.indexOf(".") < 0) {
             if (isEmpty) {
-              value = "0";
+              value = "0.";
               elem.val(value);
             }
 
@@ -585,7 +606,8 @@ export default {
             }
             return true;
           }
-        } else if (!isEmpty) {
+        }
+        else if (!isEmpty) {
           this.validate(
             (vv) => {
               elem.val(value);
@@ -598,7 +620,8 @@ export default {
             value,
             true
           );
-        } else {
+        }
+        else {
           value = "";
           elem.val("");
 
@@ -619,13 +642,15 @@ export default {
 
       el.off("keyup");
       el.on("keyup", (event) => {
+        console.debug('event number ' + event.type);
         this.$emit("keyup", event);
       });
     },
-    _handleChange(el) {
+    _handleChange_text(el) {
       // change.
       el.off("change");
       el.on("change", (event) => {
+        console.debug('event text ' + event.type);
         let elem = $(event.currentTarget);
         let value = elem.val() || "";
 
@@ -634,9 +659,10 @@ export default {
         this.$emit("change", value);
       });
     },
-    _handleChangeIntFloat(el) {
+    _handleChange_number(el) {
       el.off("change");
       el.on("change", (event) => {
+        console.debug('event number ' + event.type);
         let elem = $(event.currentTarget);
         let value = elem.val() || "";
         this.validate((vv) => {
@@ -659,6 +685,7 @@ export default {
 
       el.off("focus");
       el.on("focus", (event) => {
+        console.debug('event ' + event.type);
         this.isInputWrong = false;
         this.$emit("focus", event);
 
@@ -681,6 +708,7 @@ export default {
 
       el.off("blur");
       el.on("blur", (event) => {
+        console.debug('event ' + event.type);
         this.isFocus = false;
 
         if (febs.utils.browserIsMobile()) {
@@ -693,9 +721,19 @@ export default {
         this.validate((newValue) => {
           // type.
           if (this.isInt || this.isFloat) {
-            oldValue = Number(oldValue);
-            newValue = Number(newValue);
-            elem.val(newValue);
+            oldValue = Number(oldValue) || 0;
+            newValue = Number(newValue) || 0;
+
+            if (this.isFloat) {
+              if (Number.isInteger(newValue)) {
+                newValue = newValue.toString() + '.0';
+              }
+              elem.val(newValue);
+              newValue = Number(newValue);
+            } else {
+              newValue = Math.floor(newValue);
+              elem.val(newValue);  
+            }
           }
 
           if (oldValue != newValue) {
@@ -778,34 +816,21 @@ export default {
         }
 
         if (!matches || !matches[0]) {
-          let v = value;
-          if (!(v.length == 0 && isInputing)) {
-            v = this.defaultValue;
+          let v1 = value;
+          if (!(v1.length == 0 && isInputing)) {
+            v1 = this.defaultValue;
           }
 
           if (changeInputWrong) {
             this.isInputWrong = true;
             this.$emit("error");
           }
-          if (callback) callback(this.defaultValue);
+          if (callback) callback(v1);
           return;
           // return this.defaultValue;
         } else {
-          let value = matches[0];
-          let v = value;
-
-          if (this.isFloat || this.isInt) {
-            v = parseFloat(value) || 0;
-
-            if (v > this._max) {
-              v = this._max;
-              // return this._max;
-            }
-            if (v < this._min) {
-              v = this._min;
-              // return this._min;
-            }
-          }
+          value = matches[0];
+          let v2 = value;
 
           if (this.isFloat) {
             if (value.length > 0) {
@@ -814,15 +839,28 @@ export default {
                 if (value[value.length - 1] == ".") value += "0";
                 else if (value.indexOf(".") < 0) value += ".0";
               }
-              v = value;
+              v2 = value;
             } else if (!isInputing) {
-              v = this.defaultValue;
+              v2 = this.defaultValue;
+            }
+          }
+
+          if (this.isFloat || this.isInt) {
+            v2 = Number(v2) || 0;
+
+            if (v2 > this._max) {
+              v2 = this._max;
+              // return this._max;
+            }
+            if (v2 < this._min) {
+              v2 = this._min;
+              // return this._min;
             }
           }
 
           if (changeInputWrong) {
             if (this.validator) {
-              this.validator(parseFloat(v), (valid) => {
+              this.validator(parseFloat(v2), (valid) => {
                 if (!valid) {
                   this.isInputWrong = true;
                   this.$emit("error");
@@ -835,7 +873,7 @@ export default {
             }
           }
 
-          if (callback) callback(v);
+          if (callback) callback(v2);
           return;
           // return value;
         }
@@ -889,7 +927,17 @@ export default {
         // type.
         if (this.isInt || this.isFloat) {
           this.validate((newContent) => {
-            elem.val(newContent);
+            newContent = Number(newContent) || 0;
+
+            if (this.isFloat) {
+              if (Number.isInteger(newContent)) {
+                newContent = newContent.toString() + '.0';
+              }
+              elem.val(newContent);
+            } else {
+              newContent = Math.floor(newContent);
+              elem.val(newContent);  
+            }
           }, content);
         } else {
           this.validate(null, content);

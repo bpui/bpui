@@ -12,7 +12,9 @@
     "icons",
     "types"
   ],
-  "main": "src/index.js",
+  "main": "dist/index.common.js",
+  "module": "dist/index.esm.js",
+  "unpkg": "dist/index.min.js",
   "types": "types/index.d.ts",
   "license": "MIT",
   "homepage": "https://github.com/bpui/bpui#readme",
@@ -30,14 +32,13 @@
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
   "dependencies": {
-    "@bpui/button": "^0.1.19",
-    "@bpui/dialog": "^0.1.35",
-    "@bpui/libs": "^0.2.22"
+    "@bpui/button": "^0.2.0",
+    "@bpui/dialog": "^0.2.0"
   },
   "peerDependencies": {
     "vue": ">=2.6.11",
     "vue-class-component": ">=7.2.2"
   },
   "name": "@bpui/uploader",
-  "version": "0.0.1"
+  "version": "0.2.0"
 }

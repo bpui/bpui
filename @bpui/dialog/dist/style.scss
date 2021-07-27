@@ -612,6 +612,9 @@ $bpLoadingTextColor: #d4d4d4 !default;
   }
 
   &.bp-widget__visible {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
     opacity: 1 !important;
     visibility: visible !important;
     -webkit-transition: opacity $bpDialogAnimateDurtion 0s, visibility 0s 0s, background-color $bpDialogAnimateDurtion 0s;
@@ -620,6 +623,9 @@ $bpLoadingTextColor: #d4d4d4 !default;
   }
 
   &.bp-widget__invisible {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
     opacity: 0 !important;
     visibility: hidden !important;
     -webkit-transition: opacity $bpDialogAnimateDurtion 0s, visibility $bpDialogAnimateDurtion 0s, background-color $bpDialogAnimateDurtion 0s;
@@ -696,7 +702,6 @@ $bpLoadingTextColor: #d4d4d4 !default;
     max-width: 98vw;
 
     position: relative;
-    margin: 9em auto;
     text-align: center;
 
     font-size: $bpDialogFontSize;

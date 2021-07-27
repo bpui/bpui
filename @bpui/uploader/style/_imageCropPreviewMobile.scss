@@ -13,14 +13,25 @@
     .bp-uploader-image-crop-preview__cancel, .bp-uploader-image-crop-preview__ok {
         position: absolute;
         top: 10px;
-        @extend .bp-btnBorder;
     }
 
-    .bp-uploader-image-crop-preview__cancel:after {
-        content: '取消';
+    .bp-uploader-image-crop-preview__cancel {
+        color: #fff;
+        &:hover {
+            color: rgba(#fff, .7);
+            background-color: rgba(0, 0, 0, 0);
+        }
+
+        &:after {
+            content: '取消';
+        }
     }
-    .bp-uploader-image-crop-preview__ok:after {
-        content: '确认';
+    .bp-uploader-image-crop-preview__ok {
+        @extend .bp-btnSolid;
+        @extend .bp-btnPrimary;
+        &:after {
+            content: '确认';
+        }
     }
 
     .bp-uploader-image-crop-preview__ok {

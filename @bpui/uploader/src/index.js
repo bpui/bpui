@@ -21,8 +21,8 @@ function init() {
 }
 init();
 
-// const bpImageCropPreview = febs.utils.browserIsMobile() ? bpImageCropPreviewMobile : bpImageCropPreviewTablet;
-const bpImageCropPreview = bpImageCropPreviewMobile;
+const bpImageCropPreview = febs.utils.browserIsMobile() ? bpImageCropPreviewMobile : bpImageCropPreviewTablet;
+// const bpImageCropPreview = bpImageCropPreviewMobile;
 
 export default {
   init,

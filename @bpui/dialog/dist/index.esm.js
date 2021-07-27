@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v0.1.35
+ * bpui dialog v0.2.0
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -2960,9 +2960,24 @@ function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
       mask.removeClass("bp-widget__invisible").addClass("bp-widget__visible");
       return duration;
     }.bind(this)).then(function (duration) {
+      var _this3 = this;
+
       _newArrowCheck(this, _this2);
 
-      return utils.sleep(duration);
+      return utils.sleep(10).then(function () {
+        _newArrowCheck(this, _this3);
+
+        // 修正居中显示, 超出造成的偏移.
+        var content = mask.children('.bp-widget__content')[0];
+        var clientHeight = content.clientHeight;
+
+        if (clientHeight > dom.getViewPort().height) {
+          clientHeight = (clientHeight - dom.getViewPort().height) / 2 + 20;
+          $(content).css('top', clientHeight + 'px');
+        }
+
+        return utils.sleep(duration - 10);
+      }.bind(this));
     }.bind(this)).then(function () {
       _newArrowCheck(this, _this2);
 
@@ -3101,7 +3116,7 @@ function hideWidget(el, cb) {
 } // 取当前页所有widget 并排序；
 
 function _getSortWidget(dataMark) {
-  var _this3 = this;
+  var _this4 = this;
 
   var masks = $(".bp-widget[data-mark='".concat(dataMark, "']"));
   var widget = [];
@@ -3116,7 +3131,7 @@ function _getSortWidget(dataMark) {
   }
 
   widget.sort(function (a, b) {
-    _newArrowCheck(this, _this3);
+    _newArrowCheck(this, _this4);
 
     if (a.zIndex == b.zIndex) return 0;
     return a.zIndex > b.zIndex ? 1 : -1;

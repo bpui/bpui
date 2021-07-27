@@ -261,7 +261,17 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
           return duration;
         })
         .then(duration => {
-          return febs.utils.sleep(duration);
+          return febs.utils.sleep(10).then(() => {
+            // 修正居中显示, 超出造成的偏移.
+            let content = (mask.children('.bp-widget__content')[0]);
+            let clientHeight = content.clientHeight;
+            if (clientHeight > febs.dom.getViewPort().height) {
+              clientHeight = (clientHeight - febs.dom.getViewPort().height) / 2 + 20;
+              $(content).css('top', clientHeight + 'px');
+            }
+
+            return febs.utils.sleep(duration-10);
+          });
         })
         .then(() => {
           mask.removeClass("bp-widget__showing");

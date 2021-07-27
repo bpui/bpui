@@ -1,7 +1,7 @@
 {
   "description": "bpui",
   "dependencies": {
-    "@bpui/libs": "^0.2.22"
+    "@bpui/libs": "^0.2.23"
   },
   "devDependencies": {
     "febs": "^1.2.10"
@@ -40,5 +40,5 @@
     "postinstall": "node ./postinstall"
   },
   "name": "bpui.js",
-  "version": "1.0.2"
+  "version": "1.1.0"
 }

@@ -475,7 +475,9 @@ label {
 */
 /* 字体 */
 /* 颜色 */
-/* 背景颜色 */
+/* 实心按钮背景颜色 */
+/** 实心按钮边框色 */
+/** 实心按钮文本色 */
 /**
 * Copyright (c) 2020 Copyright bp All Rights Reserved.
 * Author: lipengxiang
@@ -519,7 +521,6 @@ button,
   outline: 0;
   outline-offset: 0;
   text-decoration: none;
-  color: #07C160;
   background-color: rgba(0, 0, 0, 0);
   border: none;
   cursor: pointer;
@@ -539,13 +540,9 @@ button svg:last-child, button .bp-icon:last-child,
 .bp-btn .bp-icon:last-child {
   margin-left: 0.24rem;
 }
-button:hover,
-.bp-btn:hover {
-  color: rgba(7, 193, 96, 0.7);
-}
 button:active,
 .bp-btn:active {
-  opacity: 0.4;
+  opacity: 0.6;
 }
 button:disabled,
 .bp-btn:disabled {
@@ -554,18 +551,42 @@ button:disabled,
   touch-action: none;
   pointer-events: none;
 }
+
+/** default */
+button,
+.bp-btn {
+  color: #07C160;
+}
+button:hover,
+.bp-btn:hover {
+  color: rgba(7, 193, 96, 0.7);
+}
 button.bp-btnBorder,
 .bp-btn.bp-btnBorder {
-  background-color: #F7F7F7;
-  border: solid 1px rgba(7, 193, 96, 0.7);
+  color: #07C160;
+  border: solid 1px rgba(7, 193, 96, 0.6);
+  background-color: rgba(0, 0, 0, 0);
 }
 button.bp-btnBorder:hover,
 .bp-btn.bp-btnBorder:hover {
+  color: rgba(7, 193, 96, 0.6);
+  border: solid 1px rgba(7, 193, 96, 0.4);
+  background-color: rgba(0, 0, 0, 0);
+}
+button.bp-btnSolid,
+.bp-btn.bp-btnSolid {
   color: #F7F7F7;
   background-color: rgba(7, 193, 96, 0.9);
   border: solid 1px rgba(7, 193, 96, 0.6);
 }
+button.bp-btnSolid:hover,
+.bp-btn.bp-btnSolid:hover {
+  color: rgba(247, 247, 247, 0.8);
+  background-color: rgba(7, 193, 96, 0.7);
+  border: solid 1px rgba(7, 193, 96, 0.4);
+}
 
+/** each button */
 .bp-btnPrimary {
   color: #07C160;
 }
@@ -573,17 +594,25 @@ button.bp-btnBorder:hover,
   color: rgba(7, 193, 96, 0.7);
   background-color: rgba(0, 0, 0, 0);
 }
-.bp-btnPrimary:active {
-  opacity: 0.4;
-}
 .bp-btnPrimary.bp-btnBorder {
-  background-color: #F7F7F7;
-  border: solid 1px rgba(7, 193, 96, 0.7);
+  color: #07C160;
+  border: solid 1px rgba(7, 193, 96, 0.6);
+  background-color: rgba(0, 0, 0, 0);
 }
 .bp-btnPrimary.bp-btnBorder:hover {
+  color: rgba(7, 193, 96, 0.6);
+  border: solid 1px rgba(7, 193, 96, 0.4);
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnPrimary.bp-btnSolid {
   color: #F7F7F7;
   background-color: rgba(7, 193, 96, 0.9);
   border: solid 1px rgba(7, 193, 96, 0.6);
+}
+.bp-btnPrimary.bp-btnSolid:hover {
+  color: rgba(247, 247, 247, 0.8);
+  background-color: rgba(7, 193, 96, 0.7);
+  border: solid 1px rgba(7, 193, 96, 0.4);
 }
 
 .bp-btnWarning {
@@ -593,15 +622,51 @@ button.bp-btnBorder:hover,
   color: rgba(250, 81, 81, 0.7);
   background-color: rgba(0, 0, 0, 0);
 }
-.bp-btnWarning:active {
-  opacity: 0.4;
-}
 .bp-btnWarning.bp-btnBorder {
-  background-color: #F7F7F7;
-  border: solid 1px rgba(250, 81, 81, 0.7);
+  color: #FA5151;
+  border: solid 1px rgba(250, 81, 81, 0.6);
+  background-color: rgba(0, 0, 0, 0);
 }
 .bp-btnWarning.bp-btnBorder:hover {
+  color: rgba(250, 81, 81, 0.6);
+  border: solid 1px rgba(250, 81, 81, 0.4);
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnWarning.bp-btnSolid {
   color: #F7F7F7;
   background-color: rgba(250, 81, 81, 0.9);
   border: solid 1px rgba(250, 81, 81, 0.6);
+}
+.bp-btnWarning.bp-btnSolid:hover {
+  color: rgba(247, 247, 247, 0.8);
+  background-color: rgba(250, 81, 81, 0.7);
+  border: solid 1px rgba(250, 81, 81, 0.4);
+}
+
+.bp-btnInfo {
+  color: #333;
+}
+.bp-btnInfo:hover {
+  color: rgba(51, 51, 51, 0.7);
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnInfo.bp-btnBorder {
+  color: #333;
+  border: solid 1px rgba(51, 51, 51, 0.6);
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnInfo.bp-btnBorder:hover {
+  color: rgba(51, 51, 51, 0.6);
+  border: solid 1px rgba(51, 51, 51, 0.4);
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnInfo.bp-btnSolid {
+  color: #07C160;
+  background-color: rgba(247, 247, 247, 0.9);
+  border: solid 1px rgba(7, 193, 96, 0.6);
+}
+.bp-btnInfo.bp-btnSolid:hover {
+  color: rgba(7, 193, 96, 0.8);
+  background-color: rgba(247, 247, 247, 0.7);
+  border: solid 1px rgba(7, 193, 96, 0.4);
 }

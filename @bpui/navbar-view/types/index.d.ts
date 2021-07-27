@@ -16,10 +16,6 @@ export function setNavbarDefaultCfg(cfg: {
    * default retain page dom in `push` method.
    */
   retainPageInPush?: boolean,
-  /**
-   * It will refresh page when change routes between different layouts.
-   */
-  allLayouts?: string[],
 }): void;
 
 export const bpNavbarView: NavbarView

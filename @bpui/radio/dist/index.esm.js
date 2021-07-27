@@ -1,5 +1,5 @@
 /*!
- * bpui radio v0.1.16
+ * bpui radio v0.2.0
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */

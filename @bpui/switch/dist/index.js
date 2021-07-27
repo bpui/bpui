@@ -1,5 +1,5 @@
 /*!
- * bpui switch v0.1.17
+ * bpui switch v0.2.1
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -920,7 +920,7 @@
         disabled: _vm.isDisabled
       },
       domProps: {
-        checked: _vm.checked
+        checked: _vm.isChecked
       },
       on: {
         change: _vm.handleChange

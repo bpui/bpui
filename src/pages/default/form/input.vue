@@ -46,6 +46,14 @@
       max="100"
       value="123456111"
     ></bp-input>
+
+    <bp-input
+      suffixIcon="loading"
+      type="float"
+      :max="textMax"
+      value="10"
+    ></bp-input>
+    <button @click="textMax=10">change max</button>
   </div>
 </template>
 
@@ -86,6 +94,7 @@ export default class extends Vue {
   @Provide() text: string = "";
   @Provide() text1: string = "345354";
   @Provide() textChange: number = 0;
+  textMax: number = 100;
 
   temNum = 1123;
 

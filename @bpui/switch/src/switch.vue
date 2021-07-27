@@ -22,7 +22,7 @@
         ref="input"
         type="checkbox"
         class="bp-switch__original"
-        :checked="checked"
+        :checked="isChecked"
         :disabled="isDisabled"
         @change="handleChange"
         v-bind="$attrs"

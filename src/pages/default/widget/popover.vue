@@ -29,6 +29,17 @@
       </span>
     </bp-popover>
 
+    <button ref="btn3">
+      custom
+    </button>
+    <bp-popover :bind="$refs.btn3" direction="right" trigger="click">
+      <div class="bp-popover__cell">cell 1</div>
+      <div class="bp-popover__cell">cell 2</div>
+      <div class="bp-popover__cell">cell 3</div>
+      <div class="bp-popover__cell">cell 4</div>
+      <div class="bp-popover__cellWarn">cell warn</div>
+    </bp-popover>
+
 
 
  

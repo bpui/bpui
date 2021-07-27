@@ -2,8 +2,10 @@ button style
 
 ```html
 <button>button</button>
+<button class="bp-btnInfo">warning</button>
 <button class="bp-btnWarning">warning</button>
 <button class="bp-btnWarning bp-btnBorder">border button</button>
+<button class="bp-btnWarning bp-btnSolid">solid button</button>
 ```
 
 style
