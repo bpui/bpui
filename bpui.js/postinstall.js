@@ -8,9 +8,9 @@
     console.log('');
 
 
-var path = require('path');
+// var path = require('path');
 
-var p = path.resolve(__dirname, '..');
-if (p.indexOf('node_modules') == p.length - 'node_modules'.length) {
-    require('./bin/init').done(null, path.resolve(__dirname, '..', '..'));
-}
+// var p = path.resolve(__dirname, '..');
+// if (p.indexOf('node_modules') == p.length - 'node_modules'.length) {
+//     require('./bin/init').done(null, path.resolve(__dirname, '..', '..'));
+// }
