@@ -9,7 +9,9 @@
 
 import * as smoothscroll from './smoothscroll';
 import * as timer from './timer';
+import * as eventMgr from './eventMgr';
 import bpLibs from '../../bpLibs';
+import * as febs from 'febs-browser';
 
 import icon from '../icon';
 
@@ -28,17 +30,22 @@ function makeInstall() {
       mounted() {
       },
       beforeCreate() {
+        eventMgr.beforeCreate(vue, this);
         timer.beforeCreate(vue, this);
       },
       created() {
       },
       beforeDestroy() {
         timer.beforeDestroy(vue, this);
+        eventMgr.beforeDestroy(vue, this);
       },
     });
 
     Object.defineProperty(vue.prototype, '$bpLibs', {
       get: function() { return bpLibs; }
+    })
+    Object.defineProperty(vue.prototype, '$febs', {
+      get: function() { return febs; }
     })
 
     vue.component('bpIcon', icon);

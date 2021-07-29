@@ -1,5 +1,5 @@
 /*!
- * bpui libs v0.2.23
+ * bpui libs v0.2.24
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -8746,6 +8746,101 @@
 	  }
 	}
 
+	var s_eventMgr = '$BpEventMgr';
+
+	var EventMgr =
+	/** @class */
+	function () {
+	  function EventMgr() {
+	    this.events = [];
+	  }
+	  /**
+	   * @desc 现存监听数量.
+	   */
+
+
+	  EventMgr.prototype.listenerLength = function () {
+	    return this.events.length;
+	  };
+
+	  EventMgr.prototype.dispose = function () {
+	    for (var i = 0; i < this.events.length; i++) {
+	      var e = this.events[i];
+	      febs.dom.removeEventListener(e.domElement, e.event, e.func, e.useCapture);
+	    }
+
+	    this.events = [];
+	    return this;
+	  };
+	  /**
+	  * @desc: 统一处理 addEventListener, attachEvent; 并提供useCapture参数问题.
+	  */
+
+
+	  EventMgr.prototype.addEventListener = function (domElement, event, func, useCapture) {
+	    var i = 0;
+
+	    for (; i < this.events.length; i++) {
+	      var e = this.events[i];
+
+	      if (e.domElement === domElement && e.event === event && e.func === func && e.useCapture === useCapture) {
+	        break;
+	      }
+	    }
+
+	    if (i >= this.events.length) {
+	      febs.dom.addEventListener(domElement, event, func, useCapture);
+	      this.events.push({
+	        domElement: domElement,
+	        event: event,
+	        func: func,
+	        useCapture: useCapture
+	      });
+	    }
+
+	    return this;
+	  };
+	  /**
+	  * @desc: 统一处理 removeEventListener, detachEvent; 并提供useCapture参数问题.
+	  */
+
+
+	  EventMgr.prototype.removeEventListener = function (domElement, event, func, useCapture) {
+	    var i = 0;
+
+	    for (; i < this.events.length; i++) {
+	      var e = this.events[i];
+
+	      if (e.domElement === domElement && e.event === event && e.func === func && e.useCapture === useCapture) {
+	        febs.dom.removeEventListener(domElement, event, func, useCapture);
+	        this.events.splice(i, 1);
+	        return;
+	      }
+	    }
+
+	    return this;
+	  };
+
+	  return EventMgr;
+	}();
+
+	function beforeCreate$1(Vue, ctx) {
+	  if (!ctx[s_eventMgr]) {
+	    ctx[s_eventMgr] = new EventMgr();
+	    Object.defineProperty(ctx, '$bpEventMgr', {
+	      get: function get() {
+	        return ctx[s_eventMgr];
+	      }
+	    });
+	  }
+	}
+	function beforeDestroy$1(Vue, ctx) {
+	  if (ctx[s_eventMgr]) {
+	    ctx[s_eventMgr].dispose();
+	    ctx[s_eventMgr] = null;
+	  }
+	}
+
 	var bpIcon = {
 	  name: 'bpIcon',
 	  props: {
@@ -8884,17 +8979,24 @@
 	    install(vue, this, g);
 	    vue.mixin({
 	      mounted: function mounted() {},
-	      beforeCreate: function beforeCreate$1() {
+	      beforeCreate: function beforeCreate$2() {
+	        beforeCreate$1(vue, this);
 	        beforeCreate(vue, this);
 	      },
 	      created: function created() {},
-	      beforeDestroy: function beforeDestroy$1() {
+	      beforeDestroy: function beforeDestroy$2() {
 	        beforeDestroy(vue, this);
+	        beforeDestroy$1(vue, this);
 	      }
 	    });
 	    Object.defineProperty(vue.prototype, '$bpLibs', {
 	      get: function get() {
 	        return bpLibs;
+	      }
+	    });
+	    Object.defineProperty(vue.prototype, '$febs', {
+	      get: function get() {
+	        return febs;
 	      }
 	    });
 	    vue.component('bpIcon', bpIcon);

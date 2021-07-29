@@ -4,6 +4,7 @@
 /// <reference path="./timer.d.ts" />
 /// <reference path="./icons.d.ts" />
 /// <reference path="./gesture.d.ts" />
+/// <reference path="./eventMgr.d.ts" />
 
 declare namespace bp {
 

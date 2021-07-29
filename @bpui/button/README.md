@@ -6,6 +6,11 @@ button style
 <button class="bp-btnWarning">warning</button>
 <button class="bp-btnWarning bp-btnBorder">border button</button>
 <button class="bp-btnWarning bp-btnSolid">solid button</button>
+
+<div class="bp-btnGroup">
+  <button class="bp-btnBorder">text</button>
+  <button class="bp-btnSolid">primary</button>
+</div>
 ```
 
 style
