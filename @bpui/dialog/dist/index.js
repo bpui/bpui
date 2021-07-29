@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v0.2.3
+ * bpui dialog v0.2.4
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3460,13 +3460,15 @@
       return false;
     }
   }
+  function getLoadingCount() {
+    return window[GlobalLoadingCount] || 0;
+  }
   /**
   * @desc: 隐藏对话框
   */
 
   function hideLoading() {
     if (window[GlobalLoadingCount]) {
-      window[GlobalLoadingCount] = window[GlobalLoadingCount] - 1;
       return;
     }
 
@@ -3555,6 +3557,17 @@
     }
   }
   /**
+  * @desc: 隐藏对话框; 并减少计数
+  */
+
+  function hideLoadingDecrease() {
+    if (window[GlobalLoadingCount]) {
+      window[GlobalLoadingCount] = window[GlobalLoadingCount] - 1;
+    }
+
+    hideLoading();
+  }
+  /**
    * @desc: 显示; 增加内部的loading计数1. 如果已经存在loading, 则不改变loading的内容.
    */
 
@@ -3581,8 +3594,10 @@
   var apiLoading = /*#__PURE__*/Object.freeze({
     __proto__: null,
     isLoadingVisible: isLoadingVisible,
+    getLoadingCount: getLoadingCount,
     hideLoading: hideLoading,
     showLoading: showLoading,
+    hideLoadingDecrease: hideLoadingDecrease,
     showLoadingIncrease: showLoadingIncrease,
     clearLoadingCount: clearLoadingCount
   });

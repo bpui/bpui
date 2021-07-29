@@ -169,58 +169,111 @@
     }
 
     showLoadingCount():void {
+
+      // @ts-ignore
+      this.$bpWidget.showLoading('hide in 1s');
+      // @ts-ignore
+      this.$bpWidget.showLoading('hide in 1s');
+      // @ts-ignore
+      this.$bpWidget.showLoading('hide in 1s');
+      // @ts-ignore
+      console.log(this.$bpWidget.getLoadingCount());
       // @ts-ignore
       this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 6000});
       // @ts-ignore
-      this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      console.log(this.$bpWidget.getLoadingCount());
       // @ts-ignore
-      this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 6000});
       // @ts-ignore
-      this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      console.log(this.$bpWidget.getLoadingCount());
       // @ts-ignore
-      this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      this.$bpWidget.hideLoadingDecrease();
       // @ts-ignore
-      this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
-      console.log('show i');
+      console.log(this.$bpWidget.getLoadingCount());
       // @ts-ignore
-      this.$bpWidget.showLoadingIncrease('hide in 4s');
-      this.$timer.sleep(1000)
-                  // @ts-ignore
-                 .then(()=>{ console.log('show i'); this.$bpWidget.showLoadingIncrease('hide in 3s'); })
-                 .then(()=>this.$timer.sleep(1000))
+      this.$bpWidget.hideLoading();
+      // @ts-ignore
+      this.$bpWidget.hideLoading();
+      // @ts-ignore
+      console.log(this.$bpWidget.getLoadingCount());
+      // @ts-ignore
+      this.$bpWidget.hideLoadingDecrease();
+      // @ts-ignore
+      console.log(this.$bpWidget.getLoadingCount());
+
+
+      // // @ts-ignore
+      // this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 6000});
+      // // @ts-ignore
+      // this.$bpWidget.showToast('1');
+      // // @ts-ignore
+      // this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      // // @ts-ignore
+      // this.$bpWidget.showToast('2');
+      // // @ts-ignore
+      // this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      // // @ts-ignore
+      // this.$bpWidget.showToast('3');
+      // // @ts-ignore
+      // this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      // // @ts-ignore
+      // this.$bpWidget.showToast('4');
+      // // @ts-ignore
+      // this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      // // @ts-ignore
+      // this.$bpWidget.showToast('5');
+      // // @ts-ignore
+      // this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      // // @ts-ignore
+      // this.$bpWidget.showToast('6');
+      // console.log('show i');
+      // // @ts-ignore
+      // this.$bpWidget.showLoadingIncrease('hide in 4s');
+      // // @ts-ignore
+      // this.$bpWidget.showToast('7');
+      // this.$timer.sleep(1000)
+      //             // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.showToast('8'); this.$bpWidget.showLoadingIncrease('hide in 3s'); })
+      //            .then(()=>this.$timer.sleep(1000))
+      //            // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.showToast('9'); this.$bpWidget.showLoadingIncrease('hide in 2s'); })
+      //            .then(()=>this.$timer.sleep(1000))
+      //            // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.showToast('10'); this.$bpWidget.showLoading('hide in 1s'); })
+      //            .then(()=>this.$timer.sleep(1000))
+      //            // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.showToast('10'); this.$bpWidget.showLoading('hide in 1s'); })
+      //            .then(()=>this.$timer.sleep(1000))
+      //            // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.hideLoading(); this.$bpWidget.showToast('9'); })
+      //            .then(()=>this.$timer.sleep(1000))
+      //            // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.hideLoading(); this.$bpWidget.showToast('8'); })
+      //            .then(()=>this.$timer.sleep(1000))
+      //            // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.hideLoading(); this.$bpWidget.showToast('7'); })
+      //            .then(()=>this.$timer.sleep(1000))
+      //            // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.hideLoading(); this.$bpWidget.showToast('6'); })
+      //            .then(()=>this.$timer.sleep(1000))
+      //            // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.hideLoading(); this.$bpWidget.showToast('5'); })
+      //            .then(()=>this.$timer.sleep(1000))
+      //            // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.hideLoading(); this.$bpWidget.showToast('4'); })
+      //            .then(()=>this.$timer.sleep(1000))
+      //            // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.hideLoading(); this.$bpWidget.showToast('3'); })
+      //            .then(()=>this.$timer.sleep(1000))
+      //            // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.hideLoading(); this.$bpWidget.showToast('2'); })
+      //            .then(()=>this.$timer.sleep(1000))
+      //            // @ts-ignore
+      //            .then(()=>{ this.$bpWidget.hideLoading(); this.$bpWidget.showToast('1'); })
+      //            .then(()=>this.$timer.sleep(1000))
                  // @ts-ignore
-                 .then(()=>{ console.log('show i'); this.$bpWidget.showLoadingIncrease('hide in 2s'); })
-                 .then(()=>this.$timer.sleep(1000))
-                 // @ts-ignore
-                 .then(()=>{ console.log('show'); this.$bpWidget.showLoading('hide in 1s'); })
-                 .then(()=>this.$timer.sleep(1000))
-                 // @ts-ignore
-                 .then(()=>{ console.log('show'); this.$bpWidget.showLoading('hide in 1s'); })
-                 .then(()=>this.$timer.sleep(1000))
-                 // @ts-ignore
-                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
-                 .then(()=>this.$timer.sleep(5000))
-                 // @ts-ignore
-                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
-                 .then(()=>this.$timer.sleep(5000))
-                 // @ts-ignore
-                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
-                 .then(()=>this.$timer.sleep(5000))
-                 // @ts-ignore
-                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
-                 .then(()=>this.$timer.sleep(5000))
-                 // @ts-ignore
-                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
-                 // @ts-ignore
-                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
-                 // @ts-ignore
-                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
-                 // @ts-ignore
-                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
-                 // @ts-ignore
-                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
-                 // @ts-ignore
-                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
+                //  .then(()=>{ this.$bpWidget.hideLoading(); this.$bpWidget.showToast('0'); })
+                //  .then(()=>this.$timer.sleep(1000))
     }
     
     showCustom():void {
