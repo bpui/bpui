@@ -141,6 +141,18 @@
     
     showLoading():void {
       // @ts-ignore
+      this.$bpWidget.showLoading({content: 'hide in 4s', delay: 6000});
+      // @ts-ignore
+      this.$bpWidget.showLoading({content: 'hide in 4s', delay: 5000});
+      // @ts-ignore
+      this.$bpWidget.showLoading({content: 'hide in 4s', delay: 5000});
+      // @ts-ignore
+      this.$bpWidget.showLoading({content: 'hide in 4s', delay: 5000});
+      // @ts-ignore
+      this.$bpWidget.showLoading({content: 'hide in 4s', delay: 5000});
+      // @ts-ignore
+      this.$bpWidget.showLoading({content: 'hide in 4s', delay: 5000});
+      // @ts-ignore
       this.$bpWidget.showLoading('hide in 4s');
       this.$timer.sleep(1000)
                   // @ts-ignore
@@ -157,6 +169,18 @@
     }
 
     showLoadingCount():void {
+      // @ts-ignore
+      this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 6000});
+      // @ts-ignore
+      this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      // @ts-ignore
+      this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      // @ts-ignore
+      this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      // @ts-ignore
+      this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
+      // @ts-ignore
+      this.$bpWidget.showLoadingIncrease({content: 'hide in 4s', delay: 5000});
       console.log('show i');
       // @ts-ignore
       this.$bpWidget.showLoadingIncrease('hide in 4s');
@@ -185,6 +209,18 @@
                  // @ts-ignore
                  .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
                  .then(()=>this.$timer.sleep(5000))
+                 // @ts-ignore
+                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
+                 // @ts-ignore
+                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
+                 // @ts-ignore
+                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
+                 // @ts-ignore
+                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
+                 // @ts-ignore
+                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
+                 // @ts-ignore
+                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
     }
     
     showCustom():void {

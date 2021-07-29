@@ -98,6 +98,7 @@ export function showLoading(cfg/*:string|{
     }
     else {
       window[GlobalLoadingTimeout].cfg = febs.utils.mergeMap(cfg);
+      return;
     }
   }
 

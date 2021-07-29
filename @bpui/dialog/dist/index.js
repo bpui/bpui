@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v0.2.2
+ * bpui dialog v0.2.3
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3532,6 +3532,7 @@
         window[GlobalLoadingTimeout] = null;
       } else {
         window[GlobalLoadingTimeout].cfg = febs.utils.mergeMap(cfg);
+        return;
       }
     }
 
