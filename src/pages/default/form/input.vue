@@ -118,6 +118,10 @@ export default class extends Vue {
       console.log(this.text);
       this.text = "11121212";
     });
+
+    this.$bpEventMgr.addEventListener(window, 'resize', ()=>{
+      console.log(11);
+    });
   }
 
   onClick() {

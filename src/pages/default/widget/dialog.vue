@@ -21,6 +21,7 @@
     <!-- api dialog -->
     <h4>api loading</h4>
     <button @click="showLoading">show loading</button>
+    <button @click="showLoadingCount">show loading count</button>
 
     <!-- api dialog -->
     <h4>api toast</h4>
@@ -153,6 +154,37 @@
                  .then(()=>this.$timer.sleep(1000))
                  // @ts-ignore
                  .then(()=>{ this.$bpWidget.hideLoading(); });
+    }
+
+    showLoadingCount():void {
+      console.log('show i');
+      // @ts-ignore
+      this.$bpWidget.showLoadingIncrease('hide in 4s');
+      this.$timer.sleep(1000)
+                  // @ts-ignore
+                 .then(()=>{ console.log('show i'); this.$bpWidget.showLoadingIncrease('hide in 3s'); })
+                 .then(()=>this.$timer.sleep(1000))
+                 // @ts-ignore
+                 .then(()=>{ console.log('show i'); this.$bpWidget.showLoadingIncrease('hide in 2s'); })
+                 .then(()=>this.$timer.sleep(1000))
+                 // @ts-ignore
+                 .then(()=>{ console.log('show'); this.$bpWidget.showLoading('hide in 1s'); })
+                 .then(()=>this.$timer.sleep(1000))
+                 // @ts-ignore
+                 .then(()=>{ console.log('show'); this.$bpWidget.showLoading('hide in 1s'); })
+                 .then(()=>this.$timer.sleep(1000))
+                 // @ts-ignore
+                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
+                 .then(()=>this.$timer.sleep(5000))
+                 // @ts-ignore
+                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
+                 .then(()=>this.$timer.sleep(5000))
+                 // @ts-ignore
+                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
+                 .then(()=>this.$timer.sleep(5000))
+                 // @ts-ignore
+                 .then(()=>{ this.$bpWidget.hideLoading(); console.log('hide'); })
+                 .then(()=>this.$timer.sleep(5000))
     }
     
     showCustom():void {

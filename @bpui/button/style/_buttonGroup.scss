@@ -12,12 +12,15 @@
   border-radius: $bpButtonBorderRadius;
   border: 1px solid $bpButtonGroupBorderColor;
 
-  & > div, button {
+  & > .bp-btn, button {
     height: 38px;
     border-radius: 0;
     border: none;
     margin: 0;
     min-width: 80px;
+    justify-content: center;
+    align-items: center;
+    display: inline-flex;
     
     &:hover {
       border-radius: 0;

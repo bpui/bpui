@@ -21,8 +21,8 @@ method:
   <div ref="main" class="bp-uploader-image-crop-preview__mobile" :style="{
       display: visibleReal?null:'none',
       }" @click.stop>
-    <button class="bp-uploader-image-crop-preview__cancel" @click.stop="visibleReal=false; $emit('cancel'); if (_cancelListener) _cancelListener();"/></button>
-    <button class="bp-uploader-image-crop-preview__ok" click.stop="onok"></button>
+    <button class="bp-uploader-image-crop-preview__cancel" @click.stop="oncancel"/></button>
+    <button class="bp-uploader-image-crop-preview__ok" @click.stop="onok"></button>
     <div ref="canvasWrap" style="position:relative;" :style="{'margin-top':canvasMarginHeight+'px'}"
         @touchmove.stop="onMainMouseMove"
         @touchend.stop="onClipMouseUp"
@@ -159,6 +159,11 @@ method:
         let dataURL = canvas.toDataURL(outputFormatReal || "image/png");
         canvas = null;
         return dataURL;
+      },
+      oncancel() {
+        this.visibleReal=false;
+        this.$emit('cancel');
+        if (this._cancelListener) this._cancelListener();
       },
       onok(){
         let url = this.getImageBase64(this.outputFormatReal);

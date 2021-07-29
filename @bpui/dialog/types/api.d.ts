@@ -73,12 +73,12 @@ declare namespace bp {
     isLoadingVisible(): boolean;
 
     /**
-     * @desc: 隐藏
+     * @desc: 隐藏; 会将内部的loading计数-1; 直到0为止,才会真正隐藏loading.
      */
     hideLoading(): void;
 
     /**
-     * @desc: 显示.
+     * @desc: 显示; 不改变内部的loading计数.
      */
     showLoading(
       cfg?:
@@ -89,6 +89,24 @@ declare namespace bp {
             delay?: number;
           }
     ): void;
+
+    /**
+     * @desc: 显示; 增加内部的loading计数1. 如果已经存在loading, 则不改变loading的内容.
+     */
+    showLoadingIncrease(
+      cfg?:
+        | string
+        | {
+            content?: string;
+            /** 延迟指定的时间后才显示, 但延迟后如果调用了hide, 则不显示 */
+            delay?: number;
+          }
+    ): void;
+
+    /**
+     * @desc: 清理loading的计数; 设置为0.
+     */
+    clearLoadingCount(): void;
 
     /**
      * @desc: 插入并显示一个任意widget组件到body上.

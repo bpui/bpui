@@ -16,6 +16,7 @@ import * as register from '../register';
 // const GlobalLoading = Symbol('$BpGlobalLoading');
 const GlobalLoadingTimeout = ('$BpGlobalLoadingTimeout');
 const GlobalLoading = ('$BpGlobalLoading');
+const GlobalLoadingCount = ('$BpGlobalLoadingCount');
 
 const ApiClass = 'bp-apiClass';
 const LoadingClass = 'bp-loadingClass';
@@ -25,13 +26,24 @@ function onHandlerRouter(to, type) {
 }
 
 export function isLoadingVisible() {
-  return $('.'+LoadingClass).length > 0;
+  let loading = $('.' + LoadingClass);
+  if (loading.length > 0 && loading.hasClass('bp-widget__visible')) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 /**
 * @desc: 隐藏对话框
 */
 export function hideLoading() {
+  if (window[GlobalLoadingCount]) {
+    window[GlobalLoadingCount] = window[GlobalLoadingCount] - 1;
+    return;
+  }
+
   if (window[GlobalLoadingTimeout]) {
     clearTimeout(window[GlobalLoadingTimeout].tm);
     window[GlobalLoadingTimeout] = null;
@@ -104,4 +116,28 @@ export function showLoading(cfg/*:string|{
 
     window[GlobalLoadingTimeout] = {tm, now, cfg: febs.utils.mergeMap(cfg)};
   }
+}
+
+
+
+/**
+ * @desc: 显示; 增加内部的loading计数1. 如果已经存在loading, 则不改变loading的内容.
+ */
+export function showLoadingIncrease(cfg) {
+  if (!window[GlobalLoadingCount]) {
+    window[GlobalLoadingCount] = 0;
+  }
+  window[GlobalLoadingCount] = window[GlobalLoadingCount] + 1;
+
+  if (!isLoadingVisible()) {
+    showLoading(cfg);
+  }
+}
+
+/**
+ * @desc: 清理loading的计数; 设置为0.
+ */
+export function clearLoadingCount() {
+  window[GlobalLoadingCount] = 0;
+  hideLoading();
 }

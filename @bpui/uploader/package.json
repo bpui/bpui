@@ -32,13 +32,13 @@
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
   "dependencies": {
-    "@bpui/button": "^0.2.0",
-    "@bpui/dialog": "^0.2.0"
+    "@bpui/button": "^0.2.3",
+    "@bpui/dialog": "^0.2.2"
   },
   "peerDependencies": {
     "vue": ">=2.6.11",
     "vue-class-component": ">=7.2.2"
   },
   "name": "@bpui/uploader",
-  "version": "0.2.0"
+  "version": "0.2.1"
 }

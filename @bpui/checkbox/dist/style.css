@@ -34,24 +34,26 @@
 }
 .bp-icon {
   font-family: "bpui-icon" !important;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
+  speak: never !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
   /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
   height: 32px;
   width: 32px;
   font-size: 32px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
-  display: inline-block;
+  white-space: nowrap;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 100% 100% !important;
+  display: inline-block !important;
 }
 .bp-icon:before {
-  display: block;
+  display: block !important;
 }
 
 .bp-iconArrowDown:before {
@@ -111,11 +113,11 @@
   }
 }
 .bp-iconLoading {
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
   -webkit-animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
   -moz-animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
   animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
@@ -124,155 +126,155 @@
 .bp-iconLoading .path1:before {
   content: "";
   color: black;
-  opacity: 0.6;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
+  opacity: 0.6 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
 }
 
 .bp-iconLoading .path2:before {
   content: "";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: black;
-  opacity: 0.65;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  margin-left: -1em;
+  opacity: 0.65 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  margin-left: -1em !important;
 }
 
 .bp-iconLoading .path3:before {
   content: "";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: black;
-  opacity: 0.7;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  margin-left: -1em;
+  opacity: 0.7 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  margin-left: -1em !important;
 }
 
 .bp-iconLoading .path4:before {
   content: "";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: black;
-  opacity: 0.73;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  margin-left: -1em;
+  opacity: 0.73 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  margin-left: -1em !important;
 }
 
 .bp-iconLoading .path5:before {
   content: "";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: black;
-  opacity: 0.68;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  margin-left: -1em;
+  opacity: 0.68 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  margin-left: -1em !important;
 }
 
 .bp-iconLoading .path6:before {
   content: "";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: black;
-  opacity: 0.59;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  margin-left: -1em;
+  opacity: 0.59 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  margin-left: -1em !important;
 }
 
 .bp-iconLoading .path7:before {
   content: "";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: black;
-  opacity: 0.53;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  margin-left: -1em;
+  opacity: 0.53 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  margin-left: -1em !important;
 }
 
 .bp-iconLoading .path8:before {
   content: "";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: black;
-  opacity: 0.48;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  margin-left: -1em;
+  opacity: 0.48 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  margin-left: -1em !important;
 }
 
 .bp-iconLoading .path9:before {
   content: "";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: black;
-  opacity: 0.44;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  margin-left: -1em;
+  opacity: 0.44 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  margin-left: -1em !important;
 }
 
 .bp-iconLoading .path10:before {
   content: "";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: black;
-  opacity: 0.41;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  margin-left: -1em;
+  opacity: 0.41 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  margin-left: -1em !important;
 }
 
 .bp-iconLoading .path11:before {
   content: "";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: black;
-  opacity: 0.38;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  margin-left: -1em;
+  opacity: 0.38 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  margin-left: -1em !important;
 }
 
 .bp-iconLoading .path12:before {
   content: "";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: black;
-  opacity: 0.35;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  margin-left: -1em;
+  opacity: 0.35 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  margin-left: -1em !important;
 }
 
 .bp-iconLocation:before {
@@ -507,6 +509,8 @@ label {
   right: 0;
   top: 0;
   bottom: 0;
+  padding: 0;
+  margin: 0;
 }
 .bp-checkbox .bp-checkbox__input .bp-checkbox__inner_hover {
   border-color: #07C160;

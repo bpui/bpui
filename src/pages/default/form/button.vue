@@ -56,6 +56,31 @@
     <button class="bp-btnBorder">
       text<bp-icon width="20px" name="loading"/>
     </button>
+
+    <!-- group -->
+    <h4>group</h4>
+    <div class="bp-btnGroup">
+      <button class="bp-btnBorder">text</button>
+      <button class="bp-btnSolid">primary</button>
+    </div>
+
+    <div class="bp-btnGroup">
+      <button class="bp-btnBorder">text</button>
+      <button class="bp-btnSolid">primary</button>
+      <button>
+        <bp-checkbox :checked="checked" >chk2</bp-checkbox>
+      </button>
+      <button>
+        <bp-switch :checked="checked" >dsfs</bp-switch>
+      </button>
+      <button>
+        <bp-radio-group v-model="value1">
+          <bp-radio value="1">选项1</bp-radio>
+          <bp-radio value="2">选项2</bp-radio>
+        </bp-radio-group>
+      </button>
+    </div>
+    
   </div>
 </template>
 
@@ -72,15 +97,24 @@
     State,
     Mutation
   } from "vuex-class";
+  
+  import bpui from 'bpui.js';
 
   @Component({
-    components: {}
+    components: {
+      bpCheckbox: bpui.bpCheckbox,
+      bpSwitch: bpui.bpSwitch,
+      bpRadio: bpui.bpRadio,
+      bpRadioGroup: bpui.bpRadioGroup,
+    }
   })
   export default class extends Vue {
     //
     // event.
     @Emit()
     demoEvent(type: string) {}
+
+    value1 = 1;
 
     //
     // state.

@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v0.2.1
+ * bpui dialog v0.2.2
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3438,6 +3438,7 @@ var apiDialog = /*#__PURE__*/Object.freeze({
 
 var GlobalLoadingTimeout = '$BpGlobalLoadingTimeout';
 var GlobalLoading = '$BpGlobalLoading';
+var GlobalLoadingCount = '$BpGlobalLoadingCount';
 var ApiClass$2 = 'bp-apiClass';
 var LoadingClass = 'bp-loadingClass';
 
@@ -3446,13 +3447,24 @@ function onHandlerRouter(to, type) {
 }
 
 function isLoadingVisible() {
-  return $('.' + LoadingClass).length > 0;
+  var loading = $('.' + LoadingClass);
+
+  if (loading.length > 0 && loading.hasClass('bp-widget__visible')) {
+    return true;
+  } else {
+    return false;
+  }
 }
 /**
 * @desc: 隐藏对话框
 */
 
 function hideLoading() {
+  if (window[GlobalLoadingCount]) {
+    window[GlobalLoadingCount] = window[GlobalLoadingCount] - 1;
+    return;
+  }
+
   if (window[GlobalLoadingTimeout]) {
     clearTimeout(window[GlobalLoadingTimeout].tm);
     window[GlobalLoadingTimeout] = null;
@@ -3536,12 +3548,37 @@ delay: 延时显示, 默认为0.
     };
   }
 }
+/**
+ * @desc: 显示; 增加内部的loading计数1. 如果已经存在loading, 则不改变loading的内容.
+ */
+
+function showLoadingIncrease(cfg) {
+  if (!window[GlobalLoadingCount]) {
+    window[GlobalLoadingCount] = 0;
+  }
+
+  window[GlobalLoadingCount] = window[GlobalLoadingCount] + 1;
+
+  if (!isLoadingVisible()) {
+    showLoading(cfg);
+  }
+}
+/**
+ * @desc: 清理loading的计数; 设置为0.
+ */
+
+function clearLoadingCount() {
+  window[GlobalLoadingCount] = 0;
+  hideLoading();
+}
 
 var apiLoading = /*#__PURE__*/Object.freeze({
   __proto__: null,
   isLoadingVisible: isLoadingVisible,
   hideLoading: hideLoading,
-  showLoading: showLoading
+  showLoading: showLoading,
+  showLoadingIncrease: showLoadingIncrease,
+  clearLoadingCount: clearLoadingCount
 });
 
 var ApiClass$3 = 'bp-apiClass'; // const GlobalToastTimeout = Symbol('$BpGlobalToastTimeout');

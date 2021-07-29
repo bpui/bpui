@@ -41,6 +41,16 @@
     </bp-popover>
 
 
+    <button ref="btn4">
+      custom row
+    </button>
+    <bp-popover class="bp-popover__row" :bind="$refs.btn4" trigger="click">
+      <div class="bp-popover__cell">cell 1</div>
+      <div class="bp-popover__cell">cell 2</div>
+      <div class="bp-popover__cell">cell 3</div>
+      <div class="bp-popover__cell">cell 4</div>
+      <div class="bp-popover__cellWarn">cell warn</div>
+    </bp-popover>
 
  
   </div>
