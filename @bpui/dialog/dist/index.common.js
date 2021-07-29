@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v0.2.4
+ * bpui dialog v0.2.5
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3443,6 +3443,7 @@ var apiDialog = /*#__PURE__*/Object.freeze({
 var GlobalLoadingTimeout = '$BpGlobalLoadingTimeout';
 var GlobalLoading = '$BpGlobalLoading';
 var GlobalLoadingCount = '$BpGlobalLoadingCount';
+var GlobalLoadingShowMark = '$BpGlobalLoadingShowMark';
 var ApiClass$2 = 'bp-apiClass';
 var LoadingClass = 'bp-loadingClass';
 
@@ -3467,6 +3468,8 @@ function getLoadingCount() {
 */
 
 function hideLoading() {
+  window[GlobalLoadingShowMark] = false;
+
   if (window[GlobalLoadingCount]) {
     return;
   }
@@ -3492,6 +3495,7 @@ delay: 延时显示, 默认为0.
 ) {
   var _this = this;
 
+  window[GlobalLoadingShowMark] = true;
   bpLibs.router.off('routeChanged', onHandlerRouter);
   bpLibs.router.on('routeChanged', onHandlerRouter);
   if (!cfg) cfg = '';
@@ -3562,6 +3566,14 @@ delay: 延时显示, 默认为0.
 function hideLoadingDecrease() {
   if (window[GlobalLoadingCount]) {
     window[GlobalLoadingCount] = window[GlobalLoadingCount] - 1;
+
+    if (window[GlobalLoadingCount] > 0) {
+      return;
+    }
+  }
+
+  if (window[GlobalLoadingShowMark]) {
+    return;
   }
 
   hideLoading();
@@ -3578,7 +3590,9 @@ function showLoadingIncrease(cfg) {
   window[GlobalLoadingCount] = window[GlobalLoadingCount] + 1;
 
   if (!isLoadingVisible()) {
+    var mark = window[GlobalLoadingShowMark];
     showLoading(cfg);
+    window[GlobalLoadingShowMark] = mark;
   }
 }
 /**

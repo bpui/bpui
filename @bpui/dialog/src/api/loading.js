@@ -17,6 +17,7 @@ import * as register from '../register';
 const GlobalLoadingTimeout = ('$BpGlobalLoadingTimeout');
 const GlobalLoading = ('$BpGlobalLoading');
 const GlobalLoadingCount = ('$BpGlobalLoadingCount');
+const GlobalLoadingShowMark = ('$BpGlobalLoadingShowMark');
 
 const ApiClass = 'bp-apiClass';
 const LoadingClass = 'bp-loadingClass';
@@ -43,6 +44,8 @@ export function getLoadingCount() {
 * @desc: 隐藏对话框
 */
 export function hideLoading() {
+  window[GlobalLoadingShowMark] = false;
+  
   if (window[GlobalLoadingCount]) {
     return;
   }
@@ -64,7 +67,8 @@ export function showLoading(cfg/*:string|{
     content: 提示文本.
     delay: 延时显示, 默认为0.
 }*/) {
-  
+  window[GlobalLoadingShowMark] = true;
+
   bpLibs.router.off('routeChanged', onHandlerRouter);
   bpLibs.router.on('routeChanged', onHandlerRouter);
 
@@ -131,7 +135,15 @@ export function hideLoadingDecrease() {
 
   if (window[GlobalLoadingCount]) {
     window[GlobalLoadingCount] = window[GlobalLoadingCount] - 1;
+    if (window[GlobalLoadingCount] > 0) {
+      return;
+    }
   }
+
+  if (window[GlobalLoadingShowMark]) {
+    return;
+  }
+
   hideLoading();
 }
 
@@ -145,7 +157,10 @@ export function showLoadingIncrease(cfg) {
   window[GlobalLoadingCount] = window[GlobalLoadingCount] + 1;
 
   if (!isLoadingVisible()) {
+
+    let mark = window[GlobalLoadingShowMark];
     showLoading(cfg);
+    window[GlobalLoadingShowMark] = mark;
   }
 }
 

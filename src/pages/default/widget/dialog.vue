@@ -173,7 +173,11 @@
       // @ts-ignore
       this.$bpWidget.showLoading('hide in 1s');
       // @ts-ignore
+      console.log(this.$bpWidget.getLoadingCount());
+      // @ts-ignore
       this.$bpWidget.showLoading('hide in 1s');
+      // @ts-ignore
+      console.log(this.$bpWidget.getLoadingCount());
       // @ts-ignore
       this.$bpWidget.showLoading('hide in 1s');
       // @ts-ignore
@@ -192,6 +196,8 @@
       console.log(this.$bpWidget.getLoadingCount());
       // @ts-ignore
       this.$bpWidget.hideLoading();
+      // @ts-ignore
+      console.log(this.$bpWidget.getLoadingCount());
       // @ts-ignore
       this.$bpWidget.hideLoading();
       // @ts-ignore
