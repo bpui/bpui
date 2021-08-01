@@ -24,6 +24,9 @@
       :name="prefixIcon"
       @click="_onPrefixIcon"
     />
+    <span
+      class="bp-input__prefixLabel"
+      v-if="prefixLabel">{{prefixLabel}}</span>
 
     <textarea
       v-if="type === 'textarea'"
@@ -73,6 +76,9 @@
       :name="suffixIcon"
       @click="_onSuffixIcon"
     />
+    <span
+      class="bp-input__suffixLabel"
+      v-if="suffixLabel">{{suffixLabel}}</span>
   </div>
 </template>
 
@@ -100,6 +106,8 @@ export default {
     },
     prefixIcon: String,
     suffixIcon: String,
+    prefixLabel: String,
+    suffixLabel: String,
     max: Number | String,
     min: Number | String,
     placeholder: String,
@@ -415,7 +423,7 @@ export default {
       // input.
       el.off("input");
       el.on("input", (event) => {
-        console.debug('event ' + event.type);
+        // console.debug('event ' + event.type);
 
         let elem = $(event.currentTarget);
         let value = elem.val() || "";
@@ -449,7 +457,7 @@ export default {
       el.off("keydown");
       el.on("keydown", (event) => {
 
-        console.debug('event text ' + event.type);
+        // console.debug('event text ' + event.type);
 
         if (event.key.length > 1) {
           return true;
@@ -474,7 +482,7 @@ export default {
         el.off("keyup");
         el.on("keyup", (event) => {
           
-          console.debug('event textarea ' + event.type);
+          // console.debug('event textarea ' + event.type);
 
           let vv = $(event.currentTarget).val() || "";
           this.typelen = vv.length;
@@ -483,7 +491,7 @@ export default {
       } else {
         el.off("keyup");
         el.on("keyup", (event) => {
-          console.debug('event ' + event.type);
+          // console.debug('event ' + event.type);
           this.$emit("keyup", event);
         });
       }
@@ -493,7 +501,7 @@ export default {
       el.off(febs.utils.browserIsMobile() ? "input" : "keydown");
       el.on(febs.utils.browserIsMobile() ? "input" : "keydown", (event) => {
 
-        console.debug('event number ' + event.type);
+        // console.debug('event number ' + event.type);
 
         let key = event.key || event.data;
         if (key && key.length > 1) {
@@ -642,7 +650,7 @@ export default {
 
       el.off("keyup");
       el.on("keyup", (event) => {
-        console.debug('event number ' + event.type);
+        // console.debug('event number ' + event.type);
         this.$emit("keyup", event);
       });
     },
@@ -650,7 +658,7 @@ export default {
       // change.
       el.off("change");
       el.on("change", (event) => {
-        console.debug('event text ' + event.type);
+        // console.debug('event text ' + event.type);
         let elem = $(event.currentTarget);
         let value = elem.val() || "";
 
@@ -662,7 +670,7 @@ export default {
     _handleChange_number(el) {
       el.off("change");
       el.on("change", (event) => {
-        console.debug('event number ' + event.type);
+        // console.debug('event number ' + event.type);
         let elem = $(event.currentTarget);
         let value = elem.val() || "";
         this.validate((vv) => {
@@ -685,7 +693,7 @@ export default {
 
       el.off("focus");
       el.on("focus", (event) => {
-        console.debug('event ' + event.type);
+        // console.debug('event ' + event.type);
         this.isInputWrong = false;
         this.$emit("focus", event);
 
@@ -708,7 +716,7 @@ export default {
 
       el.off("blur");
       el.on("blur", (event) => {
-        console.debug('event ' + event.type);
+        // console.debug('event ' + event.type);
         this.isFocus = false;
 
         if (febs.utils.browserIsMobile()) {

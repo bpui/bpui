@@ -1,5 +1,5 @@
 /*!
- * bpui input v0.2.1
+ * bpui input v0.2.2
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1577,6 +1577,8 @@ var script = {
     },
     prefixIcon: String,
     suffixIcon: String,
+    prefixLabel: String,
+    suffixLabel: String,
     max: Number | String,
     min: Number | String,
     placeholder: String,
@@ -1900,7 +1902,7 @@ var script = {
 
         _newArrowCheck(this, _this6);
 
-        console.debug('event ' + event.type);
+        // console.debug('event ' + event.type);
         var elem = $(event.currentTarget);
         var value = elem.val() || "";
 
@@ -1933,8 +1935,7 @@ var script = {
       el.on("keydown", function (event) {
         _newArrowCheck(this, _this8);
 
-        console.debug('event text ' + event.type);
-
+        // console.debug('event text ' + event.type);
         if (event.key.length > 1) {
           return true;
         }
@@ -1959,7 +1960,7 @@ var script = {
         el.on("keyup", function (event) {
           _newArrowCheck(this, _this8);
 
-          console.debug('event textarea ' + event.type);
+          // console.debug('event textarea ' + event.type);
           var vv = $(event.currentTarget).val() || "";
           this.typelen = vv.length;
           this.$emit("keyup", event);
@@ -1969,7 +1970,7 @@ var script = {
         el.on("keyup", function (event) {
           _newArrowCheck(this, _this8);
 
-          console.debug('event ' + event.type);
+          // console.debug('event ' + event.type);
           this.$emit("keyup", event);
         }.bind(this));
       }
@@ -1984,7 +1985,7 @@ var script = {
 
         _newArrowCheck(this, _this9);
 
-        console.debug('event number ' + event.type);
+        // console.debug('event number ' + event.type);
         var key = event.key || event.data;
 
         if (key && key.length > 1) {
@@ -2127,7 +2128,7 @@ var script = {
       el.on("keyup", function (event) {
         _newArrowCheck(this, _this9);
 
-        console.debug('event number ' + event.type);
+        // console.debug('event number ' + event.type);
         this.$emit("keyup", event);
       }.bind(this));
     },
@@ -2139,7 +2140,7 @@ var script = {
       el.on("change", function (event) {
         _newArrowCheck(this, _this11);
 
-        console.debug('event text ' + event.type);
+        // console.debug('event text ' + event.type);
         var elem = $(event.currentTarget);
         var value = elem.val() || "";
         this.validate(null, value);
@@ -2156,7 +2157,7 @@ var script = {
 
         _newArrowCheck(this, _this12);
 
-        console.debug('event number ' + event.type);
+        // console.debug('event number ' + event.type);
         var elem = $(event.currentTarget);
         var value = elem.val() || "";
         this.validate(function (vv) {
@@ -2188,7 +2189,7 @@ var script = {
 
         _newArrowCheck(this, _this14);
 
-        console.debug('event ' + event.type);
+        // console.debug('event ' + event.type);
         this.isInputWrong = false;
         this.$emit("focus", event);
         this.isFocus = true; // mobile side scroll.
@@ -2215,7 +2216,7 @@ var script = {
 
         _newArrowCheck(this, _this14);
 
-        console.debug('event ' + event.type);
+        // console.debug('event ' + event.type);
         this.isFocus = false;
 
         if (utils.browserIsMobile()) {
@@ -2729,7 +2730,9 @@ var __vue_render__ = function __vue_render__() {
     on: {
       click: _vm._onPrefixIcon
     }
-  }) : _vm._e(), _vm._v(" "), _vm.type === "textarea" ? _c("textarea", {
+  }) : _vm._e(), _vm._v(" "), _vm.prefixLabel ? _c("span", {
+    staticClass: "bp-input__prefixLabel"
+  }, [_vm._v(_vm._s(_vm.prefixLabel))]) : _vm._e(), _vm._v(" "), _vm.type === "textarea" ? _c("textarea", {
     staticClass: "bp-input__inner",
     attrs: {
       disabled: _vm.disabled,
@@ -2783,7 +2786,9 @@ var __vue_render__ = function __vue_render__() {
     on: {
       click: _vm._onSuffixIcon
     }
-  }) : _vm._e()], 1);
+  }) : _vm._e(), _vm._v(" "), _vm.suffixLabel ? _c("span", {
+    staticClass: "bp-input__suffixLabel"
+  }, [_vm._v(_vm._s(_vm.suffixLabel))]) : _vm._e()], 1);
 };
 
 var __vue_staticRenderFns__ = [];
