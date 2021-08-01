@@ -34,6 +34,8 @@
 
     <h4>number</h4>
     <bp-input type="int" min="8" v-model="temNum"></bp-input>
+    <bp-input type="int" min="8" v-model="temNum" suffixLabel="%"></bp-input>
+    <bp-input type="int" min="8" v-model="temNum" prefixLabel="%"></bp-input>
     <bp-input
       prefixIcon="loading"
       type="float"
