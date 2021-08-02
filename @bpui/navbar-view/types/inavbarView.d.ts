@@ -11,6 +11,106 @@ declare namespace bp {
   type NavbarViewAnimate = 'slide'|'slideOut'|'fade'|'fadeOut'|'lift'|'liftOut'|''|string;
 
   interface NavbarView {
+
+    /**
+     * @desc: 用于导航的地址查询参数名.(只能指定一次,动态修改无效)
+     * 
+     * 默认为 '_'
+     */
+    seqName: string;
+
+
+    /**
+     * @desc: 最大的page层级 (初次设置之后修改无效).
+     * 
+     * 默认为 Number.MAX_SAFE_INTEGER
+     */
+    cacheSize: number;
+
+    /**
+     * @desc 表明是否为app模式, app模式路由的最上层为 {@link rootRoutePath}; 否则为浏览器正常history
+     * 
+     * (只能指定一次,动态修改无效)
+     */
+    appMode: boolean;
+
+    /**
+     * @desc navbar中所有页面的样式.
+     */
+    pageClass: string[] | string;
+
+    /**
+     * @desc: page背景色.
+     */
+    pageBgColor: string;
+    /**
+     * @desc: 默认的切换动画.
+     * 
+     * 默认为 none
+     */
+    pageAnimation: string;
+    /**
+     * @desc: 初始显示的隐藏状态.
+     * 
+     * 默认为 true
+     */
+    barHidden: boolean;
+
+    /**
+     * @desc: bar背景色.
+     */
+    barBgColor: string;
+
+    /**
+     * @desc: 标题颜色.
+     */
+    barTitleColor: string;
+
+    /**
+     * @desc: 按钮颜色.
+     */
+    barTextColor: string;
+
+    /**
+     * @desc: 是否包含状态栏. (ios webapp模式为true, 其他默认为false).
+     */
+    containStatusBar: boolean;
+    /**
+     * @desc: 自动back按钮组件.
+     */
+    backIconComponent: Object;
+    /**
+     * @desc: 加载页面时显示的组件.
+     */
+    loadingComponent: Object;
+    /**
+     * @desc: 加载错误时显示的组件.
+     */
+    errorComponent: Object;
+    /**
+     * @desc: Delay before showing the loading component.
+     * 
+     * Default: 200ms.
+     */
+    loadingDelay: number;
+    /**
+     * @desc: load component timeout. 
+     * 
+     * Default: Infinity.
+     */
+    loadingTimeout: number;
+
+    /**
+     * @desc: 根页面route路径.
+     * 
+     * Default: /
+     */
+    rootRoutePath: string;
+    /**
+     * @desc: 根页面参数.
+     */
+    rootRouteParams: Object;
+
     /**
      * @desc: 设置可见度 (常规的setBarInfo方法中的hidden对微信无法起作用).
      */

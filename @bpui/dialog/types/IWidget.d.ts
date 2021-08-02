@@ -10,6 +10,46 @@ declare namespace bp {
 
   interface Widget {
     /**
+     * @desc 是否显示.
+     */
+    visible: boolean,
+    
+    /**
+     * @desc 是否显示掩码.
+     */
+    mask: boolean;
+
+    /**
+     * @desc 是否允许点击掩码关闭.
+     */
+    maskClose: boolean;
+
+    /**
+     * @desc 是否阻挡事件传递.
+     */
+    preventEvent: boolean;
+
+    /**
+     * @desc 显示时隐藏body的滚动条.
+     */
+    hideBodyScroll: boolean;
+
+    /**
+     * @desc 显示时是否附带到body上.
+     */
+    appendToBody: boolean | 'true' | 'false'
+    
+    /**
+     * @desc dialog的css样式.
+     */
+    pageClass: string | string[] | {[key:string]:any},
+
+    /**
+     * @desc dialog的样式.
+     */
+    pageStyle: string | string[] | {[key:string]:any},
+
+    /**
      * @desc: 显示
      * @return promise.
      */

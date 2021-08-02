@@ -5,13 +5,24 @@
 import Vue, {VueConstructor} from 'vue';
 import './vue';
 
+export interface Widget extends VueConstructor<Vue>, bp.Widget {}
+export const bpWidget: Widget;
+
 /**
  * dialog.
  */
-export interface Dialog extends VueConstructor<Vue>, bp.Widget {}
+export interface Dialog extends Widget {
+  /**
+   * @desc 显示关闭图标.
+   */
+  showClose: boolean;
+
+  /**
+   * @desc 标题
+   */
+  title: string;
+}
 export const bpDialog: Dialog;
-export interface Widget extends VueConstructor<Vue>, bp.Widget {}
-export const bpWidget: Widget;
 
 /**
  * api.
