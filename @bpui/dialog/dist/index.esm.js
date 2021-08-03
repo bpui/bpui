@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v1.1.1
+ * bpui dialog v1.1.2
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3440,25 +3440,10 @@ var GlobalLoadingTimeout = '$BpGlobalLoadingTimeout';
 var GlobalLoading = '$BpGlobalLoading';
 var GlobalLoadingCount = '$BpGlobalLoadingCount';
 var GlobalLoadingShowMark = '$BpGlobalLoadingShowMark';
+var GlobalTargetLoadings = '$BpGlobalTargetLoadings';
 var ApiClass$2 = 'bp-apiClass';
 var LoadingClass = 'bp-loadingClass';
-
-function onHandlerRouter(to, type) {
-  window[GlobalLoading] = null;
-}
-
-function isLoadingVisible() {
-  var loading = $('.' + LoadingClass);
-
-  if (loading.length > 0 && loading.hasClass('bp-widget__visible')) {
-    return true;
-  } else {
-    return false;
-  }
-}
-function getLoadingCount() {
-  return window[GlobalLoadingCount] || 0;
-}
+var LoadingTargetClass = 'bp-loadingTargetClass';
 /**
 * @desc: 隐藏对话框
 */
@@ -3478,6 +3463,55 @@ function hideLoading() {
   if (window[GlobalLoading]) {
     window[GlobalLoading].$children[0].hide();
   }
+}
+/**
+ * @desc: 清理loading的计数; 设置为0.
+ */
+
+function clearLoadingCount() {
+  window[GlobalLoadingCount] = 0;
+}
+
+function onHandlerRouter(to, type) {
+  clearLoadingCount();
+  hideLoading();
+
+  if (window[GlobalTargetLoadings]) {
+    for (var key in window[GlobalTargetLoadings]) {
+      var targetLoading = window[GlobalTargetLoadings][key];
+
+      if (targetLoading.timeout) {
+        clearTimeout(targetLoading.timeout);
+        targetLoading.timeout = null;
+      }
+
+      if (targetLoading.dom) {
+        $(targetLoading.dom).remove();
+      }
+
+      if (targetLoading.srcPosition && $(targetLoading.target).css('position') == 'relative') {
+        $(targetLoading.target).css('position', targetLoading.srcPosition);
+      }
+    }
+
+    window[GlobalTargetLoadings] = null;
+  } // if.
+
+}
+
+function isLoadingVisible() {
+  var loading = $('.' + LoadingClass);
+
+  if (loading.length > 0) {
+    if (window[GlobalLoadingTimeout] || loading.hasClass('bp-widget__visible')) {
+      return true;
+    }
+  }
+
+  return false;
+}
+function getLoadingCount() {
+  return window[GlobalLoadingCount] || 0;
 }
 /**
 * @desc: 显示警告框.
@@ -3542,10 +3576,10 @@ delay: 延时显示, 默认为0.
     var tm = setTimeout(function () {
       _newArrowCheck(this, _this);
 
-      var cfg = window[GlobalLoadingTimeout].cfg;
+      var cfg1 = window[GlobalLoadingTimeout].cfg;
       window[GlobalLoadingTimeout] = null;
-      cfg = utils.mergeMap(loading.data(), cfg);
-      window[GlobalLoading].$data.content = cfg.content;
+      cfg1 = utils.mergeMap(loading.data(), cfg1);
+      window[GlobalLoading].$data.content = cfg1.content;
       window[GlobalLoading].$children[0].show();
     }.bind(this), cfg.delay);
     window[GlobalLoadingTimeout] = {
@@ -3592,23 +3626,170 @@ function showLoadingIncrease(cfg) {
   }
 }
 /**
- * @desc: 清理loading的计数; 设置为0.
- */
+* @desc: 隐藏对话框
+*/
 
-function clearLoadingCount() {
-  window[GlobalLoadingCount] = 0;
-  hideLoading();
+function hideLoadingTarget(target) {
+  var _this2 = this;
+
+  if (!target) {
+    throw new Error('Empty parameter target in function showLoadingTarget');
+  }
+
+  if (!window[GlobalTargetLoadings]) {
+    window[GlobalTargetLoadings] = {};
+  }
+
+  var targetLoading = window[GlobalTargetLoadings][target];
+
+  if (!targetLoading) {
+    return;
+  }
+
+  if (targetLoading.timeout) {
+    clearTimeout(targetLoading.timeout);
+    targetLoading.timeout = null;
+  }
+
+  if (targetLoading.loading) {
+    targetLoading.loading.$children[0].hide().then(function () {
+      _newArrowCheck(this, _this2);
+
+      $(targetLoading.dom).remove();
+      delete window[GlobalTargetLoadings][target];
+
+      if (targetLoading.srcPosition && $(target).css('position') == 'relative') {
+        $(target).css('position', targetLoading.srcPosition);
+      }
+    }.bind(this));
+  } else {
+    delete window[GlobalTargetLoadings][target];
+  }
+}
+/**
+* @desc: 显示警告框.
+*/
+
+function showLoadingTarget(target, cfg
+/*:string|{
+content: 提示文本.
+delay: 延时显示, 默认为0.
+}*/
+) {
+  var _this3 = this;
+
+  if (!target) {
+    throw new Error('Empty parameter target in function showLoadingTarget');
+  }
+
+  bpLibs.router.off('routeChanged', onHandlerRouter);
+  bpLibs.router.on('routeChanged', onHandlerRouter);
+
+  if (!window[GlobalTargetLoadings]) {
+    window[GlobalTargetLoadings] = {};
+  }
+
+  var targetLoadings = window[GlobalTargetLoadings];
+  if (!cfg) cfg = '';
+  var loading = getComponents().loading;
+
+  if (!loading) {
+    throw new Error('dialog loading component is null');
+  } // 创建实例.
+
+
+  if (!targetLoadings[target]) {
+    var srcPosition = window.getComputedStyle(target).position;
+
+    if (srcPosition == 'sticky' || srcPosition == 'relative' || srcPosition == 'absolute' || srcPosition == 'fixed') {
+      srcPosition = null;
+    } else {
+      var tt = $(target);
+      var pos = tt.css('position');
+
+      if (!string.isEmpty(pos)) {
+        tt.css('position', '');
+      }
+
+      var style = tt.attr('style');
+      style = style || '';
+      style = string.trim(style);
+
+      if (style.length > 0 && style[style.length - 1] != ';') {
+        style += '; ';
+      }
+
+      style += 'position:relative !important;';
+      tt.attr('style', style);
+    }
+
+    var id = 'c' + crypt.uuid();
+    $("<div id=\"".concat(id, "\"></div>")).appendTo($(target));
+    var vm = new Vue({
+      render: function render(h) {
+        _newArrowCheck(this, _this3);
+
+        return h(loading, {
+          "class": [ApiClass$2, LoadingClass, LoadingTargetClass, id]
+        });
+      }.bind(this)
+    }).$mount("#".concat(id));
+    targetLoadings[target] = {
+      loading: vm.$children[0],
+      dom: $(".".concat(id))[0],
+      srcPosition: srcPosition,
+      target: target
+    };
+  }
+
+  if (typeof cfg === 'string' || typeof cfg === 'number') {
+    cfg = {
+      content: cfg.toString()
+    };
+  }
+
+  cfg.delay = cfg.delay || 0;
+  if (cfg.delay < 0) cfg.delay = 0;
+  var now = Date.now(); // 判断是否已经存在.
+
+  if (targetLoadings[target].timeout) {
+    if (targetLoadings[target].now > now + cfg.delay) {
+      clearTimeout(targetLoadings[target].timeout);
+      targetLoadings[target].timeout = null;
+    } else {
+      targetLoadings[target].cfg = utils.mergeMap(cfg);
+      return;
+    }
+  }
+
+  {
+    now = now + cfg.delay;
+    var tm = setTimeout(function () {
+      _newArrowCheck(this, _this3);
+
+      var cfg1 = targetLoadings[target].cfg;
+      targetLoadings[target].timeout = null;
+      cfg1 = utils.mergeMap(loading.data(), cfg1);
+      targetLoadings[target].loading.$data.content = cfg1.content;
+      targetLoadings[target].loading.$children[0].show();
+    }.bind(this), cfg.delay);
+    targetLoadings[target].now = now;
+    targetLoadings[target].cfg = utils.mergeMap(cfg);
+    targetLoadings[target].timeout = tm;
+  }
 }
 
 var apiLoading = /*#__PURE__*/Object.freeze({
   __proto__: null,
+  hideLoading: hideLoading,
+  clearLoadingCount: clearLoadingCount,
   isLoadingVisible: isLoadingVisible,
   getLoadingCount: getLoadingCount,
-  hideLoading: hideLoading,
   showLoading: showLoading,
   hideLoadingDecrease: hideLoadingDecrease,
   showLoadingIncrease: showLoadingIncrease,
-  clearLoadingCount: clearLoadingCount
+  hideLoadingTarget: hideLoadingTarget,
+  showLoadingTarget: showLoadingTarget
 });
 
 var ApiClass$3 = 'bp-apiClass'; // const GlobalToastTimeout = Symbol('$BpGlobalToastTimeout');

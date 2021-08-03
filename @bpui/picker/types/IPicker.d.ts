@@ -12,6 +12,35 @@ declare namespace bp {
   type PickerValue = string|number;
 
   interface Picker extends Widget {
+    /**
+     * @desc 强制按手机样式显示.
+     * 
+     * default: false
+     */
+    forcePhoneStyle: boolean | 'false' | 'true';
+
+    /**
+     * @desc toolbar 的位置.
+     */
+    toolbarPos: 'top' | 'bottom';
+
+    /**
+    * @desc: 取消按钮文本.
+    */
+    cancelBtnText: string;
+
+    /**
+    * @desc: 确认按钮文本
+    */
+    confirmBtnText: string;
+    /**
+     * @desc: 数据源.
+     */
+    datasource: bp.PickerDataSource | Array<PickerDataSourceData2>;
+    /**
+    * @desc: 当前值.
+    */
+    value: string | number | Array<any>;
 
     /**
      * @desc: 设置指定组界面上的当前选中值 (不等同于当前的value, 只是界面上的选择).

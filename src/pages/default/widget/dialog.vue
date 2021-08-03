@@ -34,6 +34,11 @@
     <h4>api custom</h4>
     <button @click="showCustom">show custom</button>
 
+    <!-- target loading -->
+    <h4>target loading</h4>
+    <div ref="aa" style="width:200px;height:300px;background:#ff0;"></div>
+    <button @click="showTargetLoading">show target loading</button>
+
 
     <!-- dialog1 -->
     <bp-dialog :top="true" :visible.sync="visible1" title="hello" appendToBody="true">
@@ -289,6 +294,14 @@
       setTimeout(()=>{
         bpui.apiWidget.hideCustom(dialogId);
       }, 5000);
+    }
+
+    showTargetLoading(): void {
+      bpui.apiWidget.showLoadingTarget(this.$refs.aa);
+
+      // this.$timer.setTimeout(() => {
+      //   bpui.apiWidget.hideLoadingTarget(this.$refs.aa);
+      // }, 2000);
     }
   }
 </script>

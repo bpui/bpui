@@ -11,6 +11,7 @@ declare namespace bp {
   
   type PickerDataSourceValue = string|number;
   type PickerDataSourceData = Array<{label:string, value:PickerDataSourceValue}>;
+  type PickerDataSourceData2 = {label:string, value:PickerDataSourceValue, children?:PickerDataSourceData2[]};
 
   /**
   * @desc: picker数据源.

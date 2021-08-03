@@ -68,9 +68,26 @@ declare namespace bp {
     ): DialogID;
 
     /**
-     * 当前是否显示.
+     * @desc: 当前是否显示. 
+     * 
+     * (已经被show, 但是处于动画或delay状态下不可见,也返回true)
      */
     isLoadingVisible(): boolean;
+
+    /**
+     * @desc: 显示; 不改变内部的loading计数.
+     * 
+     * 仅能由 {@link hideLoading} 隐藏
+     */
+    showLoading(
+      cfg?:
+        | string
+        | {
+            content?: string;
+            /** 延迟指定的时间后才显示, 但延迟后如果调用了hide, 则不显示 */
+            delay?: number;
+          }
+    ): void;
 
     /**
      * @desc: 隐藏; 不改变内部的loading计数.
@@ -78,9 +95,11 @@ declare namespace bp {
     hideLoading(): void;
 
     /**
-     * @desc: 显示; 不改变内部的loading计数.
+     * @desc: 显示; 增加内部的loading计数1. 如果已经存在loading, 则不改变loading的内容.
+     * 
+     * 仅能由 {@link hideLoadingDecrease} 隐藏
      */
-    showLoading(
+    showLoadingIncrease(
       cfg?:
         | string
         | {
@@ -96,9 +115,12 @@ declare namespace bp {
     hideLoadingDecrease(): void;
 
     /**
-     * @desc: 显示; 增加内部的loading计数1. 如果已经存在loading, 则不改变loading的内容.
+     * @desc: 显示在指定的dom元素上; 不改变内部的loading计数
+     * 
+     * 仅能由 {@link hideLoadingTarget} 隐藏
      */
-    showLoadingIncrease(
+    showLoadingTarget(
+      target: HTMLElement|any,
       cfg?:
         | string
         | {
@@ -107,6 +129,11 @@ declare namespace bp {
             delay?: number;
           }
     ): void;
+
+    /**
+     * @desc: 隐藏指定dom元素上的loading; 不改变内部的loading计数.
+     */
+    hideLoadingTarget(target: HTMLElement|any): void;
 
     /**
      * @desc: 清理loading的计数; 设置为0.
