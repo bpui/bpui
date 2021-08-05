@@ -16,6 +16,11 @@ module.exports = [
     lib: function() { return import('../../../navbar-view') },
   },
   {
+    name: 'tableView',
+    style: function() { return require('../../@bpui/table-view/style/_index.scss') },
+    lib: function() { return import('../../@bpui/table-view') },
+  },
+  {
     name: 'checkbox',
     style: function() { return require('../../@bpui/checkbox/style/_index.scss') },
     lib: function() { return import('../../@bpui/checkbox') },

@@ -1,5 +1,6 @@
 exports.ComponentName = {
   navbarView: 'navbarView',
+  tableView: 'tableView',
   checkbox: 'checkbox',
   radio: 'radio',
   switch: 'switch',

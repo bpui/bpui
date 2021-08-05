@@ -73,6 +73,22 @@ export default class Instance {
   static get hook() { return new Hook(); }
 
   //
+  static get bpTableView() { return componentInstance.getComponent('tableView').default.bpTableView; }
+  static get bpTableCell() { return componentInstance.getComponent('tableView').default.bpTableCell; }
+  static get bpTableCellCenter() { return componentInstance.getComponent('tableView').default.bpTableCellCenter; }
+  static get bpTableCellLeft() { return componentInstance.getComponent('tableView').default.bpTableCellLeft; }
+  static get bpTableCellRight() { return componentInstance.getComponent('tableView').default.bpTableCellRight; }
+  static get bpTableViewComponents() {
+    return {
+      bpTableView: this.bpTableView,
+      bpTableCell: this.bpTableCell,
+      bpTableCellCenter: this.bpTableCellCenter,
+      bpTableCellLeft: this.bpTableCellLeft,
+      bpTableCellRight: this.bpTableCellRight,
+    }
+  }
+  
+  //
   static get bpNavbarView() {
     return componentInstance.getComponent('navbarView').default.bpNavbarView;
   }
