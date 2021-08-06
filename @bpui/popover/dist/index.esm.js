@@ -1,5 +1,5 @@
 /*!
- * bpui popover v1.1.2
+ * bpui popover v1.1.3
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -889,9 +889,16 @@ var script = {
         $(el).off('mouseover', this._onTrigger);
         $(el).off('mouseleave', this._onTriggerHide);
         $(el).off('click', this._onTrigger);
+
+        if (this.ges) {
+          this.ges.dispose();
+          this.ges = null;
+        }
       }
     },
     _bindEvent: function _bindEvent(v) {
+      var _this2 = this;
+
       this._removeEvent(v);
 
       if (v) {
@@ -913,15 +920,27 @@ var script = {
         } else if (this.trigger == 'click') {
           var eventName = bpLibs.device.browserIsMobile() ? 'click' : 'click';
           $(el).off(eventName, this._onTrigger).on(eventName, this._onTrigger);
+        } else if (this.trigger == 'long-press') {
+          this.ges = new bpLibs.Gesture(el);
+          this.ges.enablePressRecognizer({
+            duration: 600
+          });
+          this.ges.on('press', function (ev) {
+            _newArrowCheck(this, _this2);
+
+            bpLibs.device.vibrate(10);
+
+            this._onTrigger(ev);
+          }.bind(this));
         }
       }
     },
     _onTrigger: function _onTrigger(ev) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.visibleReal = true;
       setTimeout(function () {
-        _newArrowCheck(this, _this2);
+        _newArrowCheck(this, _this3);
 
         $('body').off('click', this._hide).on('click', this._hide);
       }.bind(this), 10);
@@ -933,7 +952,7 @@ var script = {
       $('body').off('click', this._hide);
     },
     _show: function _show(directionData) {
-      var _this3 = this;
+      var _this4 = this;
 
       var bind = this.bind;
 
@@ -996,11 +1015,11 @@ var script = {
       var SCREEN_PADDING = 10;
       var main = this.$refs.main;
       bpLibs.dom.probeDom(400, function () {
-        _newArrowCheck(this, _this3);
+        _newArrowCheck(this, _this4);
 
         return main.clientWidth > 0;
       }.bind(this), function () {
-        _newArrowCheck(this, _this3);
+        _newArrowCheck(this, _this4);
 
         if (directionData == 'left' || directionData == 'right') {
           var mainOffset = parseInt(arrowOffset - main.clientHeight / 2);
@@ -1060,11 +1079,11 @@ var script = {
       }.bind(this));
     },
     _hide: function _hide() {
-      var _this4 = this;
+      var _this5 = this;
 
       $('body').off('click', this._hide);
       this.hide().then(function (res) {
-        _newArrowCheck(this, _this4);
+        _newArrowCheck(this, _this5);
       }.bind(this));
     }
   }

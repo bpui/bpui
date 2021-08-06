@@ -1,5 +1,5 @@
 /*!
- * bpui libs v1.1.0
+ * bpui libs v1.1.1
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -7789,7 +7789,7 @@
 	      return this.pressRecognizer;
 	    }
 
-	    var recognizer = this.ges.add(new hammer.Rotate({
+	    var recognizer = this.ges.add(new hammer.Press({
 	      event: 'press',
 	      time: cfg.duration
 	    }));

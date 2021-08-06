@@ -21,8 +21,10 @@ export default class extends Vue {
   mounted() {
     let gesture = new this.$bpLibs.Gesture(document.getElementsByTagName('body')[0]);
 
-    gesture.enableSwipeRecognizer();
-    gesture.on('swipe', (ev:bp.GestureSwipeEvent)=>{
+    // gesture.enableSwipeRecognizer();
+    gesture.enablePressRecognizer({duration: 1000});
+    (gesture as any).on('press', (ev:bp.GestureSwipeEvent)=>{
+      alert('press');
       switch (ev.direction) {
         case GestureDirection.Left:
           this.type = 'left';

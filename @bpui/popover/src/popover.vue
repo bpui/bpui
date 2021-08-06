@@ -164,6 +164,10 @@
           $(el).off('mouseover', this._onTrigger)
           $(el).off('mouseleave', this._onTriggerHide)
           $(el).off('click', this._onTrigger)
+          if (this.ges) {
+            this.ges.dispose();
+            this.ges = null;
+          }
         }
       },
       _bindEvent(v) {
@@ -188,6 +192,13 @@
           } else if (this.trigger == 'click') {
             let eventName = bpLibs.device.browserIsMobile()? 'click': 'click';
             $(el).off(eventName, this._onTrigger).on(eventName, this._onTrigger);  
+          } else if (this.trigger == 'long-press') {
+            this.ges = new bpLibs.Gesture(el);
+            this.ges.enablePressRecognizer({duration:600});
+            this.ges.on('press', (ev)=>{
+              bpLibs.device.vibrate(10);
+              this._onTrigger(ev);
+            });
           }
         }
       },

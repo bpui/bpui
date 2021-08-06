@@ -12,30 +12,29 @@
     <bp-table-view tableTitle="常规">
       <bp-table-cell>
         <bp-table-cell-left><bp-icon name="heartFill"/></bp-table-cell-left>
-        <bp-table-cell-center>center</bp-table-cell-center>
-        <bp-table-cell-right>right</bp-table-cell-right>
+        <bp-table-cell-center>center label</bp-table-cell-center>
+        <bp-table-cell-right>right label</bp-table-cell-right>
       </bp-table-cell>
-      <bp-table-cell>
+      <bp-table-cell nextArrow="true" @click="()=>{$bpWidget.showToast('click')}">
         <bp-table-cell-left></bp-table-cell-left>
-        <bp-table-cell-center>dsfs</bp-table-cell-center>
+        <bp-table-cell-center>nextArrow</bp-table-cell-center>
       </bp-table-cell>
       <bp-table-cell :disabled="true">
         <bp-table-cell-left></bp-table-cell-left>
         <bp-table-cell-center>disabled</bp-table-cell-center>
       </bp-table-cell>
-      <bp-table-cell :swipeDel="true">
-        <bp-table-cell-left></bp-table-cell-left>
-        <bp-table-cell-center>swipeDel</bp-table-cell-center>
-      </bp-table-cell>
     </bp-table-view>
 
-    <bp-table-view tableTitle="常规">
-      <bp-table-cell>
-        <bp-table-cell-left>left</bp-table-cell-left>
-        <bp-table-cell-center>center</bp-table-cell-center>
-        <bp-table-cell-right>right</bp-table-cell-right>
+    <bp-table-view tableTitle="编辑/删除">
+      <bp-table-cell :swipeDel="true" @swipeDeleted="()=>{$bpWidget.showToast('swipeDeleted')}">
+        <bp-table-cell-left></bp-table-cell-left>
+        <bp-table-cell-center>swipeDel</bp-table-cell-center>
+        <bp-table-cell-editor slot="editor">
+          <button type="info2">标为未读</button>
+          <button type="info1">不显示</button>
+          <button type="warn">删除</button>
+        </bp-table-cell-editor>
       </bp-table-cell>
-      <bp-table-cell>dsfs</bp-table-cell>
     </bp-table-view>
   </div>
 </template>

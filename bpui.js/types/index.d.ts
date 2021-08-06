@@ -16,7 +16,8 @@ import {
   bpTableCell,
   bpTableCellCenter,
   bpTableCellLeft,
-  bpTableCellRight
+  bpTableCellRight,
+  bpTableCellEditor,
 } from "@bpui/table-view/types";
 
 export enum ComponentName {
@@ -40,7 +41,8 @@ export const bpTableViewComponents:{
   bpTableCell,
   bpTableCellCenter,
   bpTableCellLeft,
-  bpTableCellRight
+  bpTableCellRight,
+  bpTableCellEditor,
 };
 
 /**

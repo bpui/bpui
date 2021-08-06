@@ -1,5 +1,6 @@
 @import "../node_modules/@bpui/libs/dist/style.scss";
 @import "./variable";
 @import "./tableView";
-@import "./tableViewCell";
-@import "./tableViewCellSwiped";
+@import "./tableCell";
+@import "./tableCellEditor.ios";
+@import "./tableCellEditor.android";

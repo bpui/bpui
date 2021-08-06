@@ -1,7 +1,7 @@
 {
   "description": "navbarView",
   "dependencies": {
-    "@bpui/libs": "^1.1.0"
+    "@bpui/libs": "^1.1.1"
   },
   "devDependencies": {
     "vue-property-decorator": "^8.4.0",
@@ -34,5 +34,5 @@
     }
   ],
   "name": "@bpui/navbar-view",
-  "version": "1.1.0"
+  "version": "1.1.1"
 }

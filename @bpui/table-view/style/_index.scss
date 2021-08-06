@@ -1,5 +1,6 @@
 @import "~@bpui/libs/style/variable";
 @import "./variable";
 @import "./tableView";
-@import "./tableViewCell";
-@import "./tableViewCellSwiped";
+@import "./tableCell";
+@import "./tableCellEditor.ios";
+@import "./tableCellEditor.android";

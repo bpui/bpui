@@ -1,0 +1,26 @@
+@import "~@bpui/popover/style";
+
+.bp-tableView_popover__main {
+    .bp-tableView__cell__editor {
+        button {
+            @extend .bp-popover__cell;
+
+            font-size: 14px;
+            padding: 10px 1em;
+
+            &[type=warn] {
+                @extend .bp-popover__cellWarn;
+
+                color: $bpColorWarn;
+            }
+
+            &[type=info1] {
+                color: rgb(211, 211, 211);
+            }
+
+            &[type=info2] {
+                color: rgb(211, 211, 211);
+            }
+        }
+    }
+}

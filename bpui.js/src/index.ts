@@ -78,6 +78,7 @@ export default class Instance {
   static get bpTableCellCenter() { return componentInstance.getComponent('tableView').default.bpTableCellCenter; }
   static get bpTableCellLeft() { return componentInstance.getComponent('tableView').default.bpTableCellLeft; }
   static get bpTableCellRight() { return componentInstance.getComponent('tableView').default.bpTableCellRight; }
+  static get bpTableCellEditor() { return componentInstance.getComponent('tableView').default.bpTableCellEditor; }
   static get bpTableViewComponents() {
     return {
       bpTableView: this.bpTableView,
@@ -85,6 +86,7 @@ export default class Instance {
       bpTableCellCenter: this.bpTableCellCenter,
       bpTableCellLeft: this.bpTableCellLeft,
       bpTableCellRight: this.bpTableCellRight,
+      bpTableCellEditor: this.bpTableCellEditor,
     }
   }
   

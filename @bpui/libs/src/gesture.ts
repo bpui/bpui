@@ -354,7 +354,7 @@ export default class GestureImp /*implements bp.Gesture*/ {
       return this.pressRecognizer;
     }
 
-    let recognizer = this.ges.add(new hammer.Rotate({
+    let recognizer = this.ges.add(new hammer.Press({
       event: 'press', time: cfg.duration
     }));
 

@@ -13,13 +13,12 @@
 属性
 - tableTitle: table标题.
 - tableStyle: 列表样式.
-- leftWidth: tableViewCellleft 统一宽度.
 
  -->
 
 <template>
   <div class="bp-tableView">
-    <div v-if="tableTitle" class="bp-tableView__title">{{tableTitle}}</div>
+    <div class="bp-tableView__title">{{tableTitle}}&nbsp;</div>
     <div class="bp-tableView__cells" :style="tableStyle">
       <slot name="default" />
     </div>
@@ -29,19 +28,15 @@
 <script>
   export default {
     props: {
-      tableTitle: String,
+      tableTitle: {
+        type: String,
+      },
       /**
        * @desc: 列表样式
        */
       tableStyle: {
         type: Object,
       },
-      /**
-       * @desc: tableViewCellleft 统一宽度
-       */
-      leftWidth: {
-        type: String,
-      }
     },
     data() {
       return {
