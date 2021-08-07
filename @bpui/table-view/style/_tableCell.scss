@@ -1,8 +1,15 @@
+.bp-tableView__animation {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0, 1);
+}
+
+.bp-tableView__animation-fast {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0, 1);
+}
+
 .bp-tableView .bp-tableView__cells {
     box-sizing: border-box;
     display: block;
-    font-size: 17px;
-    line-height: 25px;
+    font-size: $bpTableViewCellFontSize;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -20,8 +27,8 @@
         right: 0;
         left: 0;
         height: 1px;
-        border-top: 1px solid #e5e5e5;
-        color: #e5e5e5;
+        border-top: 1px solid $bpTableViewCellBorderColor;
+        color: $bpTableViewCellBorderColor;
         transform-origin: 0 0;
         transform: scaleY(0.5);
         z-index: 2;
@@ -31,7 +38,7 @@
         top: initial;
         bottom: 0px;
         border-top: none;
-        border-bottom: 1px solid #e5e5e5;
+        border-bottom: 1px solid $bpTableViewCellBorderColor;
         transform-origin: 0 2px;
     }
 
@@ -52,20 +59,19 @@
             right: 10px;
             bottom: 0;
             .bp-icon {
-                height: 16px;
-                width: 16px;
-                font-size: 16px;
-                color: #a2a2a2;
+                height: $bpTableViewCellNextArrowSize;
+                width: $bpTableViewCellNextArrowSize;
+                font-size: $bpTableViewCellNextArrowSize;
+                color: $bpTableViewCellNextArrowColor;
             }
         }
 
         align-items: center;
-        background-color: rgb(255, 255, 255);
+        background-color: $bpTableViewCellBgColor;
         box-sizing: border-box;
-        color: rgb(0, 0, 0);
+        color: $bpTableViewCellFontColor;
         display: flex;
-        min-height: 50px;
-        line-height: 30px;
+        height: $bpTableViewCellHeight;
         padding-left: 15px;
         margin: 0;
         overflow-x: hidden;
@@ -76,10 +82,13 @@
         user-select: none;
         word-spacing: 1px;
 
-        &:hover, &:active {
-            background-color: darken(rgb(255, 255, 255), 3%);
+        &:hover, &[data-touch=touch] {
+            background-color: darken($bpTableViewCellBgColor, 3%);
         }
-
+        &[data-touch=end] {
+            background-color: $bpTableViewCellBgColor;
+        }
+        
         div {
             &:first-child {
                 margin-left: 0px;
@@ -98,8 +107,8 @@
             right: 0;
             left: 0;
             height: 1px;
-            border-bottom: 1px solid #e5e5e5;
-            color: #e5e5e5;
+            border-bottom: 1px solid $bpTableViewCellBorderColor;
+            color: $bpTableViewCellBorderColor;
             transform-origin: 0 0;
             transform: scaleY(0.5);
             z-index: 2;
@@ -111,34 +120,64 @@
             }
         }
 
-        .bp-switch, .bp-radio, .bp-checkbox {
-            float: left;
+        .bp-tableView__cell_head .bp-tableView__cell__center:after,
+        .bp-tableView__cell_head .bp-tableView__cell__right:after {
+            content: " ";
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            right: 0;
+            left: 0;
+            height: 1px;
+            border-bottom: 1px solid $bpTableViewCellBorderColor;
+            color: $bpTableViewCellBorderColor;
+            transform-origin: 0 0;
+            transform: scaleY(0.5);
+            z-index: 2;
         }
 
-        .bp-switch {
-            display: table-cell;
+        &:last-child {
+            .bp-tableView__cell_head .bp-tableView__cell__center:after,
+            .bp-tableView__cell_head .bp-tableView__cell__right:after {
+                content: none;
+            }
+        }
+
+        .bp-switch, .bp-radio, .bp-checkbox, button, .bp-btn {
+            margin: 0;
+            float: right;
+        }
+        label {
+            justify-content: right;
+            align-items: center;
+            display: flex;
         }
 
         .bp-tableView__cell__center {
-            touch-action: none;
+            // touch-action: none;
             flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: left;
             position: relative;
-            padding-bottom: 10px;
-            padding-top: 10px;
         }
 
         .bp-tableView__cell__right {
-            touch-action: none;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: right;
+            // touch-action: none;
             position: relative;
             text-align: right;
-            color: #999;
-            padding-bottom: 10px;
-            padding-top: 10px;
+            color: $bpTableViewCellRightFontColor;
             padding-right: 30px;
         }
 
         .bp-tableView__cell__left {
-            touch-action: none;
+            height: 100%;
+            // touch-action: none;
             svg {
                 vertical-align: middle;
             }

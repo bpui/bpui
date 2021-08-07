@@ -5,17 +5,17 @@
 * Desc: 
 */
 
-/* 字体 */
-$bpSwitchFontSize: 0.9rem !default;
-$bpSwitchFontWeight: 400 !default;
+/* title */
+$bpTableViewTitleColor: #999;
+$bpTableViewTitleFontSize: 14px;
 
-/* 尺寸 */
-$bpSwitchSize: 32px !default;
+/* tableview cell */
+$bpTableViewCellBgColor: rgb(255, 255, 255);
+$bpTableViewCellFontColor: rgb(0, 0, 0);
+$bpTableViewCellRightFontColor: #999;
+$bpTableViewCellFontSize: 17px;
+$bpTableViewCellHeight: 56px;
+$bpTableViewCellBorderColor: #e5e5e5;
+$bpTableViewCellNextArrowColor: #a2a2a2;
+$bpTableViewCellNextArrowSize: 16px;
 
-/* 颜色 */
-$bpSwitchBgOnColor: $bpColorPrimary !default;
-$bpSwitchBgOffColor: #fff !default;
-/* 中间标记的颜色 */
-$bpSwitchTickColor: #fff !default;
-/* label颜色 */
-$bpSwitchLabelColor: #606266 !default;

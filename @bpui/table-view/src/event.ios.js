@@ -7,6 +7,9 @@
  * Desc:
  */
 
+import bpLibs from '@bpui/libs';
+import * as febs from 'febs-browser';
+
 //
 // event.
 export function mobile_onTouchstart_tablecell(event) {
@@ -30,12 +33,31 @@ export function mobile_onTouchstart_tablecell(event) {
       if (Number.isNaN(target.__tableView_swipedw)) {
         target.__tableView_swipedw = 64;
       }
+      else {
+        target.__tableView_swipedw = Math.floor(target.__tableView_swipedw);
+      }
 
       target.__tableView_start = true;
       delete target.__tableView_start_scroll;
 
-      target.__tableView_touch = touch.clientX;
+
+      let transform = window.getComputedStyle(target)['transform'];
+      if (transform && transform != 'none') {
+        transform = transform.split(',')[4];
+        if (transform) {
+          transform = febs.string.trim(transform);
+          transform = Math.ceil(Number(transform));
+        }
+      }
+
+      if (Number.isNaN(transform)) {
+        transform = 0;
+      }
+
+      target.__tableView_touch = touch.clientX - transform;
       target.__tableView_touch1 = touch.clientY;
+      target.__tableView_start_transform = transform;
+
       return true;
     } else {
       return true;
@@ -61,7 +83,7 @@ export function mobile_onTouchmove_tablecell(event) {
         var span1;
         var span2;
 
-        span1 = Math.abs(target.__tableView_touch - touch.clientX);
+        span1 = Math.abs(target.__tableView_touch + target.__tableView_start_transform - touch.clientX);
         span2 = Math.abs(target.__tableView_touch1 - touch.clientY);
 
         if (span1 > span2) {
@@ -80,6 +102,8 @@ export function mobile_onTouchmove_tablecell(event) {
       var offset = target.__tableView_touch - touch.clientX;
       if (offset < 0) offset = 0;
       offset /= 2;
+      offset -= target.__tableView_start_transform / 2;
+
       // else if (offset > target.__tableView_swipedw) offset = target.__tableView_swipedw;
 
       target.style["-webkit-transform"] = `translate3d(${-offset}px, 0px, 0px)`;
@@ -132,18 +156,20 @@ export function mobile_onTouchend_tablecell(event) {
         target.__tableView_swipered = true;
 
         // 还原.
-        var restoreEvent = event2 => {
+        let restoreEvent = event2 => {
           if (event2 && event && event2.timeStamp !== event.timeStamp) {
-            var targets = $(".bp-tableView__cell_swiped");
+            let targets = $(".bp-tableView__cell_swiped");
             targets.each(function(index, ee) {
-              var tt = $(ee).children(".bp-tableView__cell_head");
-              tt.removeClass("bp-tableView__animation-fast");
-              tt.addClass("bp-tableView__animation");
-              tt.css("-webkit-transform", `translate3d(0px, 0px, 0px)`);
-              tt.css("-moz-transform", `translate3d(0px, 0px, 0px)`);
-              tt.css("-ms-transform", `translateX(0px)`);
-              tt.css("transform", `translate3d(0px, 0px, 0px)`);
-              delete tt[0].__tableView_swipered;
+              let tt = $(ee).children(".bp-tableView__cell_head");
+              if (tt.length > 0) {
+                tt.removeClass("bp-tableView__animation-fast");
+                tt.addClass("bp-tableView__animation");
+                tt.css("-webkit-transform", `translate3d(0px, 0px, 0px)`);
+                tt.css("-moz-transform", `translate3d(0px, 0px, 0px)`);
+                tt.css("-ms-transform", `translateX(0px)`);
+                tt.css("transform", `translate3d(0px, 0px, 0px)`);
+                delete tt[0].__tableView_swipered;
+              }
             });
           } else {
             $("body").one("click", restoreEvent);
@@ -161,6 +187,12 @@ export function mobile_onTouchend_tablecell(event) {
       event.stopPropagation();
       event.preventDefault();
       event.cancelBubble = true;
+
+      delete target.__tableView_touch;
+      delete target.__tableView_touch1;
+
+      bpLibs.device.vibrate(10);
+
       return false;
     }
 

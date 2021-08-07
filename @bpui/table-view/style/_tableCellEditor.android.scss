@@ -1,12 +1,17 @@
-@import "~@bpui/popover/style";
-
 .bp-tableView_popover__main {
+    .bp-popover__main {
+        overflow-y: hidden !important;
+    }
     .bp-tableView__cell__editor {
-        button {
+        overflow-y: hidden;
+        & > * {
             @extend .bp-popover__cell;
-
+            display: inline-block;
             font-size: 14px;
+            box-sizing: border-box;
             padding: 10px 1em;
+            margin-top: 0;
+            margin-bottom: 0;
 
             &[type=warn] {
                 @extend .bp-popover__cellWarn;
