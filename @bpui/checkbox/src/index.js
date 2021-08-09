@@ -9,6 +9,7 @@
 
 import bpLibs from "@bpui/libs";
 import bpCheckbox from './checkbox.vue';
+import bpCheckboxGroup from './checkboxGroup.vue';
 
 // register alias icon.
 function init() {
@@ -19,4 +20,5 @@ init();
 export default {
   init,
   bpCheckbox,
+  bpCheckboxGroup,
 }

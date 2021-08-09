@@ -99,6 +99,7 @@ export default class Instance {
 
   //
   static get bpCheckbox() { return componentInstance.getComponent('checkbox').default.bpCheckbox }
+  static get bpCheckboxGroup() { return componentInstance.getComponent('checkbox').default.bpCheckboxGroup }
   //
   static get bpRadio() { return componentInstance.getComponent('radio').default.bpRadio }
   static get bpRadioGroup() { return componentInstance.getComponent('radio').default.bpRadioGroup }

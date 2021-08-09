@@ -15,7 +15,7 @@
       <bp-radio value="2">选项2</bp-radio>
     </bp-radio-group>
 
-    <button @click="value1=2">sel 选项2</button>
+    <button @click="value1=1">sel 选项2</button>
 
     <h4>disabled</h4>
     <bp-radio-group disabled="disabled">
@@ -63,7 +63,7 @@
 
     //
     // data.
-    @Provide() value1:number = 1;
+    @Provide() value1:number = 2;
 
     //
     // computed.

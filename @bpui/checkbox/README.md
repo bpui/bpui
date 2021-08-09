@@ -5,6 +5,12 @@
 <bp-checkbox checked="checked" >chk2</bp-checkbox>
 <bp-checkbox disabled="disabled" >chk3</bp-checkbox>
 <bp-checkbox :checked="true" disabled="disabled" >chk4</bp-checkbox>
+
+<bp-checkbox-group v-model="groupValue" :disabled="groupDisable">
+  <bp-checkbox>check1</bp-checkbox>
+  <bp-checkbox>check2</bp-checkbox>
+  <bp-checkbox>check3</bp-checkbox>
+</bp-checkbox-group>
 ```
 
 

@@ -71,7 +71,7 @@ export default {
       }
     },
     isDisabled() {
-      return this.isGroup ? this.$parent.disabled : this.disabled;
+      return this.isGroup ? (this.$parent.disabled || this.disabled) : this.disabled;
     }
   },
   created() {},

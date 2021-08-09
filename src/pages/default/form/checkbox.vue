@@ -10,12 +10,25 @@
 <template>
   <div>
     <h4>example</h4>
+    <bp-checkbox v-model="checked" :checked="checked1" @change="onChange">chk1</bp-checkbox>
     <bp-checkbox v-model="checked" @change="onChange">chk1</bp-checkbox>
     <bp-checkbox :checked="checked" >chk2</bp-checkbox>
     <bp-checkbox disabled="disabled" >chk3</bp-checkbox>
     <bp-checkbox :checked="true" disabled="disabled" >chk4</bp-checkbox>
 
+    <h4>group</h4>
+    <bp-checkbox-group v-model="groupValue" :disabled="groupDisable">
+      <bp-checkbox>check1</bp-checkbox>
+      <bp-checkbox>check2</bp-checkbox>
+      <bp-checkbox>check3</bp-checkbox>
+    </bp-checkbox-group>
+
+    <button @click="groupDisable=!groupDisable">change disable</button>
+
+    <h4></h4>
     <button @click="checked=false">unchecked chk1</button>
+    <button @click="$bpWidget.showToast('checked:'+checked + ' ' + 'checked1:'+checked1)">see check value</button>
+
   </div>
 </template>
 
@@ -37,7 +50,8 @@
 
   @Component({
     components: {
-      bpCheckbox: bpui.bpCheckbox
+      bpCheckbox: bpui.bpCheckbox,
+      bpCheckboxGroup: bpui.bpCheckboxGroup,
     }
   })
   export default class extends Vue {
@@ -56,7 +70,10 @@
 
     //
     // data.
-    @Provide() checked:boolean = true;
+    checked:boolean = true;
+    checked1:boolean = false;
+    groupValue:Array<any> = [{isChecked: true},{isChecked: true},{isChecked: true},];
+    groupDisable:boolean = false;
 
     //
     // computed.
@@ -64,8 +81,13 @@
 
     //
     // watch.
-    // @Watch('child')
-    // onChildChanged(val: string, oldVal: string) { }
+    @Watch('groupValue')
+    onGroupValueChanged(val: string, oldVal: string) {
+      // @ts-ignore
+      this.$bpWidget.showToast(JSON.stringify(val));
+
+      console.log(val);
+    }
 
     //
     // lifecycle hook.

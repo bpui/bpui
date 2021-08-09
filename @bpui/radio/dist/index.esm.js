@@ -1,5 +1,5 @@
 /*!
- * bpui radio v1.1.1
+ * bpui radio v1.1.2
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -83,7 +83,7 @@ var script = {
       }
     },
     isDisabled: function isDisabled() {
-      return this.isGroup ? this.$parent.disabled : this.disabled;
+      return this.isGroup ? this.$parent.disabled || this.disabled : this.disabled;
     }
   },
   created: function created() {},

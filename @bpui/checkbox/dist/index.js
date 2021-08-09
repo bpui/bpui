@@ -1,5 +1,5 @@
 /*!
- * bpui checkbox v1.1.1
+ * bpui checkbox v1.1.3
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -12,6 +12,8 @@
 
   bpLibs = bpLibs && Object.prototype.hasOwnProperty.call(bpLibs, 'default') ? bpLibs['default'] : bpLibs;
 
+  //
+  //
   //
   //
   //
@@ -56,6 +58,7 @@
     watch: {
       value: function value(val, oldVal) {
         this.isChecked = val;
+        this.isGroup && this.$parent.$emit("handleInput");
       },
       checked: function checked(val, oldVal) {
         if (this.value === true || this.value === false) {
@@ -63,25 +66,41 @@
         }
 
         this.isChecked = val;
+        this.isGroup && this.$parent.$emit("handleChange");
       }
     },
     data: function data() {
       return {
+        bpNodeName: "bpCheckbox",
         isChecked: false,
         hovering: false
       };
     },
     computed: {
+      isGroup: function isGroup() {
+        var parent = this.$parent;
+
+        if (parent.bpNodeName === "bpCheckboxGroup") {
+          return true;
+        }
+
+        return false;
+      },
       isDisabled: function isDisabled() {
-        return this.disabled || this.disabled !== false;
+        return this.isGroup ? this.$parent.disabled || this.disabled : this.disabled;
       }
     },
     created: function created() {
-      if (this.checked === 'checked' || this.checked === true) {
-        this.isChecked = true;
-      } else if (this.checked !== false) {
+      if (this.value === true || this.value === false) {
         this.isChecked = this.value;
+        return;
+      } else if (this.checked === 'checked' || this.checked === true) {
+        this.isChecked = true;
+      } else if (this.checked === false) {
+        this.isChecked = false;
       }
+
+      this.$emit('input', this.isChecked);
     },
     beforeDestroy: function beforeDestroy() {},
     beforeMount: function beforeMount() {},
@@ -89,10 +108,18 @@
       this.$refs.input.checked = this.isChecked;
     },
     methods: {
-      handelChange: function handelChange(e) {
+      _initValue: function _initValue(val) {
+        if (this.value === true || this.value === false) {
+          this.$emit('input', !!val);
+        } else {
+          this.isChecked = !!val;
+        }
+      },
+      handleChange: function handleChange(e) {
         this.isChecked = e.target.checked;
         this.$emit('input', this.isChecked);
         this.$emit("change", this.isChecked);
+        this.isGroup && this.$parent.$emit("handleChange");
       }
     }
   };
@@ -919,7 +946,7 @@
         checked: _vm.isChecked
       },
       on: {
-        change: _vm.handelChange
+        change: _vm.handleChange
       }
     }, "input", _vm.$attrs, false))]), _vm._v(" "), _vm.$slots["default"] ? _c("span", {
       staticClass: "bp-checkbox__label"
@@ -951,6 +978,152 @@
     staticRenderFns: __vue_staticRenderFns__
   }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, false, undefined, undefined, undefined);
 
+  function _newArrowCheck(innerThis, boundThis) {
+    if (innerThis !== boundThis) {
+      throw new TypeError("Cannot instantiate an arrow function");
+    }
+  }
+
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  var script$1 = {
+    name: "bpCheckboxGroup",
+    components: {},
+    props: {
+      value: {
+        validator: function validator(value) {
+          return !value || Array.isArray(value);
+        }
+      },
+      disabled: {
+        "default": false,
+        type: Boolean
+      }
+    },
+    data: function data() {
+      return {
+        bpNodeName: "bpCheckboxGroup"
+      };
+    },
+    computed: {},
+    created: function created() {
+      var _this = this;
+
+      this.$on("handleChange", function () {
+        _newArrowCheck(this, _this);
+
+        var values = this._getValues();
+
+        this.$emit("input", values);
+        this.$emit("change", values);
+      }.bind(this));
+      this.$on("handleInput", function () {
+        _newArrowCheck(this, _this);
+
+        this.$emit("input", this._getValues());
+      }.bind(this));
+    },
+    beforeDestroy: function beforeDestroy() {},
+    beforeMount: function beforeMount() {},
+    mounted: function mounted() {
+      if (this.value) {
+        for (var i = 0, j = 0; i < this.$children.length && j < this.value.length; i++) {
+          var child = this.$children[i];
+
+          if (child.bpNodeName == 'bpCheckbox') {
+            child._initValue(this.value[j].isChecked);
+
+            j++;
+          }
+        }
+      } else {
+        this.$emit('input', this._getValues());
+      }
+    },
+    methods: {
+      _getValues: function _getValues() {
+        var values = [];
+
+        for (var i = 0; i < this.$children.length; i++) {
+          var child = this.$children[i];
+          var slot = child.$slots["default"];
+          var label = void 0;
+
+          if (slot) {
+            if (Array.isArray(slot)) {
+              slot = slot[0];
+
+              if (slot && slot.text) {
+                label = slot.text;
+              }
+            }
+          }
+
+          if (child.bpNodeName == 'bpCheckbox') {
+            values.push({
+              isChecked: child.isChecked,
+              label: label
+            });
+          }
+        }
+
+        return values;
+      }
+    }
+  };
+
+  /* script */
+  var __vue_script__$1 = script$1;
+  /* template */
+
+  var __vue_render__$1 = function __vue_render__() {
+    var _vm = this;
+
+    var _h = _vm.$createElement;
+
+    var _c = _vm._self._c || _h;
+
+    return _c("div", [_vm._t("default")], 2);
+  };
+
+  var __vue_staticRenderFns__$1 = [];
+  __vue_render__$1._withStripped = true;
+  /* style */
+
+  var __vue_inject_styles__$1 = undefined;
+  /* scoped */
+
+  var __vue_scope_id__$1 = undefined;
+  /* module identifier */
+
+  var __vue_module_identifier__$1 = undefined;
+  /* functional template */
+
+  var __vue_is_functional_template__$1 = false;
+  /* style inject */
+
+  /* style inject SSR */
+
+  /* style inject shadow dom */
+
+  var __vue_component__$1 = /*#__PURE__*/normalizeComponent({
+    render: __vue_render__$1,
+    staticRenderFns: __vue_staticRenderFns__$1
+  }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, false, undefined, undefined, undefined);
+
   function init() {
     bpLibs.icons.registerAliasIcon('bp-checkbox_checked', 'ok');
   }
@@ -958,7 +1131,8 @@
   init();
   var index = {
     init: init,
-    bpCheckbox: __vue_component__
+    bpCheckbox: __vue_component__,
+    bpCheckboxGroup: __vue_component__$1
   };
 
   return index;
