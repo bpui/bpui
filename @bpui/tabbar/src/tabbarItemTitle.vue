@@ -3,21 +3,25 @@
 * Copyright (c) 2017 Copyright bp All Rights Reserved.
 * Author: lipengxiang
 * Date: 2018-06-13 15:04
-* Desc: 
+* Desc: tabbarItem.
 */
+
+<tabbarItem>
+  <tabbarItemIcon><svg/></tabbarItemIcon>
+  <tabbarItemTitle>个人中心</tabbarItemTitle>
+</tabbarItem>
 
  -->
 
 <template>
-  <div class="bp-tableView__cell__center bp-ellipsis">
-    <slot name="default"/>
-  </div>
+  <p class="weui-tabbar__label febsvue-tabbar-item-title"><slot name="default"/></p>
 </template>
 
 <script>
 
   export default {
     props: {
+      tableTitle: String,
     },
     data() {
       return {
@@ -31,3 +35,7 @@
     },
   };
 </script>
+
+<style lang="scss">
+
+</style>

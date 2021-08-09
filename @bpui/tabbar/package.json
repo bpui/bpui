@@ -1,5 +1,5 @@
 {
-  "description": "table view",
+  "description": "tabbar",
   "dependencies": {
     "@bpui/libs": "^1.1.1",
     "@bpui/popover": "^1.1.3"
@@ -20,9 +20,7 @@
     "type": "git",
     "url": "git+ssh://git@github.com/bpui/bpui.git"
   },
-  "main": "dist/index.common.js",
-  "module": "dist/index.esm.js",
-  "unpkg": "dist/index.min.js",
+  "main": "src/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
   "maintainers": [
@@ -34,6 +32,6 @@
   "scripts": {
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
-  "name": "@bpui/table-view",
-  "version": "1.1.3"
+  "name": "@bpui/tabbar",
+  "version": "1.1.0"
 }

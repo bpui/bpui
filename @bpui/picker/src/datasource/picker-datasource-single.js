@@ -1,7 +1,7 @@
 'use strict';
 
 /**
-* Copyright (c) 2017 Copyright taijin All Rights Reserved.
+* Copyright (c) 2017 Copyright bp All Rights Reserved.
 * Author: lipengxiang
 * Date: 2018-07-18 21:29
 * Desc: 单列数据源picker.
