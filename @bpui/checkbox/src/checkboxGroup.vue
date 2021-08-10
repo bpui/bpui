@@ -62,21 +62,12 @@ export default {
       let values = []; 
       for (let i = 0; i < this.$children.length; i++) {
         let child = this.$children[i];
-        let slot = child.$slots.default;
-        let label;
-        if (slot) {
-          if (Array.isArray(slot)) {
-            slot = slot[0];
-            if (slot && slot.text) {
-              label = slot.text;
-            }
-          }
-        }
+        let label = child.labelValue;
 
         if (child.bpNodeName == 'bpCheckbox') {
           values.push({
             isChecked: child.isChecked,
-            label: label,
+            labelValue: label,
           });
         }
       }

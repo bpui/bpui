@@ -1,5 +1,5 @@
 /*!
- * bpui checkbox v1.1.3
+ * bpui checkbox v1.1.4
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -51,6 +51,10 @@ var script = {
     value: {
       "default": null,
       type: Boolean
+    },
+    labelValue: {
+      "default": null,
+      type: String
     }
   },
   watch: {
@@ -1057,23 +1061,12 @@ var script$1 = {
 
       for (var i = 0; i < this.$children.length; i++) {
         var child = this.$children[i];
-        var slot = child.$slots["default"];
-        var label = void 0;
-
-        if (slot) {
-          if (Array.isArray(slot)) {
-            slot = slot[0];
-
-            if (slot && slot.text) {
-              label = slot.text;
-            }
-          }
-        }
+        var label = child.labelValue;
 
         if (child.bpNodeName == 'bpCheckbox') {
           values.push({
             isChecked: child.isChecked,
-            label: label
+            labelValue: label
           });
         }
       }

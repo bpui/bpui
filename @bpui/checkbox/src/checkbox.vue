@@ -41,6 +41,10 @@ value属性优先, 会覆盖checked属性
         default: null,
         type: Boolean,
       },
+      labelValue: {
+        default: null,
+        type: String,
+      },
     },
     watch: {
       value: function (val, oldVal) {

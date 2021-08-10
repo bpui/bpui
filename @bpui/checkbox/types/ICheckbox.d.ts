@@ -23,13 +23,18 @@ declare namespace bp {
      * @desc: value属性优先, 会覆盖checked属性
      */
     checked?: Boolean;
+
+    /**
+     * @desc: 除checked之外的健值.
+     */
+    labelValue?: String;
   }
 
   interface CheckboxGroup {
     /**
     * @desc: 所有checkbox的选值情况.
     */
-    value?: Array<{isChecked: Boolean, label?: String}>;
+    value?: Array<{isChecked: Boolean, labelValue?: String}>;
 
     /**
      * @desc disabled
