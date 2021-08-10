@@ -49,7 +49,10 @@ value属性优先, 会覆盖checked属性
     watch: {
       value: function (val, oldVal) {
         this.isChecked = val;
-        this.isGroup && this.$parent.$emit("handleInput");
+        if (!this.notNotifyGroup) {
+          this.isGroup && this.$parent.$emit("handleInput");
+        }
+        this.notNotifyGroup = false;
       },
       checked: function (val, oldVal) {
         if (this.value === true || this.value === false) {
@@ -80,6 +83,7 @@ value属性优先, 会覆盖checked属性
       },
     },
     created() {
+      this.notNotifyGroup = false;
       if (this.value === true || this.value === false) {
         this.isChecked = this.value;
         return;
@@ -99,8 +103,9 @@ value属性优先, 会覆盖checked属性
       this.$refs.input.checked = this.isChecked;
     },
     methods: {
-      _initValue(val) {
+      _initValue(val, notifyGroup) {
         if (this.value === true || this.value === false) {
+          this.notNotifyGroup = !notifyGroup;
           this.$emit('input', !!val);
         } else {
           this.isChecked = !!val;

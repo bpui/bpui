@@ -1,5 +1,5 @@
 /*!
- * bpui checkbox v1.1.4
+ * bpui checkbox v1.1.5
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -56,7 +56,12 @@ var script = {
   watch: {
     value: function value(val, oldVal) {
       this.isChecked = val;
-      this.isGroup && this.$parent.$emit("handleInput");
+
+      if (!this.notNotifyGroup) {
+        this.isGroup && this.$parent.$emit("handleInput");
+      }
+
+      this.notNotifyGroup = false;
     },
     checked: function checked(val, oldVal) {
       if (this.value === true || this.value === false) {
@@ -89,6 +94,8 @@ var script = {
     }
   },
   created: function created() {
+    this.notNotifyGroup = false;
+
     if (this.value === true || this.value === false) {
       this.isChecked = this.value;
       return;
@@ -106,8 +113,9 @@ var script = {
     this.$refs.input.checked = this.isChecked;
   },
   methods: {
-    _initValue: function _initValue(val) {
+    _initValue: function _initValue(val, notifyGroup) {
       if (this.value === true || this.value === false) {
+        this.notNotifyGroup = !notifyGroup;
         this.$emit('input', !!val);
       } else {
         this.isChecked = !!val;
@@ -1017,6 +1025,13 @@ var script$1 = {
     };
   },
   computed: {},
+  watch: {
+    value: function value(val, oldVal) {
+      if (val) {
+        this._setValues(val, false);
+      }
+    }
+  },
   created: function created() {
     var _this = this;
 
@@ -1038,20 +1053,23 @@ var script$1 = {
   beforeMount: function beforeMount() {},
   mounted: function mounted() {
     if (this.value) {
-      for (var i = 0, j = 0; i < this.$children.length && j < this.value.length; i++) {
-        var child = this.$children[i];
-
-        if (child.bpNodeName == 'bpCheckbox') {
-          child._initValue(this.value[j].isChecked);
-
-          j++;
-        }
-      }
+      this._setValues(this.value, false);
     } else {
       this.$emit('input', this._getValues());
     }
   },
   methods: {
+    clear: function clear() {
+      for (var i = 0, j = 0; i < this.$children.length && j < this.value.length; i++) {
+        var child = this.$children[i];
+
+        if (child.bpNodeName == 'bpCheckbox') {
+          child._initValue(val[j].isChecked, true);
+
+          j++;
+        }
+      }
+    },
     _getValues: function _getValues() {
       var values = [];
 
@@ -1068,6 +1086,19 @@ var script$1 = {
       }
 
       return values;
+    },
+    _setValues: function _setValues(val, notifyGroup) {
+      if (val) {
+        for (var i = 0, j = 0; i < this.$children.length && j < val.length; i++) {
+          var child = this.$children[i];
+
+          if (child.bpNodeName == 'bpCheckbox') {
+            child._initValue(val[j].isChecked, notifyGroup);
+
+            j++;
+          }
+        }
+      }
     }
   }
 };

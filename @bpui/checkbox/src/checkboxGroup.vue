@@ -31,6 +31,13 @@ export default {
     };
   },
   computed: {},
+  watch: {
+    value: function (val, oldVal) {
+      if (val) {
+        this._setValues(val, false);
+      }
+    },
+  },
   created() {
     this.$on("handleChange", () => {
       let values = this._getValues();
@@ -45,19 +52,22 @@ export default {
   beforeMount() {},
   mounted() {
     if (this.value) {
-      for (let i = 0, j = 0; i < this.$children.length && j < this.value.length; i++) {
-        let child = this.$children[i];
-        if (child.bpNodeName == 'bpCheckbox') {
-          child._initValue(this.value[j].isChecked);
-          j++;
-        }
-      }
+      this._setValues(this.value, false);
     }
     else {
       this.$emit('input', this._getValues());
     }
   },
   methods: {
+    clear() {
+      for (let i = 0, j = 0; i < this.$children.length && j < this.value.length; i++) {
+        let child = this.$children[i];
+        if (child.bpNodeName == 'bpCheckbox') {
+          child._initValue(val[j].isChecked, true);
+          j++;
+        }
+      }
+    },
     _getValues() {
       let values = []; 
       for (let i = 0; i < this.$children.length; i++) {
@@ -72,6 +82,17 @@ export default {
         }
       }
       return values;
+    },
+    _setValues(val, notifyGroup) {
+      if (val) {
+        for (let i = 0, j = 0; i < this.$children.length && j < val.length; i++) {
+          let child = this.$children[i];
+          if (child.bpNodeName == 'bpCheckbox') {
+            child._initValue(val[j].isChecked, notifyGroup);
+            j++;
+          }
+        }
+      }
     }
   }
 };

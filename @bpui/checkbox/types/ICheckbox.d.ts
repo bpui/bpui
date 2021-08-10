@@ -40,5 +40,10 @@ declare namespace bp {
      * @desc disabled
      */
     disabled?: Boolean;
+
+    /**
+     * @desc 清理所有选项.
+     */
+    clear(): void;
   }
 }
