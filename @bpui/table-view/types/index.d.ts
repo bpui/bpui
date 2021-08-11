@@ -58,3 +58,12 @@ export const bpTableCellLeft: VueConstructor;
 export const bpTableCellCenter: VueConstructor;
 export const bpTableCellRight: VueConstructor;
 export const bpTableCellEditor: VueConstructor;
+
+export const bpTableViewComponents:{
+  bpTableView,
+  bpTableCell,
+  bpTableCellCenter,
+  bpTableCellLeft,
+  bpTableCellRight,
+  bpTableCellEditor,
+};

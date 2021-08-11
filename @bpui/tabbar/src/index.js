@@ -9,26 +9,28 @@
 
 import bpLibs from '@bpui/libs';
 
-import bpTableView from './tableView.vue';
-import bpTableCell from './tableCell.vue';
-import bpTableCellCenter from './tableCellCenter.vue';
-import bpTableCellLeft from './tableCellLeft.vue';
-import bpTableCellRight from './tableCellRight.vue';
-import bpTableCellEditor from './tableCellEditor.vue';
+import bpTabbar from './tabbar.vue';
+import bpTabbarItem from './tabbarItem.vue';
+import bpTabbarItemIcon from './tabbarItemIcon.vue';
+import bpTabbarItemTitle from './tabbarItemTitle.vue';
 
-// register alias icon.
-function init() {
-  bpLibs.icons.registerFontIcon('none', 'none');
-  bpLibs.icons.registerAliasIcon('bp-tableView_next', 'arrowRight');
+const bpTabbarComponents = {
+  bpTabbar,
+  bpTabbarItem,
+  bpTabbarItemIcon,
+  bpTabbarItemTitle
 }
-init();
+
 
 export default {
-  init,
-  bpTableView,
-  bpTableCell,
-  bpTableCellCenter,
-  bpTableCellLeft,
-  bpTableCellRight,
-  bpTableCellEditor,
+  bpTabbarComponents,
+  bpTabbar,
+  bpTabbarItem,
+  bpTabbarItemIcon,
+  bpTabbarItemTitle,
+  // bpTableCell,
+  // bpTableCellCenter,
+  // bpTableCellLeft,
+  // bpTableCellRight,
+  // bpTableCellEditor,
 }

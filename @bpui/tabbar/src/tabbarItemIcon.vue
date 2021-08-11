@@ -18,7 +18,10 @@
  -->
 
 <template>
-  <div :class="'weui-tabbar__icon febsvue-tabbar__icon' + (actived===true?' febsvue-tabbar-active-icon':(actived===false?' febsvue-tabbar-inactive-icon':'')) + ' febsvue-tabbar-item-icon'">
+  <div :class="{
+    'bp-tabbar__item__icon': true,
+    'bp-tabbar__item__icon_active': actived,
+    }">
     <slot name="default"/>
   </div>
 </template>
@@ -44,15 +47,3 @@
     },
   };
 </script>
-
-<style lang="scss">
-
-.febsvue-tabbar__icon {
-  position: relative !important;
-  svg, img {
-    width: 27px;
-    height: 27px;
-  }
-}
-
-</style>

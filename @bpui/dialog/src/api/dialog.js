@@ -58,25 +58,36 @@ export function showAlert(cfg/*:string|{
   $(`<div id="${id}"></div>`).appendTo($('body'));
 
   // 创建实例.
-  let vm = new Vue({
-    render: h => h(c, {class:[ApiClass, AlertClass, id], on:{
-      confirm: ()=>{
-        if (cfg.confirm) {
-          cfg.confirm({vm:vm.$children[0].$children[0], id});
-        } else {
-          vm.$children[0].$children[0].hide().then(res=>{
-            $(`.${id}`).remove();
-          });
-        }
-      },
-    }})
-  }).$mount(`#${id}`);
-  vm.$children[0].$children[0].show().then(res=>{});
+  return new Promise((resolve, reject) => {
+    try {
+      let vm = new Vue({
+        render: h => h(c, {
+          class: [ApiClass, AlertClass, id], on: {
+            confirm: () => {
+              try {
+                if (cfg.confirm) {
+                  cfg.confirm({ vm: vm.$children[0].$children[0], id });
+                }
+                vm.$children[0].$children[0].hide().then(res => {
+                  $(`.${id}`).remove();
+                });
+              } catch (e) {
+                reject(e);
+                return;
+              }
+              resolve({ vm: vm.$children[0].$children[0], id });
+            },
+          }
+        })
+      }).$mount(`#${id}`);
+      vm.$children[0].$children[0].show().then(res => { });
+    } catch (e) {
+      reject(e);
+    }
 
-  // var vnode = render.call(vm._renderProxy, vm.$createElement);
-  // console.log(alert.render.call(getRenderProxy(), getCreateElement()))
-
-  return {vm:vm.$children[0].$children[0], id};
+    // var vnode = render.call(vm._renderProxy, vm.$createElement);
+    // console.log(alert.render.call(getRenderProxy(), getCreateElement()))
+  });
 }
 
 /**
@@ -106,31 +117,40 @@ export function showConfirm(cfg/*:string|{
   $(`<div id="${id}"></div>`).appendTo($('body'));
 
   // 创建实例.
-  let vm = new Vue({
-    render: h => h(c, {class:[ApiClass, AlertClass, id], on:{
-      confirm: ()=>{
-        if (cfg.confirm) {
-          cfg.confirm({vm:vm.$children[0].$children[0], id});
-        } else {
-          vm.$children[0].$children[0].hide().then(res=>{
-            $(`.${id}`).remove();
-          });
+  return new Promise((resolve, reject) => {
+    let vm = new Vue({
+      render: h => h(c, {
+        class: [ApiClass, AlertClass, id], on: {
+          confirm: () => {
+            if (cfg.confirm) {
+              try {
+                cfg.confirm({ vm: vm.$children[0].$children[0], id });
+              } catch (e) {
+                console.error(e);
+              }
+            }
+            resolve({ vm: vm.$children[0].$children[0], id });
+          },
+          cancel: () => {
+            try {
+              if (cfg.cancel) {
+                cfg.cancel({ vm: vm.$children[0].$children[0], id });
+              }
+              vm.$children[0].$children[0].hide().then(res => {
+                $(`.${id}`).remove();
+              });
+            } catch (e) {
+              console.error(e);
+            }
+            reject('cancel');
+          },
         }
-      },
-      cancel: ()=>{
-        if (cfg.cancel) {
-          cfg.cancel({vm:vm.$children[0].$children[0], id});
-        } else {
-          vm.$children[0].$children[0].hide().then(res=>{
-            $(`.${id}`).remove();
-          });
-        }
-      },
-    }})
-  }).$mount(`#${id}`);
-  vm.$children[0].$children[0].show().then(res=>{});
+      })
+    }).$mount(`#${id}`);
+    vm.$children[0].$children[0].show().then(res => { });
 
-  return {vm:vm.$children[0].$children[0], id};
+    // return { vm: vm.$children[0].$children[0], id };
+  });
 }
 
 

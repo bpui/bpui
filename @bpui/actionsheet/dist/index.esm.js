@@ -1,5 +1,5 @@
 /*!
- * bpui actionsheet v1.1.3
+ * bpui actionsheet v1.1.5
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -18,6 +18,10 @@ var script = {
   components: {// bpWidget: bpDialog.bpWidget
   },
   props: {
+    vibrateWhenShow: {
+      "default": true,
+      type: Boolean
+    },
     maskClose: {
       "default": true,
       type: Boolean

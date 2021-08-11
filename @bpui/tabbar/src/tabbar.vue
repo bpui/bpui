@@ -64,6 +64,7 @@
     beforeMount() {
     },
     mounted() {
+      $('body').append(this.$el);
       let el = $(this.$el).children('a');
       el.each((index, ee)=>{
         ee = $(ee);
@@ -71,7 +72,7 @@
         ee.on('click', (event)=>{
           if (!ee.hasClass('weui-bar__item_on')) {
             // noPage.
-            if (ee.attr('data-noPage') == 1) {
+            if (ee.attr('data-pageno') == 1) {
               return;
             } // if.
 
@@ -90,6 +91,9 @@
           ee.addClass('weui-bar__item_on');
         }
       });
+    },
+    beforeDestroy() {
+      $('.bp-tabbar').remove();
     },
     methods: {
       /**

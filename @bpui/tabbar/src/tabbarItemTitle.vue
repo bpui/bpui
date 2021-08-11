@@ -14,14 +14,12 @@
  -->
 
 <template>
-  <p class="weui-tabbar__label febsvue-tabbar-item-title"><slot name="default"/></p>
+  <p class="bp-tabbar__item__title"><slot name="default"/></p>
 </template>
 
 <script>
-
   export default {
     props: {
-      tableTitle: String,
     },
     data() {
       return {
@@ -35,7 +33,3 @@
     },
   };
 </script>
-
-<style lang="scss">
-
-</style>

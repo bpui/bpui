@@ -25,12 +25,17 @@
 <script>
   import * as maskUtils from './utils/mask';
   import * as febs from 'febs-browser';
+  import bpLibs from '@bpui/libs';
 
   export default {
     components: {
     },
     props: {
       visible: Boolean,
+      vibrateWhenShow: {
+        default: false,
+        type: Boolean,
+      },
       mask: {
         default: true,
         type: Boolean,
@@ -108,6 +113,10 @@
         return new Promise((resolve)=>{
           maskUtils.showWidget(this.$el, this.mask, this.preventEvent, this.hideBodyScroll, ()=>{
             this.$emit('update:visible', true);
+
+            if (this.vibrateWhenShow) {
+              bpLibs.device.vibrate(10);
+            }
             resolve();
           });
         })

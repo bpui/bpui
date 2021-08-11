@@ -14,7 +14,7 @@
  -->
 
 <template>
-  <a href="javascript:;" :data-noPage="noPage?1:null" @click="onClick" class="weui-tabbar__item febsvue-tabbar-item">
+  <a href="javascript:;" :data-no-page="noPage?1:null" @click="onClick" class="bp-tabbar__item">
     <slot name="default"/>
   </a>
 </template>
@@ -45,9 +45,3 @@
     },
   };
 </script>
-
-<style lang="scss">
-.febsvue-tabbar-item {
-  position: relative;
-}
-</style>

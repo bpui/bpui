@@ -30,6 +30,10 @@
       // bpWidget: bpDialog.bpWidget
     },
     props: {
+      vibrateWhenShow: {
+        default: true,
+        type: Boolean,
+      },
       maskClose: {
         default: true,
         type: Boolean,

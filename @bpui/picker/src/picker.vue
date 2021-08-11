@@ -20,7 +20,8 @@
     :maskClose="maskClose" 
     :mask="mask" 
     :preventEvent="true"
-    :appendToBody="true">
+    :appendToBody="true"
+    :vibrateWhenShow="true">
     
     <div class="bp-widget__contentWrap"
       :class="pageClass" 

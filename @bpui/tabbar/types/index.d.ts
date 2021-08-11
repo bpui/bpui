@@ -2,10 +2,14 @@
 
 import Vue, {VueConstructor} from 'vue';
 
-export const bpTableView: VueConstructor;
+export const bpTabbar: VueConstructor;
+export const bpTabbarItem: VueConstructor;
+export const bpTabbarItemIcon: VueConstructor;
+export const bpTabbarItemTitle: VueConstructor;
 
-export const bpTableCell: VueConstructor;
-export const bpTableCellLeft: VueConstructor;
-export const bpTableCellCenter: VueConstructor;
-export const bpTableCellRight: VueConstructor;
-export const bpTableCellEditor: VueConstructor;
+export const bpTabbarComponents: {
+  bpTabbar,
+  bpTabbarItem,
+  bpTabbarItemIcon,
+  bpTabbarItemTitle,
+}

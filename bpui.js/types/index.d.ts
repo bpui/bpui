@@ -1,6 +1,7 @@
 import "@bpui/libs/types";
 export * from "@bpui/navbar-view/types";
 export * from "@bpui/table-view/types";
+export * from "@bpui/tabbar/types";
 export * from "@bpui/checkbox/types";
 export * from "@bpui/radio/types";
 export * from "@bpui/switch/types";
@@ -11,19 +12,11 @@ export * from "@bpui/actionsheet/types";
 export * from "@bpui/popover/types";
 export * from "@bpui/uploader/types";
 
-import {
-  bpTableView,
-  bpTableCell,
-  bpTableCellCenter,
-  bpTableCellLeft,
-  bpTableCellRight,
-  bpTableCellEditor,
-} from "@bpui/table-view/types";
-
 export enum ComponentName {
   navbarView = "navbarView",
   tableView = "tableView",
   checkbox = "checkbox",
+  tabbar = "tabbar",
   radio = "radio",
   switch = "switch",
   input = "input",
@@ -35,15 +28,6 @@ export enum ComponentName {
 }
 
 export const libs: typeof bp.bpLibs;
-
-export const bpTableViewComponents:{
-  bpTableView,
-  bpTableCell,
-  bpTableCellCenter,
-  bpTableCellLeft,
-  bpTableCellRight,
-  bpTableCellEditor,
-};
 
 /**
  * @desc: 注册动态组件.

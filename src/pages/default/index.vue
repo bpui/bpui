@@ -37,9 +37,12 @@
       <router-link to="widget/popover">popover</router-link>
     </span>
 
-    <h4>tableView</h4>
+    <h4>view</h4>
     <span class="span">
       <router-link to="tableview">tableView</router-link>
+    </span>
+    <span class="span">
+      <router-link to="tabbar">tabbar</router-link>
     </span>
 
     <h4>navbarView</h4>

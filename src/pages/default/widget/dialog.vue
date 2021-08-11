@@ -128,8 +128,6 @@
     showAlert():void {
       // @ts-ignore
       this.$bpWidget.showAlert({content:'aaaa', confirm:(id)=>{
-        // @ts-ignore
-        this.$bpWidget.hideAlert(id);
       }})
     }
 
@@ -138,10 +136,15 @@
       this.$bpWidget.showConfirm({content:'确定取消?', cancel:(id)=>{
         // @ts-ignore
         this.$bpWidget.hideConfirm(id);
+        console.log(11)
       }, confirm:(id)=>{
         // @ts-ignore
         this.$bpWidget.showAlert('确认');
-      }})
+      }}).then(()=>{
+
+      }).catch(e=>{
+        console.log(e);
+      })
     }
     
     showLoading():void {

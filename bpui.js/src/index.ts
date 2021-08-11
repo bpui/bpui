@@ -73,22 +73,21 @@ export default class Instance {
   static get hook() { return new Hook(); }
 
   //
+  static get bpTableViewComponents() { return componentInstance.getComponent('tableView').default.bpTableViewComponents; }
   static get bpTableView() { return componentInstance.getComponent('tableView').default.bpTableView; }
   static get bpTableCell() { return componentInstance.getComponent('tableView').default.bpTableCell; }
   static get bpTableCellCenter() { return componentInstance.getComponent('tableView').default.bpTableCellCenter; }
   static get bpTableCellLeft() { return componentInstance.getComponent('tableView').default.bpTableCellLeft; }
   static get bpTableCellRight() { return componentInstance.getComponent('tableView').default.bpTableCellRight; }
   static get bpTableCellEditor() { return componentInstance.getComponent('tableView').default.bpTableCellEditor; }
-  static get bpTableViewComponents() {
-    return {
-      bpTableView: this.bpTableView,
-      bpTableCell: this.bpTableCell,
-      bpTableCellCenter: this.bpTableCellCenter,
-      bpTableCellLeft: this.bpTableCellLeft,
-      bpTableCellRight: this.bpTableCellRight,
-      bpTableCellEditor: this.bpTableCellEditor,
-    }
-  }
+  
+  
+  //
+  static get bpTabbarComponents() { return componentInstance.getComponent('tabbar').default.bpTabbarComponents; }
+  static get bpTabbar() { return componentInstance.getComponent('tabbar').default.bpTabbar; }
+  static get bpTabbarItem() { return componentInstance.getComponent('tabbar').default.bpTabbarItem; }
+  static get bpTabbarItemIcon() { return componentInstance.getComponent('tabbar').default.bpTabbarItemIcon; }
+  static get bpTabbarItemTitle() { return componentInstance.getComponent('tabbar').default.bpTabbarItemTitle; }
   
   //
   static get bpNavbarView() {

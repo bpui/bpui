@@ -1,5 +1,5 @@
 /*!
- * bpui picker v1.1.3
+ * bpui picker v1.1.5
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3788,7 +3788,8 @@ var __vue_render__ = function __vue_render__() {
       maskClose: _vm.maskClose,
       mask: _vm.mask,
       preventEvent: true,
-      appendToBody: true
+      appendToBody: true,
+      vibrateWhenShow: true
     },
     on: {
       "update:visible": function updateVisible($event) {

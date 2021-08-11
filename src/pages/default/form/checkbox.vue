@@ -18,9 +18,9 @@
 
     <h4>group</h4>
     <bp-checkbox-group v-model="groupValue" :disabled="groupDisable">
-      <bp-checkbox>check1</bp-checkbox>
-      <bp-checkbox>check2</bp-checkbox>
-      <bp-checkbox>check3</bp-checkbox>
+      <bp-checkbox labelValue="1">check1</bp-checkbox>
+      <bp-checkbox labelValue="2">check2</bp-checkbox>
+      <bp-checkbox labelValue="3">check3</bp-checkbox>
     </bp-checkbox-group>
 
     <button @click="groupDisable=!groupDisable">change disable</button>
