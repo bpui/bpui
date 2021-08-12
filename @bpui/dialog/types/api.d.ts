@@ -1,5 +1,3 @@
-import {VueConstructor} from 'vue';
-
 declare namespace bp {
   export interface DialogID {
     id: string;
@@ -11,7 +9,7 @@ declare namespace bp {
      * 
      * @param dialog html dom 或 vue对象.
      */
-    rightTop(dialog:HTMLElement|VueConstructor<any>): void;
+    rightTop(dialog:HTMLElement|any): void;
   
     /**
      * 显示/隐藏自定义模态对话框.
