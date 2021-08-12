@@ -29,11 +29,17 @@
         text-align: right;
         width: $bpInputAdditionLabelWidth;
         color: $bpInputAdditionLabelColor;
+        padding-right: 2px;
+        padding-left: 2px;
+        font-size: 10px;
     }
     .bp-input__suffixLabel {
         text-align: left;
         width: $bpInputAdditionLabelWidth;
         color: $bpInputAdditionLabelColor;
+        padding-right: 2px;
+        padding-left: 2px;
+        font-size: 10px;
     }
 
     input {
@@ -54,6 +60,7 @@
         font-size: $bpInputFontSize;
         font-weight: $bpInputFontWeight;
         padding: 1px;
+        width: 100%;
     }
 
     .bp-input__inner {
@@ -72,7 +79,7 @@
         padding: 0 15px;
         transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
         flex-grow: 1;
-        width: auto;
+        width: 100%;
 
         &:focus {
             outline: none;

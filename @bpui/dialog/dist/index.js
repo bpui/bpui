@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v1.1.5
+ * bpui dialog v1.1.6
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3991,7 +3991,25 @@
     showCustom: showCustom
   });
 
-  var apiWidget = _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({}, apiDialog), apiLoading), apiToast), apiCustom);
+  function rightTop(dialog) {
+    if (bpLibs.dom.isVueObject(dialog)) {
+      dialog = dialog.$el;
+    }
+
+    dialog = $(dialog); // 修正居中显示, 超出造成的偏移.
+
+    var content = dialog.children('.bp-widget__content')[0];
+    var clientHeight = content.clientHeight;
+
+    if (clientHeight > febs.dom.getViewPort().height) {
+      clientHeight = (clientHeight - febs.dom.getViewPort().height) / 2 + 20;
+      $(content).css('top', clientHeight + 'px');
+    }
+  }
+
+  var apiWidget = _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({
+    rightTop: rightTop
+  }, apiDialog), apiLoading), apiToast), apiCustom);
 
   var _Vue;
 

@@ -1,5 +1,5 @@
 /*!
- * bpui switch v1.1.1
+ * bpui switch v1.1.2
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -921,9 +921,9 @@ var __vue_render__ = function __vue_render__() {
     on: {
       change: _vm.handleChange
     }
-  }, "input", _vm.$attrs, false))]), _vm._v(" "), _c("span", {
+  }, "input", _vm.$attrs, false))]), _vm._v(" "), _vm.$slots["default"] ? _c("span", {
     staticClass: "bp-switch__label"
-  }, [_vm._t("default")], 2)]);
+  }, [_vm._t("default")], 2) : _vm._e()]);
 };
 
 var __vue_staticRenderFns__ = [];

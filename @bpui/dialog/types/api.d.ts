@@ -1,9 +1,18 @@
+import {VueConstructor} from 'vue';
+
 declare namespace bp {
   export interface DialogID {
     id: string;
   }
 
   export interface WidgetApi {
+    /**
+     * 在对话框高度改变时, 使用此方法来正确设置出合理的top位置, 以便不会有内容超出视图.
+     * 
+     * @param dialog html dom 或 vue对象.
+     */
+    rightTop(dialog:HTMLElement|VueConstructor<any>): void;
+  
     /**
      * 显示/隐藏自定义模态对话框.
      * @param cfg 传递data,props,on等内容.

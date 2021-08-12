@@ -28,7 +28,7 @@
         v-bind="$attrs"
       />
     </span>
-    <span class="bp-switch__label"><slot name="default" /></span>
+    <span v-if="$slots.default" class="bp-switch__label"><slot name="default" /></span>
   </label>
 </template>
 
