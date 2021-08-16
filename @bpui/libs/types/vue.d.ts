@@ -16,6 +16,11 @@ declare module 'vue/types/vue' {
      * 事件管理器; 添加的事件在组件销毁时会自动移除.
      */
     $bpEventMgr: bp.EventMgr;
+
+    /**
+     * 手势对象管理器; 添加的手势对象在组件销毁时会自动移除.
+     */
+    $bpGestureMgr: bp.GestureMgr;
   }
 }
 

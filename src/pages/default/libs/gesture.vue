@@ -19,12 +19,12 @@ export default class extends Vue {
   @Provide() type:string = '';
   
   mounted() {
-    let gesture = new this.$bpLibs.Gesture(document.getElementsByTagName('body')[0]);
+    // let gesture = new this.$bpLibs.Gesture(document.getElementsByTagName('body')[0]);
+    let gesture = this.$bpGestureMgr.add("gesture1", this.$el);
 
-    // gesture.enableSwipeRecognizer();
-    gesture.enablePressRecognizer({duration: 1000});
-    (gesture as any).on('press', (ev:bp.GestureSwipeEvent)=>{
-      alert('press');
+    gesture.enableSwipeRecognizer();
+    (gesture).on('swipe', (ev:bp.GestureSwipeEvent)=>{
+      // alert('swipe');
       switch (ev.direction) {
         case GestureDirection.Left:
           this.type = 'left';
@@ -39,6 +39,11 @@ export default class extends Vue {
           this.type = 'down';
           break;
       }
+    })
+
+    gesture.enablePressRecognizer({duration: 1000});
+    (gesture).on('press', (ev:bp.GestureEvent)=>{
+      alert('press');
     })
   }
 }

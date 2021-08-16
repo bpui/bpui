@@ -22,11 +22,11 @@ declare namespace bp {
     /**
     * @desc: 统一处理 addEventListener, attachEvent; 并提供useCapture参数问题.
     */
-    addEventListener(domElement:any, event:string, func:any, useCapture?:boolean):EventMgr;
+    on(domElement:any, event:string, func:any, useCapture?:boolean):EventMgr;
 
     /**
     * @desc: 统一处理 removeEventListener, detachEvent; 并提供useCapture参数问题.
     */
-    removeEventListener(domElement:any, event:string, func:any, useCapture?:boolean):EventMgr;
+    off(domElement:any, event:string, func:any, useCapture?:boolean):EventMgr;
   }
 }

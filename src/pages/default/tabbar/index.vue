@@ -11,7 +11,7 @@
   <div style="background: #eee">
     <bp-tabbar>
       <bp-tabbar-item>
-        <bp-tabbar-item-icon></bp-tabbar-item-icon>
+        <bp-icon name="heartFill"></bp-icon>
         <bp-tabbar-item-title>dfdf</bp-tabbar-item-title>
       </bp-tabbar-item>
       <bp-tabbar-item>hello2</bp-tabbar-item>

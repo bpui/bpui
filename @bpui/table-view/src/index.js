@@ -23,8 +23,18 @@ function init() {
 }
 init();
 
+const bpTableViewComponents = {
+  bpTableView,
+  bpTableCell,
+  bpTableCellCenter,
+  bpTableCellLeft,
+  bpTableCellRight,
+  bpTableCellEditor,
+};
+
 export default {
   init,
+  bpTableViewComponents,
   bpTableView,
   bpTableCell,
   bpTableCellCenter,

@@ -1,5 +1,5 @@
 /*!
- * bpui switch v1.1.2
+ * bpui switch v1.1.3
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */

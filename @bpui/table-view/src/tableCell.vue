@@ -133,15 +133,15 @@
 
       // touch.
       let domTouch = this.$refs.domTouch || this.$refs.editorCellMain;
-      this.$bpEventMgr.addEventListener(domTouch, 'touchstart', (ev)=>{
+      this.$bpEventMgr.on(domTouch, 'touchstart', (ev)=>{
         let target = ev.currentTarget || ev.target;
         $(target).attr('data-touch', 'touch');
       }, true);
-      this.$bpEventMgr.addEventListener(domTouch, 'touchend', (ev)=>{
+      this.$bpEventMgr.on(domTouch, 'touchend', (ev)=>{
         let target = ev.currentTarget || ev.target;
         $(target).attr('data-touch', 'end');
       }, true);
-      this.$bpEventMgr.addEventListener(domTouch, 'touchcancel', (ev)=>{
+      this.$bpEventMgr.on(domTouch, 'touchcancel', (ev)=>{
         let target = ev.currentTarget || ev.target;
         $(target).attr('data-touch', 'end');
       }, true);
@@ -213,10 +213,10 @@
           // 点击事件在swiper事件之后.
           $(el).on('fakeClick', (event)=>{return this.onClickCell(event);});
 
-          this.$bpEventMgr.addEventListener(el, namestart, iosEvent.mobile_onTouchstart_tablecell, true);
-          this.$bpEventMgr.addEventListener(el, namemove, iosEvent.mobile_onTouchmove_tablecell, true);
-          this.$bpEventMgr.addEventListener(el, nameend, iosEvent.mobile_onTouchend_tablecell, true);
-          this.$bpEventMgr.addEventListener(el, namecancel, iosEvent.mobile_onTouchcancel_tablecell, true);
+          this.$bpEventMgr.on(el, namestart, iosEvent.mobile_onTouchstart_tablecell, true);
+          this.$bpEventMgr.on(el, namemove, iosEvent.mobile_onTouchmove_tablecell, true);
+          this.$bpEventMgr.on(el, nameend, iosEvent.mobile_onTouchend_tablecell, true);
+          this.$bpEventMgr.on(el, namecancel, iosEvent.mobile_onTouchcancel_tablecell, true);
         } // if.
       },
       _initAndroid() {

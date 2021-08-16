@@ -1,5 +1,5 @@
 /*!
- * bpui libs v1.1.1
+ * bpui libs v1.1.2
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -8777,7 +8777,7 @@
 	  */
 
 
-	  EventMgr.prototype.addEventListener = function (domElement, event, func, useCapture) {
+	  EventMgr.prototype.on = function (domElement, event, func, useCapture) {
 	    var i = 0;
 
 	    for (; i < this.events.length; i++) {
@@ -8805,7 +8805,7 @@
 	  */
 
 
-	  EventMgr.prototype.removeEventListener = function (domElement, event, func, useCapture) {
+	  EventMgr.prototype.off = function (domElement, event, func, useCapture) {
 	    var i = 0;
 
 	    for (; i < this.events.length; i++) {
@@ -8838,6 +8838,82 @@
 	  if (ctx[s_eventMgr]) {
 	    ctx[s_eventMgr].dispose();
 	    ctx[s_eventMgr] = null;
+	  }
+	}
+
+	var s_gestureMgr = '$BpGestureMgr';
+
+	var GestureMgr =
+	/** @class */
+	function () {
+	  function GestureMgr() {
+	    this.gestures = {};
+	  }
+
+	  GestureMgr.prototype.add = function (name, dom) {
+	    if (!dom) dom = window.document.body;else {
+	      dom = $(dom)[0];
+
+	      if (!dom) {
+	        throw new Error('GestureMgr add func; cannot find dom selector');
+	      }
+	    }
+
+	    for (var key in this.gestures) {
+	      var ges = this.gestures[key];
+
+	      if (dom.isSameNode(ges.dom) || key == name) {
+	        throw new Error('the gesture is already existed!');
+	      }
+	    }
+
+	    var ges1 = new GestureImp(dom);
+	    this.gestures[name] = {
+	      dom: dom,
+	      gesture: ges1
+	    };
+	    return ges1;
+	  };
+
+	  GestureMgr.prototype.get = function (name) {
+	    var ges1 = this.gestures[name];
+	    return ges1 === null || ges1 === void 0 ? void 0 : ges1.gesture;
+	  };
+
+	  GestureMgr.prototype.remove = function (name) {
+	    var ges1 = this.gestures[name];
+	    ges1 === null || ges1 === void 0 ? void 0 : ges1.gesture.dispose();
+	    delete this.gestures[name];
+	  };
+
+	  GestureMgr.prototype.dispose = function () {
+	    for (var key in this.gestures) {
+	      var ges = this.gestures[key];
+	      ges.gesture.dispose();
+	    }
+
+	    this.gestures = {};
+	    return this;
+	  };
+
+	  return GestureMgr;
+	}();
+
+	function beforeCreate$2(Vue, ctx) {
+	  Object.defineProperty(ctx, '$bpGestureMgr', {
+	    get: function get() {
+	      if (!ctx[s_gestureMgr]) {
+	        ctx[s_gestureMgr] = new GestureMgr();
+	      }
+
+	      return ctx[s_gestureMgr];
+	    }
+	  });
+	}
+	function beforeDestroy$2(Vue, ctx) {
+	  if (ctx[s_gestureMgr]) {
+	    ctx[s_gestureMgr].dispose();
+	    ctx[s_gestureMgr] = null;
 	  }
 	}
 
@@ -8979,13 +9055,15 @@
 	    install(vue, this, g);
 	    vue.mixin({
 	      mounted: function mounted() {},
-	      beforeCreate: function beforeCreate$2() {
+	      beforeCreate: function beforeCreate$3() {
 	        beforeCreate$1(vue, this);
+	        beforeCreate$2(vue, this);
 	        beforeCreate(vue, this);
 	      },
 	      created: function created() {},
-	      beforeDestroy: function beforeDestroy$2() {
+	      beforeDestroy: function beforeDestroy$3() {
 	        beforeDestroy(vue, this);
+	        beforeDestroy$2(vue, this);
 	        beforeDestroy$1(vue, this);
 	      }
 	    });

@@ -10,6 +10,7 @@
 import * as smoothscroll from './smoothscroll';
 import * as timer from './timer';
 import * as eventMgr from './eventMgr';
+import * as gestureMgr from './gestureMgr';
 import bpLibs from '../../bpLibs';
 import * as febs from 'febs-browser';
 
@@ -31,12 +32,14 @@ function makeInstall() {
       },
       beforeCreate() {
         eventMgr.beforeCreate(vue, this);
+        gestureMgr.beforeCreate(vue, this);
         timer.beforeCreate(vue, this);
       },
       created() {
       },
       beforeDestroy() {
         timer.beforeDestroy(vue, this);
+        gestureMgr.beforeDestroy(vue, this);
         eventMgr.beforeDestroy(vue, this);
       },
     });

@@ -1,8 +1,8 @@
 {
   "description": "uploader",
   "dependencies": {
-    "@bpui/button": "^1.1.1",
-    "@bpui/dialog": "^1.1.7"
+    "@bpui/button": "^1.1.2",
+    "@bpui/dialog": "^1.1.8"
   },
   "keywords": [],
   "engines": {
@@ -40,5 +40,5 @@
     "vue-class-component": ">=7.2.2"
   },
   "name": "@bpui/uploader",
-  "version": "1.1.4"
+  "version": "1.1.5"
 }
