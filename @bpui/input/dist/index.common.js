@@ -1,5 +1,5 @@
 /*!
- * bpui input v1.1.3
+ * bpui input v1.1.4
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1579,6 +1579,7 @@ var script = {
         return tt === "string" || tt === "number";
       }
     },
+    clearable: String,
     prefixIcon: String,
     suffixIcon: String,
     prefixLabel: String,
@@ -1639,15 +1640,28 @@ var script = {
       defaultValue: null,
       isUnsigned: false,
       isFocus: false,
+      _isFocusForClean: false,
+      // 用于显示清除按钮.
       typelen: 0,
       floatStep: null,
       _min: Number.MIN_SAFE_INTEGER,
-      _max: Number.MAX_SAFE_INTEGER
+      _max: Number.MAX_SAFE_INTEGER,
+      textChangeMark: false
     };
   },
   computed: {
     type2: function type2() {
       return ["int", "unsigned-int", "float", "unsigned-float"].indexOf(this.type) >= 0 ? "number" : this.type;
+    },
+    showClearable: function showClearable() {
+      if (this.clearable != null) {
+        if ((this.textChangeMark || !this.textChangeMark) && this._isFocusForClean) {
+          var t = this.text();
+          return t ? t.length > 0 : false;
+        }
+      }
+
+      return false;
     }
   },
   watch: {
@@ -1927,6 +1941,9 @@ var script = {
           this.$emit("input", value);
         } else {
           this.watchValue = false;
+
+          this._onNextInput();
+
           this.$emit("input", value);
         }
       }.bind(this));
@@ -2148,6 +2165,9 @@ var script = {
         var elem = $(event.currentTarget);
         var value = elem.val() || "";
         this.validate(null, value);
+
+        this._onNextInput();
+
         this.$emit("input", value);
         this.$emit("change", value);
       }.bind(this));
@@ -2195,8 +2215,20 @@ var script = {
 
         // console.debug('event ' + event.type);
         this.isInputWrong = false;
+        this.isValid();
         this.$emit("focus", event);
-        this.isFocus = true; // mobile side scroll.
+        this.isFocus = true;
+
+        if (this.type2 != 'number') {
+          this.$timer.sleep(200).then(function () {
+            _newArrowCheck(this, _this15);
+
+            this._isFocusForClean = true;
+
+            this._onNextInput();
+          }.bind(this));
+        } // mobile side scroll.
+
 
         if (febs.utils.browserIsMobile()) {
           setTimeout(function () {
@@ -2222,6 +2254,16 @@ var script = {
 
         // console.debug('event ' + event.type);
         this.isFocus = false;
+
+        if (this.type2 != 'number') {
+          this.$timer.sleep(200).then(function () {
+            _newArrowCheck(this, _this16);
+
+            this._isFocusForClean = false;
+
+            this._onNextInput();
+          }.bind(this));
+        }
 
         if (febs.utils.browserIsMobile()) {
           $("body").off("touchstart", autoHide);
@@ -2467,6 +2509,9 @@ var script = {
         } else {
           this.validate(null, content);
           elem.val(content);
+
+          this._onNextInput();
+
           this.typelen = content ? content.length : 0;
         }
       }
@@ -2525,6 +2570,11 @@ var script = {
      */
     _onPrefixIcon: function _onPrefixIcon() {
       this.$emit("click-icon", "prefixIcon");
+    },
+    _onNextInput: function _onNextInput() {
+      if (this.clearable != null) {
+        this.textChangeMark = !this.textChangeMark;
+      }
     }
   }
 };
@@ -2734,7 +2784,7 @@ var __vue_render__ = function __vue_render__() {
     on: {
       click: _vm._onPrefixIcon
     }
-  }) : _vm._e(), _vm._v(" "), _vm.prefixLabel ? _c("span", {
+  }) : _vm.prefixLabel ? _c("span", {
     staticClass: "bp-input__prefixLabel"
   }, [_vm._v(_vm._s(_vm.prefixLabel))]) : _vm._e(), _vm._v(" "), _vm.type === "textarea" ? _c("textarea", {
     staticClass: "bp-input__inner",
@@ -2779,7 +2829,24 @@ var __vue_render__ = function __vue_render__() {
       width: "25px",
       name: "bp-input_warn"
     }
-  }) : _vm._e(), _vm._v(" "), _vm.type === "textarea" && _vm.maxlength ? _c("div", {
+  }) : _vm._e(), _vm._v(" "), _c("div", {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: _vm.showClearable,
+      expression: "showClearable"
+    }],
+    staticClass: "bp-input_clearIcon",
+    on: {
+      click: function click() {
+        return _vm.text("");
+      }
+    }
+  }, [_c("div", [_c("bp-icon", {
+    attrs: {
+      name: "bp-input_clear"
+    }
+  })], 1)]), _vm._v(" "), _vm.type === "textarea" && _vm.maxlength ? _c("div", {
     staticClass: "bp-input__counter"
   }, [_c("span", [_vm._v(_vm._s(_vm.typelen))]), _vm._v("/" + _vm._s(_vm.maxlength) + "\n  ")]) : _vm._e(), _vm._v(" "), _vm.suffixIcon ? _c("bp-icon", {
     staticClass: "bp-input__suffixIcon",
@@ -2790,7 +2857,7 @@ var __vue_render__ = function __vue_render__() {
     on: {
       click: _vm._onSuffixIcon
     }
-  }) : _vm._e(), _vm._v(" "), _vm.suffixLabel ? _c("span", {
+  }) : _vm.suffixLabel ? _c("span", {
     staticClass: "bp-input__suffixLabel"
   }, [_vm._v(_vm._s(_vm.suffixLabel))]) : _vm._e()], 1);
 };
@@ -2823,6 +2890,7 @@ var __vue_component__ = /*#__PURE__*/normalizeComponent({
 function init() {
   bpLibs.icons.registerFontIcon('none', 'none');
   bpLibs.icons.registerAliasIcon('bp-input_warn', 'none');
+  bpLibs.icons.registerAliasIcon('bp-input_clear', 'cancel');
 }
 
 init();

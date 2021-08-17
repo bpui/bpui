@@ -26,7 +26,7 @@
     />
     <span
       class="bp-input__prefixLabel"
-      v-if="prefixLabel">{{prefixLabel}}</span>
+      v-else-if="prefixLabel">{{prefixLabel}}</span>
 
     <textarea
       v-if="type === 'textarea'"
@@ -63,6 +63,11 @@
       class="bp-input__warnIcon"
       name="bp-input_warn"
     />
+    <div v-show="showClearable" class="bp-input_clearIcon" @click="()=>text('')">
+      <div>
+        <bp-icon name="bp-input_clear" />
+      </div>
+    </div>
 
     <div v-if="type === 'textarea' && maxlength" class="bp-input__counter">
       <span>{{ typelen }}</span
@@ -78,7 +83,7 @@
     />
     <span
       class="bp-input__suffixLabel"
-      v-if="suffixLabel">{{suffixLabel}}</span>
+      v-else-if="suffixLabel">{{suffixLabel}}</span>
   </div>
 </template>
 
@@ -104,6 +109,7 @@ export default {
         return tt === "string" || tt === "number";
       },
     },
+    clearable: String,
     prefixIcon: String,
     suffixIcon: String,
     prefixLabel: String,
@@ -173,10 +179,12 @@ export default {
       defaultValue: null,
       isUnsigned: false,
       isFocus: false,
+      _isFocusForClean: false,  // 用于显示清除按钮.
       typelen: 0,
       floatStep: null,
       _min: Number.MIN_SAFE_INTEGER,
       _max: Number.MAX_SAFE_INTEGER,
+      textChangeMark: false, 
     };
   },
   computed: {
@@ -187,6 +195,16 @@ export default {
         ? "number"
         : this.type;
     },
+    showClearable() {
+      if (this.clearable != null) {
+        if ((this.textChangeMark || !this.textChangeMark) && this._isFocusForClean) {
+          let t = this.text();
+          return t ? t.length > 0: false;
+        }
+      }
+
+      return false;
+    }
   },
   watch: {
     value: function (val) {
@@ -448,6 +466,7 @@ export default {
           this.$emit("input", value);
         } else {
           this.watchValue = false;
+          this._onNextInput();
           this.$emit("input", value);
         }
       });
@@ -663,6 +682,7 @@ export default {
         let value = elem.val() || "";
 
         this.validate(null, value);
+        this._onNextInput();
         this.$emit("input", value);
         this.$emit("change", value);
       });
@@ -695,9 +715,16 @@ export default {
       el.on("focus", (event) => {
         // console.debug('event ' + event.type);
         this.isInputWrong = false;
+        this.isValid();
         this.$emit("focus", event);
 
         this.isFocus = true;
+        if (this.type2 != 'number') {
+          this.$timer.sleep(200).then(()=>{
+            this._isFocusForClean = true;
+            this._onNextInput();
+          });
+        }
 
         // mobile side scroll.
         if (febs.utils.browserIsMobile()) {
@@ -718,6 +745,12 @@ export default {
       el.on("blur", (event) => {
         // console.debug('event ' + event.type);
         this.isFocus = false;
+        if (this.type2 != 'number') {
+          this.$timer.sleep(200).then(()=>{
+            this._isFocusForClean = false;
+            this._onNextInput();
+          });
+        }
 
         if (febs.utils.browserIsMobile()) {
           $("body").off("touchstart", autoHide);
@@ -951,6 +984,7 @@ export default {
           this.validate(null, content);
           elem.val(content);
 
+          this._onNextInput();
           this.typelen = content ? content.length : 0;
         }
       }
@@ -1005,6 +1039,12 @@ export default {
     _onPrefixIcon() {
       this.$emit("click-icon", "prefixIcon");
     },
+
+    _onNextInput() {
+      if (this.clearable != null) {
+        this.textChangeMark = !this.textChangeMark;
+      }
+    }
   },
 };
 </script>

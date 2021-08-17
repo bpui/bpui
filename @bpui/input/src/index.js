@@ -13,6 +13,7 @@ import bpInput from './input.vue';
 function init() {
   bpLibs.icons.registerFontIcon('none', 'none');
   bpLibs.icons.registerAliasIcon('bp-input_warn', 'none');
+  bpLibs.icons.registerAliasIcon('bp-input_clear', 'cancel');
 }
 init();
 

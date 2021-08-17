@@ -26,20 +26,22 @@
         flex-grow: 0;
     }
     .bp-input__prefixLabel {
-        text-align: right;
+        text-align: center;
         width: $bpInputAdditionLabelWidth;
         color: $bpInputAdditionLabelColor;
-        padding-right: 2px;
-        padding-left: 2px;
         font-size: 10px;
+        flex-shrink: 0;
+        padding-left: 4px;
+        box-sizing: border-box;
     }
     .bp-input__suffixLabel {
-        text-align: left;
+        text-align: center;
         width: $bpInputAdditionLabelWidth;
         color: $bpInputAdditionLabelColor;
-        padding-right: 2px;
-        padding-left: 2px;
         font-size: 10px;
+        flex-shrink: 0;
+        padding-right: 4px;
+        box-sizing: border-box;
     }
 
     input {
@@ -105,6 +107,36 @@
         }
     }
 
+    .bp-input_clearIcon {
+        cursor: pointer;
+        height: 30px;
+        width: 30px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        div {
+            height: 12px;
+            width: 12px;
+            border: 1px #cccccc solid;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            i {
+                height: 12px;
+                width: 12px;
+                font-size: 12px;
+                color: #cacaca;
+                transform-origin: center;
+                transform: scale(0.5);
+            }
+
+        }
+    }
+
     &.bp-input__textarea {
         padding-right: initial;
         background: transparent;
@@ -112,6 +144,10 @@
         display: flex;
         align-items: center;
         vertical-align: bottom;
+
+        .bp-input_clearIcon { 
+            align-self: flex-start;
+        }
         
         .bp-input__inner {
             display: block;
