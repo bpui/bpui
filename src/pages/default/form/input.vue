@@ -14,7 +14,7 @@
     <bp-input readonly value="readonly"></bp-input>
 
     <h4>email/password/tel</h4>
-    <bp-input type="email" value="xxx@dd.com"></bp-input>
+    <bp-input type="email" value="xxx@dd.com" suffixIcon="loading"></bp-input>
     <bp-input type="password" value="123456"></bp-input>
     <bp-input type="tel" value="15888888888"></bp-input>
 
@@ -31,6 +31,9 @@
     <button @click="onClick">focus</button>
 
     <input autocomplete="off" />
+
+    <h4>clearable</h4>
+    <bp-input clearable></bp-input>
 
     <h4>number</h4>
     <bp-input type="int" min="8" v-model="temNum"></bp-input>

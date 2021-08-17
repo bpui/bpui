@@ -1,5 +1,5 @@
 /*!
- * bpui libs v1.1.2
+ * bpui libs v1.1.4
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1823,6 +1823,25 @@
 	  redefine(global_1, NUMBER, NumberWrapper);
 	}
 
+	var GlobalRouterBase = '$BpGlobalRouterBase';
+	function getBasePath() {
+	  return window[GlobalRouterBase];
+	}
+	function setBasePath(basePath) {
+	  if (!febs.string.isEmpty(basePath)) {
+	    if (basePath[0] != '/') {
+	      basePath = '/' + basePath;
+	    }
+
+	    if (basePath[basePath.length - 1] != '/') {
+	      basePath = basePath + '/';
+	    }
+	  } else {
+	    basePath = '/';
+	  }
+
+	  window[GlobalRouterBase] = basePath;
+	}
 	/**
 	* @desc: 获得无文件名的path.
 	* @description
@@ -1912,8 +1931,14 @@
 	            如 /base/xxx -> /xxx
 	*/
 
-	function getCurrentRoutePath(basePath) {
+	function getCurrentRoutePath() {
 	  var path = getCurrentPathname();
+
+	  if (path[path.length - 1] != '/') {
+	    path += '/';
+	  }
+
+	  var basePath = getBasePath();
 
 	  if (basePath != '/' && path.indexOf(basePath) == 0) {
 	    path = '/' + path.substr(basePath.length);
@@ -1985,7 +2010,6 @@
 	// const GlobalRouter404 = Symbol('$BpGlobalRouter404');
 
 	var GlobalRouter = '$BpGlobalRouter';
-	var GlobalRouterBase = '$BpGlobalRouterBase';
 	var GlobalRouter404 = '$BpGlobalRouter404';
 	/**
 	* @desc: 注册app.
@@ -2000,19 +2024,7 @@
 	    window[GlobalRouter].push(routes);
 	  }
 
-	  if (!febs.string.isEmpty(basePath)) {
-	    if (basePath[0] != '/') {
-	      basePath = '/' + basePath;
-	    }
-
-	    if (basePath[basePath.length - 1] != '/') {
-	      basePath = basePath + '/';
-	    }
-	  } else {
-	    basePath = '/';
-	  }
-
-	  window[GlobalRouterBase] = basePath; //
+	  setBasePath(basePath); //
 	  // 404.
 
 	  for (var i = 0; i < window[GlobalRouter].length; i++) {
@@ -2025,9 +2037,6 @@
 	      }
 	    }
 	  }
-	}
-	function getBasePath() {
-	  return window[GlobalRouterBase];
 	}
 	/**
 	* @desc: 获得路由.
@@ -2177,6 +2186,8 @@
 	      var p = parsePathname(path.path);
 	      l = febs.utils.mergeMap(path, p);
 	      l.query = febs.utils.mergeMap(p.query, path.query);
+	      l.state = path.state ? febs.utils.mergeMap(path.state) : null;
+	      l.hash = path.hash;
 	    }
 
 	    var rawPath = stringifyUrl(l.path, l.query);
@@ -2216,6 +2227,8 @@
 	      var p = parsePathname(path.path);
 	      l = febs.utils.mergeMap(path, p);
 	      l.query = febs.utils.mergeMap(p.query, path.query);
+	      l.state = path.state ? febs.utils.mergeMap(path.state) : null;
+	      l.hash = path.hash;
 	    }
 
 	    var rawPath = stringifyUrl(l.path, l.query);
@@ -2280,7 +2293,7 @@
 	        window.addEventListener('popstate', function () {
 	          var query = parseUrl(window.location.search);
 	          var location = {
-	            path: getCurrentRoutePath(_this.basePath),
+	            path: getCurrentRoutePath(),
 	            query: febs.utils.mergeMap(query),
 	            state: history.state,
 	            hash: window.location.hash

@@ -68,10 +68,10 @@
       <button class="bp-btnBorder">text</button>
       <button class="bp-btnSolid">primary</button>
       <button>
-        <bp-checkbox :checked="checked" >chk2</bp-checkbox>
+        <bp-checkbox >chk2</bp-checkbox>
       </button>
       <button>
-        <bp-switch :checked="checked" >dsfs</bp-switch>
+        <bp-switch >dsfs</bp-switch>
       </button>
       <button>
         <bp-radio-group v-model="value1">

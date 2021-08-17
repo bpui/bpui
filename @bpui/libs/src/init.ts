@@ -15,7 +15,6 @@ import * as utils from './router/utils';
 // const GlobalRouterBase = Symbol('$BpGlobalRouterBase');
 // const GlobalRouter404 = Symbol('$BpGlobalRouter404');
 const GlobalRouter = ('$BpGlobalRouter');
-const GlobalRouterBase = ('$BpGlobalRouterBase');
 const GlobalRouter404 = ('$BpGlobalRouter404');
 
 
@@ -29,19 +28,8 @@ export function registerApp(routes: Array< {path:string,component:any,[key:strin
   if (window[GlobalRouter].indexOf(routes) < 0) {
     window[GlobalRouter].push(routes);
   }
-
-  if (!febs.string.isEmpty(basePath)) {
-    if (basePath[0] != '/') {
-      basePath = '/' + basePath;
-    }
-    if (basePath[basePath.length-1] != '/') {
-      basePath = basePath + '/';
-    }
-  }
-  else {
-    basePath = '/';
-  }
-  window[GlobalRouterBase] = basePath;
+  
+  utils.setBasePath(basePath);
 
   //
   // 404.
@@ -57,11 +45,6 @@ export function registerApp(routes: Array< {path:string,component:any,[key:strin
   }
 }
 
-
-export function getBasePath():string {
-  return window[GlobalRouterBase];
-}
-
 /**
 * @desc: 获得路由.
 */
@@ -74,7 +57,7 @@ export function getMatchedComponent(
     window[GlobalRouter] = [];
   }
 
-  let noFileRouter = utils.getRoutePathNoFile(getBasePath(), location.path);
+  let noFileRouter = utils.getRoutePathNoFile(utils.getBasePath(), location.path);
 
   for (let i = 0; i < window[GlobalRouter].length; i++) {
     let routes = window[GlobalRouter][i];

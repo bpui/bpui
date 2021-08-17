@@ -9,6 +9,28 @@
 
 import * as febs from 'febs-browser';
 
+const GlobalRouterBase = ('$BpGlobalRouterBase');
+
+
+export function getBasePath():string {
+  return window[GlobalRouterBase];
+}
+
+export function setBasePath(basePath: string): void {
+  if (!febs.string.isEmpty(basePath)) {
+    if (basePath[0] != '/') {
+      basePath = '/' + basePath;
+    }
+    if (basePath[basePath.length-1] != '/') {
+      basePath = basePath + '/';
+    }
+  }
+  else {
+    basePath = '/';
+  }
+  window[GlobalRouterBase] = basePath;
+}
+
 
 /**
 * @desc: 获得无文件名的path.
@@ -101,8 +123,13 @@ export function getRoutePathNoFile(basePath:string, routerPath?:string) {
             如 /base/xxx/ -> /xxx
             如 /base/xxx -> /xxx
 */
-export function getCurrentRoutePath(basePath:string) {
+export function getCurrentRoutePath() {
   let path = getCurrentPathname();
+  if (path[path.length - 1] != '/') {
+    path += '/';
+  }
+
+  let basePath = getBasePath();
   if (basePath != '/' && path.indexOf(basePath) == 0) {
     path = '/' + path.substr(basePath.length);
   }

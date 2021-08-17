@@ -7,7 +7,7 @@
 * Desc: basePath 以 / 结尾, / 开头
 */
 
-import * as febs from 'febs-browser';;
+import * as febs from 'febs-browser';
 import * as url from '../utils/url';
 import * as router from '../init';
 import * as utils from './utils';
@@ -35,7 +35,7 @@ export default class Html5History {
    * basePath
    */
   get basePath():string {
-    return router.getBasePath();
+    return utils.getBasePath();
   }
 
   /**
@@ -71,6 +71,8 @@ export default class Html5History {
       let p = utils.parsePathname(path.path) as bp.Location;
       l = febs.utils.mergeMap(path, p);
       l.query = febs.utils.mergeMap(p.query, path.query);
+      l.state = path.state ? febs.utils.mergeMap(path.state) : null;
+      l.hash = path.hash;
     }
 
     let rawPath = url.stringifyUrl(l.path, l.query);
@@ -103,6 +105,8 @@ export default class Html5History {
       let p = utils.parsePathname(path.path) as bp.Location;
       l = febs.utils.mergeMap(path, p);
       l.query = febs.utils.mergeMap(p.query, path.query);
+      l.state = path.state ? febs.utils.mergeMap(path.state) : null;
+      l.hash = path.hash;
     }
 
     let rawPath = url.stringifyUrl(l.path, l.query);
@@ -165,7 +169,7 @@ export default class Html5History {
         window.addEventListener('popstate', ()=>{
           let query = url.parseUrl(window.location.search);
           let location = {
-            path: utils.getCurrentRoutePath(this.basePath),
+            path: utils.getCurrentRoutePath(),
             query: febs.utils.mergeMap(query),
             state: history.state,
             hash: window.location.hash

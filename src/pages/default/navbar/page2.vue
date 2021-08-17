@@ -8,9 +8,13 @@
  -->
 
 <template>
-  <div style="background:#f00; height:1000px;">
+  <div style="background:#f00;">
     page2 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 
     <br>
+    <a href="#aaa">#aaa</a><br>
+    <a href="#bbb">#bbb</a><br>
+    <router-link to="#aaa">#aaa by router</router-link><br>
+    <router-link to="#bbb">#bbb by router</router-link><br>
     <router-link :back="true">pop</router-link><br>
     <router-link :back="true" :data="'22222'">pop with data</router-link><br>
     <router-link :back="true" animate="lift">pop with animate</router-link><br>
@@ -18,6 +22,9 @@
     <router-link :back="true" animate="fade">pop with fade</router-link><br>
     <router-link to="/sdfsf">404</router-link><br>
     <router-link to="/navbar" animate="lift" :replace="true">replace</router-link>
+
+    <div id="aaa" style="height:600px;">aaaa</div>
+    <div id="bbb" style="height:600px;">bbb</div>
   </div>
 </template>
 

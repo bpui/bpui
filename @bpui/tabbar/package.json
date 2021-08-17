@@ -1,8 +1,7 @@
 {
   "description": "tabbar",
   "dependencies": {
-    "@bpui/libs": "^1.1.1",
-    "@bpui/popover": "^1.1.3"
+    "@bpui/popover": "^1.1.9"
   },
   "directories": {},
   "keywords": [],
