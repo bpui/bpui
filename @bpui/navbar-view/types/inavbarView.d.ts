@@ -75,6 +75,12 @@ declare namespace bp {
      * @desc: 是否包含状态栏. (ios webapp模式为true, 其他默认为false).
      */
     containStatusBar: boolean;
+    
+    /**
+     * @desc 使用 router-link 或 方法跳转到 #xxx anchor时的页面滚动行为. 默认为 smooth.
+     */
+    scrollToAnchorBehavior: 'instant' | 'smooth';
+    
     /**
      * @desc: 自动back按钮组件.
      */
