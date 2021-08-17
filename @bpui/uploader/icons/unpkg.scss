@@ -11,32 +11,34 @@
   font-style: normal;
   font-display: block;
 }
+
 .bp-file-icon {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'bpui-file-icon' !important;
-  speak: never;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
+  speak: never !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  letter-spacing: initial !important;
 
   /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
 
   height: 100px;
   width: 100px;
   font-size: 100px;
-  white-space: nowrap;
+  white-space: nowrap !important;
 
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
-  display: inline-block;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 100% 100% !important;
+  display: inline-block !important;
 
   &:before {
-    display: block;
+    display: block !important;
   }
 }
 
@@ -50,22 +52,22 @@
 }
 .bp-file-icon-7z .path2:before {
   content: "\e901";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(164, 133, 188);
 }
 .bp-file-icon-7z .path3:before {
   content: "\e902";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(242, 236, 245);
 }
 .bp-file-icon-7z .path4:before {
   content: "\e903";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(255, 255, 255);
 }
 .bp-file-icon-7z .path5:before {
   content: "\e904";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(164, 133, 188);
 }
 .bp-file-icon-csv {
@@ -77,18 +79,18 @@
 }
 .bp-file-icon-csv .path2:before {
   content: "\e906";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(67, 72, 84);
 }
 .bp-file-icon-csv .path3:before {
   content: "\e907";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(0, 0, 0);
   opacity: 0.1;
 }
 .bp-file-icon-csv .path4:before {
   content: "\e908";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(3, 125, 243);
 }
 .bp-file-icon-doc {
@@ -100,23 +102,23 @@
 }
 .bp-file-icon-doc .path2:before {
   content: "\e90a";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(67, 72, 84);
 }
 .bp-file-icon-doc .path3:before {
   content: "\e90b";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(0, 0, 0);
   opacity: 0.1;
 }
 .bp-file-icon-doc .path4:before {
   content: "\e90c";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(44, 151, 255);
 }
 .bp-file-icon-doc .path5:before {
   content: "\e90d";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(255, 255, 255);
 }
 .bp-file-icon-default {
@@ -150,23 +152,23 @@
 }
 .bp-file-icon-mov .path2:before {
   content: "\e913";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(67, 72, 84);
 }
 .bp-file-icon-mov .path3:before {
   content: "\e914";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(0, 0, 0);
   opacity: 0.1;
 }
 .bp-file-icon-mov .path4:before {
   content: "\e915";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(93, 158, 213);
 }
 .bp-file-icon-mov .path5:before {
   content: "\e916";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(255, 255, 255);
 }
 .bp-file-icon-mp4 {
@@ -178,23 +180,23 @@
 }
 .bp-file-icon-mp4 .path2:before {
   content: "\e918";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(67, 72, 84);
 }
 .bp-file-icon-mp4 .path3:before {
   content: "\e919";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(0, 0, 0);
   opacity: 0.1;
 }
 .bp-file-icon-mp4 .path4:before {
   content: "\e91a";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(114, 74, 226);
 }
 .bp-file-icon-mp4 .path5:before {
   content: "\e91b";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(255, 255, 255);
 }
 .bp-file-icon-pdf {
@@ -206,23 +208,23 @@
 }
 .bp-file-icon-pdf .path2:before {
   content: "\e91d";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(67, 72, 84);
 }
 .bp-file-icon-pdf .path3:before {
   content: "\e91e";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(0, 0, 0);
   opacity: 0.1;
 }
 .bp-file-icon-pdf .path4:before {
   content: "\e91f";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(205, 64, 80);
 }
 .bp-file-icon-pdf .path5:before {
   content: "\e920";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(255, 255, 255);
 }
 .bp-file-icon-ppt {
@@ -234,23 +236,23 @@
 }
 .bp-file-icon-ppt .path2:before {
   content: "\e922";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(67, 72, 84);
 }
 .bp-file-icon-ppt .path3:before {
   content: "\e923";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(0, 0, 0);
   opacity: 0.1;
 }
 .bp-file-icon-ppt .path4:before {
   content: "\e924";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(240, 82, 100);
 }
 .bp-file-icon-ppt .path5:before {
   content: "\e925";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(255, 255, 255);
 }
 .bp-file-icon-psd {
@@ -262,23 +264,23 @@
 }
 .bp-file-icon-psd .path2:before {
   content: "\e927";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(67, 72, 84);
 }
 .bp-file-icon-psd .path3:before {
   content: "\e928";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(0, 0, 0);
   opacity: 0.1;
 }
 .bp-file-icon-psd .path4:before {
   content: "\e929";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(11, 155, 227);
 }
 .bp-file-icon-psd .path5:before {
   content: "\e92a";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(255, 255, 255);
 }
 .bp-file-icon-rar {
@@ -317,23 +319,23 @@
 }
 .bp-file-icon-svg .path2:before {
   content: "\e931";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(67, 72, 84);
 }
 .bp-file-icon-svg .path3:before {
   content: "\e932";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(0, 0, 0);
   opacity: 0.1;
 }
 .bp-file-icon-svg .path4:before {
   content: "\e933";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(186, 241, 205);
 }
 .bp-file-icon-svg .path5:before {
   content: "\e934";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(255, 255, 255);
 }
 .bp-file-icon-txt {
@@ -345,23 +347,23 @@
 }
 .bp-file-icon-txt .path2:before {
   content: "\e936";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(67, 72, 84);
 }
 .bp-file-icon-txt .path3:before {
   content: "\e937";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(0, 0, 0);
   opacity: 0.1;
 }
 .bp-file-icon-txt .path4:before {
   content: "\e938";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(167, 168, 255);
 }
 .bp-file-icon-txt .path5:before {
   content: "\e939";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(255, 255, 255);
 }
 .bp-file-icon-xls {
@@ -373,23 +375,23 @@
 }
 .bp-file-icon-xls .path2:before {
   content: "\e93b";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(67, 72, 84);
 }
 .bp-file-icon-xls .path3:before {
   content: "\e93c";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(0, 0, 0);
   opacity: 0.1;
 }
 .bp-file-icon-xls .path4:before {
   content: "\e93d";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(0, 150, 136);
 }
 .bp-file-icon-xls .path5:before {
   content: "\e93e";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(255, 255, 255);
 }
 .bp-file-icon-zip {
@@ -401,21 +403,21 @@
 }
 .bp-file-icon-zip .path2:before {
   content: "\e940";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(188, 133, 133);
 }
 .bp-file-icon-zip .path3:before {
   content: "\e941";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(255, 255, 255);
 }
 .bp-file-icon-zip .path4:before {
   content: "\e942";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(245, 236, 236);
 }
 .bp-file-icon-zip .path5:before {
   content: "\e943";
-  margin-left: -1em;
+  margin-left: -1em !important;
   color: rgb(188, 133, 133);
 }
