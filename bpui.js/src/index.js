@@ -5,40 +5,38 @@ var componentInstance = require('./componentInstance');
 var pkg = require('../package.json');
 var componentEnum = require('./componentEnum');
 
-function registerComponents(App:any, components?:string[]):Promise<void> {
+function registerComponents(App/*:any*/, components/*?:string[]*/) //:Promise<void> 
+{
   // vue.
   return vuePlugins(App, components);
 }
 
 function registerApp(
-  routes: {
+  routes/*: {
     routePath: Array< {path:string,component:any,[key:string]:any} >,
     basePath?: string,
-  },
-): void {
+  }*/,
+) {
 
   // register app.
   libs.registerApp(routes.routePath, routes.basePath);
-
-  // // register css
-  // componentInstance.requireComponentStyle(components);
 
   // Thank the user in console.
   console.log('%c[bpui v' + pkg.version + '] Thanks for visited! 😊', 'color: #e95420;');
 }
 
-function getLayout(layouts:any, newRoute:any, oldRoute:any):any {
+function getLayout(layouts/*:any*/, newRoute/*:any*/, oldRoute/*:any*/) {
   let newRoutePath = newRoute.path;
   if (newRoutePath[0] == '/') newRoutePath = newRoutePath.substring(1);
   for (let p in layouts) {
     if (p[0] == '/') p = p.substring(1);
     if (newRoutePath == p || newRoutePath.indexOf(p + '/') >= 0) {
-      return (layouts as any)[p];
+      return (layouts /*as any*/)[p];
     }
   }
 
   // 默认值.
-  return (layouts as any)['default'];
+  return (layouts /*as any*/)['default'];
 }
 
 class Hook {
@@ -46,7 +44,7 @@ class Hook {
    * 添加页面抖动hook.
    * 回调方法中的paddingRight参数表示发生抖动时页面中fixed元素应该在原有paddingRight值上增加的像素值.
    */
-  addWidgetShake(foo:(paddingRight:number)=>void):void {
+  addWidgetShake(foo/*:(paddingRight:number)=>void*/) {
     componentInstance.getComponent('dialog', (err, ms) => {
       ms.default.hook.addWidgetShake(foo);
     })
@@ -55,7 +53,7 @@ class Hook {
   /**
    * 移除页面抖动hook.
    */
-  removeWidgetShake(foo:(paddingRight:number)=>void):void {
+  removeWidgetShake(foo/*:(paddingRight:number)=>void*/) {
     componentInstance.getComponent('dialog', (err, ms) => {
       ms.default.hook.removeWidgetShake(foo);
     })
@@ -86,7 +84,6 @@ export default class Instance {
   static get bpTabbarComponents() { return componentInstance.getComponent('tabbar').default.bpTabbarComponents; }
   static get bpTabbar() { return componentInstance.getComponent('tabbar').default.bpTabbar; }
   static get bpTabbarItem() { return componentInstance.getComponent('tabbar').default.bpTabbarItem; }
-  static get bpTabbarItemIcon() { return componentInstance.getComponent('tabbar').default.bpTabbarItemIcon; }
   static get bpTabbarItemTitle() { return componentInstance.getComponent('tabbar').default.bpTabbarItemTitle; }
   
   //
@@ -94,7 +91,7 @@ export default class Instance {
     return componentInstance.getComponent('navbarView').default.bpNavbarView;
   }
   static get bpNavbar() { return componentInstance.getComponent('navbarView').default.bpNavbar; }
-  static get setNavbarDefaultCfg():any { return componentInstance.getComponent('navbarView').default.setNavbarDefaultCfg; }
+  static get setNavbarDefaultCfg() { return componentInstance.getComponent('navbarView').default.setNavbarDefaultCfg; }
 
   //
   static get bpCheckbox() { return componentInstance.getComponent('checkbox').default.bpCheckbox }
@@ -112,8 +109,8 @@ export default class Instance {
   }
   static get apiWidget() { return componentInstance.getComponent('dialog').default.apiWidget }
   static get bpWidget() { return componentInstance.getComponent('dialog').default.bpWidget }
-  static get registerDialogComponents(): any { return componentInstance.getComponent('dialog').default.registerDialogComponents }
-  static get registerDialogCustom(): any { return componentInstance.getComponent('dialog').default.registerDialogCustom }
+  static get registerDialogComponents() { return componentInstance.getComponent('dialog').default.registerDialogComponents }
+  static get registerDialogCustom() { return componentInstance.getComponent('dialog').default.registerDialogCustom }
 
   //
   static get bpPicker() { return componentInstance.getComponent('picker').default.bpPicker }
@@ -141,4 +138,4 @@ class InstanceAgent {
   static get apiWidget() { return Instance.apiWidget; }
 }
 
-((window||window) as any).bp = InstanceAgent;
+(window/* as any*/).bp = InstanceAgent;

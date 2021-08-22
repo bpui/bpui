@@ -9,6 +9,7 @@
 
 <template>
   <div style="background: #eee">
+    _2
   </div>
 </template>
 
@@ -41,6 +42,8 @@
     }
 
     mounted() {
+      // @ts-ignore
+      this.$bpTabbar.setHidden(true);
     }
   }
 </script>

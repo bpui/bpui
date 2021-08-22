@@ -9,6 +9,7 @@
 
 <template>
   <div style="background: #eee">
+    tabbar2 _1
   </div>
 </template>
 

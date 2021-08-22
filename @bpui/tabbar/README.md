@@ -2,25 +2,26 @@
 
 ```js
 import bpui from '@bpui/table-view';
-bpui.bpTableView
+bpui.bpTabbar
+bpui.bpTabbarItem
+bpui.bpTabbarItemTitle
 ```
 
 ```html
-<bp-table-view tableTitle="常规">
-  <bp-table-cell>
-    <bp-table-cell-left><bp-icon name="heartFill"/></bp-table-cell-left>
-    <bp-table-cell-center>center label</bp-table-cell-center>
-    <bp-table-cell-right>right label</bp-table-cell-right>
-  </bp-table-cell>
-  <bp-table-cell nextArrow="true" @click="()=>{$bpWidget.showToast('click')}">
-    <bp-table-cell-left></bp-table-cell-left>
-    <bp-table-cell-center>nextArrow</bp-table-cell-center>
-  </bp-table-cell>
-  <bp-table-cell :disabled="true">
-    <bp-table-cell-left></bp-table-cell-left>
-    <bp-table-cell-center>disabled</bp-table-cell-center>
-  </bp-table-cell>
-</bp-table-view>
+<bp-tabbar routePath="/tabbar2">
+  <bp-tabbar-item routePath="/_1">
+    <bp-icon name="heartFill"></bp-icon>
+    <bp-tabbar-item-title>dfdf</bp-tabbar-item-title>
+  </bp-tabbar-item>
+  <bp-tabbar-item routePath="/_2">
+    <bp-icon active="true" name="heartFill"></bp-icon>
+    <bp-icon active="false" name="heart"></bp-icon>
+    <bp-tabbar-item-title>dfdf</bp-tabbar-item-title>
+  </bp-tabbar-item>
+  <bp-tabbar-item @click.stop="$router.push('/tabbar')">
+    <bp-tabbar-item-title>to tabbar1</bp-tabbar-item-title>
+  </bp-tabbar-item>
+</bp-tabbar>
 ```
 
 style
@@ -28,8 +29,8 @@ style
 ```css
 /* scss */
 import '@bpui/libs/style/class.scss';
-import '@bpui/table-view/style';
+import '@bpui/tabbar/style';
 
 /* css */
-<link href="~@bpui/table-view/dist/style.css" rel="stylesheet" type="text/css"/>
+<link href="~@bpui/tabbar/dist/style.css" rel="stylesheet" type="text/css"/>
 ```

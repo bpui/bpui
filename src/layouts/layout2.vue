@@ -32,6 +32,7 @@ import { State, Mutation } from 'vuex-class';
 @Component({
   components: {
     navbarView: bpui.bpNavbarView,
+    ...bpui.bpTabbarComponents,
   },
 })
 export default class extends Vue {

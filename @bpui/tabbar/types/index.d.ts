@@ -1,15 +1,19 @@
 
 
-import Vue, {VueConstructor} from 'vue';
 
-export const bpTabbar: VueConstructor;
-export const bpTabbarItem: VueConstructor;
-export const bpTabbarItemIcon: VueConstructor;
+import './vue'
+import Vue, { VueConstructor } from 'vue'
+
+export interface Tabbar extends VueConstructor, bp.Tabbar { }
+export const bpTabbar: Tabbar;
+
+export interface TabbarItem extends VueConstructor, bp.TabbarItem { }
+export const bpTabbarItem: TabbarItem;
+
 export const bpTabbarItemTitle: VueConstructor;
 
 export const bpTabbarComponents: {
   bpTabbar,
   bpTabbarItem,
-  bpTabbarItemIcon,
   bpTabbarItemTitle,
 }

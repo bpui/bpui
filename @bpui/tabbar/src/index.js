@@ -7,30 +7,23 @@
 * Desc: 
 */
 
-import bpLibs from '@bpui/libs';
+import VuePlugin from './vue/plugins/plugin';
 
 import bpTabbar from './tabbar.vue';
 import bpTabbarItem from './tabbarItem.vue';
-import bpTabbarItemIcon from './tabbarItemIcon.vue';
 import bpTabbarItemTitle from './tabbarItemTitle.vue';
 
 const bpTabbarComponents = {
   bpTabbar,
   bpTabbarItem,
-  bpTabbarItemIcon,
   bpTabbarItemTitle
 }
 
 
 export default {
+  VuePlugin,
   bpTabbarComponents,
   bpTabbar,
   bpTabbarItem,
-  bpTabbarItemIcon,
   bpTabbarItemTitle,
-  // bpTableCell,
-  // bpTableCellCenter,
-  // bpTableCellLeft,
-  // bpTableCellRight,
-  // bpTableCellEditor,
 }

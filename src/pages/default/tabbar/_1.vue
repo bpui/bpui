@@ -9,6 +9,7 @@
 
 <template>
   <div style="background: #eee">
+    _1
   </div>
 </template>
 
@@ -41,6 +42,16 @@
     }
 
     mounted() {
+      // @ts-ignore
+      this.$bpTabbar.setHidden(false);
+      // @ts-ignore
+      this.$bpTabbar.setTabBadge(0, 5);
+      // @ts-ignore
+      this.$bpTabbar.setTabBadge(1, 'new');
+      // @ts-ignore
+      this.$bpTabbar.setTabBadge(2, 0);
+      // @ts-ignore
+      this.$bpTabbar.setTabBadge(3, true);
     }
   }
 </script>
