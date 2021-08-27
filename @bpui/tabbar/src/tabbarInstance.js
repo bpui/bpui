@@ -87,14 +87,3 @@ export function setInstance(instance/*: any*/) {
 export function getInstance() {
   return window[GlobalTabbar]
 }
-
-export function setViewData(data/*: any*/) {
-  window[GlobalTabbarPopData] = data
-}
-
-// 获取一次后清除.
-export function getViewData() {
-  let data = window[GlobalTabbarPopData]
-  window[GlobalTabbarPopData] = null
-  return data
-}

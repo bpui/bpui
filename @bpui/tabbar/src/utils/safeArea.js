@@ -8,12 +8,14 @@
 */
 
 import * as febs from 'febs-browser';
+import * as tabbarInstance from '../tabbarInstance';
 
 const GlobalStatusSupportSafeArea = '$BpGlobalStatusSupportSafeArea'
+const GlobalEventSupportSafeArea = '$BpGlobalEventSupportSafeArea'
 
 let status = 0; // 0:还没数据，-1:不支持，1:支持
 
-export function isSupportSafeArea() {
+function isSupportSafeArea() {
   let r = window[GlobalStatusSupportSafeArea];
   if (r !== null) {
     return r;
@@ -38,4 +40,48 @@ export function isSupportSafeArea() {
   window[GlobalStatusSupportSafeArea] = status;
 
   return status;
+}
+
+/**
+ * @desc 处理安全边距变换事件.
+ */
+function handleSafeArea() {
+  if (!isSupportSafeArea()) {
+    const thresholdH = 70;
+    let tabbar = tabbarInstance.getInstance();
+    if (tabbar) {
+      setTimeout(() => {
+        if (febs.utils.browserIsMobile()) {
+          if (febs.utils.browserIsPhone()) {
+            if (window.innerHeight < window.innerWidth) {
+              tabbar._changeFakeSafeArea(true);
+            }
+            else if (
+              window.screen.height - window.innerHeight > thresholdH
+            ) {
+              tabbar._changeFakeSafeArea(false);
+            }
+            else {
+              tabbar._changeFakeSafeArea(true);
+            }
+          }
+          else {
+            tabbar._changeFakeSafeArea(true);
+          }
+        }
+      }, 100);
+    }
+  }
+}
+
+export function init() {
+  if (!window[GlobalEventSupportSafeArea]) {
+    if (!isSupportSafeArea()) {
+      febs.dom.addEventListener(window, 'orientationchange', handleSafeArea, false);
+      febs.dom.addEventListener(window, 'resize', handleSafeArea);
+    }
+    window[GlobalEventSupportSafeArea] = true;
+  }
+
+  handleSafeArea();
 }

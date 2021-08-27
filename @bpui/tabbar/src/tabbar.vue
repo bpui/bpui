@@ -67,6 +67,7 @@
         if (tabbarInstance.isMatchRoute(this.routePath, to.path)) {
           this._restore();
           tabbarInstance.setInstance(this);
+          utilsSafeArea.init();
 
           let subRoute = tabbarInstance.getSubRoute(this.routePath, to.path);
           let children = this.$children;
@@ -82,10 +83,6 @@
     created() {
     },
     mounted() {
-      if (!utilsSafeArea.isSupportSafeArea()) {
-        this.unSupportSafeArea = true;
-      }
-
       if (!tabbarInstance.isMatchRoute(this.routePath, this.$bpLibs.router.currentRoute.path)) {
         $(this.$el).css('display', 'none');
       }
@@ -94,6 +91,7 @@
       tabbarInstance.setInstanceByRoute(this, this.routePath);
       if (tabbarInstance.isMatchRoute(this.routePath, this.$route.path)) {
         tabbarInstance.setInstance(this);
+        utilsSafeArea.init();
         isCurTabbar = true;
       } // if.
 
@@ -138,6 +136,9 @@
       $('.bp-tabbar').remove();
     },
     methods: {
+      _changeFakeSafeArea(isFakeSafeArea) {
+        this.unSupportSafeArea = isFakeSafeArea;
+      },
       /**
       * @desc: 设置可见度.
       */
