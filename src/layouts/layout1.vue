@@ -9,7 +9,7 @@
 
 <template>
   <div>
-    <div>layout1</div>
+    <div style="height:70px;background:#eee;">layout1</div>
     <div>
       <navbarView pageClass="layout1-navbarView"></navbarView>
     </div>
