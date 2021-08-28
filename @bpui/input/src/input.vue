@@ -117,6 +117,7 @@ export default {
     max: Number | String,
     min: Number | String,
     placeholder: String,
+    errorText: String,
     rows: Number | String,
     name: String,
     maxlength: Number | String,
@@ -185,6 +186,8 @@ export default {
       _min: Number.MIN_SAFE_INTEGER,
       _max: Number.MAX_SAFE_INTEGER,
       textChangeMark: false, 
+      isMarkError: false,
+      focusIsEmpty: false,
     };
   },
   computed: {
@@ -233,6 +236,24 @@ export default {
   },
   mounted() {
     this.init();
+  },
+  beforeDestroy() {
+    let el;
+    el = $(this.$el);
+    let ee = el.children("input")[0];
+    if (!ee) {
+      ee = el.children("textarea")[0];
+    }
+    ee = $(ee);
+
+    ee.off('keydown')
+      .off('keyup')
+      .off('input')
+      .off('change')
+      .off('focus')
+      .off('blur')
+      .off('keyoff')
+      .off('keyoff');
   },
   methods: {
     init() {
@@ -421,7 +442,7 @@ export default {
       this._max = Number.isNaN(parseFloat(this.max))
         ? Number.MAX_SAFE_INTEGER
         : parseFloat(this.max);
-      this.value;
+      
       // 进行一次验证.
       this.validate(
         (vv) => {
@@ -446,6 +467,8 @@ export default {
         let elem = $(event.currentTarget);
         let value = elem.val() || "";
 
+        this.isMarkError = false;
+
         if (this.isInt || this.isFloat) {
           this.validate(
             (vv) => {
@@ -456,7 +479,7 @@ export default {
             false
           );
         } else {
-          this.validate(null, value, true, true);
+          this.validate(null, value, true, !this.focusIsEmpty);
         }
 
         // type.
@@ -714,8 +737,18 @@ export default {
       el.off("focus");
       el.on("focus", (event) => {
         // console.debug('event ' + event.type);
-        this.isInputWrong = false;
-        this.isValid();
+        if (this.isInt || this.isFloat) {
+          this.focusIsEmpty = false;
+        }
+        else {
+          this.focusIsEmpty = this.text().length == 0;
+          if (this.isMarkError) {
+            this.focusIsEmpty = false;
+          }
+        }
+
+        // this.isInputWrong = false;
+        // this.isValid();
         this.$emit("focus", event);
 
         this.isFocus = true;
@@ -815,7 +848,7 @@ export default {
         } else {
           if (changeInputWrong) {
             this.isInputWrong = true;
-            this.$emit("error");
+            this.$emit("error", this, this.errorText);
           }
         }
         // }
@@ -864,7 +897,7 @@ export default {
 
           if (changeInputWrong) {
             this.isInputWrong = true;
-            this.$emit("error");
+            this.$emit("error", this, this.errorText);
           }
           if (callback) callback(v1);
           return;
@@ -904,7 +937,7 @@ export default {
               this.validator(parseFloat(v2), (valid) => {
                 if (!valid) {
                   this.isInputWrong = true;
-                  this.$emit("error");
+                  this.$emit("error", this, this.errorText);
                 } else {
                   this.isInputWrong = false;
                 }
@@ -924,7 +957,7 @@ export default {
             this.validator(value, (valid) => {
               if (!valid) {
                 this.isInputWrong = true;
-                this.$emit("error");
+                this.$emit("error", this, this.errorText);
               } else {
                 this.isInputWrong = false;
               }
@@ -1002,6 +1035,14 @@ export default {
       }
       this.validate(null, el.val());
       return !this.isInputWrong;
+    },
+
+    /**
+     * @desc: 标记为输入错误状态, 当输入内容改变后按验证规则进行验证.
+     */
+    markError: function() {
+      this.isMarkError = true;
+      this.isInputWrong = true;
     },
 
     /**

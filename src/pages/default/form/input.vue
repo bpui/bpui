@@ -33,7 +33,8 @@
     <input autocomplete="off" />
 
     <h4>clearable</h4>
-    <bp-input clearable></bp-input>
+    <bp-input ref="input1" clearable pattern="d+"></bp-input>
+    <button @click="$refs.input1.markError();">input1 mark error</button>
 
     <h4>number</h4>
     <bp-input type="int" min="8" v-model="temNum"></bp-input>
