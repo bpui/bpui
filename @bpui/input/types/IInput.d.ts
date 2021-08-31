@@ -84,7 +84,7 @@ declare namespace bp {
     isValid(): boolean;
 
     /**
-     * @desc: 标记为输入错误状态, 当输入内容改变后按验证规则进行验证.
+     * @desc: (仅生效一次) 标记为输入错误状态, 当输入内容改变后按验证规则进行验证.
      */
     markError(): void;
 

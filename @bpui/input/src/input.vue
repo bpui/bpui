@@ -186,8 +186,7 @@ export default {
       _min: Number.MIN_SAFE_INTEGER,
       _max: Number.MAX_SAFE_INTEGER,
       textChangeMark: false, 
-      isMarkError: false,
-      focusIsEmpty: false,
+      isMarkError: null,
     };
   },
   computed: {
@@ -467,19 +466,22 @@ export default {
         let elem = $(event.currentTarget);
         let value = elem.val() || "";
 
-        this.isMarkError = false;
-
         if (this.isInt || this.isFloat) {
           this.validate(
             (vv) => {
               elem.val(vv);
+              if (this.isMarkError == vv) {
+                this.isInputWrong = true;
+              }
             },
             value,
             true,
-            false
           );
         } else {
-          this.validate(null, value, true, !this.focusIsEmpty);
+          this.validate(null, value, true);
+          if (this.isMarkError == value) {
+            this.isInputWrong = true;
+          }
         }
 
         // type.
@@ -737,15 +739,6 @@ export default {
       el.off("focus");
       el.on("focus", (event) => {
         // console.debug('event ' + event.type);
-        if (this.isInt || this.isFloat) {
-          this.focusIsEmpty = false;
-        }
-        else {
-          this.focusIsEmpty = this.text().length == 0;
-          if (this.isMarkError) {
-            this.focusIsEmpty = false;
-          }
-        }
 
         // this.isInputWrong = false;
         // this.isValid();
@@ -792,6 +785,14 @@ export default {
         let elem = $(event.currentTarget);
         let value = elem.val() || "";
         let oldValue = value;
+
+        if (this.isMarkError == value) {
+          this.isInputWrong = true;
+          return;
+        }
+
+        this.isMarkError = null;
+
         this.validate((newValue) => {
           // type.
           if (this.isInt || this.isFloat) {
@@ -816,7 +817,7 @@ export default {
           }
 
           this.$emit("blur", event);
-        }, value);
+        }, value, false);
       });
     },
     /**
@@ -1041,7 +1042,7 @@ export default {
      * @desc: 标记为输入错误状态, 当输入内容改变后按验证规则进行验证.
      */
     markError: function() {
-      this.isMarkError = true;
+      this.isMarkError = this.text();
       this.isInputWrong = true;
     },
 

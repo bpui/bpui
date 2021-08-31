@@ -1,5 +1,5 @@
 /*!
- * bpui input v1.1.8
+ * bpui input v1.1.9
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1648,8 +1648,7 @@ var script = {
       _min: Number.MIN_SAFE_INTEGER,
       _max: Number.MAX_SAFE_INTEGER,
       textChangeMark: false,
-      isMarkError: false,
-      focusIsEmpty: false
+      isMarkError: null
     };
   },
   computed: {
@@ -1937,16 +1936,23 @@ var script = {
         // console.debug('event ' + event.type);
         var elem = $(event.currentTarget);
         var value = elem.val() || "";
-        this.isMarkError = false;
 
         if (this.isInt || this.isFloat) {
           this.validate(function (vv) {
             _newArrowCheck(this, _this7);
 
             elem.val(vv);
-          }.bind(this), value, true, false);
+
+            if (this.isMarkError == vv) {
+              this.isInputWrong = true;
+            }
+          }.bind(this), value, true);
         } else {
-          this.validate(null, value, true, !this.focusIsEmpty);
+          this.validate(null, value, true);
+
+          if (this.isMarkError == value) {
+            this.isInputWrong = true;
+          }
         } // type.
 
 
@@ -2229,18 +2235,8 @@ var script = {
         _newArrowCheck(this, _this14);
 
         // console.debug('event ' + event.type);
-        if (this.isInt || this.isFloat) {
-          this.focusIsEmpty = false;
-        } else {
-          this.focusIsEmpty = this.text().length == 0;
-
-          if (this.isMarkError) {
-            this.focusIsEmpty = false;
-          }
-        } // this.isInputWrong = false;
+        // this.isInputWrong = false;
         // this.isValid();
-
-
         this.$emit("focus", event);
         this.isFocus = true;
 
@@ -2297,6 +2293,13 @@ var script = {
         var elem = $(event.currentTarget);
         var value = elem.val() || "";
         var oldValue = value;
+
+        if (this.isMarkError == value) {
+          this.isInputWrong = true;
+          return;
+        }
+
+        this.isMarkError = null;
         this.validate(function (newValue) {
           _newArrowCheck(this, _this16);
 
@@ -2324,7 +2327,7 @@ var script = {
           }
 
           this.$emit("blur", event);
-        }.bind(this), value);
+        }.bind(this), value, false);
       }.bind(this));
     },
 
@@ -2563,7 +2566,7 @@ var script = {
      * @desc: 标记为输入错误状态, 当输入内容改变后按验证规则进行验证.
      */
     markError: function markError() {
-      this.isMarkError = true;
+      this.isMarkError = this.text();
       this.isInputWrong = true;
     },
 
