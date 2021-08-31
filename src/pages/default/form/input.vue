@@ -35,6 +35,8 @@
     <h4>clearable</h4>
     <bp-input ref="input1" clearable pattern="d+"></bp-input>
     <button @click="$refs.input1.markError();">input1 mark error</button>
+    <bp-input ref="input2" type="int" clearable></bp-input>
+    <button @click="$refs.input2.markError();">input number mark error</button>
 
     <h4>number</h4>
     <bp-input type="int" min="8" v-model="temNum"></bp-input>

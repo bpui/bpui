@@ -22,7 +22,8 @@
     "src",
     "style",
     "types",
-    "postinstall.js"
+    "postinstall.js",
+    "static.js"
   ],
   "license": "MIT",
   "main": "src/index.js",
@@ -37,5 +38,5 @@
     "postinstall": "node ./postinstall"
   },
   "name": "bpui.js",
-  "version": "1.1.8"
+  "version": "1.1.9"
 }

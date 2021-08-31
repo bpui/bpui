@@ -1,7 +1,7 @@
 
 import libs from '@bpui/libs';
 import vuePlugins from './vuePlugins';
-var componentInstance = require('./componentInstance');
+var componentInstance = require('./dyn/componentInstance');
 var pkg = require('../package.json');
 var componentEnum = require('./componentEnum');
 

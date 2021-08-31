@@ -8,7 +8,7 @@
 */
 
 import Components from './bpui.components';
-var componentStore = require('./componentStore');
+var componentStore = require('../componentStore');
 
 export function getComponent(name, cb) {
   var com = componentStore.getComponent(name);

@@ -9,8 +9,8 @@
 
 import libs from '@bpui/libs';
 import * as febs from 'febs-browser';
-var Components = require('./bpui.components');
-var componentInstance = require('./componentInstance');
+var Components = require('./dyn/bpui.components');
+var componentInstance = require('./dyn/componentInstance');
 var componentStore = require('./componentStore');
 
 export default async function (Vue/*:any*/, components/*?:string[]*/) // :Promise<void>
