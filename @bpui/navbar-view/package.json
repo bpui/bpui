@@ -20,7 +20,8 @@
   "files": [
     "dist",
     "style",
-    "types"
+    "types",
+    "noInject.js"
   ],
   "license": "MIT",
   "main": "dist/index.common.min.js",
@@ -34,5 +35,5 @@
     }
   ],
   "name": "@bpui/navbar-view",
-  "version": "1.1.4"
+  "version": "1.1.5"
 }

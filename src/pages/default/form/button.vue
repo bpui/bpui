@@ -54,7 +54,7 @@
     </button>
 
     <button class="bp-btnBorder">
-      text<bp-icon width="20px" name="loading"/>
+      text<bp-icon width="12px" height="12px" name="loading"/>
     </button>
 
     <!-- group -->
