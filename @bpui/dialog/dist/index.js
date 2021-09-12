@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v1.1.10
+ * bpui dialog v1.1.11
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3491,7 +3491,9 @@
     }
 
     if (window[GlobalLoading]) {
-      window[GlobalLoading].$children[0].hide();
+      try {
+        window[GlobalLoading].vm.$children[0].hide();
+      } catch (e) {}
     }
   }
   /**
@@ -3566,7 +3568,7 @@
     } // 创建实例.
 
 
-    if (!window[GlobalLoading]) {
+    if (!window[GlobalLoading] || $('.' + window[GlobalLoading].id).length == 0) {
       var id = 'c' + febs.crypt.uuid();
       $("<div id=\"".concat(id, "\"></div>")).appendTo($('body'));
       var vm = new Vue({
@@ -3578,7 +3580,10 @@
           });
         }.bind(this)
       }).$mount("#".concat(id));
-      window[GlobalLoading] = vm.$children[0];
+      window[GlobalLoading] = {
+        vm: vm.$children[0],
+        id: id
+      };
     }
 
     if (typeof cfg === 'string' || typeof cfg === 'number') {
@@ -3609,8 +3614,8 @@
         var cfg1 = window[GlobalLoadingTimeout].cfg;
         window[GlobalLoadingTimeout] = null;
         cfg1 = febs.utils.mergeMap(loading.data(), cfg1);
-        window[GlobalLoading].$data.content = cfg1.content;
-        window[GlobalLoading].$children[0].show();
+        window[GlobalLoading].vm.$data.content = cfg1.content;
+        window[GlobalLoading].vm.$children[0].show();
       }.bind(this), cfg.delay);
       window[GlobalLoadingTimeout] = {
         tm: tm,

@@ -404,6 +404,7 @@ ipad pro  1024~1366
   font-variant: normal !important;
   text-transform: none !important;
   line-height: 1 !important;
+  letter-spacing: initial !important;
 
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased !important;
@@ -482,6 +483,7 @@ ipad pro  1024~1366
   font-variant: normal !important;
   text-transform: none !important;
   line-height: 1 !important;
+  color: rgb(0, 0, 0);
 
   -webkit-animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
   -moz-animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
@@ -489,7 +491,6 @@ ipad pro  1024~1366
 }
 .bp-iconLoading .path1:before {
   content: "\e909";
-  color: rgb(0, 0, 0);
   opacity: 0.6 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -500,7 +501,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path2:before {
   content: "\e90a";
   margin-left: -1em !important;
-  color: rgb(0, 0, 0);
   opacity: 0.65 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -512,7 +512,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path3:before {
   content: "\e90b";
   margin-left: -1em !important;
-  color: rgb(0, 0, 0);
   opacity: 0.7 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -524,7 +523,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path4:before {
   content: "\e90c";
   margin-left: -1em !important;
-  color: rgb(0, 0, 0);
   opacity: 0.73 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -536,7 +534,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path5:before {
   content: "\e90d";
   margin-left: -1em !important;
-  color: rgb(0, 0, 0);
   opacity: 0.68 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -548,7 +545,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path6:before {
   content: "\e90e";
   margin-left: -1em !important;
-  color: rgb(0, 0, 0);
   opacity: 0.59 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -560,7 +556,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path7:before {
   content: "\e90f";
   margin-left: -1em !important;
-  color: rgb(0, 0, 0);
   opacity: 0.53 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -572,7 +567,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path8:before {
   content: "\e910";
   margin-left: -1em !important;
-  color: rgb(0, 0, 0);
   opacity: 0.48 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -584,7 +578,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path9:before {
   content: "\e911";
   margin-left: -1em !important;
-  color: rgb(0, 0, 0);
   opacity: 0.44 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -596,7 +589,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path10:before {
   content: "\e912";
   margin-left: -1em !important;
-  color: rgb(0, 0, 0);
   opacity: 0.41 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -608,7 +600,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path11:before {
   content: "\e913";
   margin-left: -1em !important;
-  color: rgb(0, 0, 0);
   opacity: 0.38 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -620,7 +611,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path12:before {
   content: "\e914";
   margin-left: -1em !important;
-  color: rgb(0, 0, 0);
   opacity: 0.35 !important;
   font-style: normal !important;
   font-weight: normal !important;

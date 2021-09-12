@@ -14,34 +14,45 @@
     border-radius: 4px;
     border: 1px solid #dcdfe6;
     background-color: $bpInputBgColor;
-        
+    transition: background-color .2s cubic-bezier(.645, .045, .355, 1), border .2s cubic-bezier(.645, .045, .355, 1);
+
     .bp-input__prefixIcon {
         margin-left: 10px;
         cursor: pointer;
         flex-grow: 0;
+        background-color: transparent;
     }
+
     .bp-input__suffixIcon {
         margin-right: 10px;
         cursor: pointer;
         flex-grow: 0;
+        height: 16px !important;
+        width: 16px !important;
+        font-size: 16px !important;
+        background-color: transparent;
     }
+
     .bp-input__prefixLabel {
         text-align: center;
-        width: $bpInputAdditionLabelWidth;
+        min-width: $bpInputAdditionLabelWidth;
         color: $bpInputAdditionLabelColor;
         font-size: 10px;
         flex-shrink: 0;
         padding-left: 4px;
         box-sizing: border-box;
+        background-color: transparent;
     }
+
     .bp-input__suffixLabel {
         text-align: center;
-        width: $bpInputAdditionLabelWidth;
+        min-width: $bpInputAdditionLabelWidth;
         color: $bpInputAdditionLabelColor;
         font-size: 10px;
         flex-shrink: 0;
         padding-right: 4px;
         box-sizing: border-box;
+        background-color: transparent;
     }
 
     input {
@@ -68,7 +79,6 @@
     .bp-input__inner {
         -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
         -webkit-appearance: none;
-        background-color: transparent;
         background-image: none;
         box-sizing: border-box;
         border: none;
@@ -79,9 +89,10 @@
         line-height: 40px;
         outline: none;
         padding: 0 15px;
-        transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+        transition: background-color .2s cubic-bezier(.645, .045, .355, 1);
         flex-grow: 1;
         width: 100%;
+        background-color: $bpInputBgColor;
 
         &:focus {
             outline: none;
@@ -89,19 +100,28 @@
     }
 
     &.bp-input__focus {
-        border-color: $bpInputBorderColor;
+        border-color: $bpInputFocusBorderColor;
+        background: $bpInputFocusBgColor !important;
+
+        .bp-input__inner {
+            background: $bpInputFocusBgColor !important;
+        }
     }
 
 
     &.bp-input__warn {
-        textarea, input {
+
+        textarea,
+        input {
             color: $bpInputTextWarnColor;
         }
+
         .bp-input__warnIcon {
             position: absolute;
             right: 5px;
             top: 8.5px;
         }
+
         border-color: $bpInputTextWarnColor;
     }
 
@@ -145,10 +165,10 @@
         align-items: center;
         vertical-align: bottom;
 
-        .bp-input_clearIcon { 
+        .bp-input_clearIcon {
             align-self: flex-start;
         }
-        
+
         .bp-input__inner {
             display: block;
             resize: vertical;

@@ -56,6 +56,9 @@
     <button class="bp-btnBorder">
       text<bp-icon width="12px" height="12px" name="loading"/>
     </button>
+    <button class="bp-btnBorder" style="background:#222;">
+      text<bp-icon width="12px" height="12px" color="#f00" name="loading"/>
+    </button>
 
     <!-- group -->
     <h4>group</h4>

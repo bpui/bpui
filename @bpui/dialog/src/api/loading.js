@@ -40,7 +40,9 @@ export function hideLoading() {
   }
 
   if (window[GlobalLoading]) {
-    window[GlobalLoading].$children[0].hide();
+    try {
+      window[GlobalLoading].vm.$children[0].hide();
+    } catch (e) { }
   }
 }
 
@@ -110,14 +112,18 @@ export function showLoading(cfg/*:string|{
   }
 
   // 创建实例.
-  if (!window[GlobalLoading]) {
+  if (!window[GlobalLoading] || $('.' + window[GlobalLoading].id).length == 0) {
     let id = 'c' + febs.crypt.uuid();
     $(`<div id="${id}"></div>`).appendTo($('body'));
 
     let vm = new Vue({
       render: h => h(loading, {class:[ApiClass, LoadingClass, id]})
     }).$mount(`#${id}`);
-    window[GlobalLoading] = vm.$children[0];
+
+    window[GlobalLoading] = {
+      vm: vm.$children[0],
+      id: id,
+    }
   }
 
   if (typeof cfg === 'string' || typeof cfg === 'number') {
@@ -149,8 +155,8 @@ export function showLoading(cfg/*:string|{
 
       cfg1 = febs.utils.mergeMap(loading.data(), cfg1);
 
-      window[GlobalLoading].$data.content = cfg1.content;
-      window[GlobalLoading].$children[0].show();
+      window[GlobalLoading].vm.$data.content = cfg1.content;
+      window[GlobalLoading].vm.$children[0].show();
     }, cfg.delay);
 
     window[GlobalLoadingTimeout] = {tm, now, cfg: febs.utils.mergeMap(cfg)};

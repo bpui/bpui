@@ -1,5 +1,5 @@
 /*!
- * bpui libs v1.1.5
+ * bpui libs v1.1.7
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */

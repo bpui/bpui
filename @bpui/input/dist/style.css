@@ -61,6 +61,7 @@ ipad pro  1024~1366
   font-variant: normal !important;
   text-transform: none !important;
   line-height: 1 !important;
+  letter-spacing: initial !important;
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
@@ -139,6 +140,7 @@ ipad pro  1024~1366
   font-variant: normal !important;
   text-transform: none !important;
   line-height: 1 !important;
+  color: black;
   -webkit-animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
   -moz-animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
   animation: bp-iconLoading_animationSpinKeyframes 1.6s infinite linear;
@@ -146,7 +148,6 @@ ipad pro  1024~1366
 
 .bp-iconLoading .path1:before {
   content: "";
-  color: black;
   opacity: 0.6 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -158,7 +159,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path2:before {
   content: "";
   margin-left: -1em !important;
-  color: black;
   opacity: 0.65 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -171,7 +171,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path3:before {
   content: "";
   margin-left: -1em !important;
-  color: black;
   opacity: 0.7 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -184,7 +183,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path4:before {
   content: "";
   margin-left: -1em !important;
-  color: black;
   opacity: 0.73 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -197,7 +195,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path5:before {
   content: "";
   margin-left: -1em !important;
-  color: black;
   opacity: 0.68 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -210,7 +207,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path6:before {
   content: "";
   margin-left: -1em !important;
-  color: black;
   opacity: 0.59 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -223,7 +219,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path7:before {
   content: "";
   margin-left: -1em !important;
-  color: black;
   opacity: 0.53 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -236,7 +231,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path8:before {
   content: "";
   margin-left: -1em !important;
-  color: black;
   opacity: 0.48 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -249,7 +243,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path9:before {
   content: "";
   margin-left: -1em !important;
-  color: black;
   opacity: 0.44 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -262,7 +255,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path10:before {
   content: "";
   margin-left: -1em !important;
-  color: black;
   opacity: 0.41 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -275,7 +267,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path11:before {
   content: "";
   margin-left: -1em !important;
-  color: black;
   opacity: 0.38 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -288,7 +279,6 @@ ipad pro  1024~1366
 .bp-iconLoading .path12:before {
   content: "";
   margin-left: -1em !important;
-  color: black;
   opacity: 0.35 !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -483,13 +473,43 @@ label {
   border-image: initial;
   border-radius: 4px;
   border: 1px solid #dcdfe6;
-  background-color: #fff;
+  background-color: #ffffff;
+  transition: background-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1), border 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 .bp-input .bp-input__prefixIcon {
   margin-left: 10px;
+  cursor: pointer;
+  flex-grow: 0;
+  background-color: transparent;
 }
 .bp-input .bp-input__suffixIcon {
   margin-right: 10px;
+  cursor: pointer;
+  flex-grow: 0;
+  height: 16px !important;
+  width: 16px !important;
+  font-size: 16px !important;
+  background-color: transparent;
+}
+.bp-input .bp-input__prefixLabel {
+  text-align: center;
+  min-width: 34px;
+  color: #7b7b7b;
+  font-size: 10px;
+  flex-shrink: 0;
+  padding-left: 4px;
+  box-sizing: border-box;
+  background-color: transparent;
+}
+.bp-input .bp-input__suffixLabel {
+  text-align: center;
+  min-width: 34px;
+  color: #7b7b7b;
+  font-size: 10px;
+  flex-shrink: 0;
+  padding-right: 4px;
+  box-sizing: border-box;
+  background-color: transparent;
 }
 .bp-input input {
   -webkit-writing-mode: horizontal-tb !important;
@@ -509,11 +529,11 @@ label {
   font-size: 1rem;
   font-weight: 400;
   padding: 1px;
+  width: 100%;
 }
 .bp-input .bp-input__inner {
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   -webkit-appearance: none;
-  background-color: transparent;
   background-image: none;
   box-sizing: border-box;
   border: none;
@@ -524,16 +544,26 @@ label {
   line-height: 40px;
   outline: none;
   padding: 0 15px;
-  transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transition: background-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  flex-grow: 1;
   width: 100%;
+  background-color: #ffffff;
 }
 .bp-input .bp-input__inner:focus {
   outline: none;
 }
 .bp-input.bp-input__focus {
   border-color: #07C160;
+  background: #ffffff !important;
 }
-.bp-input.bp-input__warn textarea, .bp-input.bp-input__warn input {
+.bp-input.bp-input__focus .bp-input__inner {
+  background: #ffffff !important;
+}
+.bp-input.bp-input__warn {
+  border-color: #FA5151;
+}
+.bp-input.bp-input__warn textarea,
+.bp-input.bp-input__warn input {
   color: #FA5151;
 }
 .bp-input.bp-input__warn .bp-input__warnIcon {
@@ -541,8 +571,33 @@ label {
   right: 5px;
   top: 8.5px;
 }
-.bp-input.bp-input__warn.bp-input__focus {
-  border-color: #FA5151;
+.bp-input .bp-input_clearIcon {
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bp-input .bp-input_clearIcon div {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #b7b7b7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  box-sizing: content-box;
+}
+.bp-input .bp-input_clearIcon div i {
+  height: 14px;
+  width: 14px;
+  font-size: 14px;
+  color: #F3F3F4;
+  transform-origin: center;
+  transform: scale(0.5);
 }
 .bp-input.bp-input__textarea {
   padding-right: initial;
@@ -551,6 +606,9 @@ label {
   display: flex;
   align-items: center;
   vertical-align: bottom;
+}
+.bp-input.bp-input__textarea .bp-input_clearIcon {
+  align-self: flex-start;
 }
 .bp-input.bp-input__textarea .bp-input__inner {
   display: block;
