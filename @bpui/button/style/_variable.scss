@@ -10,49 +10,118 @@ $bpButtonGroupBorderColor: $bpColorPrimary;
 
 /* 字体 */
 $bpButtonFontSize: 1rem !default;
-$bpButtonFontWeight: 400 !default;
 $bpButtonBorderRadius: .25rem !default;
 
-/* 颜色 */
-$bpButtonColor: (
-  /* .bp-btnPrimary */
-  Primary: $bpColorPrimary,
-  /* .bp-btnWarning */
-  Warning: $bpColorWarn,
-  /* .bp-btnInfo */
-  Info: lighten($bpTextColorSecondary, 30%),
-  /* custom */
+/**
+ * .bp-btn
+ */
+
+$bpButtonPrimary: (
+  fontWeight: bold,
+  color: $bpColorPrimary,
+  bgColor: rgba(0,0,0,0),
+  borderColor: none,
+  hover_color: rgba($bpColorPrimary, .7),
+  hover_bgColor: rgba(0,0,0,0),
+  hover_borderColor: none,
+) !default;
+$bpButtonInfo: (
+  fontWeight: 400,
+  color: lighten($bpColorPrimary, 2%),
+  bgColor: rgba(0,0,0,0),
+  borderColor: none,
+  hover_color: rgba(lighten($bpColorPrimary, 2%), .7),
+  hover_bgColor: rgba(0,0,0,0),
+  hover_borderColor: none,
+) !default;
+$bpButtonWarning: (
+  fontWeight: 400,
+  color: $bpColorWarn,
+  bgColor: rgba(0,0,0,0),
+  borderColor: none,
+  hover_color: rgba($bpColorWarn, .7),
+  hover_bgColor: rgba(0,0,0,0),
+  hover_borderColor: none,
 ) !default;
 
-/* 实心按钮背景颜色 */
-$bpButtonSolidBgColor: (
-  /* .bp-btnPrimary */
-  Primary: $bpColorPrimary,
-  /* .bp-btnWarning */
-  Warning: $bpColorWarn,
-  /* .bp-btnInfo */
-  Info: $bpBgColor,
-  /* custom */
+$bpButtons: (
+  Primary: $bpButtonPrimary,
+  Info: $bpButtonInfo,
+  Warning: $bpButtonWarning,
 ) !default;
 
-/** 实心按钮边框色 */
-$bpButtonSolidBorderColor: (
-  /* .bp-btnPrimary */
-  Primary: darken($bpColorPrimary, 5%),
-  /* .bp-btnWarning */
-  Warning: darken($bpColorWarn, 5%),
-  /* .bp-btnInfo */
-  Info: darken($bpBgColor, 5%),
-  /* custom */
+/**
+ * .bp-btnBorder
+ */
+
+$bpButtonBorderPrimary: (
+  fontWeight: bold,
+  color: $bpColorPrimary,
+  bgColor: rgba(0,0,0,0),
+  borderColor: solid 1px rgba($bpColorPrimary, .6),
+  hover_color: rgba($bpColorPrimary, .7),
+  hover_bgColor: rgba(0,0,0,0),
+  hover_borderColor: solid 1px rgba($bpColorPrimary, .4),
+) !default;
+$bpButtonBorderInfo: (
+  fontWeight: 400,
+  color: lighten($bpColorPrimary, 2%),
+  bgColor: rgba(0,0,0,0),
+  borderColor: solid 1px rgba(lighten($bpColorPrimary, 2%), .6),
+  hover_color: rgba(lighten($bpColorPrimary, 2%), .7),
+  hover_bgColor: rgba(0,0,0,0),
+  hover_borderColor: solid 1px rgba(lighten($bpColorPrimary, 2%), .4),
+) !default;
+$bpButtonBorderWarning: (
+  fontWeight: 400,
+  color: $bpColorWarn,
+  bgColor: rgba(0,0,0,0),
+  borderColor: solid 1px rgba($bpColorWarn, .6),
+  hover_color: rgba($bpColorWarn, .7),
+  hover_bgColor: rgba(0,0,0,0),
+  hover_borderColor: solid 1px rgba($bpColorWarn, .4),
 ) !default;
 
-/** 实心按钮文本色 */
-$bpButtonSolidTextColor: (
-  /* .bp-btnPrimary */
-  Primary: $bpBgColor,
-  /* .bp-btnWarning */
-  Warning: $bpBgColor,
-  /* .bp-btnInfo */
-  Info: $bpColorPrimary,
-  /* custom */
+$bpButtonBorders: (
+  Primary: $bpButtonBorderPrimary,
+  Info: $bpButtonBorderInfo,
+  Warning: $bpButtonBorderWarning,
+) !default;
+
+/**
+ * .bp-btnFill
+ */
+
+$bpButtonFillPrimary: (
+  fontWeight: 400,
+  color: $bpBgColor,
+  bgColor: rgba($bpColorPrimary, .9),
+  borderColor: solid 1px rgba(darken($bpColorPrimary, 5%), .6),
+  hover_color: rgba($bpBgColor, .8),
+  hover_bgColor: rgba($bpColorPrimary, .7),
+  hover_borderColor: solid 1px rgba(darken($bpColorPrimary, 5%), .4),
+) !default;
+$bpButtonFillInfo: (
+  fontWeight: 400,
+  color: $bpColorPrimary,
+  bgColor: rgba($bpBgColor, .9),
+  borderColor: solid 1px rgba(darken($bpBgColor, 5%), .6),
+  hover_color: rgba($bpColorPrimary, .8),
+  hover_bgColor: rgba($bpBgColor, .7),
+  hover_borderColor: solid 1px rgba(darken($bpBgColor, 5%), .4),
+) !default;
+$bpButtonFillWarning: (
+  fontWeight: 400,
+  color: $bpBgColor,
+  bgColor: rgba($bpColorWarn, .9),
+  borderColor: solid 1px rgba(darken($bpColorWarn, 5%), .6),
+  hover_color: rgba($bpBgColor, .8),
+  hover_bgColor: rgba($bpColorWarn, .7),
+  hover_borderColor: solid 1px rgba(darken($bpColorWarn, 5%), .4),
+) !default;
+
+$bpButtonFills: (
+  Primary: $bpButtonFillPrimary,
+  Info: $bpButtonFillInfo,
+  Warning: $bpButtonFillWarning,
 ) !default;

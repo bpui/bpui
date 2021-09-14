@@ -29,12 +29,11 @@ button,
   user-select: none;
 
   font-size: $bpButtonFontSize;
-  font-weight: $bpButtonFontWeight;
   padding: .38rem .48rem;
   margin: 2px;
   line-height: 1.25em;
   border-radius: $bpButtonBorderRadius;
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
   white-space: nowrap;
   word-wrap: break-word;
   text-transform: none;
@@ -60,11 +59,11 @@ button,
   }
 
   &:active {
-    opacity: 0.6;
+    opacity: 0.7;
   }
 
   &:disabled {
-    opacity: .5;
+    opacity: .6;
     cursor: not-allowed;
     touch-action: none;
     pointer-events: none;
@@ -74,64 +73,77 @@ button,
 /** default */
 button,
 .bp-btn {
-  color: map-get($bpButtonColor, Primary);
+  font-weight: map-get(map-get($bpButtons, Info), fontWeight);
+  color: map-get(map-get($bpButtons, Info), color);
+  border: map-get(map-get($bpButtons, Info), borderColor);
+  background-color: map-get(map-get($bpButtons, Info), bgColor);
 
   &:hover {
-    color: rgba(map-get($bpButtonColor, Primary), .7);
+    color: map-get(map-get($bpButtons, Info), hover_color);
+    border: map-get(map-get($bpButtons, Info), hover_borderColor);
+    background-color: map-get(map-get($bpButtons, Info), hover_bgColor);
   }
 
   &.bp-btnBorder {
-    color: map-get($bpButtonColor, Primary);
-    border: solid 1px rgba(map-get($bpButtonColor, Primary), .6);
-    background-color: rgba(0, 0, 0, 0);
+    font-weight: map-get(map-get($bpButtonBorders, Info), fontWeight);
+    color: map-get(map-get($bpButtonBorders, Info), color);
+    border: map-get(map-get($bpButtonBorders, Info), borderColor);
+    background-color: map-get(map-get($bpButtonBorders, Info), bgColor);
     &:hover {
-      color: rgba(map-get($bpButtonColor, Primary), .6);
-      border: solid 1px rgba(map-get($bpButtonColor, Primary), .4);
-      background-color: rgba(0, 0, 0, 0);
+      color: map-get(map-get($bpButtonBorders, Info), hover_color);
+      border: map-get(map-get($bpButtonBorders, Info), hover_borderColor);
+      background-color: map-get(map-get($bpButtonBorders, Info), hover_bgColor);
     }
   }
   
-  &.bp-btnSolid {
-    color: map-get($bpButtonSolidTextColor, Primary);
-    background-color: rgba(map-get($bpButtonSolidBgColor, Primary), .9);
-    border: solid 1px rgba(map-get($bpButtonSolidBorderColor, Primary), .6);
+  &.bp-btnFill {
+    font-weight: map-get(map-get($bpButtonFills, Info), fontWeight);
+    color: map-get(map-get($bpButtonFills, Info), color);
+    border: map-get(map-get($bpButtonFills, Info), borderColor);
+    background-color: map-get(map-get($bpButtonFills, Info), bgColor);
     &:hover {
-      color: rgba(map-get($bpButtonSolidTextColor, Primary), .8);
-      background-color: rgba(map-get($bpButtonSolidBgColor, Primary), .7);
-      border: solid 1px rgba(map-get($bpButtonSolidBorderColor, Primary), .4);
+      color: map-get(map-get($bpButtonFills, Info), hover_color);
+      border: map-get(map-get($bpButtonFills, Info), hover_borderColor);
+      background-color: map-get(map-get($bpButtonFills, Info), hover_bgColor);
     }
   }
 }
 
 /** each button */
-@each $name, $color in $bpButtonColor {
+@each $name, $color in $bpButtons {
   .bp-btn#{$name} {
-    color: $color;
+    font-weight: map-get($color, fontWeight);
+    color: map-get($color, color);
+    border: map-get($color, borderColor);
+    background-color: map-get($color, bgColor);
 
     &:hover {
-      color: rgba($color, .7);
-      background-color: rgba(0, 0, 0, 0);
+      color: map-get($color, hover_color);
+      border: map-get($color, hover_borderColor);
+      background-color: map-get($color, hover_bgColor);
     }
 
     &.bp-btnBorder {
-      color: $color;
-      border: solid 1px rgba($color, .6);
-      background-color: rgba(0, 0, 0, 0);
+      font-weight: map-get(map-get($bpButtonBorders, $name), fontWeight);
+      color: map-get(map-get($bpButtonBorders, $name), color);
+      border: map-get(map-get($bpButtonBorders, $name), borderColor);
+      background-color: map-get(map-get($bpButtonBorders, $name), bgColor);
       &:hover {
-        color: rgba($color, .6);
-        border: solid 1px rgba($color, .4);
-        background-color: rgba(0, 0, 0, 0);
+        color: map-get(map-get($bpButtonBorders, $name), hover_color);
+        border: map-get(map-get($bpButtonBorders, $name), hover_borderColor);
+        background-color: map-get(map-get($bpButtonBorders, $name), hover_bgColor);
       }
     }
     
-    &.bp-btnSolid {
-      color: map-get($bpButtonSolidTextColor, $name);
-      background-color: rgba(map-get($bpButtonSolidBgColor, $name), .9);
-      border: solid 1px rgba(map-get($bpButtonSolidBorderColor, $name), .6);
+    &.bp-btnFill {
+      font-weight: map-get(map-get($bpButtonFills, $name), fontWeight);
+      color: map-get(map-get($bpButtonFills, $name), color);
+      border: map-get(map-get($bpButtonFills, $name), borderColor);
+      background-color: map-get(map-get($bpButtonFills, $name), bgColor);
       &:hover {
-        color: rgba(map-get($bpButtonSolidTextColor, $name), .8);
-        background-color: rgba(map-get($bpButtonSolidBgColor, $name), .7);
-        border: solid 1px rgba(map-get($bpButtonSolidBorderColor, $name), .4);
+        color: map-get(map-get($bpButtonFills, $name), hover_color);
+        border: map-get(map-get($bpButtonFills, $name), hover_borderColor);
+        background-color: map-get(map-get($bpButtonFills, $name), hover_bgColor);
       }
     }
   }

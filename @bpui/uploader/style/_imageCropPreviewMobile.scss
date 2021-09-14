@@ -27,7 +27,7 @@
         }
     }
     .bp-uploader-image-crop-preview__ok {
-        @extend .bp-btnSolid;
+        @extend .bp-btnFill;
         @extend .bp-btnPrimary;
         &:after {
             content: '确认';

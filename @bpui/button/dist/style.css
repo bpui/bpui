@@ -467,10 +467,15 @@ label {
 */
 /* 按钮组边框色 */
 /* 字体 */
-/* 颜色 */
-/* 实心按钮背景颜色 */
-/** 实心按钮边框色 */
-/** 实心按钮文本色 */
+/**
+ * .bp-btn
+ */
+/**
+ * .bp-btnBorder
+ */
+/**
+ * .bp-btnFill
+ */
 /**
 * Copyright (c) 2020 Copyright bp All Rights Reserved.
 * Author: lipengxiang
@@ -498,12 +503,11 @@ button,
   -ms-user-select: none;
   user-select: none;
   font-size: 1rem;
-  font-weight: 400;
   padding: 0.38rem 0.48rem;
   margin: 2px;
   line-height: 1.25em;
   border-radius: 0.25rem;
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   white-space: nowrap;
   word-wrap: break-word;
   text-transform: none;
@@ -535,11 +539,11 @@ button svg:last-child, button .bp-icon:last-child,
 }
 button:active,
 .bp-btn:active {
-  opacity: 0.6;
+  opacity: 0.7;
 }
 button:disabled,
 .bp-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
   touch-action: none;
   pointer-events: none;
@@ -548,118 +552,143 @@ button:disabled,
 /** default */
 button,
 .bp-btn {
-  color: #07C160;
+  font-weight: 400;
+  color: #07cb65;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
 }
 button:hover,
 .bp-btn:hover {
-  color: rgba(7, 193, 96, 0.7);
+  color: rgba(7, 203, 101, 0.7);
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
 }
 button.bp-btnBorder,
 .bp-btn.bp-btnBorder {
-  color: #07C160;
-  border: solid 1px rgba(7, 193, 96, 0.6);
+  font-weight: 400;
+  color: #07cb65;
+  border: solid 1px rgba(7, 203, 101, 0.6);
   background-color: rgba(0, 0, 0, 0);
 }
 button.bp-btnBorder:hover,
 .bp-btn.bp-btnBorder:hover {
-  color: rgba(7, 193, 96, 0.6);
-  border: solid 1px rgba(7, 193, 96, 0.4);
+  color: rgba(7, 203, 101, 0.7);
+  border: solid 1px rgba(7, 203, 101, 0.4);
   background-color: rgba(0, 0, 0, 0);
 }
-button.bp-btnSolid,
-.bp-btn.bp-btnSolid {
-  color: #F7F7F7;
-  background-color: rgba(7, 193, 96, 0.9);
-  border: solid 1px rgba(6, 168, 84, 0.6);
+button.bp-btnFill,
+.bp-btn.bp-btnFill {
+  font-weight: 400;
+  color: #07C160;
+  border: solid 1px rgba(234, 234, 234, 0.6);
+  background-color: rgba(247, 247, 247, 0.9);
 }
-button.bp-btnSolid:hover,
-.bp-btn.bp-btnSolid:hover {
-  color: rgba(247, 247, 247, 0.8);
-  background-color: rgba(7, 193, 96, 0.7);
-  border: solid 1px rgba(6, 168, 84, 0.4);
+button.bp-btnFill:hover,
+.bp-btn.bp-btnFill:hover {
+  color: rgba(7, 193, 96, 0.8);
+  border: solid 1px rgba(234, 234, 234, 0.4);
+  background-color: rgba(247, 247, 247, 0.7);
 }
 
 /** each button */
 .bp-btnPrimary {
+  font-weight: bold;
   color: #07C160;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
 }
 .bp-btnPrimary:hover {
   color: rgba(7, 193, 96, 0.7);
+  border: none;
   background-color: rgba(0, 0, 0, 0);
 }
 .bp-btnPrimary.bp-btnBorder {
+  font-weight: bold;
   color: #07C160;
   border: solid 1px rgba(7, 193, 96, 0.6);
   background-color: rgba(0, 0, 0, 0);
 }
 .bp-btnPrimary.bp-btnBorder:hover {
-  color: rgba(7, 193, 96, 0.6);
+  color: rgba(7, 193, 96, 0.7);
   border: solid 1px rgba(7, 193, 96, 0.4);
   background-color: rgba(0, 0, 0, 0);
 }
-.bp-btnPrimary.bp-btnSolid {
+.bp-btnPrimary.bp-btnFill {
+  font-weight: 400;
   color: #F7F7F7;
-  background-color: rgba(7, 193, 96, 0.9);
   border: solid 1px rgba(6, 168, 84, 0.6);
+  background-color: rgba(7, 193, 96, 0.9);
 }
-.bp-btnPrimary.bp-btnSolid:hover {
+.bp-btnPrimary.bp-btnFill:hover {
   color: rgba(247, 247, 247, 0.8);
-  background-color: rgba(7, 193, 96, 0.7);
   border: solid 1px rgba(6, 168, 84, 0.4);
+  background-color: rgba(7, 193, 96, 0.7);
+}
+
+.bp-btnInfo {
+  font-weight: 400;
+  color: #07cb65;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnInfo:hover {
+  color: rgba(7, 203, 101, 0.7);
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnInfo.bp-btnBorder {
+  font-weight: 400;
+  color: #07cb65;
+  border: solid 1px rgba(7, 203, 101, 0.6);
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnInfo.bp-btnBorder:hover {
+  color: rgba(7, 203, 101, 0.7);
+  border: solid 1px rgba(7, 203, 101, 0.4);
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnInfo.bp-btnFill {
+  font-weight: 400;
+  color: #07C160;
+  border: solid 1px rgba(234, 234, 234, 0.6);
+  background-color: rgba(247, 247, 247, 0.9);
+}
+.bp-btnInfo.bp-btnFill:hover {
+  color: rgba(7, 193, 96, 0.8);
+  border: solid 1px rgba(234, 234, 234, 0.4);
+  background-color: rgba(247, 247, 247, 0.7);
 }
 
 .bp-btnWarning {
+  font-weight: 400;
   color: #FA5151;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
 }
 .bp-btnWarning:hover {
   color: rgba(250, 81, 81, 0.7);
+  border: none;
   background-color: rgba(0, 0, 0, 0);
 }
 .bp-btnWarning.bp-btnBorder {
+  font-weight: 400;
   color: #FA5151;
   border: solid 1px rgba(250, 81, 81, 0.6);
   background-color: rgba(0, 0, 0, 0);
 }
 .bp-btnWarning.bp-btnBorder:hover {
-  color: rgba(250, 81, 81, 0.6);
+  color: rgba(250, 81, 81, 0.7);
   border: solid 1px rgba(250, 81, 81, 0.4);
   background-color: rgba(0, 0, 0, 0);
 }
-.bp-btnWarning.bp-btnSolid {
+.bp-btnWarning.bp-btnFill {
+  font-weight: 400;
   color: #F7F7F7;
-  background-color: rgba(250, 81, 81, 0.9);
   border: solid 1px rgba(249, 56, 56, 0.6);
+  background-color: rgba(250, 81, 81, 0.9);
 }
-.bp-btnWarning.bp-btnSolid:hover {
+.bp-btnWarning.bp-btnFill:hover {
   color: rgba(247, 247, 247, 0.8);
-  background-color: rgba(250, 81, 81, 0.7);
   border: solid 1px rgba(249, 56, 56, 0.4);
-}
-
-.bp-btnInfo {
-  color: gray;
-}
-.bp-btnInfo:hover {
-  color: rgba(128, 128, 128, 0.7);
-  background-color: rgba(0, 0, 0, 0);
-}
-.bp-btnInfo.bp-btnBorder {
-  color: gray;
-  border: solid 1px rgba(128, 128, 128, 0.6);
-  background-color: rgba(0, 0, 0, 0);
-}
-.bp-btnInfo.bp-btnBorder:hover {
-  color: rgba(128, 128, 128, 0.6);
-  border: solid 1px rgba(128, 128, 128, 0.4);
-  background-color: rgba(0, 0, 0, 0);
-}
-.bp-btnInfo.bp-btnSolid {
-  color: #07C160;
-  background-color: rgba(247, 247, 247, 0.9);
-  border: solid 1px rgba(234, 234, 234, 0.6);
-}
-.bp-btnInfo.bp-btnSolid:hover {
-  color: rgba(7, 193, 96, 0.8);
-  background-color: rgba(247, 247, 247, 0.7);
-  border: solid 1px rgba(234, 234, 234, 0.4);
+  background-color: rgba(250, 81, 81, 0.7);
 }

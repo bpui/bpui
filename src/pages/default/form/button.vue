@@ -10,22 +10,22 @@
 <template>
   <div>
     <!-- primary -->
-    <h4>button</h4>
+    <h4>default style</h4>
     <button>default</button>
-    <button>primary</button>
     <button class="bp-btnInfo">info</button>
+    <button class="bp-btnPrimary">primary</button>
     <button class="bp-btnWarning">warning</button>
 
-    <!-- solid -->
-    <h4>solid style</h4>
-    <button class="bp-btnSolid">primary</button>
-    <button class="bp-btnSolid bp-btnInfo">info</button>
-    <button class="bp-btnSolid bp-btnWarning">warning</button>
+    <!-- fill -->
+    <h4>fill style</h4>
+    <button class="bp-btnFill bp-btnPrimary">primary</button>
+    <button class="bp-btnFill">info</button>
+    <button class="bp-btnFill bp-btnWarning">warning</button>
 
     <!-- border -->
     <h4>border style</h4>
-    <button class="bp-btnBorder">primary</button>
-    <button class="bp-btnBorder bp-btnInfo">info</button>
+    <button class="bp-btnBorder bp-btnPrimary">primary</button>
+    <button class="bp-btnBorder">info</button>
     <button class="bp-btnBorder bp-btnWarning">warning</button>
 
     <!-- disable -->
@@ -33,7 +33,7 @@
     <button disabled="disabled">
       disabled
     </button>
-    <button class="bp-btnSolid" disabled="disabled">
+    <button class="bp-btnFill" disabled="disabled">
       disabled
     </button>
     <button class="bp-btnBorder" disabled="disabled">
@@ -47,7 +47,7 @@
       </bp-icon>
       text
     </button>
-    <button class="bp-btnSolid">
+    <button class="bp-btnFill">
       text
       <bp-icon width="20px" name="heartFill">
       </bp-icon>
@@ -57,19 +57,19 @@
       text<bp-icon width="12px" height="12px" name="loading"/>
     </button>
     <button class="bp-btnBorder" style="background:#222;">
-      text<bp-icon width="12px" height="12px" color="#f00" name="loading"/>
+      text<bp-icon width="12px" height="12px" color="#0f0" name="loading"/>
     </button>
 
     <!-- group -->
     <h4>group</h4>
     <div class="bp-btnGroup">
       <button class="bp-btnBorder">text</button>
-      <button class="bp-btnSolid">primary</button>
+      <button class="bp-btnFill">primary</button>
     </div>
 
     <div class="bp-btnGroup">
       <button class="bp-btnBorder">text</button>
-      <button class="bp-btnSolid">primary</button>
+      <button class="bp-btnFill">primary</button>
       <button>
         <bp-checkbox >chk2</bp-checkbox>
       </button>
