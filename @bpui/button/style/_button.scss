@@ -73,15 +73,15 @@ button,
 /** default */
 button,
 .bp-btn {
-  font-weight: map-get(map-get($bpButtons, Info), fontWeight);
-  color: map-get(map-get($bpButtons, Info), color);
-  border: map-get(map-get($bpButtons, Info), borderColor);
-  background-color: map-get(map-get($bpButtons, Info), bgColor);
+  font-weight: map-get(map-get($bpButtonDefault, Info), fontWeight);
+  color: map-get(map-get($bpButtonDefault, Info), color);
+  border: map-get(map-get($bpButtonDefault, Info), borderColor);
+  background-color: map-get(map-get($bpButtonDefault, Info), bgColor);
 
   &:hover {
-    color: map-get(map-get($bpButtons, Info), hover_color);
-    border: map-get(map-get($bpButtons, Info), hover_borderColor);
-    background-color: map-get(map-get($bpButtons, Info), hover_bgColor);
+    color: map-get(map-get($bpButtonDefault, Info), hover_color);
+    border: map-get(map-get($bpButtonDefault, Info), hover_borderColor);
+    background-color: map-get(map-get($bpButtonDefault, Info), hover_bgColor);
   }
 
   &.bp-btnBorder {
@@ -110,7 +110,7 @@ button,
 }
 
 /** each button */
-@each $name, $color in $bpButtons {
+@each $name, $color in $bpButtonDefault {
   .bp-btn#{$name} {
     font-weight: map-get($color, fontWeight);
     color: map-get($color, color);
@@ -121,6 +121,18 @@ button,
       color: map-get($color, hover_color);
       border: map-get($color, hover_borderColor);
       background-color: map-get($color, hover_bgColor);
+    }
+
+    &.bp-btnPlain {
+      font-weight: map-get(map-get($bpButtonPlains, $name), fontWeight);
+      color: map-get(map-get($bpButtonPlains, $name), color);
+      border: map-get(map-get($bpButtonPlains, $name), borderColor);
+      background-color: map-get(map-get($bpButtonPlains, $name), bgColor);
+      &:hover {
+        color: map-get(map-get($bpButtonPlains, $name), hover_color);
+        border: map-get(map-get($bpButtonPlains, $name), hover_borderColor);
+        background-color: map-get(map-get($bpButtonPlains, $name), hover_bgColor);
+      }
     }
 
     &.bp-btnBorder {

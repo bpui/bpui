@@ -16,6 +16,13 @@
     <button class="bp-btnPrimary">primary</button>
     <button class="bp-btnWarning">warning</button>
 
+    <!-- plain -->
+    <h4>plain style</h4>
+    <button>default</button>
+    <button class="bp-btnPlain bp-btnInfo">info</button>
+    <button class="bp-btnPlain bp-btnPrimary">primary</button>
+    <button class="bp-btnPlain bp-btnWarning">warning</button>
+
     <!-- fill -->
     <h4>fill style</h4>
     <button class="bp-btnFill bp-btnPrimary">primary</button>

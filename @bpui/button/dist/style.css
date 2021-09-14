@@ -468,13 +468,16 @@ label {
 /* 按钮组边框色 */
 /* 字体 */
 /**
- * .bp-btn
+ * .bp-btnPlain
  */
 /**
  * .bp-btnBorder
  */
 /**
  * .bp-btnFill
+ */
+/**
+ * default .bp-btn button
  */
 /**
 * Copyright (c) 2020 Copyright bp All Rights Reserved.
@@ -602,6 +605,17 @@ button.bp-btnFill:hover,
   border: none;
   background-color: rgba(0, 0, 0, 0);
 }
+.bp-btnPrimary.bp-btnPlain {
+  font-weight: bold;
+  color: #07C160;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnPrimary.bp-btnPlain:hover {
+  color: rgba(7, 193, 96, 0.7);
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
 .bp-btnPrimary.bp-btnBorder {
   font-weight: bold;
   color: #07C160;
@@ -636,6 +650,17 @@ button.bp-btnFill:hover,
   border: none;
   background-color: rgba(0, 0, 0, 0);
 }
+.bp-btnInfo.bp-btnPlain {
+  font-weight: 400;
+  color: #07cb65;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnInfo.bp-btnPlain:hover {
+  color: rgba(7, 203, 101, 0.7);
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
 .bp-btnInfo.bp-btnBorder {
   font-weight: 400;
   color: #07cb65;
@@ -666,6 +691,17 @@ button.bp-btnFill:hover,
   background-color: rgba(0, 0, 0, 0);
 }
 .bp-btnWarning:hover {
+  color: rgba(250, 81, 81, 0.7);
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnWarning.bp-btnPlain {
+  font-weight: 400;
+  color: #FA5151;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+.bp-btnWarning.bp-btnPlain:hover {
   color: rgba(250, 81, 81, 0.7);
   border: none;
   background-color: rgba(0, 0, 0, 0);

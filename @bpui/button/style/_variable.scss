@@ -13,7 +13,7 @@ $bpButtonFontSize: 1rem !default;
 $bpButtonBorderRadius: .25rem !default;
 
 /**
- * .bp-btn
+ * .bp-btnPlain
  */
 
 $bpButtonPrimary: (
@@ -44,7 +44,7 @@ $bpButtonWarning: (
   hover_borderColor: none,
 ) !default;
 
-$bpButtons: (
+$bpButtonPlains: (
   Primary: $bpButtonPrimary,
   Info: $bpButtonInfo,
   Warning: $bpButtonWarning,
@@ -125,3 +125,9 @@ $bpButtonFills: (
   Info: $bpButtonFillInfo,
   Warning: $bpButtonFillWarning,
 ) !default;
+
+
+/**
+ * default .bp-btn button
+ */
+$bpButtonDefault: $bpButtonPlains !default;
