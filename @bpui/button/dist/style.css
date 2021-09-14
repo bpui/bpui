@@ -559,6 +559,8 @@ button,
   color: #07cb65;
   border: none;
   background-color: rgba(0, 0, 0, 0);
+  /** primary */
+  /** warning */
 }
 button:hover,
 .bp-btn:hover {
@@ -591,6 +593,84 @@ button.bp-btnFill:hover,
   color: rgba(7, 193, 96, 0.8);
   border: solid 1px rgba(234, 234, 234, 0.4);
   background-color: rgba(247, 247, 247, 0.7);
+}
+button[primary],
+.bp-btn[primary] {
+  font-weight: bold;
+  color: #07C160;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+button[primary]:hover,
+.bp-btn[primary]:hover {
+  color: rgba(7, 193, 96, 0.7);
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+button[primary].bp-btnBorder,
+.bp-btn[primary].bp-btnBorder {
+  font-weight: bold;
+  color: #07C160;
+  border: solid 1px rgba(7, 193, 96, 0.6);
+  background-color: rgba(0, 0, 0, 0);
+}
+button[primary].bp-btnBorder:hover,
+.bp-btn[primary].bp-btnBorder:hover {
+  color: rgba(7, 193, 96, 0.7);
+  border: solid 1px rgba(7, 193, 96, 0.4);
+  background-color: rgba(0, 0, 0, 0);
+}
+button[primary].bp-btnFill,
+.bp-btn[primary].bp-btnFill {
+  font-weight: 400;
+  color: #F7F7F7;
+  border: solid 1px rgba(6, 168, 84, 0.6);
+  background-color: rgba(7, 193, 96, 0.9);
+}
+button[primary].bp-btnFill:hover,
+.bp-btn[primary].bp-btnFill:hover {
+  color: rgba(247, 247, 247, 0.8);
+  border: solid 1px rgba(6, 168, 84, 0.4);
+  background-color: rgba(7, 193, 96, 0.7);
+}
+button[warning],
+.bp-btn[warning] {
+  font-weight: 400;
+  color: #FA5151;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+button[warning]:hover,
+.bp-btn[warning]:hover {
+  color: rgba(250, 81, 81, 0.7);
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+button[warning].bp-btnBorder,
+.bp-btn[warning].bp-btnBorder {
+  font-weight: 400;
+  color: #FA5151;
+  border: solid 1px rgba(250, 81, 81, 0.6);
+  background-color: rgba(0, 0, 0, 0);
+}
+button[warning].bp-btnBorder:hover,
+.bp-btn[warning].bp-btnBorder:hover {
+  color: rgba(250, 81, 81, 0.7);
+  border: solid 1px rgba(250, 81, 81, 0.4);
+  background-color: rgba(0, 0, 0, 0);
+}
+button[warning].bp-btnFill,
+.bp-btn[warning].bp-btnFill {
+  font-weight: 400;
+  color: #F7F7F7;
+  border: solid 1px rgba(249, 56, 56, 0.6);
+  background-color: rgba(250, 81, 81, 0.9);
+}
+button[warning].bp-btnFill:hover,
+.bp-btn[warning].bp-btnFill:hover {
+  color: rgba(247, 247, 247, 0.8);
+  border: solid 1px rgba(249, 56, 56, 0.4);
+  background-color: rgba(250, 81, 81, 0.7);
 }
 
 /** each button */

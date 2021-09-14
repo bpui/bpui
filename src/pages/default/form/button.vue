@@ -14,26 +14,34 @@
     <button>default</button>
     <button class="bp-btnInfo">info</button>
     <button class="bp-btnPrimary">primary</button>
+    <button primary>primary</button>
     <button class="bp-btnWarning">warning</button>
+    <button warning>warning</button>
 
     <!-- plain -->
     <h4>plain style</h4>
     <button>default</button>
     <button class="bp-btnPlain bp-btnInfo">info</button>
     <button class="bp-btnPlain bp-btnPrimary">primary</button>
+    <button class="bp-btnPlain" primary>primary</button>
     <button class="bp-btnPlain bp-btnWarning">warning</button>
+    <button class="bp-btnPlain" warning>warning</button>
 
     <!-- fill -->
     <h4>fill style</h4>
     <button class="bp-btnFill bp-btnPrimary">primary</button>
+    <button class="bp-btnFill" primary>primary</button>
     <button class="bp-btnFill">info</button>
     <button class="bp-btnFill bp-btnWarning">warning</button>
+    <button class="bp-btnFill" warning>warning</button>
 
     <!-- border -->
     <h4>border style</h4>
     <button class="bp-btnBorder bp-btnPrimary">primary</button>
+    <button class="bp-btnBorder" primary>primary</button>
     <button class="bp-btnBorder">info</button>
     <button class="bp-btnBorder bp-btnWarning">warning</button>
+    <button class="bp-btnBorder" warning>warning</button>
 
     <!-- disable -->
     <h4>disable button</h4>
