@@ -113,11 +113,11 @@
         return new Promise((resolve)=>{
           maskUtils.showWidget(this.$el, this.mask, this.preventEvent, this.hideBodyScroll, ()=>{
             this.$emit('update:visible', true);
+            resolve();
 
             if (this.vibrateWhenShow) {
               bpLibs.device.vibrate(10);
             }
-            resolve();
           });
         })
       },

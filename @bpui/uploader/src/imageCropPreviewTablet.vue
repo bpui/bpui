@@ -24,7 +24,7 @@ method:
       @mouseup.stop="onClipMouseUp"
       @mouseleave="onClipMouseUp">
     <bp-icon class="bp-uploader-image-crop-preview__cancel" name="bp-uploader_cancel" width="22px"
-      height="22px" @click="visibleReal=false"></bp-icon>
+      height="22px" @click="oncancel"></bp-icon>
     <bp-icon class="bp-uploader-image-crop-preview__ok" name="bp-uploader_ok" width="22px"
       height="22px" @click="onok"></bp-icon>
     <div ref="canvasWrap" style="position:relative">
@@ -160,6 +160,11 @@ method:
         canvas = null;
         return dataURL;
       },
+      oncancel() {
+        this.visibleReal=false;
+        this.$emit('cancel');
+        if (this._cancelListener) this._cancelListener();
+      },
       onok(){
         let url = this.getImageBase64(this.outputFormatReal);
         this.visibleReal = false;
@@ -170,6 +175,9 @@ method:
       },
       _addClipFinishListener(func) {
         this._clipFinishListener = func;
+      },
+      _addCancelListener(func) {
+        this._cancelListener = func;
       },
       onresize() {
         if (this.visibleReal) {

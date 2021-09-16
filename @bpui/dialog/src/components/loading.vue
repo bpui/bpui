@@ -19,7 +19,7 @@
     <div class="bp-loading__main">
       <bp-icon name="loading"/>
     </div>
-    <div class="bp-loading__text">
+    <div v-if="content && content.length>0" class="bp-loading__text">
       {{content}}
     </div>
   </widget>

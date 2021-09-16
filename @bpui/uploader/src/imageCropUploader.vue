@@ -19,7 +19,8 @@
 - httpHeaders  上传时的请求headers对象.
 - crossDomain      跨域, 默认为true
 - withCredentials  是否附带cookie, 默认为true
-- tip          提示文字, 默认"点击上传"
+- tip          提示文字, 默认"将图片拖到此处,或点击上传"
+- tipCancel    提示文字, 默认"点击取消"
 - enableDragFile   打开拖拽文件特性
 - textErrFileNotFound 默认为: '未选择文件!'
 - textErrFileSizeExceed 默认为: '选择的文件大小超出最大值!'
@@ -45,12 +46,17 @@ method:
     <div ref="main" class="bp-uploader-image__file-content-main" style="width:100%; height:100%;">
       <div v-if="isUploading" data-action="uploading" class="bp-uploader-image__add-icon" @click.stop="reset()">
         <bp-icon name="bp-uploader_cancel" width="22px" height="22px"></bp-icon>
+        <p>{{tipCancel}}</p>
       </div>
       <img v-else-if="coverRealUrl && coverRealUrl.length > 0" class="bp-uploader-image__cover"
         :src="coverRealUrl" alt :title="tip" />
       <div v-else class="bp-uploader-image__add-icon" :title="tip">
         <bp-icon name="bp-uploader_add" width="22px" height="22px"></bp-icon>
+        <p>{{tip}}</p>
       </div>
+      <img v-if="isUploading && coverRealUrl && coverRealUrl.length > 0" class="bp-uploader-image__cover_uploading"
+        :src="coverRealUrl" alt :title="tip" />
+      
       <form method="post" class="bp-uploader-image__fileform" ref="form" role="form"
         enctype="multipart/form-data" :style="{
             visibility: 'hidden',
@@ -101,7 +107,11 @@ method:
         type: Boolean
       },
       tip: {
-        default: '点击上传',
+        default: '将图片拖到此处,或点击上传',
+        type: String
+      },
+      tipCancel: {
+        default: '点击取消',
         type: String
       },
       data: {
@@ -253,7 +263,10 @@ method:
       },
       onUpload(imageData) {
 
+        bpDialog.apiWidget.showLoading();
         libImage.compressImage(imageData, this.maxImageSize, null, (base64Data, width, height)=>{
+          bpDialog.apiWidget.hideLoading();
+
           this.coverRealUrl = base64Data;
           let options = {
             timeout: this.timeout,
@@ -324,26 +337,33 @@ method:
 
         let localImage;
 
+        bpDialog.apiWidget.showLoading();
         if (file) {
           libImage.getImageBase64ByFile(file, (base64Data) => {
             //this.coverRealUrl = localImage;
             if (!base64Data) {
+              bpDialog.apiWidget.hideLoading();
               bpDialog.apiWidget.showAlert(this.textErrFileNotFound);
               return;
             }
             this.filename = file.name;
             this.previewRefReal.drawImage(base64Data);
+
+            bpDialog.apiWidget.hideLoading();
           });
         }
         else {
           let fileInput = this.$refs.fileInput;
           libImage.getImageBase64(fileInput, (base64Data, width, height) => {
             if (!base64Data) {
+              bpDialog.apiWidget.hideLoading();
               bpDialog.apiWidget.showAlert(this.textErrFileNotFound);
               return;
             }
             this.filename = fileInput.value;
             this.previewRefReal.drawImage(base64Data);
+
+            bpDialog.apiWidget.hideLoading();
           });
         }
       },

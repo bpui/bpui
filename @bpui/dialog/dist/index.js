@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v1.1.11
+ * bpui dialog v1.1.12
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -2932,6 +2932,7 @@
       }
     }
 
+    mask.attr("data-display", '');
     bpLibs.dom.probeDom(200, function () {
       _newArrowCheck(this, _this);
 
@@ -3005,6 +3006,12 @@
         if (cb) {
           cb();
         }
+
+        var maskHide = mask.attr("data-display");
+
+        if (maskHide == 'hide') {
+          hideWidget(el);
+        }
       }.bind(this))["catch"](function () {
         _newArrowCheck(this, _this2);
       }.bind(this));
@@ -3051,6 +3058,7 @@
     // bp-widget__closing只是标示 正在关闭的样式名，没有实际样式
 
     if (mask.hasClass("bp-widget__invisible") || mask.hasClass("bp-widget__closing")) {
+      mask.attr("data-display", "hide");
       if (cb) cb();
       return;
     }
@@ -3103,9 +3111,10 @@
       preMask.removeClass("bp-widget__maskTmp").addClass("bp-widget__maskNoAminate").addClass("bp-widget__mask");
     }
 
-    var duration = domGetDuration(mask[0]) || 100;
+    var duration = (domGetDuration(mask[0]) || 100) + 10;
     setTimeout(function () {
       mask.css("display", "none");
+      mask.attr("data-display", "hide");
       mask.removeClass("bp-widget__closing");
       mask.removeClass("bp-widget__mask");
       mask.removeClass("bp-widget__maskNoAminate");
@@ -3479,6 +3488,8 @@
   */
 
   function hideLoading() {
+    var _this = this;
+
     window[GlobalLoadingShowMark] = false;
 
     if (window[GlobalLoadingCount]) {
@@ -3490,11 +3501,15 @@
       window[GlobalLoadingTimeout] = null;
     }
 
-    if (window[GlobalLoading]) {
-      try {
-        window[GlobalLoading].vm.$children[0].hide();
-      } catch (e) {}
-    }
+    setTimeout(function () {
+      _newArrowCheck(this, _this);
+
+      if (window[GlobalLoading]) {
+        try {
+          window[GlobalLoading].vm.$children[0].hide();
+        } catch (e) {}
+      }
+    }.bind(this), 0);
   }
   /**
    * @desc: 清理loading的计数; 设置为0.
@@ -3555,7 +3570,7 @@
   delay: 延时显示, 默认为0.
   }*/
   ) {
-    var _this = this;
+    var _this2 = this;
 
     window[GlobalLoadingShowMark] = true;
     bpLibs.router.off('routeChanged', onHandlerRouter);
@@ -3573,7 +3588,7 @@
       $("<div id=\"".concat(id, "\"></div>")).appendTo($('body'));
       var vm = new Vue({
         render: function render(h) {
-          _newArrowCheck(this, _this);
+          _newArrowCheck(this, _this2);
 
           return h(loading, {
             "class": [ApiClass$2, LoadingClass, id]
@@ -3609,13 +3624,18 @@
     {
       now = now + cfg.delay;
       var tm = setTimeout(function () {
-        _newArrowCheck(this, _this);
+        _newArrowCheck(this, _this2);
 
-        var cfg1 = window[GlobalLoadingTimeout].cfg;
-        window[GlobalLoadingTimeout] = null;
-        cfg1 = febs.utils.mergeMap(loading.data(), cfg1);
-        window[GlobalLoading].vm.$data.content = cfg1.content;
-        window[GlobalLoading].vm.$children[0].show();
+        if (window[GlobalLoadingTimeout]) {
+          var cfg1 = window[GlobalLoadingTimeout].cfg;
+          window[GlobalLoadingTimeout] = null;
+          cfg1 = febs.utils.mergeMap(loading.data(), cfg1);
+          window[GlobalLoading].vm.$data.content = cfg1.content;
+
+          try {
+            window[GlobalLoading].vm.$children[0].show();
+          } catch (e) {}
+        }
       }.bind(this), cfg.delay);
       window[GlobalLoadingTimeout] = {
         tm: tm,
@@ -3665,7 +3685,7 @@
   */
 
   function hideLoadingTarget(target) {
-    var _this2 = this;
+    var _this3 = this;
 
     if (!target) {
       throw new Error('Empty parameter target in function showLoadingTarget');
@@ -3688,7 +3708,7 @@
 
     if (targetLoading.loading) {
       targetLoading.loading.$children[0].hide().then(function () {
-        _newArrowCheck(this, _this2);
+        _newArrowCheck(this, _this3);
 
         $(targetLoading.dom).remove();
         delete window[GlobalTargetLoadings][target];
@@ -3711,7 +3731,7 @@
   delay: 延时显示, 默认为0.
   }*/
   ) {
-    var _this3 = this;
+    var _this4 = this;
 
     if (!target) {
       throw new Error('Empty parameter target in function showLoadingTarget');
@@ -3762,7 +3782,7 @@
       $("<div id=\"".concat(id, "\"></div>")).appendTo($(target));
       var vm = new Vue({
         render: function render(h) {
-          _newArrowCheck(this, _this3);
+          _newArrowCheck(this, _this4);
 
           return h(loading, {
             "class": [ApiClass$2, LoadingClass, LoadingTargetClass, id]
@@ -3800,7 +3820,7 @@
     {
       now = now + cfg.delay;
       var tm = setTimeout(function () {
-        _newArrowCheck(this, _this3);
+        _newArrowCheck(this, _this4);
 
         var cfg1 = targetLoadings[target].cfg;
         targetLoadings[target].timeout = null;
@@ -4142,12 +4162,11 @@
             _newArrowCheck(this, _this5);
 
             this.$emit('update:visible', true);
+            resolve();
 
             if (this.vibrateWhenShow) {
               bpLibs.device.vibrate(10);
             }
-
-            resolve();
           }.bind(this));
         }.bind(this));
       },
@@ -4731,9 +4750,9 @@
       attrs: {
         name: "loading"
       }
-    })], 1), _vm._v(" "), _c("div", {
+    })], 1), _vm._v(" "), _vm.content && _vm.content.length > 0 ? _c("div", {
       staticClass: "bp-loading__text"
-    }, [_vm._v("\n    " + _vm._s(_vm.content) + "\n  ")])]);
+    }, [_vm._v("\n    " + _vm._s(_vm.content) + "\n  ")]) : _vm._e()]);
   };
 
   var __vue_staticRenderFns__$4 = [];

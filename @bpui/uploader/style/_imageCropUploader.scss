@@ -43,10 +43,14 @@
         align-items: center;
         cursor: pointer;
 
-        .bp-uploader-image__cover {
+        .bp-uploader-image__cover, .bp-uploader-image__cover_uploading {
             max-width:95%;
             max-height:95%;
             cursor: pointer;
+        }
+
+        .bp-uploader-image__cover_uploading {
+            position: absolute;
         }
 
         .bp-uploader-image__add-icon {
@@ -60,15 +64,19 @@
             pointer-events: none;
             touch-action: none;
             flex-direction: column;
+            
+            p {
+                text-align: center;
+                margin-top: 15px;
+                margin-bottom: 0;
+                width: 90%;
+            }
+        }
+        
 
-            &:after {
-                margin-top: 15px;
-                content: $bpUploaderDragText;
-            }
-            &[data-action^=uploading]:after {
-                margin-top: 15px;
-                content: $bpUploaderCancelText;
-            }
+        &:hover .bp-uploader-image__cover_uploading {
+            // display: none !important;
+            opacity: 0.1 !important;
         }
     }
 }

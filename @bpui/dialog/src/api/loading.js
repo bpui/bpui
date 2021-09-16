@@ -39,11 +39,13 @@ export function hideLoading() {
     window[GlobalLoadingTimeout] = null;
   }
 
-  if (window[GlobalLoading]) {
-    try {
-      window[GlobalLoading].vm.$children[0].hide();
-    } catch (e) { }
-  }
+  setTimeout(() => {
+    if (window[GlobalLoading]) {
+      try {
+        window[GlobalLoading].vm.$children[0].hide();
+      } catch (e) { }
+    }
+  }, 0);
 }
 
 /**
@@ -149,14 +151,19 @@ export function showLoading(cfg/*:string|{
   {
     now = now + cfg.delay;
 
-    let tm = setTimeout(()=>{
-      let cfg1 = window[GlobalLoadingTimeout].cfg;
-      window[GlobalLoadingTimeout] = null;
+    let tm = setTimeout(() => {
+      if (window[GlobalLoadingTimeout]) {
+        let cfg1 = window[GlobalLoadingTimeout].cfg;
+        window[GlobalLoadingTimeout] = null;
 
-      cfg1 = febs.utils.mergeMap(loading.data(), cfg1);
+        cfg1 = febs.utils.mergeMap(loading.data(), cfg1);
 
-      window[GlobalLoading].vm.$data.content = cfg1.content;
-      window[GlobalLoading].vm.$children[0].show();
+        window[GlobalLoading].vm.$data.content = cfg1.content;
+
+        try {
+          window[GlobalLoading].vm.$children[0].show();
+        } catch (e) { }
+      }
     }, cfg.delay);
 
     window[GlobalLoadingTimeout] = {tm, now, cfg: febs.utils.mergeMap(cfg)};

@@ -16,7 +16,8 @@
 - httpHeaders  上传时的请求headers对象.
 - crossDomain      跨域, 默认为true
 - withCredentials  是否附带cookie, 默认为true
-- tip          提示文字, 默认"点击上传"
+- tip          提示文字, 默认"将文件拖到此处,或点击上传"
+- tipCancel    提示文字, 默认"点击取消"
 - enableDragFile   打开拖拽文件特性
 - textErrFileNotFound 默认为: '未选择文件!'
 - textErrFileSizeExceed 默认为: '选择的文件大小超出最大值!'
@@ -45,6 +46,9 @@ method:
       <!-- image -->
       <div v-if="fileIsImage && isUploading" data-action="uploading" class="bp-uploader__add-icon" @click.stop="reset()">
         <bp-icon name="bp-uploader_cancel" width="22px" height="22px"></bp-icon>
+        <p>{{tipCancel}}</p>
+        <img v-if="coverRealUrl && coverRealUrl.length > 0" class="bp-uploader__uploading-image-cover"
+          :src="coverRealUrl" alt :title="tip"/>
       </div>
       <div v-else-if="fileIsImage && coverRealUrl && coverRealUrl.length > 0" style="flex:1">
         <img class="bp-uploader__cover"
@@ -52,10 +56,12 @@ method:
       </div>
       <div v-else-if="fileIsImage" class="bp-uploader__add-icon" :title="tip">
         <bp-icon name="bp-uploader_add" width="22px" height="22px"></bp-icon>
+        <p>{{tip}}</p>
       </div>
       <!-- file -->
       <div v-if="!fileIsImage && isUploading" data-action="uploading" class="bp-uploader__add-icon bp-uploader__uploading-icon-file" @click.stop="reset()">
         <bp-icon name="bp-uploader_cancel" width="22px" height="22px"></bp-icon>
+        <p>{{tipCancel}}</p>
       </div>
       <div v-if="!fileIsImage && fileType" style="flex:1" :class="isUploading? 'bp-uploader__uploading-icon-filetype': ''">
         <div class="bp-uploader__cover bp-uploader__cover__file" :title="tip" :data-type="fileType"/>
@@ -63,6 +69,7 @@ method:
       </div>
       <div v-else-if="!fileIsImage && !isUploading" class="bp-uploader__add-icon" :title="tip">
         <bp-icon name="bp-uploader_add" width="22px" height="22px"></bp-icon>
+        <p>{{tip}}</p>
       </div>
 
       <form method="post" class="bp-uploader__fileform" ref="form" role="form"
@@ -88,6 +95,7 @@ method:
   import * as libUpload from './libs/upload';
   import * as libImage from './libs/image';
   import libUploadErr from './libs/upload.err';
+  import * as febs from 'febs-browser';
 
   export default {
     name: "",
@@ -102,7 +110,11 @@ method:
         type: Boolean
       },
       tip: {
-        default: '点击上传',
+        default: '将文件拖到此处,或点击上传',
+        type: String
+      },
+      tipCancel: {
+        default: '点击取消',
         type: String
       },
       data: {
@@ -201,6 +213,7 @@ method:
         this.fileType = null;
         this.filename = null;
         this.isUploading = false;
+        return false;
       },
       upload(e, file) {
         if (this.uploader) {
@@ -218,8 +231,11 @@ method:
 
         if (file) {
           if (file.type.indexOf('image/') == 0) {
+            bpDialog.apiWidget.showLoading();
+
             libImage.getImageBase64ByFile(file, (base64Data) => {
               localImage = base64Data;
+              bpDialog.apiWidget.hideLoading();
               //this.coverRealUrl = localImage;
             });
             this.fileIsImage = true;
@@ -235,9 +251,16 @@ method:
         }
         else {
           let fileInput = this.$refs.fileInput;
+          if (!fileInput.files[0]) {
+            return;
+          }
+
           if (fileInput.files[0].type.indexOf('image/') == 0) {
+            bpDialog.apiWidget.showLoading();
             libImage.getImageBase64(fileInput, (base64Data, width, height) => {
               localImage = base64Data;
+              bpDialog.apiWidget.hideLoading();
+              //this.coverRealUrl = localImage;
             });
             this.fileIsImage = true;
             this.filename = null;
@@ -305,6 +328,9 @@ method:
             this.$emit('uploadProgress', percent);
           }
         };
+
+        this.isUploading = true;
+        return;
 
         if (options.uploadUrl) {
           libUpload.upload(options);
@@ -374,7 +400,7 @@ method:
           let file = list[0];
           let accept = this.accept;
           if (accept) {
-            accept = febs.String.replace(accept, ' ', '');
+            accept = febs.string.replace(accept, ' ', '');
             accept = accept.split(',');
 
             let fc = file.type.split('/');
@@ -382,6 +408,7 @@ method:
               let ac = accept[i].split('/');
               if ((fc[0] == ac[0] || ac[0] == '*') && (ac[1] == '*' || fc[1] == ac[1])) {
                 this.upload(null, file);
+                return;
               }
             }
             return;

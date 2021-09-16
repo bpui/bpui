@@ -30,5 +30,5 @@
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
   "name": "@bpui/button",
-  "version": "1.1.8"
+  "version": "1.1.9"
 }

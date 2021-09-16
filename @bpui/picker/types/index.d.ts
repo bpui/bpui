@@ -109,6 +109,14 @@ export class PickerTimeDatasource extends PickerDataSourceBase {
     * @desc: 分钟显示的文本
     */
     minuteText?:string,
+    /**
+    * @desc: 秒钟显示的文本
+    */
+    secondText?: string,
+    /**
+     * @desc: 是否显示秒
+     */
+    showSecond?: boolean,
   });
   constructor();
 }

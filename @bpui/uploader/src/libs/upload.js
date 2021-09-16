@@ -285,7 +285,7 @@ export function upload(cfg) {
     } // function.
 
     if (cfg.checkoutCrc32) {
-      crypt.crc32_fileSegment(
+      febs.crypt.crc32_fileSegment(
         file,
         0,
         -1,

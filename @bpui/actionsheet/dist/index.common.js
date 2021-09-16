@@ -1,5 +1,5 @@
 /*!
- * bpui actionsheet v1.1.11
+ * bpui actionsheet v1.1.12
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -876,7 +876,12 @@ var __vue_render__ = function __vue_render__() {
   }, [_c("div", {
     staticClass: "bp-widget__content"
   }, [_c("div", {
-    staticClass: "bp-widget__contentWrap"
+    staticClass: "bp-widget__contentWrap",
+    on: {
+      click: function click($event) {
+        $event.stopPropagation();
+      }
+    }
   }, [_c("div", {
     staticClass: "bp-actionsheet__main",
     "class": _vm.pageClass,

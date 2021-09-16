@@ -544,8 +544,9 @@ button:active,
 .bp-btn:active {
   opacity: 0.7;
 }
-button:disabled,
-.bp-btn:disabled {
+button:disabled, button[disabled=disabled],
+.bp-btn:disabled,
+.bp-btn[disabled=disabled] {
   opacity: 0.6;
   cursor: not-allowed;
   touch-action: none;
@@ -564,6 +565,19 @@ button,
 }
 button:hover,
 .bp-btn:hover {
+  color: rgba(7, 203, 101, 0.7);
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+button.bp-btnPlain,
+.bp-btn.bp-btnPlain {
+  font-weight: 400;
+  color: #07cb65;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+button.bp-btnPlain:hover,
+.bp-btn.bp-btnPlain:hover {
   color: rgba(7, 203, 101, 0.7);
   border: none;
   background-color: rgba(0, 0, 0, 0);
@@ -607,6 +621,19 @@ button[primary]:hover,
   border: none;
   background-color: rgba(0, 0, 0, 0);
 }
+button[primary].bp-btnPlain,
+.bp-btn[primary].bp-btnPlain {
+  font-weight: bold;
+  color: #07C160;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+button[primary].bp-btnPlain:hover,
+.bp-btn[primary].bp-btnPlain:hover {
+  color: rgba(7, 193, 96, 0.7);
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
 button[primary].bp-btnBorder,
 .bp-btn[primary].bp-btnBorder {
   font-weight: bold;
@@ -642,6 +669,19 @@ button[warning],
 }
 button[warning]:hover,
 .bp-btn[warning]:hover {
+  color: rgba(250, 81, 81, 0.7);
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+button[warning].bp-btnPlain,
+.bp-btn[warning].bp-btnPlain {
+  font-weight: 400;
+  color: #FA5151;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+}
+button[warning].bp-btnPlain:hover,
+.bp-btn[warning].bp-btnPlain:hover {
   color: rgba(250, 81, 81, 0.7);
   border: none;
   background-color: rgba(0, 0, 0, 0);

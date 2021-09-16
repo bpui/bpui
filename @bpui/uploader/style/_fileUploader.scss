@@ -121,14 +121,12 @@
             pointer-events: none;
             touch-action: none;
             flex-direction: column;
-
-            &:after {
+            
+            p {
+                text-align: center;
                 margin-top: 15px;
-                content: $bpUploaderDragText;
-            }
-            &[data-action^=uploading]:after {
-                margin-top: 15px;
-                content: $bpUploaderCancelText;
+                margin-bottom: 0;
+                width: 90%;
             }
         }
 
@@ -136,6 +134,14 @@
         .bp-uploader__uploading-icon-file {
             display: none !important;
         }
+
+        .bp-uploader__uploading-image-cover {
+            max-width:95%;
+            max-height:95%;
+            cursor: pointer;
+            position: absolute;
+        }
+
     }
 
     &:hover .bp-uploader__uploading-icon-file {
@@ -144,5 +150,8 @@
 
     &:hover .bp-uploader__uploading-icon-filetype {
         display: none !important;
+    }
+    &:hover .bp-uploader__uploading-image-cover {
+        opacity: 0.1 !important;
     }
 }

@@ -11,8 +11,10 @@
   display: inline-block;
   border-radius: $bpButtonBorderRadius;
   border: 1px solid $bpButtonGroupBorderColor;
+  font-size: 0px;
 
-  & > .bp-btn, button {
+  & > .bp-btn,
+  & > button {
     height: 38px;
     border-radius: 0;
     border: none;
@@ -21,17 +23,18 @@
     justify-content: center;
     align-items: center;
     display: inline-flex;
+    font-size: $bpButtonFontSize;
     
     &:hover {
       border-radius: 0;
       border: none;
       margin: 0;  
     }
-    &:not(:first-child) {
-      border-left: 1px solid $bpButtonGroupBorderColor;
-      &:hover {
-        border-left: 1px solid $bpButtonGroupBorderColor;
-      }
-    }
+    // &:not(:first-child) {
+    //   border-left: 1px solid $bpButtonGroupBorderColor;
+    //   &:hover {
+    //     border-left: 1px solid $bpButtonGroupBorderColor;
+    //   }
+    // }
   }
 }

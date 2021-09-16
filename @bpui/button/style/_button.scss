@@ -62,7 +62,8 @@ button,
     opacity: 0.7;
   }
 
-  &:disabled {
+  &:disabled,
+  &[disabled=disabled] {
     opacity: .6;
     cursor: not-allowed;
     touch-action: none;
@@ -82,6 +83,18 @@ button,
     color: map-get(map-get($bpButtonDefault, Info), hover_color);
     border: map-get(map-get($bpButtonDefault, Info), hover_borderColor);
     background-color: map-get(map-get($bpButtonDefault, Info), hover_bgColor);
+  }
+
+  &.bp-btnPlain {
+    font-weight: map-get(map-get($bpButtonPlains, Info), fontWeight);
+    color: map-get(map-get($bpButtonPlains, Info), color);
+    border: map-get(map-get($bpButtonPlains, Info), borderColor);
+    background-color: map-get(map-get($bpButtonPlains, Info), bgColor);
+    &:hover {
+      color: map-get(map-get($bpButtonPlains, Info), hover_color);
+      border: map-get(map-get($bpButtonPlains, Info), hover_borderColor);
+      background-color: map-get(map-get($bpButtonPlains, Info), hover_bgColor);
+    }
   }
 
   &.bp-btnBorder {
@@ -121,6 +134,17 @@ button,
       background-color: map-get(map-get($bpButtonDefault, Primary), hover_bgColor);
     }
 
+    &.bp-btnPlain {
+      font-weight: map-get(map-get($bpButtonPlains, Primary), fontWeight);
+      color: map-get(map-get($bpButtonPlains, Primary), color);
+      border: map-get(map-get($bpButtonPlains, Primary), borderColor);
+      background-color: map-get(map-get($bpButtonPlains, Primary), bgColor);
+      &:hover {
+        color: map-get(map-get($bpButtonPlains, Primary), hover_color);
+        border: map-get(map-get($bpButtonPlains, Primary), hover_borderColor);
+        background-color: map-get(map-get($bpButtonPlains, Primary), hover_bgColor);
+      }
+    }
     &.bp-btnBorder {
       font-weight: map-get(map-get($bpButtonBorders, Primary), fontWeight);
       color: map-get(map-get($bpButtonBorders, Primary), color);
@@ -159,6 +183,17 @@ button,
       background-color: map-get(map-get($bpButtonDefault, Warning), hover_bgColor);
     }
 
+    &.bp-btnPlain {
+      font-weight: map-get(map-get($bpButtonPlains, Warning), fontWeight);
+      color: map-get(map-get($bpButtonPlains, Warning), color);
+      border: map-get(map-get($bpButtonPlains, Warning), borderColor);
+      background-color: map-get(map-get($bpButtonPlains, Warning), bgColor);
+      &:hover {
+        color: map-get(map-get($bpButtonPlains, Warning), hover_color);
+        border: map-get(map-get($bpButtonPlains, Warning), hover_borderColor);
+        background-color: map-get(map-get($bpButtonPlains, Warning), hover_bgColor);
+      }
+    }
     &.bp-btnBorder {
       font-weight: map-get(map-get($bpButtonBorders, Warning), fontWeight);
       color: map-get(map-get($bpButtonBorders, Warning), color);

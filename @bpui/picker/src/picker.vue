@@ -24,6 +24,7 @@
     :vibrateWhenShow="true">
     
     <div class="bp-widget__contentWrap"
+      @click.stop
       :class="pageClass" 
       :style="pageStyle">
       <div v-if="$slots['toolbar'] && (toolbarPos?toolbarPos=='top':(!tabletClass))" class="bp-picker__toolbar bp-ellipsis" >

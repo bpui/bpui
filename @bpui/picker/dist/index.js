@@ -1,5 +1,5 @@
 /*!
- * bpui picker v1.1.11
+ * bpui picker v1.1.12
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3800,7 +3800,12 @@
     }, [_c("div", {
       staticClass: "bp-widget__contentWrap",
       "class": _vm.pageClass,
-      style: _vm.pageStyle
+      style: _vm.pageStyle,
+      on: {
+        click: function click($event) {
+          $event.stopPropagation();
+        }
+      }
     }, [_vm.$slots["toolbar"] && (_vm.toolbarPos ? _vm.toolbarPos == "top" : !_vm.tabletClass) ? _c("div", {
       staticClass: "bp-picker__toolbar bp-ellipsis"
     }, [_vm._t("toolbar")], 2) : (_vm.toolbarPos ? _vm.toolbarPos == "top" : !_vm.tabletClass) ? _c("div", {
@@ -4165,17 +4170,35 @@
 
     return ds;
   }
+  /**
+  * @desc: .
+  * @return: picker数据源.
+  *         [{label:'00', value:0}, {label:'01', value:1}, ...]
+  */
+
+
+  function ds_sec(secondText) {
+    var ds = [];
+
+    for (var i = 0; i < 60; i++) {
+      ds.push({
+        label: (i < 10 ? '0' + i : i) + (secondText ? ' ' + secondText : ''),
+        value: i
+      });
+    }
+
+    return ds;
+  }
 
   var _default$4 = /*#__PURE__*/function () {
-    /**
-    * @param ds: [{label:'', value:0, children:[]}, ],  // 数据源.
-    */
     function _default(cfg) {
       _classCallCheck(this, _default);
 
       cfg = cfg || {};
+      this.showSecond = cfg.hasOwnProperty('showSecond') ? cfg.showSecond : true;
       this.hourText = cfg.hourText || '时';
       this.minuteText = cfg.minuteText || '分';
+      this.secondText = cfg.secondText || '秒';
     }
     /**
     * @desc: 返回数据源组数(最多4个)
@@ -4185,7 +4208,7 @@
     _createClass(_default, [{
       key: "picker_datasource_groups",
       value: function picker_datasource_groups(callback) {
-        callback(2);
+        callback(this.showSecond ? 3 : 2);
       }
       /**
       * @desc: 返回指定组的数据源
@@ -4211,6 +4234,13 @@
           callback({
             datasource: ds_mins(this.minuteText),
             value: _now.getMinutes()
+          });
+        } else if (groupIndex == 2) {
+          var _now2 = new Date();
+
+          callback({
+            datasource: ds_sec(this.secondText),
+            value: _now2.getSeconds()
           });
         }
       }

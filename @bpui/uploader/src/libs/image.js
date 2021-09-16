@@ -39,6 +39,12 @@ export function getImageBase64ByFile(file, callback) {
   reader.onload = function () {
     callback(reader.result);
   }
+  reader.onerror = function () {
+    callback(null);
+  }
+  reader.onabort = function () {
+    callback(null);
+  }
 }
 
 /**

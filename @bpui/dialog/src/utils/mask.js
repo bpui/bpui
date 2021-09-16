@@ -234,6 +234,7 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
     }
   }
 
+  mask.attr("data-display", '');
   bpLibs.dom.probeDom(
     200,
     () => {
@@ -295,6 +296,11 @@ export function showWidget(el, showMask, preventEvent, hideBodyScroll, cb) {
           if (cb) {
             cb();
           }
+          
+          let maskHide = mask.attr("data-display");
+          if (maskHide == 'hide') {
+            hideWidget(el);
+          }
         })
         .catch(() => {});
     }
@@ -345,6 +351,7 @@ export function hideWidget(el, cb) {
   // 防止多次调用
   // bp-widget__closing只是标示 正在关闭的样式名，没有实际样式
   if (mask.hasClass("bp-widget__invisible") || mask.hasClass("bp-widget__closing")) {
+    mask.attr("data-display", "hide");
     if (cb) cb();
     return;
   }
@@ -411,9 +418,10 @@ export function hideWidget(el, cb) {
       .addClass("bp-widget__mask");
   }
 
-  const duration = domGetDuration(mask[0]) || 100;
-  setTimeout(function() {
+  const duration = (domGetDuration(mask[0]) || 100) + 10;
+  setTimeout(function () {
     mask.css("display", "none");
+    mask.attr("data-display", "hide");
     mask.removeClass("bp-widget__closing");
     mask.removeClass("bp-widget__mask");
     mask.removeClass("bp-widget__maskNoAminate");
