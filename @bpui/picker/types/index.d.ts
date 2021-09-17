@@ -53,14 +53,6 @@ export class PickerDateDatasource extends PickerDataSourceBase {
     */
     dateText?:string,
     /**
-    * @desc: 年份从哪一年开始
-    */
-    yearFrom?:number,
-    /**
-    * @desc: 年份到哪一年结束
-    */
-    yearTo?: number,
-    /**
      * @desc 允许选择的最小时间.
      */
     min?: {

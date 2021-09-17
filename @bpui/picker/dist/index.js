@@ -1,5 +1,5 @@
 /*!
- * bpui picker v1.1.13
+ * bpui picker v1.1.14
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -2805,9 +2805,9 @@
       if (oldOffset != offset) {
         bee();
         ttt.trigger('change');
-      }
+      } // console.log(offset);
 
-      console.log(offset);
+
       event.preventDefault();
       event.stopPropagation();
       event.cancelBubble = true;

@@ -81,7 +81,7 @@ export function mobile_onWheel_picker(event) {
       ttt.trigger('change')
     }
 
-  console.log(offset);
+  // console.log(offset);
     event.preventDefault()
     event.stopPropagation()
     event.cancelBubble = true
