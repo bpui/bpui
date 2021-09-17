@@ -113,12 +113,15 @@ $bpPickerIndicatorHeight: 40px;
     justify-content: space-between;
 
     button {
+      @extend .bp-btn;
+      @extend .bp-btnPrimary;
       margin: 0;
       padding: 0;
     }
 
     .bp-picker__cancelBtn {
-      color: rgb(136, 136, 136);
+      @extend .bp-btn;
+      @extend .bp-btnInfo;
     }
   }
 

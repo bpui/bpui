@@ -1,5 +1,5 @@
 /*!
- * bpui picker v1.1.12
+ * bpui picker v1.1.13
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -4011,10 +4011,12 @@ function ds_years(from, to, yearText) {
 */
 
 
-function ds_months(monthText) {
+function ds_months(from, to, monthText) {
+  from = Math.max(from, 0);
+  to = Math.min(to, 11) + 1;
   var ds = [];
 
-  for (var i = 0; i < 12; i++) {
+  for (var i = from; i < to; i++) {
     ds.push({
       label: i + 1 + (monthText ? monthText : ''),
       value: i
@@ -4032,13 +4034,15 @@ function ds_months(monthText) {
 */
 
 
-function ds_days(year, month, dateText) {
+function ds_days(year, month, from, to, dateText) {
   var date = new Date(year, month + 1, 1, 0, 0, 0, 0);
   date.setTime(date.getTime() - 1000 * 60 * 60 * 23);
   var maxDate = date.getDate();
+  from = Math.max(from, 1);
+  to = Math.min(to, maxDate);
   var ds = [];
 
-  for (var i = 1; i <= maxDate; i++) {
+  for (var i = from; i <= to; i++) {
     ds.push({
       label: i + (dateText ? dateText : ''),
       value: i
@@ -4059,8 +4063,16 @@ var _default$3 = /*#__PURE__*/function () {
     this.yearText = cfg.yearText || '年';
     this.monthText = cfg.monthText || '月';
     this.dateText = cfg.dateText || '日';
-    this.yearFrom = cfg.yearFrom;
-    this.yearTo = cfg.yearTo;
+    this.min = cfg.min || {
+      year: null,
+      month: 0,
+      date: 1
+    };
+    this.max = cfg.max || {
+      year: null,
+      month: 11,
+      date: 31
+    };
   }
   /**
   * @desc: 返回数据源组数(最多4个)
@@ -4087,7 +4099,7 @@ var _default$3 = /*#__PURE__*/function () {
       if (groupIndex == 0) {
         var now = new Date();
         callback({
-          datasource: ds_years(this.yearFrom, this.yearTo, this.yearText),
+          datasource: ds_years(this.min.year, this.max.year, this.yearText),
           value: now.getFullYear()
         });
         return;
@@ -4095,7 +4107,7 @@ var _default$3 = /*#__PURE__*/function () {
         var _now = new Date();
 
         callback({
-          datasource: ds_months(this.monthText),
+          datasource: ds_months(this.min.month, this.max.month, this.monthText),
           value: _now.getMonth()
         });
         return;
@@ -4106,7 +4118,7 @@ var _default$3 = /*#__PURE__*/function () {
 
         var _now2 = new Date();
 
-        var ds = ds_days(value0 ? value0 : _now2.getFullYear(), null === value1 || undefined === value1 ? _now2.getMonth() : value1, this.dateText);
+        var ds = ds_days(value0 ? value0 : _now2.getFullYear(), null === value1 || undefined === value1 ? _now2.getMonth() : value1, this.min.date, this.max.date, this.dateText);
         callback({
           datasource: ds,
           value: value2 ? value2 : _now2.getDate()
@@ -4138,10 +4150,14 @@ var _default$3 = /*#__PURE__*/function () {
   return _default;
 }();
 
-function ds_hours(hourText) {
+function ds_hours(hourText, min, max) {
   var ds = [];
+  var f = Math.max(min, 0);
+  var t = Math.min(max, 23);
+  var f1 = Math.min(f, t);
+  var f2 = Math.max(f, t) + 1;
 
-  for (var i = 0; i < 24; i++) {
+  for (var i = f1; i < f2; i++) {
     ds.push({
       label: (i < 10 ? '0' + i : i) + (hourText ? ' ' + hourText : ''),
       value: i
@@ -4157,10 +4173,14 @@ function ds_hours(hourText) {
 */
 
 
-function ds_mins(minuteText) {
+function ds_mins(minuteText, min, max) {
   var ds = [];
+  var f = Math.max(min, 0);
+  var t = Math.min(max, 59);
+  var f1 = Math.min(f, t);
+  var f2 = Math.max(f, t) + 1;
 
-  for (var i = 0; i < 60; i++) {
+  for (var i = f1; i < f2; i++) {
     ds.push({
       label: (i < 10 ? '0' + i : i) + (minuteText ? ' ' + minuteText : ''),
       value: i
@@ -4176,10 +4196,14 @@ function ds_mins(minuteText) {
 */
 
 
-function ds_sec(secondText) {
+function ds_sec(secondText, min, max) {
   var ds = [];
+  var f = Math.max(min, 0);
+  var t = Math.min(max, 59);
+  var f1 = Math.min(f, t);
+  var f2 = Math.max(f, t) + 1;
 
-  for (var i = 0; i < 60; i++) {
+  for (var i = f1; i < f2; i++) {
     ds.push({
       label: (i < 10 ? '0' + i : i) + (secondText ? ' ' + secondText : ''),
       value: i
@@ -4198,6 +4222,16 @@ var _default$4 = /*#__PURE__*/function () {
     this.hourText = cfg.hourText || '时';
     this.minuteText = cfg.minuteText || '分';
     this.secondText = cfg.secondText || '秒';
+    this.min = cfg.min || {
+      hour: 0,
+      minute: 0,
+      second: 0
+    };
+    this.max = cfg.max || {
+      hour: 23,
+      minute: 59,
+      second: 59
+    };
   }
   /**
   * @desc: 返回数据源组数(最多4个)
@@ -4221,25 +4255,28 @@ var _default$4 = /*#__PURE__*/function () {
   }, {
     key: "picker_datasource",
     value: function picker_datasource(groupIndex, picker, callback) {
+      var now = new Date();
+      var h = now.getHours();
+      var m = now.getMinutes();
+      var s = now.getSeconds();
+      h = Math.max(Math.min(h, this.max.hour), this.min.hour);
+      m = Math.max(Math.min(m, this.max.minute), this.min.minute);
+      s = Math.max(Math.min(s, this.max.second), this.min.second);
+
       if (groupIndex == 0) {
-        var now = new Date();
         callback({
-          datasource: ds_hours(this.hourText),
-          value: now.getHours()
+          datasource: ds_hours(this.hourText, this.min.hour, this.max.hour),
+          value: h
         });
       } else if (groupIndex == 1) {
-        var _now = new Date();
-
         callback({
-          datasource: ds_mins(this.minuteText),
-          value: _now.getMinutes()
+          datasource: ds_mins(this.minuteText, this.min.minute, this.max.minute),
+          value: m
         });
       } else if (groupIndex == 2) {
-        var _now2 = new Date();
-
         callback({
-          datasource: ds_sec(this.secondText),
-          value: _now2.getSeconds()
+          datasource: ds_sec(this.secondText, this.min.second, this.max.second),
+          value: s
         });
       }
     }

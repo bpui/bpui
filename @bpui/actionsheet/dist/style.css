@@ -1450,7 +1450,8 @@ label {
     max-width: 450px;
   }
 }
-.bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cell, .bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cellWarn {
+.bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cell, .bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cellWarn,
+.bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cell[warn] {
   text-align: center;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -1462,7 +1463,8 @@ label {
   border-radius: 8px;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cell, .bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cellWarn {
+  .bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cell, .bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cellWarn,
+.bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cell[warn] {
     border-bottom: none;
     background-size: 100% 1px;
     background-repeat: no-repeat;
@@ -1482,7 +1484,9 @@ label {
     background-image: linear-gradient(0deg, rgba(0, 0, 0, 0) 49%, transparent 51%, transparent);
   }
 }
-.bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cellWarn {
+.bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cellWarn,
+.bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group .bp-actionsheet__cell[warn],
+.bp-actionsheet .bp-actionsheet__main .bp-actionsheet__group [warn].bp-actionsheet__cellWarn {
   color: #FA5151;
 }
 

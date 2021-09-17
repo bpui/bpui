@@ -139,7 +139,8 @@
         }
       }
 
-      .bp-actionsheet__cellWarn {
+      .bp-actionsheet__cellWarn, 
+      .bp-actionsheet__cell[warn] {
         @extend .bp-actionsheet__cell;
         color: $bpColorWarn;
       }

@@ -59,7 +59,29 @@ export class PickerDateDatasource extends PickerDataSourceBase {
     /**
     * @desc: 年份到哪一年结束
     */
-    yearTo?:number,
+    yearTo?: number,
+    /**
+     * @desc 允许选择的最小时间.
+     */
+    min?: {
+      // 默认为 null
+      year: number,
+      // 默认为 0
+      month: number,
+      // 默认为 1
+      date: number,
+    },
+    /**
+     * @desc 允许选择的最大时间.
+     */
+    max?: {
+      // 默认为 null
+      year: number,
+      // 默认为 11
+      month: number,
+      // 默认为 31
+      date: number,
+    },
   });
   constructor();
 }
@@ -117,6 +139,22 @@ export class PickerTimeDatasource extends PickerDataSourceBase {
      * @desc: 是否显示秒
      */
     showSecond?: boolean,
+    /**
+     * @desc 允许选择的最小时间.
+     */
+    min?: {
+      hour: number,
+      minute: number,
+      second: number,
+    },
+    /**
+     * @desc 允许选择的最大时间.
+     */
+    max?: {
+      hour: number,
+      minute: number,
+      second: number,
+    },
   });
   constructor();
 }

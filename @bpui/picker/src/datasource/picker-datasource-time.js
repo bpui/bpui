@@ -12,9 +12,13 @@
 * @return: picker数据源.
 *         [{label:'00', value:0}, ...]
 */
-function ds_hours(hourText) {
+function ds_hours(hourText, min, max) {
   let ds = [];
-  for (let i = 0; i < 24; i++) {
+  let f = Math.max(min, 0);
+  let t = Math.min(max, 23);
+  let f1 = Math.min(f, t);
+  let f2 = Math.max(f, t)+1;
+  for (let i = f1; i < f2; i++) {
     ds.push({label:(i<10?'0'+i:i) + (hourText?' '+hourText:''), value:i});
   }
   return ds;
@@ -26,9 +30,13 @@ function ds_hours(hourText) {
 * @return: picker数据源.
 *         [{label:'00', value:0}, {label:'01', value:1}, ...]
 */
-function ds_mins(minuteText) {
+function ds_mins(minuteText, min, max) {
   let ds = [];
-  for (let i = 0; i < 60; i++) {
+  let f = Math.max(min, 0);
+  let t = Math.min(max, 59);
+  let f1 = Math.min(f, t);
+  let f2 = Math.max(f, t)+1;
+  for (let i = f1; i < f2; i++) {
     ds.push({label:(i<10?'0'+i:i) + (minuteText?' '+minuteText:''), value:i});
   }
   return ds;
@@ -39,9 +47,13 @@ function ds_mins(minuteText) {
 * @return: picker数据源.
 *         [{label:'00', value:0}, {label:'01', value:1}, ...]
 */
-function ds_sec(secondText) {
+function ds_sec(secondText, min, max) {
   let ds = [];
-  for (let i = 0; i < 60; i++) {
+  let f = Math.max(min, 0);
+  let t = Math.min(max, 59);
+  let f1 = Math.min(f, t);
+  let f2 = Math.max(f, t)+1;
+  for (let i = f1; i < f2; i++) {
     ds.push({label:(i<10?'0'+i:i) + (secondText?' '+secondText:''), value:i});
   }
   return ds;
@@ -56,7 +68,9 @@ export default class {
     this.showSecond = cfg.hasOwnProperty('showSecond') ? cfg.showSecond : true;
     this.hourText = cfg.hourText||'时';
     this.minuteText = cfg.minuteText||'分';
-    this.secondText = cfg.secondText||'秒';
+    this.secondText = cfg.secondText || '秒';
+    this.min = cfg.min || {hour:0, minute:0, second:0};
+    this.max = cfg.max || {hour:23, minute:59, second:59};
   }
 
   /**
@@ -75,23 +89,28 @@ export default class {
           }
   */
   picker_datasource(groupIndex, picker, callback) {
+    let now = new Date();
+    let h = now.getHours();
+    let m = now.getMinutes();
+    let s = now.getSeconds();
+    h = Math.max(Math.min(h, this.max.hour), this.min.hour);
+    m = Math.max(Math.min(m, this.max.minute), this.min.minute);
+    s = Math.max(Math.min(s, this.max.second), this.min.second);
+
     if (groupIndex == 0) {
-      let now = new Date();
       callback({
-        datasource: ds_hours(this.hourText),
-        value: now.getHours(),
+        datasource: ds_hours(this.hourText, this.min.hour, this.max.hour),
+        value: h,
       });
     } else if (groupIndex == 1) {
-      let now = new Date();
       callback({
-        datasource: ds_mins(this.minuteText),
-        value: now.getMinutes()
+        datasource: ds_mins(this.minuteText, this.min.minute, this.max.minute),
+        value: m
       });
     } else if (groupIndex == 2) {
-      let now = new Date();
       callback({
-        datasource: ds_sec(this.secondText),
-        value: now.getSeconds()
+        datasource: ds_sec(this.secondText, this.min.second, this.max.second),
+        value: s
       });
     }
   }

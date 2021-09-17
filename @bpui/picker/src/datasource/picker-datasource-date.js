@@ -43,9 +43,12 @@ function ds_years(from, to, yearText) {
 * @return: picker数据源.
 *         [{label:'1月', value:0}, {label:'2月', value:1}, ...]
 */
-function ds_months(monthText) {
+function ds_months(from, to, monthText) {
+  from = Math.max(from, 0);
+  to = Math.min(to, 11) + 1;
+  
   let ds = [];
-  for (let i = 0; i < 12; i++) {
+  for (let i = from; i < to; i++) {
     ds.push({label:(i+1)+(monthText?monthText:''), value:i});
   }
   return ds;
@@ -58,13 +61,17 @@ function ds_months(monthText) {
 * @return: picker数据源.
 *         [{label:'1日', value:1}, {label:'2日', value:2}, ...]
 */
-function ds_days(year, month, dateText) {
+function ds_days(year, month, from, to,  dateText) {
   let date = new Date(year, month+1, 1, 0, 0, 0, 0);
   date.setTime(date.getTime()-1000*60*60*23);
 
   let maxDate = date.getDate();
+
+  from = Math.max(from, 1);
+  to = Math.min(to, maxDate);
+
   let ds = [];
-  for (let i = 1; i <= maxDate; i++) {
+  for (let i = from; i <= to; i++) {
     ds.push({label:i+(dateText?dateText:''), value:i});
   }
   return ds;
@@ -81,8 +88,8 @@ export default class {
     this.yearText = cfg.yearText||'年';
     this.monthText = cfg.monthText||'月';
     this.dateText = cfg.dateText||'日';
-    this.yearFrom = cfg.yearFrom;
-    this.yearTo = cfg.yearTo;
+    this.min = cfg.min || {year:null, month:0, date:1};
+    this.max = cfg.max || {year:null, month:11, date:31};
   }
 
   /**
@@ -104,14 +111,14 @@ export default class {
     if (groupIndex == 0) {
       let now = new Date();
       callback({
-        datasource: ds_years(this.yearFrom, this.yearTo, this.yearText),
+        datasource: ds_years(this.min.year, this.max.year, this.yearText),
         value: now.getFullYear(),
       });
       return;
     } else if (groupIndex == 1) {
       let now = new Date();
       callback({
-        datasource: ds_months(this.monthText),
+        datasource: ds_months(this.min.month, this.max.month, this.monthText),
         value: now.getMonth()
       });
       return;
@@ -122,7 +129,10 @@ export default class {
       let value1 = picker.getSelect(1).value;
       let value2 = picker.getSelect(2).value;
       let now = new Date();
-      let ds = ds_days(value0?value0:now.getFullYear(), (null===value1||undefined===value1)?now.getMonth():value1, this.dateText);
+      let ds = ds_days(
+        value0 ? value0 : now.getFullYear(), (null === value1 || undefined === value1) ? now.getMonth() : value1,
+        this.min.date, this.max.date, 
+        this.dateText);
       callback({
         datasource: ds,
         value: value2?value2:now.getDate()
