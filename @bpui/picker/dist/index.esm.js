@@ -1,5 +1,5 @@
 /*!
- * bpui picker v1.1.14
+ * bpui picker v1.1.16
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3972,17 +3972,106 @@ var __vue_component__ = /*#__PURE__*/normalizeComponent({
   staticRenderFns: __vue_staticRenderFns__
 }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, false, undefined, undefined, undefined);
 
+var floor$3 = Math.floor;
+
+// `Number.isInteger` method implementation
+// https://tc39.es/ecma262/#sec-number.isinteger
+var isInteger = function isInteger(it) {
+  return !isObject(it) && isFinite(it) && floor$3(it) === it;
+};
+
+// `Number.isInteger` method
+// https://tc39.es/ecma262/#sec-number.isinteger
+_export({ target: 'Number', stat: true }, {
+  isInteger: isInteger
+});
+
+// makes subclassing work correct for wrapped built-ins
+var inheritIfRequired = function ($this, dummy, Wrapper) {
+  var NewTarget, NewTargetPrototype;
+  if (
+    // it can work only with native `setPrototypeOf`
+    objectSetPrototypeOf &&
+    // we haven't completely correct pre-ES6 way for getting `new.target`, so use this
+    typeof (NewTarget = dummy.constructor) == 'function' &&
+    NewTarget !== Wrapper &&
+    isObject(NewTargetPrototype = NewTarget.prototype) &&
+    NewTargetPrototype !== Wrapper.prototype
+  ) objectSetPrototypeOf($this, NewTargetPrototype);
+  return $this;
+};
+
+var getOwnPropertyNames = objectGetOwnPropertyNames.f;
+var getOwnPropertyDescriptor$3 = objectGetOwnPropertyDescriptor.f;
+var defineProperty$1 = objectDefineProperty.f;
+var trim = stringTrim.trim;
+
+var NUMBER = 'Number';
+var NativeNumber = global_1[NUMBER];
+var NumberPrototype = NativeNumber.prototype;
+
+// Opera ~12 has broken Object#toString
+var BROKEN_CLASSOF = classofRaw(objectCreate(NumberPrototype)) == NUMBER;
+
+// `ToNumber` abstract operation
+// https://tc39.es/ecma262/#sec-tonumber
+var toNumber = function (argument) {
+  var it = toPrimitive(argument, false);
+  var first, third, radix, maxCode, digits, length, index, code;
+  if (typeof it == 'string' && it.length > 2) {
+    it = trim(it);
+    first = it.charCodeAt(0);
+    if (first === 43 || first === 45) {
+      third = it.charCodeAt(2);
+      if (third === 88 || third === 120) return NaN; // Number('+0x1') should be NaN, old V8 fix
+    } else if (first === 48) {
+      switch (it.charCodeAt(1)) {
+        case 66: case 98: radix = 2; maxCode = 49; break; // fast equal of /^0b[01]+$/i
+        case 79: case 111: radix = 8; maxCode = 55; break; // fast equal of /^0o[0-7]+$/i
+        default: return +it;
+      }
+      digits = it.slice(2);
+      length = digits.length;
+      for (index = 0; index < length; index++) {
+        code = digits.charCodeAt(index);
+        // parseInt parses a string to a first unavailable symbol
+        // but ToNumber should return NaN if a string contains unavailable symbols
+        if (code < 48 || code > maxCode) return NaN;
+      } return parseInt(digits, radix);
+    }
+  } return +it;
+};
+
+// `Number` constructor
+// https://tc39.es/ecma262/#sec-number-constructor
+if (isForced_1(NUMBER, !NativeNumber(' 0o1') || !NativeNumber('0b1') || NativeNumber('+0x1'))) {
+  var NumberWrapper = function Number(value) {
+    var it = arguments.length < 1 ? 0 : value;
+    var dummy = this;
+    return dummy instanceof NumberWrapper
+      // check on 1..constructor(foo) case
+      && (BROKEN_CLASSOF ? fails(function () { NumberPrototype.valueOf.call(dummy); }) : classofRaw(dummy) != NUMBER)
+        ? inheritIfRequired(new NativeNumber(toNumber(it)), dummy, NumberWrapper) : toNumber(it);
+  };
+  for (var keys$1 = descriptors ? getOwnPropertyNames(NativeNumber) : (
+    // ES3:
+    'MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' +
+    // ES2015 (in case, if modules with ES2015 Number statics required before):
+    'EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,' +
+    'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger,' +
+    // ESNext
+    'fromString,range'
+  ).split(','), j = 0, key; keys$1.length > j; j++) {
+    if (has(NativeNumber, key = keys$1[j]) && !has(NumberWrapper, key)) {
+      defineProperty$1(NumberWrapper, key, getOwnPropertyDescriptor$3(NativeNumber, key));
+    }
+  }
+  NumberWrapper.prototype = NumberPrototype;
+  NumberPrototype.constructor = NumberWrapper;
+  redefine(global_1, NUMBER, NumberWrapper);
+}
+
 function ds_years(from, to, yearText) {
-  var now = new Date();
-
-  if (!from) {
-    from = now.getFullYear() - 80;
-  }
-
-  if (!to) {
-    to = now.getFullYear() + 80;
-  }
-
   if (from > to) {
     var x = from;
     from = to;
@@ -4007,12 +4096,25 @@ function ds_years(from, to, yearText) {
 */
 
 
-function ds_months(from, to, monthText) {
-  from = Math.max(from, 0);
-  to = Math.min(to, 11) + 1;
+function ds_months(year, min, max, monthText) {
+  var f1;
+  var f2;
+
+  if (year > min.year) {
+    f1 = 0;
+  } else {
+    f1 = min.month;
+  }
+
+  if (year < max.year) {
+    f2 = 12;
+  } else {
+    f2 = max.month + 1;
+  }
+
   var ds = [];
 
-  for (var i = from; i < to; i++) {
+  for (var i = f1; i < f2; i++) {
     ds.push({
       label: i + 1 + (monthText ? monthText : ''),
       value: i
@@ -4030,15 +4132,33 @@ function ds_months(from, to, monthText) {
 */
 
 
-function ds_days(year, month, from, to, dateText) {
+function ds_days(year, month, min, max, dateText) {
+  var f1;
+  var f2;
+
+  if (year > min.year) {
+    f1 = 1;
+  } else if (month > min.month) {
+    f1 = 1;
+  } else {
+    f1 = min.date;
+  }
+
+  if (year < max.year) {
+    f2 = 31;
+  } else if (month < max.month) {
+    f2 = 31;
+  } else {
+    f2 = max.date;
+  }
+
   var date = new Date(year, month + 1, 1, 0, 0, 0, 0);
   date.setTime(date.getTime() - 1000 * 60 * 60 * 23);
   var maxDate = date.getDate();
-  from = Math.max(from, 1);
-  to = Math.min(to, maxDate);
+  f2 = Math.min(f2, maxDate);
   var ds = [];
 
-  for (var i = from; i <= to; i++) {
+  for (var i = f1; i <= f2; i++) {
     ds.push({
       label: i + (dateText ? dateText : ''),
       value: i
@@ -4069,6 +4189,22 @@ var _default$3 = /*#__PURE__*/function () {
       month: 11,
       date: 31
     };
+    this.min.month = Number.isInteger(this.min.month) ? this.min.month : 0;
+    this.min.date = Number.isInteger(this.min.date) ? this.min.date : 1;
+    this.max.month = Number.isInteger(this.max.month) ? this.max.month : 11;
+    this.max.date = Number.isInteger(this.max.date) ? this.max.date : 31;
+    var now = new Date().getFullYear();
+
+    if (!this.min.year && !this.max.year) {
+      this.min.year = now - 80;
+      this.max.year = now + 80;
+    } else if (!this.min.year) {
+      this.min.year = now - 80;
+      this.min.year = Math.min(this.min.year, this.max.year);
+    } else if (!this.max.year) {
+      this.max.year = now + 80;
+      this.max.year = Math.max(this.min.year, this.max.year);
+    }
   }
   /**
   * @desc: 返回数据源组数(最多4个)
@@ -4094,30 +4230,57 @@ var _default$3 = /*#__PURE__*/function () {
     value: function picker_datasource(groupIndex, picker, callback) {
       if (groupIndex == 0) {
         var now = new Date();
+        now = Math.max(Math.min(now.getFullYear(), this.max.year), this.min.year);
         callback({
           datasource: ds_years(this.min.year, this.max.year, this.yearText),
-          value: now.getFullYear()
+          value: now
         });
         return;
       } else if (groupIndex == 1) {
+        var value0 = picker.getSelect(0).value;
+        var value1 = picker.getSelect(1).value;
+        var m;
+
         var _now = new Date();
 
+        if (value0 > this.min.year) {
+          m = value1;
+        } else {
+          m = _now.getMonth();
+          m = Math.max(Math.min(m, this.max.month), this.min.month);
+        }
+
         callback({
-          datasource: ds_months(this.min.month, this.max.month, this.monthText),
-          value: _now.getMonth()
+          datasource: ds_months(value0, this.min, this.max, this.monthText),
+          value: m ? m : _now.getMonth()
         });
         return;
       } else if (groupIndex == 2) {
-        var value0 = picker.getSelect(0).value;
-        var value1 = picker.getSelect(1).value;
+        var _value = picker.getSelect(0).value;
+        var _value2 = picker.getSelect(1).value;
         var value2 = picker.getSelect(2).value;
+        var s;
+
+        if (_value > this.min.year) {
+          s = value2;
+        } else if (_value2 > this.min.month) {
+          s = value2;
+        } else if (value2 > this.min.date) {
+          s = value2;
+        } else if (_value < this.max.year) {
+          s = this.min.date;
+        } else if (_value2 < this.max.month) {
+          s = this.min.date;
+        } else {
+          s = Math.max(Math.min(value2, this.max.date), this.min.date);
+        }
 
         var _now2 = new Date();
 
-        var ds = ds_days(value0 ? value0 : _now2.getFullYear(), null === value1 || undefined === value1 ? _now2.getMonth() : value1, this.min.date, this.max.date, this.dateText);
+        var ds = ds_days(_value, _value2, this.min, this.max, this.dateText);
         callback({
           datasource: ds,
-          value: value2 ? value2 : _now2.getDate()
+          value: s ? s : _now2.getDate()
         });
         return;
       }
@@ -4132,8 +4295,14 @@ var _default$3 = /*#__PURE__*/function () {
       var _this = this;
 
       if (groupIndex == 0) {
-        picker.refreshDatasource(2).then(function (value) {
+        picker.refreshDatasource(1).then(function (value) {
+          var _this2 = this;
+
           _newArrowCheck(this, _this);
+
+          picker.refreshDatasource(2).then(function (value) {
+            _newArrowCheck(this, _this2);
+          }.bind(this));
         }.bind(this));
       } else if (groupIndex == 1) {
         picker.refreshDatasource(2).then(function (value) {
@@ -4148,8 +4317,8 @@ var _default$3 = /*#__PURE__*/function () {
 
 function ds_hours(hourText, min, max) {
   var ds = [];
-  var f = Math.max(min, 0);
-  var t = Math.min(max, 23);
+  var f = Math.max(min.hour, 0);
+  var t = Math.min(max.hour, 23);
   var f1 = Math.min(f, t);
   var f2 = Math.max(f, t) + 1;
 
@@ -4169,12 +4338,22 @@ function ds_hours(hourText, min, max) {
 */
 
 
-function ds_mins(minuteText, min, max) {
+function ds_mins(minuteText, min, max, hour) {
   var ds = [];
-  var f = Math.max(min, 0);
-  var t = Math.min(max, 59);
-  var f1 = Math.min(f, t);
-  var f2 = Math.max(f, t) + 1;
+  var f1;
+  var f2;
+
+  if (hour > min.hour) {
+    f1 = 0;
+  } else {
+    f1 = min.minute;
+  }
+
+  if (hour < max.hour) {
+    f2 = 60;
+  } else {
+    f2 = max.minute + 1;
+  }
 
   for (var i = f1; i < f2; i++) {
     ds.push({
@@ -4192,12 +4371,26 @@ function ds_mins(minuteText, min, max) {
 */
 
 
-function ds_sec(secondText, min, max) {
+function ds_sec(secondText, min, max, hour, minute) {
   var ds = [];
-  var f = Math.max(min, 0);
-  var t = Math.min(max, 59);
-  var f1 = Math.min(f, t);
-  var f2 = Math.max(f, t) + 1;
+  var f1;
+  var f2;
+
+  if (hour > min.hour) {
+    f1 = 0;
+  } else if (minute > min.minute) {
+    f1 = 0;
+  } else {
+    f1 = min.second;
+  }
+
+  if (hour < max.hour) {
+    f2 = 60;
+  } else if (minute < max.minute) {
+    f2 = 60;
+  } else {
+    f2 = max.second + 1;
+  }
 
   for (var i = f1; i < f2; i++) {
     ds.push({
@@ -4228,6 +4421,12 @@ var _default$4 = /*#__PURE__*/function () {
       minute: 59,
       second: 59
     };
+    this.min.hour = Number.isInteger(this.min.hour) ? this.min.hour : 0;
+    this.min.minute = Number.isInteger(this.min.minute) ? this.min.minute : 0;
+    this.min.second = Number.isInteger(this.min.second) ? this.min.second : 0;
+    this.max.hour = Number.isInteger(this.max.hour) ? this.max.hour : 23;
+    this.max.minute = Number.isInteger(this.max.minute) ? this.max.minute : 59;
+    this.max.second = Number.isInteger(this.max.second) ? this.max.second : 59;
   }
   /**
   * @desc: 返回数据源组数(最多4个)
@@ -4251,27 +4450,52 @@ var _default$4 = /*#__PURE__*/function () {
   }, {
     key: "picker_datasource",
     value: function picker_datasource(groupIndex, picker, callback) {
-      var now = new Date();
-      var h = now.getHours();
-      var m = now.getMinutes();
-      var s = now.getSeconds();
-      h = Math.max(Math.min(h, this.max.hour), this.min.hour);
-      m = Math.max(Math.min(m, this.max.minute), this.min.minute);
-      s = Math.max(Math.min(s, this.max.second), this.min.second);
-
       if (groupIndex == 0) {
+        var now = new Date();
+        var h = now.getHours();
+        h = Math.max(Math.min(h, this.max.hour), this.min.hour);
         callback({
-          datasource: ds_hours(this.hourText, this.min.hour, this.max.hour),
+          datasource: ds_hours(this.hourText, this.min, this.max),
           value: h
         });
       } else if (groupIndex == 1) {
+        var value0 = picker.getSelect(0).value;
+        var value1 = picker.getSelect(1).value;
+        var m;
+
+        if (value0 > this.min.hour) {
+          m = value1;
+        } else {
+          m = this.min.minute;
+          m = Math.max(Math.min(m, this.max.minute), this.min.minute);
+        }
+
         callback({
-          datasource: ds_mins(this.minuteText, this.min.minute, this.max.minute),
+          datasource: ds_mins(this.minuteText, this.min, this.max, value0),
           value: m
         });
       } else if (groupIndex == 2) {
+        var _value = picker.getSelect(0).value;
+        var _value2 = picker.getSelect(1).value;
+        var value2 = picker.getSelect(2).value;
+        var s;
+
+        if (_value > this.min.hour) {
+          s = value2;
+        } else if (_value2 > this.min.minute) {
+          s = value2;
+        } else if (value2 > this.min.second) {
+          s = value2;
+        } else if (_value < this.max.hour) {
+          s = this.min.second;
+        } else if (_value2 < this.max.minute) {
+          s = this.min.second;
+        } else {
+          s = Math.max(Math.min(value2, this.max.second), this.min.second);
+        }
+
         callback({
-          datasource: ds_sec(this.secondText, this.min.second, this.max.second),
+          datasource: ds_sec(this.secondText, this.min, this.max, _value, _value2),
           value: s
         });
       }
@@ -4282,7 +4506,25 @@ var _default$4 = /*#__PURE__*/function () {
 
   }, {
     key: "picker_changed",
-    value: function picker_changed(groupIndex, picker) {}
+    value: function picker_changed(groupIndex, picker) {
+      var _this = this;
+
+      if (groupIndex == 0) {
+        picker.refreshDatasource(1).then(function (value) {
+          var _this2 = this;
+
+          _newArrowCheck(this, _this);
+
+          picker.refreshDatasource(2).then(function (value) {
+            _newArrowCheck(this, _this2);
+          }.bind(this));
+        }.bind(this));
+      } else if (groupIndex == 1) {
+        picker.refreshDatasource(2).then(function (value) {
+          _newArrowCheck(this, _this);
+        }.bind(this));
+      }
+    }
   }]);
 
   return _default;

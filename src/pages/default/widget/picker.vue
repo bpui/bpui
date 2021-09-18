@@ -75,10 +75,10 @@
     @Provide() visible3:boolean = false;
     @Provide() value1 = null;
     @Provide() value2 = [];
-    @Provide() PickerTimeDatasource = new bpui.PickerTimeDatasource({hourText:'h', minuteText:'m'});
-    @Provide() PickerDateDatasource = new bpui.PickerDateDatasource({yearText:'n'});
+    @Provide() PickerTimeDatasource = new bpui.PickerTimeDatasource({hourText:'h', minuteText:'m', min:{hour:3, minute:1, second:5}, max:{hour:5, minute:2, second:2}});
+    @Provide() PickerDateDatasource = new bpui.PickerDateDatasource({yearText:'n', min:{year:2000, month:10, date: 5}, max:{year:2020, month:8, date: 10}});
     
-
+ 
     //
     // computed.
     // get demo() { return xxxx; }
@@ -109,7 +109,7 @@
     onChange2(value) {
       console.log('change', value);
       // @ts-ignore
-      this.$bpWidget.showToast(JSON.stringify(value));
+      // this.$bpWidget.showToast(JSON.stringify(value));
     }
     onConfirm1() {
       console.log('confirm', this.value1, this.picker1.getValue());

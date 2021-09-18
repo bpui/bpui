@@ -57,22 +57,22 @@ export class PickerDateDatasource extends PickerDataSourceBase {
      */
     min?: {
       // 默认为 null
-      year: number,
+      year?: number,
       // 默认为 0
-      month: number,
+      month?: number,
       // 默认为 1
-      date: number,
+      date?: number,
     },
     /**
      * @desc 允许选择的最大时间.
      */
     max?: {
       // 默认为 null
-      year: number,
+      year?: number,
       // 默认为 11
-      month: number,
+      month?: number,
       // 默认为 31
-      date: number,
+      date?: number,
     },
   });
   constructor();
@@ -135,17 +135,17 @@ export class PickerTimeDatasource extends PickerDataSourceBase {
      * @desc 允许选择的最小时间.
      */
     min?: {
-      hour: number,
-      minute: number,
-      second: number,
+      hour?: number,
+      minute?: number,
+      second?: number,
     },
     /**
      * @desc 允许选择的最大时间.
      */
     max?: {
-      hour: number,
-      minute: number,
-      second: number,
+      hour?: number,
+      minute?: number,
+      second?: number,
     },
   });
   constructor();
