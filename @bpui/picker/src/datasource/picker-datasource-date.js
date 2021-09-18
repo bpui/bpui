@@ -7,6 +7,41 @@
 * Desc: picker日期类型数据源.
 */
 
+/**
+ * 获得最接近的月
+ */
+function getCompareMonth(min, max, year, month) {
+  let mi = min.year * 12 + min.month;
+  let mx = max.year * 12 + max.month;
+  let n = year * 12 + month;
+  if (n < mi) {
+    return min.month;
+  }
+  else if (n > mx) {
+    return max.month;
+  }
+  else {
+    return month;
+  }
+}
+
+/**
+ * 获得最接近的天
+ */
+function getCompareDate(min, max, year, month, date) {
+  let mi = min.year * 12 * 31 + min.month * 31 + min.date;
+  let mx = max.year * 12 * 31 + max.month * 31 + max.date;
+  let n = year * 12 * 31 + month * 31 + date;
+  if (n < mi) {
+    return min.date;
+  }
+  else if (n > mx) {
+    return max.date;
+  }
+  else {
+    return date;
+  }
+}
 
 /**
 * @desc: 获得年数据源. 参数不指定默认当前时间前后80年.
@@ -104,6 +139,9 @@ export default class {
   */
   constructor(cfg) {
     cfg = cfg || {};
+    this.showMonth = cfg.hasOwnProperty('showMonth') ? cfg.showMonth : true;
+    this.showDate = cfg.hasOwnProperty('showDate') ? cfg.showDate : true;
+
     this.yearText = cfg.yearText || '年';
     this.monthText = cfg.monthText || '月';
     this.dateText = cfg.dateText || '日';
@@ -120,13 +158,19 @@ export default class {
       this.min.year = now - 80;
       this.max.year = now + 80;
     }
-    else if (!this.min.year) {
-      this.min.year = now - 80;
-      this.min.year = Math.min(this.min.year, this.max.year);
-    }
-    else if (!this.max.year) {
-      this.max.year = now + 80;
-      this.max.year = Math.max(this.min.year, this.max.year);
+    else {
+      if (!this.min.year) {
+        this.min.year = now - 80;
+      }
+      if (!this.max.year) {
+        this.max.year = now + 80;
+      }
+
+      if (this.min.year > this.max.year) {
+        let t = this.min.year;
+        this.min.year = this.max.year;
+        this.max.year = t;
+      }
     }
   }
 
@@ -134,7 +178,12 @@ export default class {
   * @desc: 返回数据源组数(最多4个)
   */
   picker_datasource_groups(callback) {
-    callback(3);
+    if (this.showMonth) {
+      callback(this.showDate ? 3 : 2);
+    }
+    else {
+      callback(1);
+    }
   }
 
   /**
@@ -147,30 +196,31 @@ export default class {
   */
   picker_datasource(groupIndex, picker, callback) {
     if (groupIndex == 0) {
-      let now = new Date();
-      now = Math.max(Math.min(now.getFullYear(), this.max.year), this.min.year);
+      let value0 = picker.getSelect(0).value;
+      if (value0 < this.min.year || value0 > this.max.year) {
+        let now = new Date();
+        value0 = now.getFullYear();
+        value0 = Math.max(Math.min(value0, this.max.year), this.min.year);
+      }
+
       callback({
         datasource: ds_years(this.min.year, this.max.year, this.yearText),
-        value: now,
+        value: value0,
       });
       return;
     } else if (groupIndex == 1) {
       let value0 = picker.getSelect(0).value;
       let value1 = picker.getSelect(1).value;
-      let m;
-      
-      let now = new Date();
-      if (value0 > this.min.year) {
-        m = value1;
+      let m = value1;
+      if (m < 0) {
+        m = new Date().getMonth();
       }
-      else {
-        m = now.getMonth();
-        m = Math.max(Math.min(m, this.max.month), this.min.month);
-      }
+
+      m = getCompareMonth(this.min, this.max, value0, m);
 
       callback({
         datasource: ds_months(value0, this.min, this.max, this.monthText),
-        value: m?m:now.getMonth()
+        value: m
       });
       return;
 
@@ -178,34 +228,20 @@ export default class {
       let value0 = picker.getSelect(0).value;
       let value1 = picker.getSelect(1).value;
       let value2 = picker.getSelect(2).value;
-      let s;
-      if (value0 > this.min.year) {
-        s = value2;
+      
+      let m = value2;
+      if (m < 0) {
+        m = new Date().getDate();
       }
-      else if (value1 > this.min.month) {
-        s = value2;
-      }
-      else if (value2 > this.min.date) {
-        s = value2;
-      }
-      else if (value0 < this.max.year) {
-        s = this.min.date;
-      }
-      else if (value1 < this.max.month) {
-        s = this.min.date;
-      }
-      else {
-        s = Math.max(Math.min(value2, this.max.date), this.min.date);
-      }
+      m = getCompareDate(this.min, this.max, value0, value1, m);
 
-      let now = new Date();
       let ds = ds_days(
         value0, value1,
         this.min, this.max, 
         this.dateText);
       callback({
         datasource: ds,
-        value: s?s:now.getDate()
+        value: m
       });
       return;
     }

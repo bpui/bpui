@@ -53,6 +53,14 @@ export class PickerDateDatasource extends PickerDataSourceBase {
     */
     dateText?:string,
     /**
+     * @desc: 是否显示月
+     */
+    showMonth?: boolean,
+    /**
+     * @desc: 是否显示天
+     */
+    showDate?: boolean,
+    /**
      * @desc 允许选择的最小时间.
      */
     min?: {
@@ -127,6 +135,10 @@ export class PickerTimeDatasource extends PickerDataSourceBase {
     * @desc: 秒钟显示的文本
     */
     secondText?: string,
+    /**
+     * @desc: 是否显示分钟
+     */
+    showMinute?: boolean,
     /**
      * @desc: 是否显示秒
      */

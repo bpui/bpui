@@ -7,6 +7,41 @@
 * Desc: picker 时间类型数据源.
 */
 
+/**
+ * 获得最接近的分钟
+ */
+function getCompareMinute(min, max, hour, minute) {
+  let mi = min.hour * 60 + min.minute;
+  let mx = max.hour * 60 + max.minute;
+  let n = hour * 60 + minute;
+  if (n < mi) {
+    return min.minute;
+  }
+  else if (n > mx) {
+    return max.minute;
+  }
+  else {
+    return minute;
+  }
+}
+
+/**
+ * 获得最接近的秒
+ */
+function getCompareSecond(min, max, hour, minute, second) {
+  let mi = min.hour * 60 * 60 + min.minute * 60 + second;
+  let mx = max.hour * 60 * 60 + max.minute * 60 + second;
+  let n = hour * 60 * 60 + minute * 60 + second;
+  if (n < mi) {
+    return min.second;
+  }
+  else if (n > mx) {
+    return max.second;
+  }
+  else {
+    return second;
+  }
+}
 
 /**
 * @return: picker数据源.
@@ -90,6 +125,7 @@ export default class {
   constructor(cfg) {
     cfg = cfg || {};
     this.showSecond = cfg.hasOwnProperty('showSecond') ? cfg.showSecond : true;
+    this.showMinute = cfg.hasOwnProperty('showMinute') ? cfg.showMinute : true;
     this.hourText = cfg.hourText||'时';
     this.minuteText = cfg.minuteText||'分';
     this.secondText = cfg.secondText || '秒';
@@ -102,13 +138,24 @@ export default class {
     this.max.hour = Number.isInteger(this.max.hour) ? this.max.hour : 23;
     this.max.minute = Number.isInteger(this.max.minute) ? this.max.minute : 59;
     this.max.second = Number.isInteger(this.max.second) ? this.max.second : 59;
+
+    if (this.max.hour * 60 * 60 + this.max.minute * 60 + this.max.second < this.min.hour * 60 * 60 + this.min.minute * 60 + this.min.second) {
+      let t = this.max;
+      this.max = this.min;
+      this.min = t;
+    }
   }
 
   /**
   * @desc: 返回数据源组数(最多4个)
   */
   picker_datasource_groups(callback) {
-    callback(this.showSecond ? 3 : 2);
+    if (this.showMinute) {
+      callback(this.showSecond ? 3 : 2);
+    }
+    else {
+      callback(1);
+    }
   }
 
   /**
@@ -121,26 +168,26 @@ export default class {
   */
   picker_datasource(groupIndex, picker, callback) {
     if (groupIndex == 0) {
-      let now = new Date();
-      let h = now.getHours();
-      h = Math.max(Math.min(h, this.max.hour), this.min.hour);
-      
+      let value0 = picker.getSelect(0).value;
+      if (value0 < this.min.hour || value0 > this.max.hour) {
+        let now = new Date();
+        value0 = now.getHours();
+        value0 = Math.max(Math.min(value0, this.max.hour), this.min.hour);
+      }
+
       callback({
         datasource: ds_hours(this.hourText, this.min, this.max),
-        value: h,
+        value: value0,
       });
     } else if (groupIndex == 1) {
       let value0 = picker.getSelect(0).value;
       let value1 = picker.getSelect(1).value;
-      let m;
-      if (value0 > this.min.hour) {
-        m = value1;
-      }
-      else {
-        m = this.min.minute;
-        m = Math.max(Math.min(m, this.max.minute), this.min.minute);
+      let m = value1;
+      if (m < 0) {
+        m = new Date().getMinutes();
       }
 
+      m = getCompareMinute(this.min, this.max, value0, m);
       callback({
         datasource: ds_mins(this.minuteText, this.min, this.max, value0),
         value: m
@@ -149,29 +196,15 @@ export default class {
       let value0 = picker.getSelect(0).value;
       let value1 = picker.getSelect(1).value;
       let value2 = picker.getSelect(2).value;
-      let s;
-      if (value0 > this.min.hour) {
-        s = value2;
+      let m = value2;
+      if (m < 0) {
+        m = new Date().getSeconds();
       }
-      else if (value1 > this.min.minute) {
-        s = value2;
-      }
-      else if (value2 > this.min.second) {
-        s = value2;
-      }
-      else if (value0 < this.max.hour) {
-        s = this.min.second;
-      }
-      else if (value1 < this.max.minute) {
-        s = this.min.second;
-      }
-      else {
-        s = Math.max(Math.min(value2, this.max.second), this.min.second);
-      }
+      m = getCompareSecond(this.min, this.max, value0, value1, m);
 
       callback({
         datasource: ds_sec(this.secondText, this.min, this.max, value0, value1),
-        value: s
+        value: m
       });
     }
   }

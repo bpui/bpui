@@ -23,8 +23,10 @@
 
     <!-- picker2 -->
     <!-- <bp-picker ref="picker2" v-model="value2" :visible.sync="visible2" @confirm="onConfirm2" @change="onChange2" :datasource="[{label:'1',value:1, children:[{label:'22',value:2}]}, {label:'2',value:2}, {label:'2',value:2}]" /> -->
-    <!-- <bp-picker ref="picker2" v-model="value2" :visible.sync="visible2" @confirm="onConfirm2" @change="onChange2" :datasource="PickerTimeDatasource" /> -->
-    <bp-picker ref="picker2" v-model="value2" :visible.sync="visible2" @confirm="onConfirm2" @change="onChange2" :datasource="PickerDateDatasource" />
+    <bp-picker ref="picker2" v-model="value2" :visible.sync="visible2" @confirm="onConfirm2" @change="onChange2" :datasource="PickerTimeDatasource" />
+    <!-- <bp-picker ref="picker2" v-model="value2" :visible.sync="visible2" @confirm="onConfirm2" @change="onChange2" :datasource="PickerDateDatasource" /> -->
+
+    <button @click="value2=[4,2,2]">set time</button>
   </div>
 </template>
 

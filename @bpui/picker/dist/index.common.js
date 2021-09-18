@@ -1,5 +1,5 @@
 /*!
- * bpui picker v1.1.16
+ * bpui picker v1.1.17
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -4075,6 +4075,46 @@ if (isForced_1(NUMBER, !NativeNumber(' 0o1') || !NativeNumber('0b1') || NativeNu
   redefine(global_1, NUMBER, NumberWrapper);
 }
 
+function getCompareMonth(min, max, year, month) {
+  var mi = min.year * 12 + min.month;
+  var mx = max.year * 12 + max.month;
+  var n = year * 12 + month;
+
+  if (n < mi) {
+    return min.month;
+  } else if (n > mx) {
+    return max.month;
+  } else {
+    return month;
+  }
+}
+/**
+ * 获得最接近的天
+ */
+
+
+function getCompareDate(min, max, year, month, date) {
+  var mi = min.year * 12 * 31 + min.month * 31 + min.date;
+  var mx = max.year * 12 * 31 + max.month * 31 + max.date;
+  var n = year * 12 * 31 + month * 31 + date;
+
+  if (n < mi) {
+    return min.date;
+  } else if (n > mx) {
+    return max.date;
+  } else {
+    return date;
+  }
+}
+/**
+* @desc: 获得年数据源. 参数不指定默认当前时间前后80年.
+* @param from: 从哪一年开始.
+* @param to:   到哪一年结束.
+* @return: picker数据源.
+*         [{label:'1984', value:1984}, ...]
+*/
+
+
 function ds_years(from, to, yearText) {
   if (from > to) {
     var x = from;
@@ -4180,6 +4220,8 @@ var _default$3 = /*#__PURE__*/function () {
     _classCallCheck(this, _default);
 
     cfg = cfg || {};
+    this.showMonth = cfg.hasOwnProperty('showMonth') ? cfg.showMonth : true;
+    this.showDate = cfg.hasOwnProperty('showDate') ? cfg.showDate : true;
     this.yearText = cfg.yearText || '年';
     this.monthText = cfg.monthText || '月';
     this.dateText = cfg.dateText || '日';
@@ -4202,12 +4244,20 @@ var _default$3 = /*#__PURE__*/function () {
     if (!this.min.year && !this.max.year) {
       this.min.year = now - 80;
       this.max.year = now + 80;
-    } else if (!this.min.year) {
-      this.min.year = now - 80;
-      this.min.year = Math.min(this.min.year, this.max.year);
-    } else if (!this.max.year) {
-      this.max.year = now + 80;
-      this.max.year = Math.max(this.min.year, this.max.year);
+    } else {
+      if (!this.min.year) {
+        this.min.year = now - 80;
+      }
+
+      if (!this.max.year) {
+        this.max.year = now + 80;
+      }
+
+      if (this.min.year > this.max.year) {
+        var t = this.min.year;
+        this.min.year = this.max.year;
+        this.max.year = t;
+      }
     }
   }
   /**
@@ -4218,7 +4268,11 @@ var _default$3 = /*#__PURE__*/function () {
   _createClass(_default, [{
     key: "picker_datasource_groups",
     value: function picker_datasource_groups(callback) {
-      callback(3);
+      if (this.showMonth) {
+        callback(this.showDate ? 3 : 2);
+      } else {
+        callback(1);
+      }
     }
     /**
     * @desc: 返回指定组的数据源
@@ -4233,58 +4287,49 @@ var _default$3 = /*#__PURE__*/function () {
     key: "picker_datasource",
     value: function picker_datasource(groupIndex, picker, callback) {
       if (groupIndex == 0) {
-        var now = new Date();
-        now = Math.max(Math.min(now.getFullYear(), this.max.year), this.min.year);
+        var value0 = picker.getSelect(0).value;
+
+        if (value0 < this.min.year || value0 > this.max.year) {
+          var now = new Date();
+          value0 = now.getFullYear();
+          value0 = Math.max(Math.min(value0, this.max.year), this.min.year);
+        }
+
         callback({
           datasource: ds_years(this.min.year, this.max.year, this.yearText),
-          value: now
+          value: value0
         });
         return;
       } else if (groupIndex == 1) {
-        var value0 = picker.getSelect(0).value;
+        var _value = picker.getSelect(0).value;
         var value1 = picker.getSelect(1).value;
-        var m;
+        var m = value1;
 
-        var _now = new Date();
-
-        if (value0 > this.min.year) {
-          m = value1;
-        } else {
-          m = _now.getMonth();
-          m = Math.max(Math.min(m, this.max.month), this.min.month);
+        if (m < 0) {
+          m = new Date().getMonth();
         }
 
+        m = getCompareMonth(this.min, this.max, _value, m);
         callback({
-          datasource: ds_months(value0, this.min, this.max, this.monthText),
-          value: m ? m : _now.getMonth()
+          datasource: ds_months(_value, this.min, this.max, this.monthText),
+          value: m
         });
         return;
       } else if (groupIndex == 2) {
-        var _value = picker.getSelect(0).value;
-        var _value2 = picker.getSelect(1).value;
+        var _value2 = picker.getSelect(0).value;
+        var _value3 = picker.getSelect(1).value;
         var value2 = picker.getSelect(2).value;
-        var s;
+        var _m = value2;
 
-        if (_value > this.min.year) {
-          s = value2;
-        } else if (_value2 > this.min.month) {
-          s = value2;
-        } else if (value2 > this.min.date) {
-          s = value2;
-        } else if (_value < this.max.year) {
-          s = this.min.date;
-        } else if (_value2 < this.max.month) {
-          s = this.min.date;
-        } else {
-          s = Math.max(Math.min(value2, this.max.date), this.min.date);
+        if (_m < 0) {
+          _m = new Date().getDate();
         }
 
-        var _now2 = new Date();
-
-        var ds = ds_days(_value, _value2, this.min, this.max, this.dateText);
+        _m = getCompareDate(this.min, this.max, _value2, _value3, _m);
+        var ds = ds_days(_value2, _value3, this.min, this.max, this.dateText);
         callback({
           datasource: ds,
-          value: s ? s : _now2.getDate()
+          value: _m
         });
         return;
       }
@@ -4318,6 +4363,43 @@ var _default$3 = /*#__PURE__*/function () {
 
   return _default;
 }();
+
+function getCompareMinute(min, max, hour, minute) {
+  var mi = min.hour * 60 + min.minute;
+  var mx = max.hour * 60 + max.minute;
+  var n = hour * 60 + minute;
+
+  if (n < mi) {
+    return min.minute;
+  } else if (n > mx) {
+    return max.minute;
+  } else {
+    return minute;
+  }
+}
+/**
+ * 获得最接近的秒
+ */
+
+
+function getCompareSecond(min, max, hour, minute, second) {
+  var mi = min.hour * 60 * 60 + min.minute * 60 + second;
+  var mx = max.hour * 60 * 60 + max.minute * 60 + second;
+  var n = hour * 60 * 60 + minute * 60 + second;
+
+  if (n < mi) {
+    return min.second;
+  } else if (n > mx) {
+    return max.second;
+  } else {
+    return second;
+  }
+}
+/**
+* @return: picker数据源.
+*         [{label:'00', value:0}, ...]
+*/
+
 
 function ds_hours(hourText, min, max) {
   var ds = [];
@@ -4412,6 +4494,7 @@ var _default$4 = /*#__PURE__*/function () {
 
     cfg = cfg || {};
     this.showSecond = cfg.hasOwnProperty('showSecond') ? cfg.showSecond : true;
+    this.showMinute = cfg.hasOwnProperty('showMinute') ? cfg.showMinute : true;
     this.hourText = cfg.hourText || '时';
     this.minuteText = cfg.minuteText || '分';
     this.secondText = cfg.secondText || '秒';
@@ -4431,6 +4514,12 @@ var _default$4 = /*#__PURE__*/function () {
     this.max.hour = Number.isInteger(this.max.hour) ? this.max.hour : 23;
     this.max.minute = Number.isInteger(this.max.minute) ? this.max.minute : 59;
     this.max.second = Number.isInteger(this.max.second) ? this.max.second : 59;
+
+    if (this.max.hour * 60 * 60 + this.max.minute * 60 + this.max.second < this.min.hour * 60 * 60 + this.min.minute * 60 + this.min.second) {
+      var t = this.max;
+      this.max = this.min;
+      this.min = t;
+    }
   }
   /**
   * @desc: 返回数据源组数(最多4个)
@@ -4440,7 +4529,11 @@ var _default$4 = /*#__PURE__*/function () {
   _createClass(_default, [{
     key: "picker_datasource_groups",
     value: function picker_datasource_groups(callback) {
-      callback(this.showSecond ? 3 : 2);
+      if (this.showMinute) {
+        callback(this.showSecond ? 3 : 2);
+      } else {
+        callback(1);
+      }
     }
     /**
     * @desc: 返回指定组的数据源
@@ -4455,52 +4548,46 @@ var _default$4 = /*#__PURE__*/function () {
     key: "picker_datasource",
     value: function picker_datasource(groupIndex, picker, callback) {
       if (groupIndex == 0) {
-        var now = new Date();
-        var h = now.getHours();
-        h = Math.max(Math.min(h, this.max.hour), this.min.hour);
-        callback({
-          datasource: ds_hours(this.hourText, this.min, this.max),
-          value: h
-        });
-      } else if (groupIndex == 1) {
         var value0 = picker.getSelect(0).value;
-        var value1 = picker.getSelect(1).value;
-        var m;
 
-        if (value0 > this.min.hour) {
-          m = value1;
-        } else {
-          m = this.min.minute;
-          m = Math.max(Math.min(m, this.max.minute), this.min.minute);
+        if (value0 < this.min.hour || value0 > this.max.hour) {
+          var now = new Date();
+          value0 = now.getHours();
+          value0 = Math.max(Math.min(value0, this.max.hour), this.min.hour);
         }
 
         callback({
-          datasource: ds_mins(this.minuteText, this.min, this.max, value0),
+          datasource: ds_hours(this.hourText, this.min, this.max),
+          value: value0
+        });
+      } else if (groupIndex == 1) {
+        var _value = picker.getSelect(0).value;
+        var value1 = picker.getSelect(1).value;
+        var m = value1;
+
+        if (m < 0) {
+          m = new Date().getMinutes();
+        }
+
+        m = getCompareMinute(this.min, this.max, _value, m);
+        callback({
+          datasource: ds_mins(this.minuteText, this.min, this.max, _value),
           value: m
         });
       } else if (groupIndex == 2) {
-        var _value = picker.getSelect(0).value;
-        var _value2 = picker.getSelect(1).value;
+        var _value2 = picker.getSelect(0).value;
+        var _value3 = picker.getSelect(1).value;
         var value2 = picker.getSelect(2).value;
-        var s;
+        var _m = value2;
 
-        if (_value > this.min.hour) {
-          s = value2;
-        } else if (_value2 > this.min.minute) {
-          s = value2;
-        } else if (value2 > this.min.second) {
-          s = value2;
-        } else if (_value < this.max.hour) {
-          s = this.min.second;
-        } else if (_value2 < this.max.minute) {
-          s = this.min.second;
-        } else {
-          s = Math.max(Math.min(value2, this.max.second), this.min.second);
+        if (_m < 0) {
+          _m = new Date().getSeconds();
         }
 
+        _m = getCompareSecond(this.min, this.max, _value2, _value3, _m);
         callback({
-          datasource: ds_sec(this.secondText, this.min, this.max, _value, _value2),
-          value: s
+          datasource: ds_sec(this.secondText, this.min, this.max, _value2, _value3),
+          value: _m
         });
       }
     }
