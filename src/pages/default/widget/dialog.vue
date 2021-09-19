@@ -127,7 +127,7 @@
 
     showAlert():void {
       // @ts-ignore
-      this.$bpWidget.showAlert({content:'aaaa', confirm:(id)=>{
+      this.$bpWidget.showAlert({content:'aaaa', okText: 'dfdfd', confirm:(id)=>{
       }})
     }
 

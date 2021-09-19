@@ -45,18 +45,14 @@ class Hook {
    * 回调方法中的paddingRight参数表示发生抖动时页面中fixed元素应该在原有paddingRight值上增加的像素值.
    */
   addWidgetShake(foo/*:(paddingRight:number)=>void*/) {
-    componentInstance.getComponent('dialog', (err, ms) => {
-      ms.default.hook.addWidgetShake(foo);
-    })
+    componentInstance.getComponent('dialog').default.hook.addWidgetShake(foo);
   }
 
   /**
    * 移除页面抖动hook.
    */
   removeWidgetShake(foo/*:(paddingRight:number)=>void*/) {
-    componentInstance.getComponent('dialog', (err, ms) => {
-      ms.default.hook.removeWidgetShake(foo);
-    })
+    componentInstance.getComponent('dialog').default.hook.removeWidgetShake(foo);
   }
 }
 
