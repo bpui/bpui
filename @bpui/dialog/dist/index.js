@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v1.1.12
+ * bpui dialog v1.1.13
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -49,6 +49,22 @@
     }
 
     return target;
+  }
+
+  function _typeof(obj) {
+    "@babel/helpers - typeof";
+
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function (obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
   }
 
   function _defineProperty(obj, key, value) {
@@ -1584,6 +1600,101 @@
     }
   });
 
+  // `IsArray` abstract operation
+  // https://tc39.es/ecma262/#sec-isarray
+  // eslint-disable-next-line es/no-array-isarray -- safe
+  var isArray = Array.isArray || function isArray(arg) {
+    return classofRaw(arg) == 'Array';
+  };
+
+  var createProperty = function (object, key, value) {
+    var propertyKey = toPrimitive(key);
+    if (propertyKey in object) objectDefineProperty.f(object, propertyKey, createPropertyDescriptor(0, value));
+    else object[propertyKey] = value;
+  };
+
+  var SPECIES$3 = wellKnownSymbol('species');
+
+  // `ArraySpeciesCreate` abstract operation
+  // https://tc39.es/ecma262/#sec-arrayspeciescreate
+  var arraySpeciesCreate = function (originalArray, length) {
+    var C;
+    if (isArray(originalArray)) {
+      C = originalArray.constructor;
+      // cross-realm fallback
+      if (typeof C == 'function' && (C === Array || isArray(C.prototype))) C = undefined;
+      else if (isObject(C)) {
+        C = C[SPECIES$3];
+        if (C === null) C = undefined;
+      }
+    } return new (C === undefined ? Array : C)(length === 0 ? 0 : length);
+  };
+
+  var SPECIES$4 = wellKnownSymbol('species');
+
+  var arrayMethodHasSpeciesSupport = function (METHOD_NAME) {
+    // We can't use this feature detection in V8 since it causes
+    // deoptimization and serious performance degradation
+    // https://github.com/zloirock/core-js/issues/677
+    return engineV8Version >= 51 || !fails(function () {
+      var array = [];
+      var constructor = array.constructor = {};
+      constructor[SPECIES$4] = function () {
+        return { foo: 1 };
+      };
+      return array[METHOD_NAME](Boolean).foo !== 1;
+    });
+  };
+
+  var IS_CONCAT_SPREADABLE = wellKnownSymbol('isConcatSpreadable');
+  var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
+  var MAXIMUM_ALLOWED_INDEX_EXCEEDED = 'Maximum allowed index exceeded';
+
+  // We can't use this feature detection in V8 since it causes
+  // deoptimization and serious performance degradation
+  // https://github.com/zloirock/core-js/issues/679
+  var IS_CONCAT_SPREADABLE_SUPPORT = engineV8Version >= 51 || !fails(function () {
+    var array = [];
+    array[IS_CONCAT_SPREADABLE] = false;
+    return array.concat()[0] !== array;
+  });
+
+  var SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('concat');
+
+  var isConcatSpreadable = function (O) {
+    if (!isObject(O)) return false;
+    var spreadable = O[IS_CONCAT_SPREADABLE];
+    return spreadable !== undefined ? !!spreadable : isArray(O);
+  };
+
+  var FORCED$1 = !IS_CONCAT_SPREADABLE_SUPPORT || !SPECIES_SUPPORT;
+
+  // `Array.prototype.concat` method
+  // https://tc39.es/ecma262/#sec-array.prototype.concat
+  // with adding support of @@isConcatSpreadable and @@species
+  _export({ target: 'Array', proto: true, forced: FORCED$1 }, {
+    // eslint-disable-next-line no-unused-vars -- required for `.length`
+    concat: function concat(arg) {
+      var O = toObject(this);
+      var A = arraySpeciesCreate(O, 0);
+      var n = 0;
+      var i, k, length, len, E;
+      for (i = -1, length = arguments.length; i < length; i++) {
+        E = i === -1 ? O : arguments[i];
+        if (isConcatSpreadable(E)) {
+          len = toLength(E.length);
+          if (n + len > MAX_SAFE_INTEGER) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
+          for (k = 0; k < len; k++, n++) if (k in E) createProperty(A, n, E[k]);
+        } else {
+          if (n >= MAX_SAFE_INTEGER) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
+          createProperty(A, n++, E);
+        }
+      }
+      A.length = n;
+      return A;
+    }
+  });
+
   // babel-minify transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError,
   var RE = function (s, f) {
     return RegExp(s, f);
@@ -1836,7 +1947,7 @@
 
 
 
-  var SPECIES$3 = wellKnownSymbol('species');
+  var SPECIES$5 = wellKnownSymbol('species');
   var RegExpPrototype$1 = RegExp.prototype;
 
   var fixRegexpWellKnownSymbolLogic = function (KEY, exec, FORCED, SHAM) {
@@ -1862,7 +1973,7 @@
         // RegExp[@@split] doesn't call the regex's exec method, but first creates
         // a new one. We need to return the patched regex when creating the new one.
         re.constructor = {};
-        re.constructor[SPECIES$3] = function () { return re; };
+        re.constructor[SPECIES$5] = function () { return re; };
         re.flags = '';
         re[SYMBOL] = /./[SYMBOL];
       }
@@ -2519,7 +2630,7 @@
     return result !== 'DGBEFHACIJK';
   });
 
-  var FORCED$1 = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || !STRICT_METHOD$1 || !STABLE_SORT;
+  var FORCED$2 = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || !STRICT_METHOD$1 || !STABLE_SORT;
 
   var getSortCompare = function (comparefn) {
     return function (x, y) {
@@ -2532,7 +2643,7 @@
 
   // `Array.prototype.sort` method
   // https://tc39.es/ecma262/#sec-array.prototype.sort
-  _export({ target: 'Array', proto: true, forced: FORCED$1 }, {
+  _export({ target: 'Array', proto: true, forced: FORCED$2 }, {
     sort: function sort(comparefn) {
       if (comparefn !== undefined) aFunction$1(comparefn);
 
@@ -2559,57 +2670,11 @@
     }
   });
 
-  // `IsArray` abstract operation
-  // https://tc39.es/ecma262/#sec-isarray
-  // eslint-disable-next-line es/no-array-isarray -- safe
-  var isArray = Array.isArray || function isArray(arg) {
-    return classofRaw(arg) == 'Array';
-  };
-
-  var SPECIES$4 = wellKnownSymbol('species');
-
-  // `ArraySpeciesCreate` abstract operation
-  // https://tc39.es/ecma262/#sec-arrayspeciescreate
-  var arraySpeciesCreate = function (originalArray, length) {
-    var C;
-    if (isArray(originalArray)) {
-      C = originalArray.constructor;
-      // cross-realm fallback
-      if (typeof C == 'function' && (C === Array || isArray(C.prototype))) C = undefined;
-      else if (isObject(C)) {
-        C = C[SPECIES$4];
-        if (C === null) C = undefined;
-      }
-    } return new (C === undefined ? Array : C)(length === 0 ? 0 : length);
-  };
-
-  var createProperty = function (object, key, value) {
-    var propertyKey = toPrimitive(key);
-    if (propertyKey in object) objectDefineProperty.f(object, propertyKey, createPropertyDescriptor(0, value));
-    else object[propertyKey] = value;
-  };
-
-  var SPECIES$5 = wellKnownSymbol('species');
-
-  var arrayMethodHasSpeciesSupport = function (METHOD_NAME) {
-    // We can't use this feature detection in V8 since it causes
-    // deoptimization and serious performance degradation
-    // https://github.com/zloirock/core-js/issues/677
-    return engineV8Version >= 51 || !fails(function () {
-      var array = [];
-      var constructor = array.constructor = {};
-      constructor[SPECIES$5] = function () {
-        return { foo: 1 };
-      };
-      return array[METHOD_NAME](Boolean).foo !== 1;
-    });
-  };
-
   var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('splice');
 
   var max$2 = Math.max;
   var min$4 = Math.min;
-  var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
+  var MAX_SAFE_INTEGER$1 = 0x1FFFFFFFFFFFFF;
   var MAXIMUM_ALLOWED_LENGTH_EXCEEDED = 'Maximum allowed length exceeded';
 
   // `Array.prototype.splice` method
@@ -2631,7 +2696,7 @@
         insertCount = argumentsLength - 2;
         actualDeleteCount = min$4(max$2(toInteger(deleteCount), 0), len - actualStart);
       }
-      if (len + insertCount - actualDeleteCount > MAX_SAFE_INTEGER) {
+      if (len + insertCount - actualDeleteCount > MAX_SAFE_INTEGER$1) {
         throw TypeError(MAXIMUM_ALLOWED_LENGTH_EXCEEDED);
       }
       A = arraySpeciesCreate(O, actualDeleteCount);
@@ -3224,6 +3289,7 @@
 
   function showAlert(cfg
   /*:string|{
+  customClass?: string,
   title?: string,
   content: string,
   okText?: string,
@@ -3254,7 +3320,8 @@
       }.bind(this)
     });
     var id = 'c' + febs.crypt.uuid();
-    $("<div id=\"".concat(id, "\"></div>")).appendTo($('body')); // 创建实例.
+    $("<div id=\"".concat(id, "\"></div>")).appendTo($('body'));
+    var classes = cfg.customClass || []; // 创建实例.
 
     return new Promise(function (resolve, reject) {
       var _this3 = this;
@@ -3269,7 +3336,7 @@
             _newArrowCheck(this, _this3);
 
             return h(c, {
-              "class": [ApiClass$1, AlertClass, id],
+              "class": [ApiClass$1, AlertClass, id].concat(classes),
               on: {
                 confirm: function confirm() {
                   var _this5 = this;
@@ -3319,6 +3386,7 @@
 
   function showConfirm(cfg
   /*:string|{
+  customClass?: string,
   title?: string,
   content: string,
   okText?: string,
@@ -3351,7 +3419,8 @@
       }.bind(this)
     });
     var id = 'c' + febs.crypt.uuid();
-    $("<div id=\"".concat(id, "\"></div>")).appendTo($('body')); // 创建实例.
+    $("<div id=\"".concat(id, "\"></div>")).appendTo($('body'));
+    var classes = cfg.customClass || []; // 创建实例.
 
     return new Promise(function (resolve, reject) {
       var _this7 = this;
@@ -3365,7 +3434,7 @@
           _newArrowCheck(this, _this7);
 
           return h(c, {
-            "class": [ApiClass$1, AlertClass, id],
+            "class": [ApiClass$1, AlertClass, id].concat(classes),
             on: {
               confirm: function confirm() {
                 _newArrowCheck(this, _this8);
@@ -3566,6 +3635,7 @@
 
   function showLoading(cfg
   /*:string|{
+  customClass?: string,
   content: 提示文本.
   delay: 延时显示, 默认为0.
   }*/
@@ -3580,6 +3650,14 @@
 
     if (!loading) {
       throw new Error('dialog loading component is null');
+    }
+
+    var classes;
+
+    if (_typeof(cfg) === 'object') {
+      classes = cfg.customClass || [];
+    } else {
+      classes = [];
     } // 创建实例.
 
 
@@ -3591,7 +3669,7 @@
           _newArrowCheck(this, _this2);
 
           return h(loading, {
-            "class": [ApiClass$2, LoadingClass, id]
+            "class": [ApiClass$2, LoadingClass, id].concat(classes)
           });
         }.bind(this)
       }).$mount("#".concat(id));
@@ -3780,12 +3858,20 @@
 
       var id = 'c' + febs.crypt.uuid();
       $("<div id=\"".concat(id, "\"></div>")).appendTo($(target));
+      var classes;
+
+      if (_typeof(cfg) === 'object') {
+        classes = cfg.customClass || [];
+      } else {
+        classes = [];
+      }
+
       var vm = new Vue({
         render: function render(h) {
           _newArrowCheck(this, _this4);
 
           return h(loading, {
-            "class": [ApiClass$2, LoadingClass, LoadingTargetClass, id]
+            "class": [ApiClass$2, LoadingClass, LoadingTargetClass, id].concat(classes)
           });
         }.bind(this)
       }).$mount("#".concat(id));
@@ -3858,6 +3944,7 @@
 
   function showToast(cfg
   /*:string|{
+  customClass?: string,
   content: 提示文本.
   durable: 持续时间, 默认为0.
   pos: 显示位置, 默认为 'top',
@@ -3885,6 +3972,7 @@
     if (cfg.durable == 0) cfg.durable = 4000; // 创建实例.
 
     var id = 'c' + febs.crypt.uuid();
+    var classes = cfg.customClass || [];
 
     if (cfg.pos == 'top') {
       if (!$('.bp-toast-wrap')[0]) {
@@ -3913,7 +4001,7 @@
         _newArrowCheck(this, _this);
 
         return h(toast, {
-          "class": [ApiClass$3, id, cfg.pos == 'center' ? 'bp-toast__center' : '']
+          "class": [ApiClass$3, id, cfg.pos == 'center' ? 'bp-toast__center' : ''].concat(classes)
         });
       }.bind(this)
     }).$mount("#".concat(id));
@@ -4202,55 +4290,6 @@
       }
     }
   };
-
-  var IS_CONCAT_SPREADABLE = wellKnownSymbol('isConcatSpreadable');
-  var MAX_SAFE_INTEGER$1 = 0x1FFFFFFFFFFFFF;
-  var MAXIMUM_ALLOWED_INDEX_EXCEEDED = 'Maximum allowed index exceeded';
-
-  // We can't use this feature detection in V8 since it causes
-  // deoptimization and serious performance degradation
-  // https://github.com/zloirock/core-js/issues/679
-  var IS_CONCAT_SPREADABLE_SUPPORT = engineV8Version >= 51 || !fails(function () {
-    var array = [];
-    array[IS_CONCAT_SPREADABLE] = false;
-    return array.concat()[0] !== array;
-  });
-
-  var SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('concat');
-
-  var isConcatSpreadable = function (O) {
-    if (!isObject(O)) return false;
-    var spreadable = O[IS_CONCAT_SPREADABLE];
-    return spreadable !== undefined ? !!spreadable : isArray(O);
-  };
-
-  var FORCED$2 = !IS_CONCAT_SPREADABLE_SUPPORT || !SPECIES_SUPPORT;
-
-  // `Array.prototype.concat` method
-  // https://tc39.es/ecma262/#sec-array.prototype.concat
-  // with adding support of @@isConcatSpreadable and @@species
-  _export({ target: 'Array', proto: true, forced: FORCED$2 }, {
-    // eslint-disable-next-line no-unused-vars -- required for `.length`
-    concat: function concat(arg) {
-      var O = toObject(this);
-      var A = arraySpeciesCreate(O, 0);
-      var n = 0;
-      var i, k, length, len, E;
-      for (i = -1, length = arguments.length; i < length; i++) {
-        E = i === -1 ? O : arguments[i];
-        if (isConcatSpreadable(E)) {
-          len = toLength(E.length);
-          if (n + len > MAX_SAFE_INTEGER$1) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
-          for (k = 0; k < len; k++, n++) if (k in E) createProperty(A, n, E[k]);
-        } else {
-          if (n >= MAX_SAFE_INTEGER$1) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
-          createProperty(A, n++, E);
-        }
-      }
-      A.length = n;
-      return A;
-    }
-  });
 
   function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier
   /* server only */

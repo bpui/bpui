@@ -28,6 +28,7 @@ declare namespace bp {
       cfg?:
         | string
         | {
+            customClass?: string,
             content?: string;
             /** 持续时间 */
             durable?: number;
@@ -55,6 +56,7 @@ declare namespace bp {
       cfg:
         | string
         | {
+          customClass?: string,
           title?: string;
           content: string;
           okText?: string;
@@ -80,6 +82,7 @@ declare namespace bp {
       cfg:
         | string
         | {
+            customClass?: string,
             title?: string;
             content: string;
             okText?: string;
@@ -105,6 +108,7 @@ declare namespace bp {
       cfg?:
         | string
         | {
+            customClass?: string,
             content?: string;
             /** 延迟指定的时间后才显示, 但延迟后如果调用了hide, 则不显示 */
             delay?: number;
@@ -125,6 +129,7 @@ declare namespace bp {
       cfg?:
         | string
         | {
+            customClass?: string,
             content?: string;
             /** 延迟指定的时间后才显示, 但延迟后如果调用了hide, 则不显示 */
             delay?: number;
@@ -146,6 +151,7 @@ declare namespace bp {
       cfg?:
         | string
         | {
+            customClass?: string,
             content?: string;
             /** 延迟指定的时间后才显示, 但延迟后如果调用了hide, 则不显示 */
             delay?: number;

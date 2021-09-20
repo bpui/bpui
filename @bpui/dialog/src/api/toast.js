@@ -21,6 +21,7 @@ const ApiClass = 'bp-apiClass';
 * @desc: 显示警告框.
 */
 export function showToast(cfg/*:string|{
+    customClass?: string,
     content: 提示文本.
     durable: 持续时间, 默认为0.
     pos: 显示位置, 默认为 'top',
@@ -45,6 +46,7 @@ export function showToast(cfg/*:string|{
 
   // 创建实例.
   let id = 'c' + febs.crypt.uuid();
+  let classes = cfg.customClass || [];
 
   if (cfg.pos == 'top') {
     if (!$('.bp-toast-wrap')[0]) {
@@ -70,7 +72,7 @@ export function showToast(cfg/*:string|{
   // }
 
   let vm = new Vue({
-    render: h => h(toast, {class:[ApiClass, id, cfg.pos == 'center'? 'bp-toast__center': '']})
+    render: h => h(toast, {class:[ApiClass, id, cfg.pos == 'center'? 'bp-toast__center': ''].concat(classes)})
   }).$mount(`#${id}`);
   vm.$children[0].$data.content = cfg.content;
   vm.$children[0].$data.icon = cfg.icon;

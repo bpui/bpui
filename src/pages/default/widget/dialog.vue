@@ -25,7 +25,7 @@
 
     <!-- api dialog -->
     <h4>api toast</h4>
-    <button @click="$bpWidget.showToast({content:'1212121212121221212111111111121212121212122121211111111112121212121212212121111111111212121212121221212111111111'})">toast top</button>
+    <button @click="$bpWidget.showToast({customClass: 'customClass', content:'1212121212121221212111111111121212121212122121211111111112121212121212212121111111111212121212121221212111111111'})">toast top</button>
     <button @click="$bpWidget.showToast({content:'hello world!', icon: 'locationPin', durable:4000})">toast top (icon)</button>
     <button @click="$bpWidget.showToast({content:'hello world2!', pos:'center', durable: 4000})">toast center</button>
     <button @click="$bpWidget.showToast({content:'创建成功!', pos:'center', icon: 'ok'})">toast center (icon)</button>
@@ -127,13 +127,13 @@
 
     showAlert():void {
       // @ts-ignore
-      this.$bpWidget.showAlert({content:'aaaa', okText: 'dfdfd', confirm:(id)=>{
+      this.$bpWidget.showAlert({content:'aaaa', okText: 'dfdfd', customClass: 'customClass', confirm:(id)=>{
       }})
     }
 
     showConfirm():void {
       // @ts-ignore
-      this.$bpWidget.showConfirm({content:'确定取消?', cancel:(id)=>{
+      this.$bpWidget.showConfirm({content:'确定取消?', customClass: 'customClass', cancel:(id)=>{
         // @ts-ignore
         this.$bpWidget.hideConfirm(id);
         console.log(11)
@@ -148,6 +148,8 @@
     }
     
     showLoading():void {
+      // @ts-ignore
+      this.$bpWidget.showLoading({content: 'ssss', customClass: 'customClass'});
       // @ts-ignore
       this.$bpWidget.showLoading({content: 'hide in 4s', delay: 6000});
       // @ts-ignore

@@ -37,6 +37,7 @@ export const hideConfirm = hideDialog;
 * @desc: 显示警告框.
 */
 export function showAlert(cfg/*:string|{
+  customClass?: string,
   title?: string,
   content: string,
   okText?: string,
@@ -57,12 +58,14 @@ export function showAlert(cfg/*:string|{
   let id = 'c' + febs.crypt.uuid();
   $(`<div id="${id}"></div>`).appendTo($('body'));
 
+  let classes = cfg.customClass || [];
+
   // 创建实例.
   return new Promise((resolve, reject) => {
     try {
       let vm = new Vue({
         render: h => h(c, {
-          class: [ApiClass, AlertClass, id], on: {
+          class: [ApiClass, AlertClass, id].concat(classes), on: {
             confirm: () => {
               try {
                 if (cfg.confirm) {
@@ -94,6 +97,7 @@ export function showAlert(cfg/*:string|{
 * @desc: 显示确认框.
 */
 export function showConfirm(cfg/*:string|{
+  customClass?: string,
   title?: string,
   content: string,
   okText?: string,
@@ -116,11 +120,13 @@ export function showConfirm(cfg/*:string|{
   let id = 'c' + febs.crypt.uuid();
   $(`<div id="${id}"></div>`).appendTo($('body'));
 
+  let classes = cfg.customClass || [];
+
   // 创建实例.
   return new Promise((resolve, reject) => {
     let vm = new Vue({
       render: h => h(c, {
-        class: [ApiClass, AlertClass, id], on: {
+        class: [ApiClass, AlertClass, id].concat(classes), on: {
           confirm: () => {
             if (cfg.confirm) {
               try {

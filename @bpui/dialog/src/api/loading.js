@@ -98,6 +98,7 @@ export function getLoadingCount() {
 * @desc: 显示警告框.
 */
 export function showLoading(cfg/*:string|{
+    customClass?: string,
     content: 提示文本.
     delay: 延时显示, 默认为0.
 }*/) {
@@ -113,13 +114,21 @@ export function showLoading(cfg/*:string|{
     throw new Error('dialog loading component is null');
   }
 
+  let classes;
+  if (typeof cfg === 'object') {
+    classes = cfg.customClass || [];
+  }
+  else {
+    classes = [];
+  }
+
   // 创建实例.
   if (!window[GlobalLoading] || $('.' + window[GlobalLoading].id).length == 0) {
     let id = 'c' + febs.crypt.uuid();
     $(`<div id="${id}"></div>`).appendTo($('body'));
 
     let vm = new Vue({
-      render: h => h(loading, {class:[ApiClass, LoadingClass, id]})
+      render: h => h(loading, {class:[ApiClass, LoadingClass, id].concat(classes)})
     }).$mount(`#${id}`);
 
     window[GlobalLoading] = {
@@ -301,8 +310,16 @@ export function showLoadingTarget(target, cfg/*:string|{
     let id = 'c' + febs.crypt.uuid();
     $(`<div id="${id}"></div>`).appendTo($(target));
 
+    let classes;
+    if (typeof cfg === 'object') {
+      classes = cfg.customClass || [];
+    }
+    else {
+      classes = [];
+    }
+
     let vm = new Vue({
-      render: h => h(loading, {class:[ApiClass, LoadingClass, LoadingTargetClass, id]})
+      render: h => h(loading, {class:[ApiClass, LoadingClass, LoadingTargetClass, id].concat(classes)})
     }).$mount(`#${id}`);
     targetLoadings[target] = {
       loading: vm.$children[0],
