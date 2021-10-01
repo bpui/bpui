@@ -19,7 +19,6 @@ export function getComponent(name) {
   for (var i = 0; i < Components.length; i++) {
     if (Components[i].name == name) {
       if (Components[i].lib) {
-        // if (Components[i].style) Components[i].style();
         var lib = Components[i].lib();
         componentStore.setComponent(name, lib);
         return lib;

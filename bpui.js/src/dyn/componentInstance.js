@@ -22,7 +22,6 @@ export function getComponent(name, cb) {
 
   for (var i = 0; i < Components.length; i++) {
     if (Components[i].name == name) {
-      // if (Components[i].style) Components[i].style();
       if (Components[i].lib) {
         Components[i].lib().then((module) => {
           componentStore.setComponent(name, module);
@@ -40,22 +39,4 @@ export function getComponent(name, cb) {
   }
 
   throw new Error('Can\'t get module: ' + name);
-}
-
-
-export function requireComponentStyle(names) {
-  if (!names) {
-    for (var i = 0; i < Components.length; i++) {
-      if (Components[i].style) Components[i].style();
-    }
-  } else {
-    for (var i = 0; i < Components.length; i++) {
-      for (var j = 0; j < names.length; j++) {
-        if (Components[i].name == names[j]) {
-          if (Components[i].style) Components[i].style();
-          break;
-        }
-      }
-    }
-  }
 }

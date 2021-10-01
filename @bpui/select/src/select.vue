@@ -1,16 +1,12 @@
 <!--
 /**
 * Copyright (c) 2020 Copyright bpui All Rights Reserved.
-* Author: qiahao
-* Date: 2020-09-14
 * Desc:
 */
 -->
 <template>
   <selectCascader ref="select" v-bind="$attrs" v-on="$listeners" :value="realValue"
-    @input="_onUpdateValue"
-    :realDatasourceItem1="realDatasourceItem1" :realDatasourceItem2="realDatasourceItem2"
-    :realDatasourceItem3="realDatasourceItem3" :realDatasourceItem0="realDatasourceItem0"
+    @input="_onUpdateValue" :groupCount="groupCount"
     :multiple="multiple" :placeholder="placeholder" :emptyText="emptyText">
     <template v-if="$slots.default">
       <slot name="default"/>
@@ -49,10 +45,15 @@
       emptyText: {
         type: String,
         default: '无数据'
+      },
+      sepText: {
+        type: String,
+        default: '>'
       }
     },
     data() {
       return {
+        groupCount: 1,
         realValue: null,
         realDatasource: null,
         realDatasourceItem0: null,
@@ -163,6 +164,7 @@
             this.$nextTick(() => {
               p.then(() => {
                 // this._bindEvent();
+                this.$refs.select._updateDatasource();
               });
             });
           });
@@ -173,6 +175,7 @@
           this.$nextTick(() => {
             p.then(() => {
               // this._bindEvent();
+              this.$refs.select._updateDatasource();
             });
           });
         }
@@ -231,6 +234,7 @@
 
               this.$nextTick(() => {
                 setTimeout(() => {
+                  this.$refs.select._refreshRenderDatasource(groupIndex, value);
                   // this.setSelect(groupIndex, value, trigger);
                   resolve(value);
                   // this._bindEvent();

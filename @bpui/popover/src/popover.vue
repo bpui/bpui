@@ -100,8 +100,13 @@
       visible(v, oldV) {
         if (this.visibleReal != v) {
           this.visibleReal = v;
-          if (v != oldV && v) {
-            this._onTriggerShow(null);
+          if (v != oldV) {
+            if (v) {
+              this._onTriggerShow(null);
+            }
+            else {
+              this._onTriggerHide(null);
+            }
             // this._show(this.direction);
             // this._show('top');
             // this._show('bottom');

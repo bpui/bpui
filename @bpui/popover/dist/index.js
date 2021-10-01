@@ -1,6 +1,6 @@
 /*!
- * bpui popover v1.1.15
- * Copyright (c) 2021 Copyright bpuioint.lee@live.com All Rights Reserved.
+ * bpui popover v1.1.16
+ * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 
@@ -828,8 +828,12 @@
         if (this.visibleReal != v) {
           this.visibleReal = v;
 
-          if (v != oldV && v) {
-            this._onTriggerShow(null); // this._show(this.direction);
+          if (v != oldV) {
+            if (v) {
+              this._onTriggerShow(null);
+            } else {
+              this._onTriggerHide(null);
+            } // this._show(this.direction);
             // this._show('top');
             // this._show('bottom');
             // this._show('left');

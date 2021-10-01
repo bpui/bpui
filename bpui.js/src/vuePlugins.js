@@ -19,7 +19,7 @@ export default async function (Vue/*:any*/, components/*?:string[]*/) // :Promis
 {
 
   // 加载必须加载的库.
-  (function() { require('@bpui/libs/style/class.scss') })();
+  // (function() { require('@bpui/libs/style/class.scss') })();
 
   // 需要注册.
   if (!window[INIT_KEY]) {

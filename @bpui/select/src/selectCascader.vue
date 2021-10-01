@@ -1,8 +1,6 @@
 <!--
 /**
 * Copyright (c) 2020 Copyright bpui All Rights Reserved.
-* Author: qiahao
-* Date: 2020-09-14
 * Desc:
 */
 -->
@@ -19,9 +17,10 @@
         <span :style="{
           'white-space': isMultiple?'initial':'nowrap'
         }">
-          <template v-if="null !== selectedIndex && selectedIndex.length > 0">
+          <template v-if="null !== valueIndex && valueIndex.length > 0">
+            <!-- custom slot -->
             <template v-if="$slots.default">
-              <template v-for="(iindex, index) in selectedIndex">
+              <template v-for="(iindex, index) in valueIndex">
                 <div v-if="isMultiple" class="bp-select__label bp-ellipsis">
                   <renderDom :vNode="$slots.default[iindex]"
                     :key="index"/>
@@ -30,18 +29,19 @@
                 <renderDom v-else :vNode="$slots.default[iindex]" class="bp-select__label" :key="index" />
               </template>
             </template>
+            <!-- multiple -->
             <template v-else-if="isMultiple">
-              <template v-for="(iindex, index) in selectedIndex">
+              <template v-for="(label, index) in valueLabels">
                 <span :key="index"
-                  class="bp-select__label">{{cascaderDatasource[0][selectedIndex[index]].label}}<bp-icon class="bp-select_close" name="bp-select_close" @click.stop="onRemoveMultipleOption(index)"/></span>
+                  class="bp-select__label">{{label}}<bp-icon class="bp-select_close" name="bp-select_close" @click.stop="onRemoveMultipleOption(index)"/></span>
               </template>
             </template>
             <template v-else>
-              <template v-for="(iindex, index) in selectedIndex">
+              <template v-for="(label, index) in valueLabels">
                 <span :key="index"
-                  class="bp-select__label">{{cascaderDatasource[index][selectedIndex[index]].label}}</span>
-                <span :key="index+'xx'" v-if="index < selectedIndex.length - 1"
-                  class="bp-select__label_sep">&gt;</span>
+                  class="bp-select__label">{{label}}</span>
+                <span :key="index+'xx'" v-if="index < valueLabels.length - 1"
+                  class="bp-select__label_sep">{{$parent.sepText}}</span>
               </template>
             </template>
           </template>
@@ -60,7 +60,7 @@
     <bp-popover class="bp-select__popover" :maskClose="false" :bind="$refs.main" trigger="click"
       :visible.sync="visibleDropdown">
       <div class="bp-select__dropdown">
-        <template v-if="!realDatasourceItem0 || realDatasourceItem0.length == 0">
+        <template v-if="!cascaderDatasource || cascaderDatasource.length == 0 || cascaderDatasource[0].length == 0">
           <div class="bp-select__dropdownList bp-select__dropdownList__empty">
             <span>{{emptyText}}</span>
           </div>
@@ -70,6 +70,7 @@
             :key="index">
             <div class="bp-select__dropdownList__scroller">
               <div class="bp-select__dropdownList__inner">
+                <!-- slot -->
                 <template v-if="$slots.default">
                   <template v-for="(item, i) in $slots.default">
                     <renderDom :vNode="item" class="bp-select__option bp-ellipsis" v-if="isMultiple"
@@ -80,7 +81,7 @@
                     <renderDom :vNode="item" class="bp-select__option bp-ellipsis" v-else :key="index+'_'+i" :class="{
                         'bp-select__option_active': (selectedValue && cascaderDatasource[0][i].value === selectedValue[index]) || (cascaderClickIndex && i === cascaderClickIndex[index]),
                         'bp-select__option_disabled': !!cascaderDatasource[0][i].disabled
-                      }" @click="onClickOption(cascaderDatasource[0][i], index, i, true)" />
+                      }" @click.stop="onClickOption(cascaderDatasource[0][i], index, i, true)" />
                   </template>
                 </template>
                 <template v-else>
@@ -90,15 +91,11 @@
                         'bp-select__option_active': (selectedIndex && selectedIndex.indexOf(i) >= 0),
                         'bp-select__option_disabled': !!item.disabled
                       }" @click.stop="onClickOption(item, index, i, false)">{{item.label}}</div>
-                    <div class="bp-select__option bp-ellipsis" v-else-if="item.children"
+                    <div class="bp-select__option bp-ellipsis" v-else
                       :key="index+'_'+i" :class="{ 
                         'bp-select__option_active': (selectedValue && item.value === selectedValue[index]) || (cascaderClickIndex && i === cascaderClickIndex[index]),
                         'bp-select__option_disabled': !!item.disabled
                       }" @click.stop="onClickOption(item, index, i, false)">{{item.label}}</div>
-                    <div class="bp-select__option bp-ellipsis" v-else :key="index+'_'+i" :class="{
-                        'bp-select__option_active': (selectedValue && item.value === selectedValue[index]) || (cascaderClickIndex && i === cascaderClickIndex[index]),
-                        'bp-select__option_disabled': !!item.disabled
-                      }" @click="onClickOption(item, index, i, true)">{{item.label}}</div>
                   </template>
                 </template>
               </div>
@@ -121,18 +118,7 @@
       value: {
         type: [Number, String, Array]
       },
-      realDatasourceItem0: {
-        type: [Array],
-      },
-      realDatasourceItem1: {
-        type: [Array],
-      },
-      realDatasourceItem2: {
-        type: [Array],
-      },
-      realDatasourceItem3: {
-        type: [Array],
-      },
+      groupCount: Number,
       multiple: {
         type: Boolean
       },
@@ -145,12 +131,13 @@
     },
     data() {
       return {
-        isMoreLayer: false,
         cascaderDatasource: null,
         cascaderClickIndex: null,
         visibleDropdown: false,
         selectedIndex: null,
         selectedValue: null,
+        valueIndex: null,
+        valueLabels: null,
       }
     },
     components: {
@@ -161,28 +148,32 @@
     directives: {},
     computed: {
       isMultiple() {
-        return this.multiple && !this.isMoreLayer;
+        return this.multiple && this.groupCount == 1;
       }
     },
     watch: {
+      valueIndex(newVal, oldVal) {
+        if (!utils.isEqual(newVal, oldVal)) {
+          this._updateValueLabels();
+        }
+      },
       visibleDropdown(newVal) {
         if (newVal) {
-          if (this.selectedIndex) {
-            this.cascaderClickIndex = this.selectedIndex.concat([]);
+          if (this.valueIndex) {
+            this.cascaderClickIndex = [].concat(this.valueIndex);
             if (this.isMultiple) {
-              this.cascaderDatasource = [this.realDatasourceItem0];
+              this.cascaderDatasource = [this.$parent.realDatasourceItem0];
             }
             else {
-              if (this.cascaderDatasource && this.cascaderDatasource.length > this.cascaderClickIndex
-                .length) {
-                this.cascaderDatasource.length = this.cascaderClickIndex.length;
-              } else {
-                this.cascaderDatasource = [this.realDatasourceItem0];
+              this.cascaderDatasource.length = this.cascaderClickIndex.length||1;
+              for (let i = 0; i < this.cascaderDatasource.length; i++) {
+                this.cascaderDatasource[i] = this.$parent['realDatasourceItem' + i];
               }
+              this.cascaderDatasource = this.cascaderDatasource.concat([]);
             }
           } else {
             this.cascaderClickIndex = null;
-            this.cascaderDatasource = [this.realDatasourceItem0];
+            this.cascaderDatasource = [this.$parent.realDatasourceItem0];
           } // if..else.
         }
       },
@@ -217,29 +208,11 @@
           this.selectedValue = arr;
         }
       },
-      selectedValue(newVal) {
-        if (null === newVal) {
-          this.oldValue = null;
-          this.$emit('input', null);
-          this.$emit('change', null);
-          return;
-        }
-
-        if (this.isMoreLayer || this.isMultiple) {
-          let value = this.selectedValue.concat([]);
-          this.oldValue = value;
-          this.$emit('input', value);
-          this.$emit('change', value);
-        } else {
-          this.oldValue = this.selectedValue[0];
-          this.$emit('input', this.selectedValue[0]);
-          this.$emit('change', this.selectedValue[0]);
-        }
-      },
       value(newVal, o) {
         if (null === newVal) {
           this.oldValue = null;
           this.selectedIndex = null;
+          this.valueIndex = null;
           return;
         }
 
@@ -248,39 +221,31 @@
           return;
         }
 
-        if (this.isMoreLayer) {
-
-          let cascaderDs = [];
-          let ds = {
-            children: this.datasource
-          };
-          let arr = [];
-          for (let i = 0; i < newVal.length; i++) {
-            if (!ds.children) {
+        if (this.groupCount > 1) {
+          this.valueIndex = [];
+          this.cascaderDatasource = [this.$parent.realDatasourceItem0];
+          for (let i = 0; i < this.cascaderDatasource[0].length; i++) {
+            if (this.cascaderDatasource[0][i].value == newVal[0]) {
+              this.valueIndex = [i];
               break;
             }
-            ds = ds.children;
-            cascaderDs.push(ds);
-
-            for (let j = 0; j < ds.length; j++) {
-              if (ds[j].value == newVal[i]) {
-                arr.push(j);
-                ds = ds[j];
-                break;
-              }
-            }
           }
-          this.cascaderDatasource = cascaderDs;
-          if (!utils.isEqual(this.selectedIndex, arr)) {
-            this.selectedIndex = arr;
+          if (this.valueIndex.length == 0) {
+            return;
+          }
+
+          for (let i = 0; i < newVal.length-1; i++) {
+            if (this.$parent.realDatasource) {
+              this.$parent.realDatasource.picker_changed(i, this.$parent);
+            }
           }
         }
         else {
           if (this.isMultiple) {
             let arr = [];
             for (let i = 0; i < newVal.length; i++) {
-              for (let j = 0; j < this.realDatasourceItem0.length; j++) {
-                if (this.realDatasourceItem0[j].value == newVal[i]) {
+              for (let j = 0; j < this.$parent.realDatasourceItem0.length; j++) {
+                if (this.$parent.realDatasourceItem0[j].value == newVal[i]) {
                   arr.push(j);
                   break;
                 }
@@ -290,40 +255,16 @@
             this.selectedIndex = arr;
           }
           else {
-            for (let i = 0; i < this.realDatasourceItem0.length; i++) {
-              if (this.realDatasourceItem0[i].value == newVal) {
+            for (let i = 0; i < this.$parent.realDatasourceItem0.length; i++) {
+              if (this.$parent.realDatasourceItem0[i].value == newVal) {
                 this.selectedIndex = [i];
                 break;
               }
             }
           }
+          this.valueIndex = [].concat(this.selectedIndex);
         } // if..else.
-      },
-      // 数据源更新时，更新label
-      // 数据源更新时，更新renderList
-      realDatasourceItem0: {
-        handler(n, o) {
-          this._updateDatasource();
-        },
-        deep: true
-      },
-      realDatasourceItem1: {
-        handler(n, o) {
-          this._updateDatasource();
-        },
-        deep: true
-      },
-      realDatasourceItem2: {
-        handler(n, o) {
-          this._updateDatasource();
-        },
-        deep: true
-      },
-      realDatasourceItem3: {
-        handler(n, o) {
-          this._updateDatasource();
-        },
-        deep: true
+
       },
     },
     created() {},
@@ -331,7 +272,7 @@
       // this._updateDatasource();
     },
     mounted() {
-      this._updateDatasource();
+      // this._updateDatasource();
     },
     methods: {
       /**
@@ -343,7 +284,12 @@
         let data = this.cascaderDatasource;
         if (data && groupIndex < data.length) {
           if (!this.selectedIndex || this.selectedIndex.length <= groupIndex) {
-            return {};
+            if (!this.valueIndex || this.valueIndex.length <= groupIndex) {
+              return {};
+            }
+            else {
+              return data[groupIndex][this.valueIndex[groupIndex]];
+            }
           }
           return data[groupIndex][this.selectedIndex[groupIndex]];
         } // if.
@@ -351,74 +297,101 @@
         return {};
       },
       _updateDatasource() {
-        if (!this.realDatasourceItem0) {
-          let cascaderDatasource = [];
-          if (this.realDatasourceItem0) {
-            cascaderDatasource.push(this.realDatasourceItem0);
-          }
-          this.cascaderDatasource = cascaderDatasource;
+        this.selectedIndex = null;
+        this.selectedValue = null;
+        this.valueIndex = null;
+        this._updateValue(this.selectedValue);
 
+        if (!this.$parent.realDatasourceItem0) {
+          this.cascaderDatasource = [];
           return;
         } // if.
 
-        let cascaderDatasource = [];
-        if (this.realDatasourceItem0) {
-          cascaderDatasource.push(this.realDatasourceItem0);
-        }
-        if (this.realDatasourceItem1) {
-          cascaderDatasource.push(this.realDatasourceItem1);
-        }
-        if (this.realDatasourceItem2) {
-          cascaderDatasource.push(this.realDatasourceItem2);
-        }
-        if (this.realDatasourceItem3) {
-          cascaderDatasource.push(this.realDatasourceItem3);
-        }
-        this.cascaderDatasource = cascaderDatasource;
-        this.selectedIndex = null;
-
-        // is more then one layer
-        for (let i = 0; i < this.realDatasourceItem0.length; i++) {
-          let item = this.realDatasourceItem0[i];
-          if (!!!item.disabled && item.children && item.children.length > 0) {
-            this.isMoreLayer = true;
-            break;
-          }
-        }
+        this.cascaderDatasource = [this.$parent.realDatasourceItem0];
       },
-      onClickOption(item, index, i, isEnd) {
-        this.cascaderClickIndex = this.cascaderClickIndex || [];
-        this.cascaderClickIndex.length = index + 1;
-        this.cascaderClickIndex[index] = i;
+      _refreshRenderDatasource(groupIndex, value) {
+        if (groupIndex > 0) {
+          let ds = this.$parent['realDatasourceItem'+groupIndex];
 
-        if (item.children && item.children.length > 0) {
-          if (!!item.disabled) {
+          if (ds.length == 0) {
+            if (this.cascaderClickIndex && this.cascaderClickIndex.length == groupIndex) {
+              this.$nextTick().then(()=>{
+                this.visibleDropdown = false;
+                this._updateValue(this.selectedValue);
+              });
+            }
             return;
           }
 
-          let arr = this.cascaderDatasource;
-          arr.length = index + 1;
-          let arr2 = item.children;
-          arr.push(arr2);
+          if (this.cascaderDatasource.length < groupIndex+1) {
+            this.cascaderDatasource.push(ds);
+          } else {
+            this.cascaderDatasource[groupIndex] = ds;
+          }
           this.cascaderDatasource = this.cascaderDatasource.concat([]);
-          this.cascaderClickIndex = this.cascaderClickIndex.concat([]);
-        } else {
+
+          // update valueIndex from value update.
+          if (this.value && (!this.valueIndex || this.valueIndex.length < this.value.length || this.valueIndex.length < this.cascaderDatasource.length)) {
+            this.valueIndex = this.valueIndex || [];
+            let n = Math.min(this.cascaderDatasource.length, this.value.length);
+            for (let i = this.valueIndex.length; i < n; i++) {
+              let v = this.value[i];
+              for (let j = 0; j < this.cascaderDatasource[i].length; j++) {
+                if (v == this.cascaderDatasource[i][j].value) {
+                  this.valueIndex.push(j);
+                  this.valueIndex = this.valueIndex.concat([]);
+                  this._updateValueLabels();
+                  break;
+                }
+              }
+            }
+          } // if.
+        }
+      },
+      onClickOption(item, groupIndex, index, isEnd) {
+        this.cascaderClickIndex = this.cascaderClickIndex || [];
+        this.cascaderClickIndex.length = groupIndex + 1;
+        this.cascaderClickIndex[groupIndex] = index;
+        this.cascaderClickIndex = this.cascaderClickIndex.concat([]);
+
+        if (!!item.disabled) {
+          return;
+        }
+
+        if (this.groupCount > 1) {
+          this.selectedIndex = [].concat(this.cascaderClickIndex);
+
+          if (groupIndex < this.groupCount - 1) {
+            this.$parent.realDatasource.picker_changed(groupIndex, this.$parent);
+            return;
+          }
+          else {
+            isEnd = true;
+          }
+        }
+        else {
+          isEnd = true;
+
           if (this.isMultiple) {
             let arr = this.selectedIndex || [];
-            let curIndex = arr.indexOf(i);
+            let curIndex = arr.indexOf(index);
             if (curIndex < 0) {
-              arr.push(i);
+              arr.push(index);
               arr.sort();
             } else {
               arr.splice(curIndex, 1);
             }
-            this.selectedIndex = arr;
+            this.selectedIndex = arr.concat([]);
           } else {
-            this.selectedIndex = this.cascaderClickIndex.concat([]);
+            this.selectedIndex = [].concat(this.cascaderClickIndex);
           }
         } // if..else.
 
         if (isEnd) {
+          this.$nextTick().then(()=>{
+            this._updateValue(this.selectedValue);
+          });
+
           if (this.isMultiple) {
             return;
           }
@@ -429,7 +402,51 @@
       onRemoveMultipleOption(index) {
         this.selectedIndex.splice(index, 1);
         this.selectedIndex = this.selectedIndex.concat([]);
-      }
+        this.valueIndex.splice(index, 1);
+        this.valueIndex = this.valueIndex.concat([]);
+        this.valueLabels.splice(index, 1);
+        this.valueLabels = this.valueLabels.concat([]);
+      },
+      _updateValue(selectedValue) {
+        if (null === selectedValue) {
+          this.valueIndex = null;
+          this.oldValue = null;
+          this.$emit('input', null);
+          this.$emit('change', null);
+          return;
+        }
+
+        this.valueIndex = [].concat(this.selectedIndex);
+
+        if (this.groupCount > 1 || this.isMultiple) {
+          let value = [].concat(selectedValue);
+          this.oldValue = value;
+          this.$emit('input', value);
+          this.$emit('change', value);
+        } else {
+          this.oldValue = selectedValue[0];
+          this.$emit('input', selectedValue[0]);
+          this.$emit('change', selectedValue[0]);
+        }
+      },
+      _updateValueLabels() {
+        if (!this.valueIndex) {
+          this.valueLabels = null;
+        }
+        else if (this.groupCount > 1) {
+          this.valueLabels = [];
+          for (let i = 0; i < this.valueIndex.length; i++) {
+            this.valueLabels.push(this.cascaderDatasource[i][this.valueIndex[i]].label);
+          }
+          this.valueLabels = this.valueLabels.concat([]);
+        } else {
+          this.valueLabels = [];
+          for (let i = 0; i < this.valueIndex.length; i++) {
+            this.valueLabels.push(this.cascaderDatasource[0][this.valueIndex[i]].label);
+          }
+          this.valueLabels = this.valueLabels.concat([]);
+        }
+      },
     },
   }
 </script>

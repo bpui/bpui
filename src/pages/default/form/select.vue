@@ -33,7 +33,7 @@
       <bpSelectOption value="8">label8</bpSelectOption>
     </bpSelect>
 
-    <h4>single</h4>
+    <h4>multiple</h4>
     <bpSelect ref="select1" v-model="singleValue" multiple :datasource="singleDatasource" @change="onChange"></bpSelect>
     <button @click="singleValue=['value3', 'value1']">修改value</button>
     <button @click="singleDatasource = [
@@ -43,6 +43,16 @@
     <button @click="$refs.select1.show()">show</button>
     <button @click="$refs.select1.hide()">hide</button>
     <button @click="$bpWidget.showAlert(JSON.stringify($refs.select1.getSelect(0)))">getSelect</button>
+
+    <h4>single</h4>
+    <bpSelect ref="selectSingle" :datasource="singleDatasource"></bpSelect>
+    <button @click="singleValue='value3'">修改value</button>
+    <button @click="singleDatasource = [
+    {label: `label1`, value: `value1`, disabled: false},
+    {label: `label2`, value: `value2`, disabled: false},]">修改ds</button>
+    <button @click="$refs.selectSingle.show()">show</button>
+    <button @click="$refs.selectSingle.hide()">hide</button>
+    <button @click="$bpWidget.showAlert(JSON.stringify($refs.selectSingle.getSelect(0)))">getSelect</button>
 
     <h4>cascader</h4>
     <bpSelect ref="select2" v-model="cascaderValue" multiple :datasource="cascaderDatasource"></bpSelect>
@@ -64,7 +74,7 @@
     <bpSelect ref="select3" :datasource="[]"></bpSelect>
 
     <h4>PickerDatasource</h4>
-    <bpSelect ref="select4" v-model="cascaderValue2" :datasource="PickerDatasource"></bpSelect>
+    <bpSelect ref="select4" v-model="cascaderValue2" sepText="-" :datasource="PickerDatasource"></bpSelect>
     <button @click="cascaderValue2=['value01', 'value011', 'value0111']">修改value</button>
     <button @click="$bpWidget.showAlert(JSON.stringify(cascaderValue2))">value</button>
     <button @click="$refs.select4.show()">show</button>
@@ -146,9 +156,9 @@ export default class App extends Vue {
   ];
 
   @Provide() PickerDatasource = new bpui.PickerDateDatasource({
-    yearText: 'y',
-    monthText: 'm',
-    dateText: 'd',
+    yearText: ' 年',
+    monthText: ' 月',
+    dateText: ' 日',
     min: {
       // 默认为 null
       year: 2000,
