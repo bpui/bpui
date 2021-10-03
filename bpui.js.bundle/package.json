@@ -8,10 +8,10 @@
     "@bpui/input": "^1.1.15",
     "@bpui/libs": "^1.1.7",
     "@bpui/navbar-view": "^1.1.6",
-    "@bpui/picker": "^1.1.20",
+    "@bpui/picker": "^1.1.21",
     "@bpui/popover": "^1.1.16",
     "@bpui/radio": "^1.1.7",
-    "@bpui/select": "^1.1.2",
+    "@bpui/select": "^1.1.3",
     "@bpui/switch": "^1.1.6",
     "@bpui/tabbar": "^1.1.5",
     "@bpui/table-view": "^1.1.11",
@@ -37,5 +37,5 @@
     }
   ],
   "name": "bpui.js.bundle",
-  "version": "1.1.25"
+  "version": "1.1.26"
 }

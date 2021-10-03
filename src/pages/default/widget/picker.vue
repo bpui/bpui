@@ -39,7 +39,7 @@
 
 
     <bp-picker ref="picker3" multiple v-model="value3" :visible.sync="visible4" @confirm="onConfirm3">
-      <bp-picker-cell value="1" :disabled="true">ddd</bp-picker-cell>
+      <bpPickerCell value="1" :disabled="true">ddd</bpPickerCell>
       <bp-picker-cell value="2">ddd</bp-picker-cell>
       <bp-picker-cell value="3">ddd</bp-picker-cell>
       <bp-picker-cell value="4">ddd</bp-picker-cell>
@@ -100,7 +100,7 @@
     @Provide() visible5: boolean = false;
     @Provide() value1 = null;
     @Provide() value2 = [];
-    @Provide() value3 = 1;
+    @Provide() value3 = ["1"];
     @Provide() PickerTimeDatasource = new bpui.PickerTimeDatasource({
       hourText: 'h',
       minuteText: 'm',
