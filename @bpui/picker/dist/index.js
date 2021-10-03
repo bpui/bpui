@@ -1,5 +1,5 @@
 /*!
- * bpui picker v1.1.21
+ * bpui picker v1.1.22
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3282,8 +3282,7 @@
                     }
                   }
                 }.bind(this));
-              } // if.
-
+              }
             } else {
               for (var _i6 = 0; _i6 < value.length && _i6 < 4; _i6++) {
                 this.setSelect(_i6, value[_i6], false);
@@ -3291,6 +3290,12 @@
             }
           } else {
             this.setSelect(0, value, false);
+
+            if (this.multiple && this.groupCount == 1) {
+              var _arr = [];
+              _arr.length = this.items0Checked.length;
+              this.items0Checked = _arr;
+            }
           }
         }
 

@@ -321,7 +321,7 @@
                     }
                   }
                 });
-              } // if.
+              }
             }
             else {
               for (let i = 0; i < value.length && i < 4; i++) {
@@ -330,6 +330,12 @@
             }
           } else {
             this.setSelect(0, value, false);
+
+            if (this.multiple && this.groupCount == 1) {
+              let arr = [];
+              arr.length = this.items0Checked.length;
+              this.items0Checked = arr;
+            }
           }
         }
 

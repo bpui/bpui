@@ -17,6 +17,7 @@
     <button @click="visible2=true">show2</button>
     <button @click="visible3=true">show phone style</button>
     <button @click="visible4=true">show4</button>
+    <button @click="visible6=true">show6</button>
     <button @click="value2=[4,2,2]">set time</button>
 
     <!-- picker1 -->
@@ -45,6 +46,8 @@
       <bp-picker-cell value="4">ddd</bp-picker-cell>
     </bp-picker>
 
+    <bp-picker multiple  :visible.sync="visible6" :datasource="[{label:'1',value:1}, {label:'2',value:2, disabled:true}, {label:'2',value:2}, {label:'2',value:2}, {label:'2',value:2}]" >
+    </bp-picker>
   </div>
 </template>
 
@@ -98,6 +101,7 @@
     @Provide() visible3: boolean = false;
     @Provide() visible4: boolean = false;
     @Provide() visible5: boolean = false;
+    @Provide() visible6: boolean = false;
     @Provide() value1 = null;
     @Provide() value2 = [];
     @Provide() value3 = ["1"];
