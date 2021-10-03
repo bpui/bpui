@@ -1,6 +1,6 @@
 /*!
- * bpui picker v1.1.20
- * Copyright (c) 2021 Copyright bpuioint.lee@live.com All Rights Reserved.
+ * bpui picker v1.1.21
+ * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 
@@ -3139,6 +3139,8 @@
       value: function value(v, vOld) {
         var _this = this;
 
+        this.items0CheckedValue = v;
+
         if (this.noEmitUpdateWatch) {
           this.noEmitUpdateWatch = false;
           return;
@@ -3165,7 +3167,7 @@
               for (var _i = 0; _i < this.$slots["default"].length; _i++) {
                 var c = this.$slots["default"][_i];
 
-                if (c.componentOptions.tag === 'bp-picker-cell') {
+                if (c.componentOptions.tag === 'bp-picker-cell' || c.componentOptions.tag === 'bpPickerCell') {
                   if (this.items0[_i].value === v) {
                     c.componentInstance.check = true;
                   } else {
@@ -3207,8 +3209,8 @@
               for (var _i3 = 0; _i3 < this.$slots["default"].length; _i3++) {
                 var _c = this.$slots["default"][_i3];
 
-                if (_c.componentOptions.tag === 'bp-picker-cell') {
-                  if (arr.indexOf(_c.componentInstance.value) >= 0) {
+                if (_c.componentOptions.tag === 'bp-picker-cell' || _c.componentOptions.tag === 'bpPickerCell') {
+                  if (arr[_i3]) {
                     _c.componentInstance.check = true;
                   } else {
                     _c.componentInstance.check = false;
@@ -3240,6 +3242,8 @@
         }
       },
       visibleReal: function visibleReal(v, oldVal) {
+        var _this2 = this;
+
         if (v == oldVal) return;
         this.$emit('update:visible', v);
 
@@ -3247,8 +3251,43 @@
           var value = this.getValue();
 
           if (Array.isArray(value)) {
-            for (var i = 0; i < value.length && i < 4; i++) {
-              this.setSelect(i, value[i], false);
+            if (this.multiple && this.groupCount == 1) {
+              var arr = [];
+              arr.length = this.items0Checked.length;
+
+              for (var i = 0; i < arr.length; i++) {
+                for (var j = 0; j < value.length; j++) {
+                  if (this.items0[i] && this.items0[i].value === value[j]) {
+                    arr[i] = true;
+                    break;
+                  }
+                }
+              }
+
+              this.items0Checked = arr; // by solt.
+
+              if (!this.datasource) {
+                this.$nextTick(function () {
+                  _newArrowCheck(this, _this2);
+
+                  for (var _i5 = 0; _i5 < this.$slots["default"].length; _i5++) {
+                    var c = this.$slots["default"][_i5];
+
+                    if (c.componentInstance && (c.componentOptions.tag === 'bp-picker-cell' || c.componentOptions.tag === 'bpPickerCell')) {
+                      if (arr[_i5]) {
+                        c.componentInstance.check = true;
+                      } else {
+                        c.componentInstance.check = false;
+                      }
+                    }
+                  }
+                }.bind(this));
+              } // if.
+
+            } else {
+              for (var _i6 = 0; _i6 < value.length && _i6 < 4; _i6++) {
+                this.setSelect(_i6, value[_i6], false);
+              }
             }
           } else {
             this.setSelect(0, value, false);
@@ -3262,7 +3301,7 @@
         this.visibleRealByProperty = false;
       },
       datasource: function datasource(val, oldVal) {
-        var _this2 = this;
+        var _this3 = this;
 
         if (val && oldVal) {
           if (isArrayEqualByKey(val, oldVal, ['label', 'value', 'children'])) {
@@ -3274,7 +3313,7 @@
 
         if (isShow) {
           this.timer.sleep(300).then(function () {
-            _newArrowCheck(this, _this2);
+            _newArrowCheck(this, _this3);
 
             this._initRealDatasource(val);
 
@@ -3292,6 +3331,7 @@
     },
     beforeMount: function beforeMount() {
       this.isMobile = febs.utils.browserIsMobile();
+      this.items0CheckedValue = this.value;
       var forcePhoneStyle = this.forcePhoneStyle === true || this.forcePhoneStyle === 'true';
 
       if (!febs.utils.browserIsPhone() && !forcePhoneStyle) {
@@ -3322,7 +3362,7 @@
         for (var i = 0; i < this.$slots["default"].length; i++) {
           var c = this.$slots["default"][i];
 
-          if (c.componentOptions.tag === 'bp-picker-cell') {
+          if (c.componentOptions.tag === 'bp-picker-cell' || c.componentOptions.tag === 'bpPickerCell') {
             c.componentInstance.multiple = true;
 
             if (Array.isArray(this.value)) {
@@ -3461,13 +3501,11 @@
 
         if (this.groupCount == 1) {
           if (this.multiple && this.groupCount == 1) {
-            v = [];
-
-            for (var i = 0; i < this.items0Checked.length; i++) {
-              if (this.items0Checked[i]) {
-                v.push(this.items0[i].value);
-              }
+            if (!this.items0CheckedValue) {
+              return null;
             }
+
+            return Array.isArray(this.items0CheckedValue) ? this.items0CheckedValue : [this.items0CheckedValue];
           } else {
             v = this.value0;
           }
@@ -3578,15 +3616,15 @@
         }
       },
       _onClickGroup0End: function _onClickGroup0End() {
-        var _this3 = this;
+        var _this4 = this;
 
         if (this.multiple && this.groupCount == 1) {
           bpLibs$1.dom.probeDom(100, function () {
-            _newArrowCheck(this, _this3);
+            _newArrowCheck(this, _this4);
 
             return getComputedStyle(this.$refs.content1).transition.indexOf('none') != 0;
           }.bind(this), function () {
-            _newArrowCheck(this, _this3);
+            _newArrowCheck(this, _this4);
 
             var curIndexClickGroup0 = this._getSelectIndex(0);
 
@@ -3604,7 +3642,7 @@
         }
       },
       _bindEvent: function _bindEvent() {
-        var _this4 = this;
+        var _this5 = this;
 
         var elHd = this.$refs.agentToolbar;
         var elMain = $(this.$refs.agentMain);
@@ -3614,7 +3652,7 @@
         if (elBc[0]) {
           for (var i = 0; i < elBc.length; i++) {
             $(elBc[i]).off('change').on('change', function (event) {
-              _newArrowCheck(this, _this4);
+              _newArrowCheck(this, _this5);
 
               var group = parseInt($(event.currentTarget).attr('data-group'));
 
@@ -3643,31 +3681,31 @@
             namecancel = 'mouseout';
           }
 
-          for (var _i5 = 0; _i5 < elBd.length; _i5++) {
-            febs.dom.removeEventListener(elBd[_i5], namestart, this._onClickGroup0Start, true);
-            febs.dom.removeEventListener(elBd[_i5], nameend, this._onClickGroup0End, true);
-            febs.dom.removeEventListener(elBd[_i5], namestart, mobile_onTouchstart_picker, true);
-            febs.dom.removeEventListener(elBd[_i5], namemove, mobile_onTouchmove_picker, true);
-            febs.dom.removeEventListener(elBd[_i5], nameend, mobile_onTouchend_picker, true);
-            febs.dom.removeEventListener(elBd[_i5], namecancel, mobile_onTouchcancel_picker, true);
-            febs.dom.addEventListener(elBd[_i5], namestart, mobile_onTouchstart_picker, true); // elBd[i].addEventListener(namemove, mobile_onTouchmove_picker, true);
+          for (var _i7 = 0; _i7 < elBd.length; _i7++) {
+            febs.dom.removeEventListener(elBd[_i7], namestart, this._onClickGroup0Start, true);
+            febs.dom.removeEventListener(elBd[_i7], nameend, this._onClickGroup0End, true);
+            febs.dom.removeEventListener(elBd[_i7], namestart, mobile_onTouchstart_picker, true);
+            febs.dom.removeEventListener(elBd[_i7], namemove, mobile_onTouchmove_picker, true);
+            febs.dom.removeEventListener(elBd[_i7], nameend, mobile_onTouchend_picker, true);
+            febs.dom.removeEventListener(elBd[_i7], namecancel, mobile_onTouchcancel_picker, true);
+            febs.dom.addEventListener(elBd[_i7], namestart, mobile_onTouchstart_picker, true); // elBd[i].addEventListener(namemove, mobile_onTouchmove_picker, true);
             // elBd[i].addEventListener(nameend, mobile_onTouchend_picker, true);
             // elBd[i].addEventListener(namecancel, mobile_onTouchcancel_picker, true);
 
-            if (_i5 == 0 && this.multiple && this.groupCount == 1) {
-              febs.dom.addEventListener(elBd[_i5], namestart, this._onClickGroup0Start, true);
-              febs.dom.addEventListener(elBd[_i5], nameend, this._onClickGroup0End, true);
+            if (_i7 == 0 && this.multiple && this.groupCount == 1) {
+              febs.dom.addEventListener(elBd[_i7], namestart, this._onClickGroup0Start, true);
+              febs.dom.addEventListener(elBd[_i7], nameend, this._onClickGroup0End, true);
             }
 
             if (!this.isMobile) {
               var agent = navigator.userAgent;
 
               if (/.*Firefox.*/.test(agent)) {
-                febs.dom.removeEventListener(elBd[_i5], 'DOMMouseScroll', mobile_onWheel_picker, true);
-                febs.dom.addEventListener(elBd[_i5], 'DOMMouseScroll', mobile_onWheel_picker, true);
+                febs.dom.removeEventListener(elBd[_i7], 'DOMMouseScroll', mobile_onWheel_picker, true);
+                febs.dom.addEventListener(elBd[_i7], 'DOMMouseScroll', mobile_onWheel_picker, true);
               } else {
-                febs.dom.removeEventListener(elBd[_i5], 'mousewheel', mobile_onWheel_picker, true);
-                febs.dom.addEventListener(elBd[_i5], 'mousewheel', mobile_onWheel_picker, true);
+                febs.dom.removeEventListener(elBd[_i7], 'mousewheel', mobile_onWheel_picker, true);
+                febs.dom.addEventListener(elBd[_i7], 'mousewheel', mobile_onWheel_picker, true);
               }
             }
           }
@@ -3680,7 +3718,7 @@
       * @return Promise. - resolve(value)
       */
       refreshDatasource: function refreshDatasource(groupIndex) {
-        var _this5 = this;
+        var _this6 = this;
 
         var trigger = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
@@ -3691,9 +3729,9 @@
           }
 
           return new Promise(function (resolve, reject) {
-            var _this6 = this;
+            var _this7 = this;
 
-            _newArrowCheck(this, _this5);
+            _newArrowCheck(this, _this6);
 
             var value = this.value;
             var datasource = [];
@@ -3702,7 +3740,7 @@
               for (var i = 0; i < this.$slots["default"].length; i++) {
                 var c = this.$slots["default"][i];
 
-                if (c.tag.indexOf('bpPickerCell') >= 0) {
+                if (c.componentOptions.tag === 'bp-picker-cell' || c.componentOptions.tag === 'bpPickerCell') {
                   datasource.push({
                     value: c.componentOptions.propsData.value,
                     disabled: c.componentOptions.propsData.disabled
@@ -3719,12 +3757,12 @@
 
               this['items' + 0] = datasource;
               this.$nextTick(function () {
-                var _this7 = this;
+                var _this8 = this;
 
-                _newArrowCheck(this, _this6);
+                _newArrowCheck(this, _this7);
 
                 setTimeout(function () {
-                  _newArrowCheck(this, _this7);
+                  _newArrowCheck(this, _this8);
 
                   this.setSelect(groupIndex, value, trigger);
                   resolve(value);
@@ -3743,18 +3781,18 @@
 
 
         return new Promise(function (resolve, reject) {
-          var _this8 = this;
+          var _this9 = this;
 
-          _newArrowCheck(this, _this5);
+          _newArrowCheck(this, _this6);
 
           var needEvent = false;
           var value;
 
           try {
             this.realDatasource.picker_datasource(groupIndex, this, function (ds) {
-              var _this9 = this;
+              var _this10 = this;
 
-              _newArrowCheck(this, _this8);
+              _newArrowCheck(this, _this9);
 
               try {
                 value = ds.value;
@@ -3776,12 +3814,12 @@
               }
 
               this.$nextTick(function () {
-                var _this10 = this;
+                var _this11 = this;
 
-                _newArrowCheck(this, _this9);
+                _newArrowCheck(this, _this10);
 
                 setTimeout(function () {
-                  _newArrowCheck(this, _this10);
+                  _newArrowCheck(this, _this11);
 
                   this.setSelect(groupIndex, value, trigger);
                   resolve(value);
@@ -3803,15 +3841,15 @@
        * @desc: 重新获取整个数据.
        */
       _refreshDatasource: function _refreshDatasource() {
-        var _this11 = this;
+        var _this12 = this;
 
         var trigger = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
         if (this.realDatasource) {
           this.realDatasource.picker_datasource_groups(function (groupCount) {
-            var _this12 = this;
+            var _this13 = this;
 
-            _newArrowCheck(this, _this11);
+            _newArrowCheck(this, _this12);
 
             if (groupCount <= 0 || groupCount > 4) {
               throw new Error('picker group count must in [1,4]');
@@ -3819,7 +3857,7 @@
 
             this.groupCount = groupCount;
             var p = new Promise(function (resolve) {
-              _newArrowCheck(this, _this12);
+              _newArrowCheck(this, _this13);
 
               return resolve();
             }.bind(this));
@@ -3829,12 +3867,12 @@
             }
 
             this.$nextTick(function () {
-              var _this13 = this;
+              var _this14 = this;
 
-              _newArrowCheck(this, _this12);
+              _newArrowCheck(this, _this13);
 
               p.then(function () {
-                _newArrowCheck(this, _this13);
+                _newArrowCheck(this, _this14);
 
                 this._bindEvent();
               }.bind(this));
@@ -3844,12 +3882,12 @@
           this.groupCount = 1;
           var p = febs.utils.sleep(1).then(this.refreshDatasource(0, trigger));
           this.$nextTick(function () {
-            var _this14 = this;
+            var _this15 = this;
 
-            _newArrowCheck(this, _this11);
+            _newArrowCheck(this, _this12);
 
             p.then(function () {
-              _newArrowCheck(this, _this14);
+              _newArrowCheck(this, _this15);
 
               this._bindEvent();
             }.bind(this));

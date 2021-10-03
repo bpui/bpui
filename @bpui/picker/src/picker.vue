@@ -187,6 +187,7 @@
     },
     watch: {
       value(v, vOld) {
+        this.items0CheckedValue = v;
         if (this.noEmitUpdateWatch) {
           this.noEmitUpdateWatch = false;
           return;
@@ -212,7 +213,9 @@
             if (!this.datasource) {
               for (let i = 0; i < this.$slots.default.length; i++) {
                 let c = this.$slots.default[i];
-                if (c.componentOptions.tag === 'bp-picker-cell') {
+                if ((
+                    c.componentOptions.tag === 'bp-picker-cell' ||
+                    c.componentOptions.tag === 'bpPickerCell')) {
                   if (this.items0[i].value === v) {
                     c.componentInstance.check = true;
                   } else {
@@ -248,8 +251,10 @@
             if (!this.datasource) {
               for (let i = 0; i < this.$slots.default.length; i++) {
                 let c = this.$slots.default[i];
-                if (c.componentOptions.tag === 'bp-picker-cell') {
-                  if (arr.indexOf(c.componentInstance.value) >= 0) {
+                if ((
+                    c.componentOptions.tag === 'bp-picker-cell' ||
+                    c.componentOptions.tag === 'bpPickerCell')) {
+                  if (arr[i]) {
                     c.componentInstance.check = true;
                   }
                   else {
@@ -285,8 +290,43 @@
         if (v) {
           let value = this.getValue();
           if (Array.isArray(value)) {
-            for (let i = 0; i < value.length && i < 4; i++) {
-              this.setSelect(i, value[i], false);
+            if (this.multiple && this.groupCount == 1) {
+              let arr = [];
+              arr.length = this.items0Checked.length;
+              for (let i = 0; i < arr.length; i++) {
+                for (let j = 0; j < value.length; j++) {
+                  if (this.items0[i] && this.items0[i].value === value[j]) {
+                    arr[i] = true;
+                    break;
+                  }
+                }
+              }
+              this.items0Checked = arr;
+
+              // by solt.
+              if (!this.datasource) {
+                this.$nextTick(()=>{
+                  for (let i = 0; i < this.$slots.default.length; i++) {
+                    let c = this.$slots.default[i];
+                    if (c.componentInstance && (
+                      c.componentOptions.tag === 'bp-picker-cell' ||
+                      c.componentOptions.tag === 'bpPickerCell')
+                    ) {
+                      if (arr[i]) {
+                        c.componentInstance.check = true;
+                      }
+                      else {
+                        c.componentInstance.check = false;
+                      }
+                    }
+                  }
+                });
+              } // if.
+            }
+            else {
+              for (let i = 0; i < value.length && i < 4; i++) {
+                this.setSelect(i, value[i], false);
+              }
             }
           } else {
             this.setSelect(0, value, false);
@@ -322,6 +362,7 @@
     },
     beforeMount() {
       this.isMobile = febs.utils.browserIsMobile();
+      this.items0CheckedValue = this.value;
 
       let forcePhoneStyle = this.forcePhoneStyle === true || this.forcePhoneStyle === 'true';
       if (!febs.utils.browserIsPhone() && !forcePhoneStyle) {
@@ -350,7 +391,8 @@
       if (!this.datasource && this.multiple && this.groupCount == 1) {
         for (let i = 0; i < this.$slots.default.length; i++) {
           let c = this.$slots.default[i];
-          if (c.componentOptions.tag === 'bp-picker-cell') {
+          if ((c.componentOptions.tag === 'bp-picker-cell' ||
+               c.componentOptions.tag === 'bpPickerCell')) {
             c.componentInstance.multiple = true;
             if (Array.isArray(this.value)) {
               if (this.value.indexOf(c.componentOptions.propsData.value) >= 0) {
@@ -467,12 +509,10 @@
         let v;
         if (this.groupCount == 1) {
           if (this.multiple && this.groupCount == 1) {
-            v = [];
-            for (let i = 0; i < this.items0Checked.length; i++) {
-              if (this.items0Checked[i]) {
-                v.push(this.items0[i].value);
-              }
+            if (!this.items0CheckedValue) {
+              return null;
             }
+            return Array.isArray(this.items0CheckedValue)? this.items0CheckedValue: [this.items0CheckedValue];
           }
           else {
             v = this.value0;
@@ -684,7 +724,9 @@
             try {
               for (let i = 0; i < this.$slots.default.length; i++) {
                 let c = this.$slots.default[i];
-                if (c.tag.indexOf('bpPickerCell') >= 0) {
+                if ((
+                    c.componentOptions.tag === 'bp-picker-cell' ||
+                    c.componentOptions.tag === 'bpPickerCell')) {
                   datasource.push({
                     value: c.componentOptions.propsData.value,
                     disabled: c.componentOptions.propsData.disabled,
