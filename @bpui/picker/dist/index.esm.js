@@ -1,5 +1,5 @@
 /*!
- * bpui picker v1.1.22
+ * bpui picker v1.1.23
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3549,6 +3549,8 @@ var script = {
               v.push(this.items0[i].value);
             }
           }
+
+          this.items0CheckedValue = v;
         } else {
           var item0 = this.getSelect(0);
 

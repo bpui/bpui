@@ -565,6 +565,7 @@
                 v.push(this.items0[i].value);
               }
             }
+            this.items0CheckedValue = v;
           }
           else {
             let item0 = this.getSelect(0);
