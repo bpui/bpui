@@ -45,7 +45,7 @@
     <button @click="$bpWidget.showAlert(JSON.stringify($refs.select1.getSelect(0)))">getSelect</button>
 
     <h4>single</h4>
-    <bpSelect ref="selectSingle" :datasource="singleDatasource"></bpSelect>
+    <bpSelect ref="selectSingle" disabled :datasource="singleDatasource"></bpSelect>
     <button @click="singleValue='value3'">修改value</button>
     <button @click="singleDatasource = [
     {label: `label1`, value: `value1`, disabled: false},

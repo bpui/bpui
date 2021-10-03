@@ -213,9 +213,7 @@
             if (!this.datasource) {
               for (let i = 0; i < this.$slots.default.length; i++) {
                 let c = this.$slots.default[i];
-                if ((
-                    c.componentOptions.tag === 'bp-picker-cell' ||
-                    c.componentOptions.tag === 'bpPickerCell')) {
+                if (c.tag.indexOf('bpPickerCell') >= 0) {
                   if (this.items0[i].value === v) {
                     c.componentInstance.check = true;
                   } else {
@@ -251,9 +249,7 @@
             if (!this.datasource) {
               for (let i = 0; i < this.$slots.default.length; i++) {
                 let c = this.$slots.default[i];
-                if ((
-                    c.componentOptions.tag === 'bp-picker-cell' ||
-                    c.componentOptions.tag === 'bpPickerCell')) {
+                if (c.tag.indexOf('bpPickerCell') >= 0) {
                   if (arr[i]) {
                     c.componentInstance.check = true;
                   }
@@ -308,10 +304,7 @@
                 this.$nextTick(()=>{
                   for (let i = 0; i < this.$slots.default.length; i++) {
                     let c = this.$slots.default[i];
-                    if (c.componentInstance && (
-                      c.componentOptions.tag === 'bp-picker-cell' ||
-                      c.componentOptions.tag === 'bpPickerCell')
-                    ) {
+                    if (c.tag.indexOf('bpPickerCell') >= 0) {
                       if (arr[i]) {
                         c.componentInstance.check = true;
                       }
@@ -397,8 +390,7 @@
       if (!this.datasource && this.multiple && this.groupCount == 1) {
         for (let i = 0; i < this.$slots.default.length; i++) {
           let c = this.$slots.default[i];
-          if ((c.componentOptions.tag === 'bp-picker-cell' ||
-               c.componentOptions.tag === 'bpPickerCell')) {
+          if (c.tag.indexOf('bpPickerCell') >= 0) {
             c.componentInstance.multiple = true;
             if (Array.isArray(this.value)) {
               if (this.value.indexOf(c.componentOptions.propsData.value) >= 0) {
@@ -731,9 +723,7 @@
             try {
               for (let i = 0; i < this.$slots.default.length; i++) {
                 let c = this.$slots.default[i];
-                if ((
-                    c.componentOptions.tag === 'bp-picker-cell' ||
-                    c.componentOptions.tag === 'bpPickerCell')) {
+                if (c.tag.indexOf('bpPickerCell') >= 0) {
                   datasource.push({
                     value: c.componentOptions.propsData.value,
                     disabled: c.componentOptions.propsData.disabled,

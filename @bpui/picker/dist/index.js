@@ -1,5 +1,5 @@
 /*!
- * bpui picker v1.1.23
+ * bpui picker v1.1.24
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3167,7 +3167,7 @@
               for (var _i = 0; _i < this.$slots["default"].length; _i++) {
                 var c = this.$slots["default"][_i];
 
-                if (c.componentOptions.tag === 'bp-picker-cell' || c.componentOptions.tag === 'bpPickerCell') {
+                if (c.tag.indexOf('bpPickerCell') >= 0) {
                   if (this.items0[_i].value === v) {
                     c.componentInstance.check = true;
                   } else {
@@ -3209,7 +3209,7 @@
               for (var _i3 = 0; _i3 < this.$slots["default"].length; _i3++) {
                 var _c = this.$slots["default"][_i3];
 
-                if (_c.componentOptions.tag === 'bp-picker-cell' || _c.componentOptions.tag === 'bpPickerCell') {
+                if (_c.tag.indexOf('bpPickerCell') >= 0) {
                   if (arr[_i3]) {
                     _c.componentInstance.check = true;
                   } else {
@@ -3273,7 +3273,7 @@
                   for (var _i5 = 0; _i5 < this.$slots["default"].length; _i5++) {
                     var c = this.$slots["default"][_i5];
 
-                    if (c.componentInstance && (c.componentOptions.tag === 'bp-picker-cell' || c.componentOptions.tag === 'bpPickerCell')) {
+                    if (c.tag.indexOf('bpPickerCell') >= 0) {
                       if (arr[_i5]) {
                         c.componentInstance.check = true;
                       } else {
@@ -3367,7 +3367,7 @@
         for (var i = 0; i < this.$slots["default"].length; i++) {
           var c = this.$slots["default"][i];
 
-          if (c.componentOptions.tag === 'bp-picker-cell' || c.componentOptions.tag === 'bpPickerCell') {
+          if (c.tag.indexOf('bpPickerCell') >= 0) {
             c.componentInstance.multiple = true;
 
             if (Array.isArray(this.value)) {
@@ -3747,7 +3747,7 @@
               for (var i = 0; i < this.$slots["default"].length; i++) {
                 var c = this.$slots["default"][i];
 
-                if (c.componentOptions.tag === 'bp-picker-cell' || c.componentOptions.tag === 'bpPickerCell') {
+                if (c.tag.indexOf('bpPickerCell') >= 0) {
                   datasource.push({
                     value: c.componentOptions.propsData.value,
                     disabled: c.componentOptions.propsData.disabled

@@ -5,7 +5,10 @@
 */
 -->
 <template>
-  <selectCascader ref="select" v-bind="$attrs" v-on="$listeners" :value="realValue"
+  <selectCascader :class="{
+      'bp-select__disabled': disabled,
+      'bp-select__readonly': readonly,
+    }" ref="select" v-bind="$attrs" v-on="$listeners" :value="realValue"
     @input="_onUpdateValue" :groupCount="groupCount"
     :multiple="multiple" :placeholder="placeholder" :emptyText="emptyText">
     <template v-if="$slots.default">
@@ -36,6 +39,14 @@
         type: [Array, Object],
       },
       multiple: {
+        type: Boolean
+      },
+      readonly: {
+        default: false,
+        type: Boolean
+      },
+      disabled: {
+        default: false,
         type: Boolean
       },
       placeholder: {
