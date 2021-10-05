@@ -17,6 +17,7 @@
     <button @click="visible2=true">show2</button>
     <button @click="visible3=true">show phone style</button>
     <button @click="visible4=true">show4</button>
+    <button @click="value3=['1']">set value</button>
     <button @click="visible6=true">show6</button>
     <button @click="value2=[4,2,2]">set time</button>
 

@@ -3110,6 +3110,7 @@ var script = {
   },
   data: function data() {
     return {
+      confirmBtnDisabled: false,
       isMobile: null,
       tabletClass: null,
       visibleReal: false,
@@ -3159,11 +3160,14 @@ var script = {
 
 
           if (!this.datasource) {
+            var ii = 0;
+
             for (var _i = 0; _i < this.$slots["default"].length; _i++) {
               var c = this.$slots["default"][_i];
+              if (!c.tag) continue;
 
               if (c.tag.indexOf('bpPickerCell') >= 0) {
-                if (this.items0[_i].value === v) {
+                if (this.items0[ii++].value === v) {
                   c.componentInstance.check = true;
                 } else {
                   c.componentInstance.check = false;
@@ -3201,11 +3205,14 @@ var script = {
           this.items0Checked = arr; // by solt.
 
           if (!this.datasource) {
+            var _ii = 0;
+
             for (var _i3 = 0; _i3 < this.$slots["default"].length; _i3++) {
               var _c = this.$slots["default"][_i3];
+              if (!_c.tag) continue;
 
               if (_c.tag.indexOf('bpPickerCell') >= 0) {
-                if (arr[_i3]) {
+                if (arr[_ii++]) {
                   _c.componentInstance.check = true;
                 } else {
                   _c.componentInstance.check = false;
@@ -3265,11 +3272,14 @@ var script = {
               this.$nextTick(function () {
                 _newArrowCheck(this, _this2);
 
+                var ii = 0;
+
                 for (var _i5 = 0; _i5 < this.$slots["default"].length; _i5++) {
                   var c = this.$slots["default"][_i5];
+                  if (!c.tag) continue;
 
                   if (c.tag.indexOf('bpPickerCell') >= 0) {
-                    if (arr[_i5]) {
+                    if (arr[ii++]) {
                       c.componentInstance.check = true;
                     } else {
                       c.componentInstance.check = false;
@@ -3359,8 +3369,11 @@ var script = {
     // febs.dom.addEventListener(this.$refs.content0, 'click', this._onClickGroup0Current);
     //  by slot and multiple.
     if (!this.datasource && this.multiple && this.groupCount == 1) {
+      var ii = 0;
+
       for (var i = 0; i < this.$slots["default"].length; i++) {
         var c = this.$slots["default"][i];
+        if (!c.tag) continue;
 
         if (c.tag.indexOf('bpPickerCell') >= 0) {
           c.componentInstance.multiple = true;
@@ -3368,12 +3381,14 @@ var script = {
           if (Array.isArray(this.value)) {
             if (this.value.indexOf(c.componentOptions.propsData.value) >= 0) {
               c.componentInstance.check = true;
-              this.items0Checked[i] = true;
+              this.items0Checked[ii] = true;
             }
           } else if (c.componentOptions.propsData.value == this.value) {
             c.componentInstance.check = true;
-            this.items0Checked[i] = true;
+            this.items0Checked[ii] = true;
           }
+
+          ii++;
         }
       }
     } // if.
@@ -3404,6 +3419,7 @@ var script = {
      */
     setSelect: function setSelect(groupIndex, value) {
       var trigger = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      this.confirmBtnDisabled = false;
       var data = this['items' + groupIndex];
 
       if (data) {
@@ -3421,6 +3437,10 @@ var script = {
 
             for (; i < data.length; i++) {
               if (data[i].value == value || !value) {
+                if (!!data[i].disabled && (!this.multiple || this.groupCount != 1)) {
+                  this.confirmBtnDisabled = true;
+                }
+
                 break;
               }
             } // for.
@@ -3526,13 +3546,38 @@ var script = {
       var v;
 
       if (this.groupCount == 1) {
-        v = this.getSelect(0).value;
+        var c0 = this.getSelect(0);
+        v = c0.value;
+
+        if (this.multiple) {
+          this.confirmBtnDisabled = false;
+        } else {
+          this.confirmBtnDisabled = !!c0.disabled;
+        }
       } else if (this.groupCount == 2) {
-        v = [this.getSelect(0).value, this.getSelect(1).value];
+        var _c2 = this.getSelect(0);
+
+        var c1 = this.getSelect(1);
+        v = [_c2.value, c1.value];
+        this.confirmBtnDisabled = !!_c2.disabled || !!c1.disabled;
       } else if (this.groupCount == 3) {
-        v = [this.getSelect(0).value, this.getSelect(1).value, this.getSelect(2).value];
+        var _c3 = this.getSelect(0);
+
+        var _c4 = this.getSelect(1);
+
+        var c2 = this.getSelect(2);
+        v = [_c3.value, _c4.value, c2.value];
+        this.confirmBtnDisabled = !!_c3.disabled || !!_c4.disabled || !!c2.disabled;
       } else {
-        v = [this.getSelect(0).value, this.getSelect(1).value, this.getSelect(2).value, this.getSelect(3).value];
+        var _c5 = this.getSelect(0);
+
+        var _c6 = this.getSelect(1);
+
+        var _c7 = this.getSelect(2);
+
+        var c3 = this.getSelect(3);
+        v = [_c5.value, _c6.value, _c7.value, c3.value];
+        this.confirmBtnDisabled = !!_c5.disabled || !!_c6.disabled || !!_c7.disabled || !!c3.disabled;
       }
 
       this.$emit('change', v);
@@ -3636,7 +3681,18 @@ var script = {
               this.$set(this.items0Checked, curIndexClickGroup0, check);
 
               if (!this.datasource) {
-                this.$slots["default"][curIndexClickGroup0].componentInstance.check = check;
+                var ii = 0;
+
+                for (var i = 0; i < this.$slots["default"].length; i++) {
+                  if (this.$slots["default"][i].tag) {
+                    if (ii == curIndexClickGroup0) {
+                      this.$slots["default"][i].componentInstance.check = check;
+                      break;
+                    }
+
+                    ii++;
+                  }
+                }
               }
             }
           }
@@ -3741,6 +3797,7 @@ var script = {
           try {
             for (var i = 0; i < this.$slots["default"].length; i++) {
               var c = this.$slots["default"][i];
+              if (!c.tag) continue;
 
               if (c.tag.indexOf('bpPickerCell') >= 0) {
                 datasource.push({
@@ -4170,6 +4227,9 @@ var __vue_render__ = function __vue_render__() {
       }
     }
   }, [_vm._v(_vm._s(_vm.cancelBtnText))]), _vm._v(" "), _c("button", {
+    attrs: {
+      disabled: _vm.confirmBtnDisabled
+    },
     on: {
       click: _vm._onConfirm
     }
@@ -4305,6 +4365,9 @@ var __vue_render__ = function __vue_render__() {
       }
     }
   }, [_vm._v(_vm._s(_vm.cancelBtnText))]), _vm._v(" "), _c("button", {
+    attrs: {
+      disabled: _vm.confirmBtnDisabled
+    },
     on: {
       click: _vm._onConfirm
     }

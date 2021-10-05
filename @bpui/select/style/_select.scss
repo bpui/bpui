@@ -66,6 +66,7 @@
             @extend .bp-ellipsis;
 
             .bp-select__mainContain_placeholder {
+                user-select: none;
                 color: #858588;
                 font-size: $bpSelectFontSize;
             }

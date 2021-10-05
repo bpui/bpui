@@ -32,7 +32,7 @@
       </div>
       <div v-else-if="(toolbarPos?toolbarPos=='top':(!tabletClass))" class="bp-picker__toolbar bp-ellipsis" ref="agentToolbar">
         <button class="bp-picker__cancelBtn" @click="visibleReal=false">{{cancelBtnText}}</button>
-        <button @click="_onConfirm">{{confirmBtnText}}</button>
+        <button :disabled="confirmBtnDisabled" @click="_onConfirm">{{confirmBtnText}}</button>
       </div>
 
       <div class="bp-picker__main" ref="agentMain">
@@ -40,7 +40,7 @@
           <div class="bp-picker__indicator"></div>
           <div ref="content0" class="bp-picker__content" data-group="0" :style="'transform: translate3d(0px, 102px, 0px); transition: all 0.3s;'">
             <template v-if="$slots.default">
-              <slot name="default"/>
+              <slot v-if="(slotReRender||!slotReRender)" name="default"/>
             </template>
             <template v-else>
               <div v-for="(item, index) in items0" :class="'bp-picker__item' + (item.disabled?' bp-picker__item-disabled':'')"
@@ -85,7 +85,7 @@
       </div>
       <div v-else-if="(toolbarPos?toolbarPos=='bottom':(tabletClass))" class="bp-picker__toolbar bp-ellipsis" ref="agentToolbar">
         <button class="bp-picker__cancelBtn" @click="visibleReal=false">{{cancelBtnText}}</button>
-        <button @click="_onConfirm">{{confirmBtnText}}</button>
+        <button :disabled="confirmBtnDisabled" @click="_onConfirm">{{confirmBtnText}}</button>
       </div>
     </div>
   </bp-widget>
@@ -166,6 +166,8 @@
     },
     data() {
       return {
+        slotReRender: false,
+        confirmBtnDisabled: false,
         isMobile: null,
         tabletClass: null,
         visibleReal: false,
@@ -211,10 +213,12 @@
 
             // by solt.
             if (!this.datasource) {
+              let ii = 0;
               for (let i = 0; i < this.$slots.default.length; i++) {
                 let c = this.$slots.default[i];
+                if (!c.tag) continue;
                 if (c.tag.indexOf('bpPickerCell') >= 0) {
-                  if (this.items0[i].value === v) {
+                  if (this.items0[ii++].value === v) {
                     c.componentInstance.check = true;
                   } else {
                     c.componentInstance.check = false;
@@ -247,17 +251,24 @@
 
             // by solt.
             if (!this.datasource) {
-              for (let i = 0; i < this.$slots.default.length; i++) {
-                let c = this.$slots.default[i];
-                if (c.tag.indexOf('bpPickerCell') >= 0) {
-                  if (arr[i]) {
-                    c.componentInstance.check = true;
-                  }
-                  else {
-                    c.componentInstance.check = false;
+
+              this.$nextTick(()=>{
+                let ii = 0;
+                for (let i = 0; i < this.$slots.default.length; i++) {
+                  let c = this.$slots.default[i];
+                  if (!c.tag) continue;
+                  if (c.tag.indexOf('bpPickerCell') >= 0) {
+                    if (arr[ii++]) {
+                      c.componentInstance.check = true;
+                    }
+                    else {
+                      c.componentInstance.check = false;
+                    }
                   }
                 }
-              }
+
+                this.slotReRender = !this.slotReRender;
+              });
             } // if.
 
             return;
@@ -302,10 +313,12 @@
               // by solt.
               if (!this.datasource) {
                 this.$nextTick(()=>{
+                  let ii = 0;
                   for (let i = 0; i < this.$slots.default.length; i++) {
                     let c = this.$slots.default[i];
+                    if (!c.tag) continue;
                     if (c.tag.indexOf('bpPickerCell') >= 0) {
-                      if (arr[i]) {
+                      if (arr[ii++]) {
                         c.componentInstance.check = true;
                       }
                       else {
@@ -313,6 +326,8 @@
                       }
                     }
                   }
+
+                  this.slotReRender = !this.slotReRender;
                 });
               }
             }
@@ -388,20 +403,23 @@
 
       //  by slot and multiple.
       if (!this.datasource && this.multiple && this.groupCount == 1) {
+        let ii = 0;
         for (let i = 0; i < this.$slots.default.length; i++) {
           let c = this.$slots.default[i];
+          if (!c.tag) continue;
           if (c.tag.indexOf('bpPickerCell') >= 0) {
             c.componentInstance.multiple = true;
             if (Array.isArray(this.value)) {
               if (this.value.indexOf(c.componentOptions.propsData.value) >= 0) {
                 c.componentInstance.check = true;
-                this.items0Checked[i] = true;
+                this.items0Checked[ii] = true;
               }
             }
             else if (c.componentOptions.propsData.value == this.value) {
               c.componentInstance.check = true;
-              this.items0Checked[i] = true;
+              this.items0Checked[ii] = true;
             }
+            ii++;
           }
         }
       } // if.
@@ -428,6 +446,7 @@
        * @param trigger: 是否触发change事件.
        */
       setSelect(groupIndex, value, trigger = false) {
+        this.confirmBtnDisabled = false;
         let data = this['items' + groupIndex];
         if (data) {
           let ee = this.$refs.agentMain;
@@ -443,6 +462,9 @@
               let i = 0;
               for (; i < data.length; i++) {
                 if (data[i].value == value || !value) {
+                  if (!!data[i].disabled && (!this.multiple || this.groupCount != 1)) {
+                    this.confirmBtnDisabled = true;
+                  }
                   break;
                 }
               } // for.
@@ -533,16 +555,36 @@
       _onChange() {
         let v;
         if (this.groupCount == 1) {
-          v = this.getSelect(0).value;
+          let c0 = this.getSelect(0);
+          v = c0.value;
+
+          if (this.multiple) {
+            this.confirmBtnDisabled = false;
+          }
+          else {
+            this.confirmBtnDisabled = !!c0.disabled;
+          }
         }
         else if (this.groupCount == 2) {
-          v = [this.getSelect(0).value, this.getSelect(1).value];
+          let c0 = this.getSelect(0);
+          let c1 = this.getSelect(1);
+          v = [c0.value, c1.value];
+          this.confirmBtnDisabled = !!c0.disabled || !!c1.disabled;
         }
         else if (this.groupCount == 3) {
-          v = [this.getSelect(0).value, this.getSelect(1).value, this.getSelect(2).value];
+          let c0 = this.getSelect(0);
+          let c1 = this.getSelect(1);
+          let c2 = this.getSelect(2);
+          v = [c0.value, c1.value, c2.value];
+          this.confirmBtnDisabled = !!c0.disabled || !!c1.disabled || !!c2.disabled;
         }
         else {
-          v = [this.getSelect(0).value, this.getSelect(1).value, this.getSelect(2).value,  this.getSelect(3).value];
+          let c0 = this.getSelect(0);
+          let c1 = this.getSelect(1);
+          let c2 = this.getSelect(2);
+          let c3 = this.getSelect(3);
+          v = [c0.value, c1.value, c2.value, c3.value];
+          this.confirmBtnDisabled = !!c0.disabled || !!c1.disabled || !!c2.disabled || !!c3.disabled;
         }
 
         this.$emit('change', v);
@@ -629,7 +671,16 @@
                 let check = !!!this.items0Checked[curIndexClickGroup0];
                 this.$set(this.items0Checked, curIndexClickGroup0, check);
                 if (!this.datasource) {
-                  this.$slots.default[curIndexClickGroup0].componentInstance.check = check;
+                  let ii = 0;
+                  for (let i = 0; i < this.$slots.default.length; i++) {
+                    if (this.$slots.default[i].tag) {
+                      if (ii == curIndexClickGroup0) {
+                        this.$slots.default[i].componentInstance.check = check;
+                        break;
+                      }
+                      ii++;
+                    }
+                  }
                 }
               }
             }
@@ -723,6 +774,7 @@
             try {
               for (let i = 0; i < this.$slots.default.length; i++) {
                 let c = this.$slots.default[i];
+                if (!c.tag) continue;
                 if (c.tag.indexOf('bpPickerCell') >= 0) {
                   datasource.push({
                     value: c.componentOptions.propsData.value,
