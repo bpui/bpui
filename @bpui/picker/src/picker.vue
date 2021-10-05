@@ -343,6 +343,21 @@
               let arr = [];
               arr.length = this.items0Checked.length;
               this.items0Checked = arr;
+
+              // by solt.
+              if (!this.datasource) {
+                this.$nextTick(()=>{
+                  for (let i = 0; i < this.$slots.default.length; i++) {
+                    let c = this.$slots.default[i];
+                    if (!c.tag) continue;
+                    if (c.tag.indexOf('bpPickerCell') >= 0) {
+                      c.componentInstance.check = false;
+                    }
+                  }
+
+                  this.slotReRender = !this.slotReRender;
+                });
+              }
             }
           }
         }
@@ -673,9 +688,12 @@
                 if (!this.datasource) {
                   let ii = 0;
                   for (let i = 0; i < this.$slots.default.length; i++) {
-                    if (this.$slots.default[i].tag) {
+                    let c = this.$slots.default[i];
+                    if (!c.tag) continue;
+                    if (c.tag.indexOf('bpPickerCell') >= 0) {
                       if (ii == curIndexClickGroup0) {
-                        this.$slots.default[i].componentInstance.check = check;
+                        c.componentInstance.check = check;
+                        this.slotReRender = !this.slotReRender;
                         break;
                       }
                       ii++;

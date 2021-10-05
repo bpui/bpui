@@ -5,10 +5,10 @@
 */
 -->
 <template>
-  <selectCascader :class="{
+  <selectCascader ref="select" :class="{
       'bp-select__disabled': disabled,
       'bp-select__readonly': readonly,
-    }" ref="select" v-bind="$attrs" v-on="$listeners" :value="realValue"
+    }" v-bind="$attrs" v-on="$listeners" :value="realValue"
     @input="_onUpdateValue" :groupCount="groupCount"
     :multiple="multiple" :placeholder="placeholder" :emptyText="emptyText">
     <template v-if="$slots.default">
@@ -71,6 +71,7 @@
         realDatasourceItem1: null,
         realDatasourceItem2: null,
         realDatasourceItem3: null,
+        slotIndexs: [],
       }
     },
     filters: {},
@@ -207,9 +208,12 @@
             let value = this.value;
             let datasource = [];
             try {
+              this.slotIndexs = [];
               for (let i = 0; i < this.$slots.default.length; i++) {
                 let c = this.$slots.default[i];
+                if (!c.tag) continue;
                 if (c.tag.indexOf('bpSelectOption') >= 0) {
+                  this.slotIndexs.push(i);
                   datasource.push({
                     value: c.componentOptions.propsData.value,
                     disabled: c.componentOptions.propsData.disabled,
@@ -220,6 +224,7 @@
               }
 
               this['realDatasourceItem' + 0] = datasource;
+              this.$refs.select.slotIndexs = this.slotIndexs;
               resolve(value);
             } catch (e) {
               reject(e);

@@ -2,13 +2,16 @@ import * as febs from 'febs-browser';
 
 export default {
   props: {
-    vNode: [Object],
+    node: {
+      type: Object,
+      required: true,
+    },
   },
   render(h) {
-    this.vNode.componentOptions.listeners = this.vNode.componentOptions.listeners || {};
+    this.node.componentOptions.listeners = this.node.componentOptions.listeners || {};
 
-    this.vNode.componentOptions.listeners = febs.utils.mergeMap(this.vNode.componentOptions.listeners, this.$listeners);
+    this.node.componentOptions.listeners = febs.utils.mergeMap(this.node.componentOptions.listeners, this.$listeners);
 
-    return this.vNode;
+    return this.node;
   }
 }

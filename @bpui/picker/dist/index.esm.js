@@ -1,5 +1,5 @@
 /*!
- * bpui picker v1.1.24
+ * bpui picker v1.1.25
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -3110,6 +3110,7 @@ var script = {
   },
   data: function data() {
     return {
+      slotReRender: false,
       confirmBtnDisabled: false,
       isMobile: null,
       tabletClass: null,
@@ -3205,20 +3206,26 @@ var script = {
           this.items0Checked = arr; // by solt.
 
           if (!this.datasource) {
-            var _ii = 0;
+            this.$nextTick(function () {
+              _newArrowCheck(this, _this);
 
-            for (var _i3 = 0; _i3 < this.$slots["default"].length; _i3++) {
-              var _c = this.$slots["default"][_i3];
-              if (!_c.tag) continue;
+              var ii = 0;
 
-              if (_c.tag.indexOf('bpPickerCell') >= 0) {
-                if (arr[_ii++]) {
-                  _c.componentInstance.check = true;
-                } else {
-                  _c.componentInstance.check = false;
+              for (var _i3 = 0; _i3 < this.$slots["default"].length; _i3++) {
+                var _c = this.$slots["default"][_i3];
+                if (!_c.tag) continue;
+
+                if (_c.tag.indexOf('bpPickerCell') >= 0) {
+                  if (arr[ii++]) {
+                    _c.componentInstance.check = true;
+                  } else {
+                    _c.componentInstance.check = false;
+                  }
                 }
               }
-            }
+
+              this.slotReRender = !this.slotReRender;
+            }.bind(this));
           } // if.
 
 
@@ -3286,6 +3293,8 @@ var script = {
                     }
                   }
                 }
+
+                this.slotReRender = !this.slotReRender;
               }.bind(this));
             }
           } else {
@@ -3299,7 +3308,24 @@ var script = {
           if (this.multiple && this.groupCount == 1) {
             var _arr = [];
             _arr.length = this.items0Checked.length;
-            this.items0Checked = _arr;
+            this.items0Checked = _arr; // by solt.
+
+            if (!this.datasource) {
+              this.$nextTick(function () {
+                _newArrowCheck(this, _this2);
+
+                for (var _i7 = 0; _i7 < this.$slots["default"].length; _i7++) {
+                  var c = this.$slots["default"][_i7];
+                  if (!c.tag) continue;
+
+                  if (c.tag.indexOf('bpPickerCell') >= 0) {
+                    c.componentInstance.check = false;
+                  }
+                }
+
+                this.slotReRender = !this.slotReRender;
+              }.bind(this));
+            }
           }
         }
       }
@@ -3684,9 +3710,13 @@ var script = {
                 var ii = 0;
 
                 for (var i = 0; i < this.$slots["default"].length; i++) {
-                  if (this.$slots["default"][i].tag) {
+                  var c = this.$slots["default"][i];
+                  if (!c.tag) continue;
+
+                  if (c.tag.indexOf('bpPickerCell') >= 0) {
                     if (ii == curIndexClickGroup0) {
-                      this.$slots["default"][i].componentInstance.check = check;
+                      c.componentInstance.check = check;
+                      this.slotReRender = !this.slotReRender;
                       break;
                     }
 
@@ -3739,31 +3769,31 @@ var script = {
           namecancel = 'mouseout';
         }
 
-        for (var _i7 = 0; _i7 < elBd.length; _i7++) {
-          dom.removeEventListener(elBd[_i7], namestart, this._onClickGroup0Start, true);
-          dom.removeEventListener(elBd[_i7], nameend, this._onClickGroup0End, true);
-          dom.removeEventListener(elBd[_i7], namestart, mobile_onTouchstart_picker, true);
-          dom.removeEventListener(elBd[_i7], namemove, mobile_onTouchmove_picker, true);
-          dom.removeEventListener(elBd[_i7], nameend, mobile_onTouchend_picker, true);
-          dom.removeEventListener(elBd[_i7], namecancel, mobile_onTouchcancel_picker, true);
-          dom.addEventListener(elBd[_i7], namestart, mobile_onTouchstart_picker, true); // elBd[i].addEventListener(namemove, mobile_onTouchmove_picker, true);
+        for (var _i8 = 0; _i8 < elBd.length; _i8++) {
+          dom.removeEventListener(elBd[_i8], namestart, this._onClickGroup0Start, true);
+          dom.removeEventListener(elBd[_i8], nameend, this._onClickGroup0End, true);
+          dom.removeEventListener(elBd[_i8], namestart, mobile_onTouchstart_picker, true);
+          dom.removeEventListener(elBd[_i8], namemove, mobile_onTouchmove_picker, true);
+          dom.removeEventListener(elBd[_i8], nameend, mobile_onTouchend_picker, true);
+          dom.removeEventListener(elBd[_i8], namecancel, mobile_onTouchcancel_picker, true);
+          dom.addEventListener(elBd[_i8], namestart, mobile_onTouchstart_picker, true); // elBd[i].addEventListener(namemove, mobile_onTouchmove_picker, true);
           // elBd[i].addEventListener(nameend, mobile_onTouchend_picker, true);
           // elBd[i].addEventListener(namecancel, mobile_onTouchcancel_picker, true);
 
-          if (_i7 == 0 && this.multiple && this.groupCount == 1) {
-            dom.addEventListener(elBd[_i7], namestart, this._onClickGroup0Start, true);
-            dom.addEventListener(elBd[_i7], nameend, this._onClickGroup0End, true);
+          if (_i8 == 0 && this.multiple && this.groupCount == 1) {
+            dom.addEventListener(elBd[_i8], namestart, this._onClickGroup0Start, true);
+            dom.addEventListener(elBd[_i8], nameend, this._onClickGroup0End, true);
           }
 
           if (!this.isMobile) {
             var agent = navigator.userAgent;
 
             if (/.*Firefox.*/.test(agent)) {
-              dom.removeEventListener(elBd[_i7], 'DOMMouseScroll', mobile_onWheel_picker, true);
-              dom.addEventListener(elBd[_i7], 'DOMMouseScroll', mobile_onWheel_picker, true);
+              dom.removeEventListener(elBd[_i8], 'DOMMouseScroll', mobile_onWheel_picker, true);
+              dom.addEventListener(elBd[_i8], 'DOMMouseScroll', mobile_onWheel_picker, true);
             } else {
-              dom.removeEventListener(elBd[_i7], 'mousewheel', mobile_onWheel_picker, true);
-              dom.addEventListener(elBd[_i7], 'mousewheel', mobile_onWheel_picker, true);
+              dom.removeEventListener(elBd[_i8], 'mousewheel', mobile_onWheel_picker, true);
+              dom.addEventListener(elBd[_i8], 'mousewheel', mobile_onWheel_picker, true);
             }
           }
         }
@@ -4253,7 +4283,7 @@ var __vue_render__ = function __vue_render__() {
     attrs: {
       "data-group": "0"
     }
-  }, [_vm.$slots["default"] ? [_vm._t("default")] : _vm._l(_vm.items0, function (item, index) {
+  }, [_vm.$slots["default"] ? [_vm.slotReRender || !_vm.slotReRender ? _vm._t("default") : _vm._e()] : _vm._l(_vm.items0, function (item, index) {
     return _c("div", {
       key: "_1" + index,
       "class": "bp-picker__item" + (item.disabled ? " bp-picker__item-disabled" : ""),

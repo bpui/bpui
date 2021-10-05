@@ -22,11 +22,12 @@
             <template v-if="$slots.default">
               <template v-for="(iindex, index) in valueIndex">
                 <div v-if="isMultiple" class="bp-select__label bp-ellipsis">
-                  <renderDom :vNode="$slots.default[iindex]"
-                    :key="index"/>
+                  <div v-html="_getSlotLabel(slotIndexs[iindex])" :key="index"/>
                   <bp-icon class="bp-select_close" name="bp-select_close" @click.stop="onRemoveMultipleOption(index)"/>
                 </div>
-                <renderDom v-else :vNode="$slots.default[iindex]" class="bp-select__label" :key="index" />
+                <template v-else>
+                  <div v-html="_getSlotLabel(slotIndexs[iindex])" :key="index"/>
+                </template>
               </template>
             </template>
             <!-- multiple -->
@@ -72,13 +73,13 @@
               <div class="bp-select__dropdownList__inner">
                 <!-- slot -->
                 <template v-if="$slots.default">
-                  <template v-for="(item, i) in $slots.default">
-                    <renderDom :vNode="item" class="bp-select__option bp-ellipsis" v-if="isMultiple"
+                  <template v-for="(item, i) in cascaderDatasource[0]">
+                    <renderDom v-if="isMultiple" :node="$slots.default[slotIndexs[i]]" class="bp-select__option bp-ellipsis" 
                       :key="index+'_'+i" :class="{ 
                         'bp-select__option_active': (selectedIndex && selectedIndex.indexOf(i) >= 0),
                         'bp-select__option_disabled': !!cascaderDatasource[0][i].disabled
                       }" @click.stop="onClickOption(cascaderDatasource[0][i], index, i, false)"/>
-                    <renderDom :vNode="item" class="bp-select__option bp-ellipsis" v-else :key="index+'_'+i" :class="{
+                    <renderDom v-else :node="$slots.default[slotIndexs[i]]" class="bp-select__option bp-ellipsis" :key="index+'_'+i" :class="{
                         'bp-select__option_active': (selectedValue && cascaderDatasource[0][i].value === selectedValue[index]) || (cascaderClickIndex && i === cascaderClickIndex[index]),
                         'bp-select__option_disabled': !!cascaderDatasource[0][i].disabled
                       }" @click.stop="onClickOption(cascaderDatasource[0][i], index, i, true)" />
@@ -131,6 +132,7 @@
     },
     data() {
       return {
+        slotIndexs: [],
         cascaderDatasource: null,
         cascaderClickIndex: null,
         visibleDropdown: false,
@@ -275,6 +277,12 @@
       // this._updateDatasource();
     },
     methods: {
+      _getSlotLabel(index) {
+        const div = document.createElement('div');
+        div.appendChild(this.$slots.default[index].elm.cloneNode(true));
+        const divString = div.innerHTML;
+        return divString;
+      },
       /**
        * @desc: 获得当前界面上选中的元素的值.
        * @param groupIndex: 明确指定后可以获得指定组的值.
@@ -381,6 +389,7 @@
             } else {
               arr.splice(curIndex, 1);
             }
+            arr.sort();
             this.selectedIndex = arr.concat([]);
           } else {
             this.selectedIndex = [].concat(this.cascaderClickIndex);
@@ -416,7 +425,9 @@
           return;
         }
 
-        this.valueIndex = [].concat(this.selectedIndex);
+        let arr = [].concat(this.selectedIndex);
+        arr.sort();
+        this.valueIndex = arr;
 
         if (this.groupCount > 1 || this.isMultiple) {
           let value = [].concat(selectedValue);
