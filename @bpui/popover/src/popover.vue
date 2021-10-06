@@ -217,20 +217,28 @@
 
         this._show(this.direction);
       },
-      _onTriggerHide(ev) {
+      _onTriggerHide(e) {
         let main = $(this.$refs.main);
-        let mainOffset = bpLibs.dom.getElementOffset(main[0]);
 
-        // in popover.
-        if (ev && ev.clientX+ev.offsetX >= mainOffset.left && ev.clientX+ev.offsetX <= mainOffset.left + main[0].offsetWidth
-        && ev.clientY+ev.offsetY >= mainOffset.top && ev.clientY+ev.offsetY <= mainOffset.top + main[0].offsetHeight) {
-          $(this.$refs.main).on('mouseleave', this._hideVisible);
-        }
-        else {
-          this.visibleReal = false;
-        }
+        let ev = e;
 
-        $('body').off('click', this._hide);
+        this.$timer.setTimeout(()=>{
+          let mainOffset = bpLibs.dom.getElementOffset(main[0]);
+          
+          // in popover.
+          if (ev 
+          && ev.clientX+ev.offsetX >= mainOffset.left - 24
+          && ev.clientX+ev.offsetX <= mainOffset.left + main[0].offsetWidth + 24
+          && ev.clientY+ev.offsetY >= mainOffset.top - 24
+          && ev.clientY+ev.offsetY <= mainOffset.top + main[0].offsetHeight + 24) {
+            $(this.$refs.main).on('mouseleave', this._hideVisible);
+          }
+          else {
+            this.visibleReal = false;
+          }
+
+          $('body').off('click', this._hide);
+        }, 50);
       },
       _show: function(directionData) {
         let bind = this.bind;

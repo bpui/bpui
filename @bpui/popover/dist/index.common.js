@@ -1,5 +1,5 @@
 /*!
- * bpui popover v1.1.18
+ * bpui popover v1.1.19
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -958,20 +958,27 @@ var script = {
 
       this._show(this.direction);
     },
-    _onTriggerHide: function _onTriggerHide(ev) {
+    _onTriggerHide: function _onTriggerHide(e) {
+      var _this4 = this;
+
       var main = $(this.$refs.main);
-      var mainOffset = bpLibs.dom.getElementOffset(main[0]); // in popover.
+      var ev = e;
+      this.$timer.setTimeout(function () {
+        _newArrowCheck(this, _this4);
 
-      if (ev && ev.clientX + ev.offsetX >= mainOffset.left && ev.clientX + ev.offsetX <= mainOffset.left + main[0].offsetWidth && ev.clientY + ev.offsetY >= mainOffset.top && ev.clientY + ev.offsetY <= mainOffset.top + main[0].offsetHeight) {
-        $(this.$refs.main).on('mouseleave', this._hideVisible);
-      } else {
-        this.visibleReal = false;
-      }
+        var mainOffset = bpLibs.dom.getElementOffset(main[0]); // in popover.
 
-      $('body').off('click', this._hide);
+        if (ev && ev.clientX + ev.offsetX >= mainOffset.left - 24 && ev.clientX + ev.offsetX <= mainOffset.left + main[0].offsetWidth + 24 && ev.clientY + ev.offsetY >= mainOffset.top - 24 && ev.clientY + ev.offsetY <= mainOffset.top + main[0].offsetHeight + 24) {
+          $(this.$refs.main).on('mouseleave', this._hideVisible);
+        } else {
+          this.visibleReal = false;
+        }
+
+        $('body').off('click', this._hide);
+      }.bind(this), 50);
     },
     _show: function _show(directionData) {
-      var _this4 = this;
+      var _this5 = this;
 
       var bind = this.bind;
 
@@ -1033,11 +1040,11 @@ var script = {
       var SCREEN_PADDING = 10;
       var main = this.$refs.main;
       bpLibs.dom.probeDom(400, function () {
-        _newArrowCheck(this, _this4);
+        _newArrowCheck(this, _this5);
 
         return main.clientWidth > 0;
       }.bind(this), function () {
-        _newArrowCheck(this, _this4);
+        _newArrowCheck(this, _this5);
 
         if (directionData == 'left' || directionData == 'right') {
           var mainOffset = parseInt(arrowOffset - main.clientHeight / 2);
@@ -1104,11 +1111,11 @@ var script = {
       }.bind(this));
     },
     _hide: function _hide() {
-      var _this5 = this;
+      var _this6 = this;
 
       $('body').off('click', this._hide);
       this.hide().then(function (res) {
-        _newArrowCheck(this, _this5);
+        _newArrowCheck(this, _this6);
       }.bind(this));
     },
     _hideVisible: function _hideVisible() {
