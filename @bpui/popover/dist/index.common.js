@@ -1,5 +1,5 @@
 /*!
- * bpui popover v1.1.16
+ * bpui popover v1.1.18
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -853,6 +853,8 @@ var script = {
     this.visibleReal = this.visible;
   },
   beforeDestroy: function beforeDestroy() {
+    this._removeEvent(this.bind);
+
     $('body').off('click', this._hide);
   },
   mounted: function mounted() {
@@ -957,7 +959,15 @@ var script = {
       this._show(this.direction);
     },
     _onTriggerHide: function _onTriggerHide(ev) {
-      this.visibleReal = false;
+      var main = $(this.$refs.main);
+      var mainOffset = bpLibs.dom.getElementOffset(main[0]); // in popover.
+
+      if (ev && ev.clientX + ev.offsetX >= mainOffset.left && ev.clientX + ev.offsetX <= mainOffset.left + main[0].offsetWidth && ev.clientY + ev.offsetY >= mainOffset.top && ev.clientY + ev.offsetY <= mainOffset.top + main[0].offsetHeight) {
+        $(this.$refs.main).on('mouseleave', this._hideVisible);
+      } else {
+        this.visibleReal = false;
+      }
+
       $('body').off('click', this._hide);
     },
     _show: function _show(directionData) {
@@ -1100,6 +1110,10 @@ var script = {
       this.hide().then(function (res) {
         _newArrowCheck(this, _this5);
       }.bind(this));
+    },
+    _hideVisible: function _hideVisible() {
+      this.visibleReal = false;
+      $(this.$refs.main).off('mouseleave', this._hideVisible);
     }
   }
 };

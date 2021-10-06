@@ -127,6 +127,7 @@
       this.visibleReal = this.visible;
     },
     beforeDestroy() {
+      this._removeEvent(this.bind);
       $('body').off('click', this._hide);
     },
     mounted() {
@@ -217,7 +218,18 @@
         this._show(this.direction);
       },
       _onTriggerHide(ev) {
-        this.visibleReal = false;
+        let main = $(this.$refs.main);
+        let mainOffset = bpLibs.dom.getElementOffset(main[0]);
+
+        // in popover.
+        if (ev && ev.clientX+ev.offsetX >= mainOffset.left && ev.clientX+ev.offsetX <= mainOffset.left + main[0].offsetWidth
+        && ev.clientY+ev.offsetY >= mainOffset.top && ev.clientY+ev.offsetY <= mainOffset.top + main[0].offsetHeight) {
+          $(this.$refs.main).on('mouseleave', this._hideVisible);
+        }
+        else {
+          this.visibleReal = false;
+        }
+
         $('body').off('click', this._hide);
       },
       _show: function(directionData) {
@@ -353,6 +365,10 @@
       _hide() {
         $('body').off('click', this._hide);
         this.hide().then(res=>{});
+      },
+      _hideVisible() {
+        this.visibleReal = false;
+        $(this.$refs.main).off('mouseleave', this._hideVisible)
       }
     },
   };
