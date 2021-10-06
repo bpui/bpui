@@ -1,5 +1,5 @@
 /*!
- * bpui popover v1.1.19
+ * bpui popover v1.1.20
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -955,26 +955,21 @@ var script = {
       this._show(this.direction);
     },
     _onTriggerHide: function _onTriggerHide(e) {
-      var _this4 = this;
-
       var main = $(this.$refs.main);
-      var ev = e;
-      this.$timer.setTimeout(function () {
-        _newArrowCheck(this, _this4);
+      var ev = e; // this.$timer.setTimeout(()=>{
 
-        var mainOffset = bpLibs.dom.getElementOffset(main[0]); // in popover.
+      var mainOffset = bpLibs.dom.getElementOffset(main[0]); // in popover.
 
-        if (ev && ev.clientX + ev.offsetX >= mainOffset.left - 24 && ev.clientX + ev.offsetX <= mainOffset.left + main[0].offsetWidth + 24 && ev.clientY + ev.offsetY >= mainOffset.top - 24 && ev.clientY + ev.offsetY <= mainOffset.top + main[0].offsetHeight + 24) {
-          $(this.$refs.main).on('mouseleave', this._hideVisible);
-        } else {
-          this.visibleReal = false;
-        }
+      if (ev && ev.clientX >= mainOffset.left - 24 && ev.clientX <= mainOffset.left + main[0].offsetWidth + 24 && ev.clientY >= mainOffset.top - 24 && ev.clientY <= mainOffset.top + main[0].offsetHeight + 24) {
+        $(this.$refs.main).on('mouseleave', this._hideVisible);
+      } else {
+        this.visibleReal = false;
+      }
 
-        $('body').off('click', this._hide);
-      }.bind(this), 50);
+      $('body').off('click', this._hide); // }, 50);
     },
     _show: function _show(directionData) {
-      var _this5 = this;
+      var _this4 = this;
 
       var bind = this.bind;
 
@@ -1036,11 +1031,11 @@ var script = {
       var SCREEN_PADDING = 10;
       var main = this.$refs.main;
       bpLibs.dom.probeDom(400, function () {
-        _newArrowCheck(this, _this5);
+        _newArrowCheck(this, _this4);
 
         return main.clientWidth > 0;
       }.bind(this), function () {
-        _newArrowCheck(this, _this5);
+        _newArrowCheck(this, _this4);
 
         if (directionData == 'left' || directionData == 'right') {
           var mainOffset = parseInt(arrowOffset - main.clientHeight / 2);
@@ -1107,16 +1102,40 @@ var script = {
       }.bind(this));
     },
     _hide: function _hide() {
-      var _this6 = this;
+      var _this5 = this;
 
       $('body').off('click', this._hide);
       this.hide().then(function (res) {
-        _newArrowCheck(this, _this6);
+        _newArrowCheck(this, _this5);
       }.bind(this));
     },
-    _hideVisible: function _hideVisible() {
-      this.visibleReal = false;
+    _hideVisible: function _hideVisible(ev) {
       $(this.$refs.main).off('mouseleave', this._hideVisible);
+
+      if (ev) {
+        var el;
+
+        if (bpLibs.dom.isVueObject(this.bind)) {
+          el = this.bind.$el;
+        } else {
+          el = this.bind;
+
+          if (typeof el === 'string') {
+            el = $(el)[0];
+          }
+        }
+
+        var mainOffset = bpLibs.dom.getElementOffset(el); // in popover.
+
+        if (ev.clientX >= mainOffset.left - 24 && ev.clientX <= mainOffset.left + el.offsetWidth + 24 && ev.clientY >= mainOffset.top - 24 && ev.clientY <= mainOffset.top + el.offsetHeight + 24) {
+          return;
+        } // if (ev.toElement.isSameNode(el)) {
+        //   return;
+        // }
+
+      }
+
+      this.visibleReal = false;
     }
   }
 };

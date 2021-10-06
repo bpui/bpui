@@ -222,15 +222,15 @@
 
         let ev = e;
 
-        this.$timer.setTimeout(()=>{
+        // this.$timer.setTimeout(()=>{
           let mainOffset = bpLibs.dom.getElementOffset(main[0]);
           
           // in popover.
           if (ev 
-          && ev.clientX+ev.offsetX >= mainOffset.left - 24
-          && ev.clientX+ev.offsetX <= mainOffset.left + main[0].offsetWidth + 24
-          && ev.clientY+ev.offsetY >= mainOffset.top - 24
-          && ev.clientY+ev.offsetY <= mainOffset.top + main[0].offsetHeight + 24) {
+          && ev.clientX >= mainOffset.left - 24
+          && ev.clientX <= mainOffset.left + main[0].offsetWidth + 24
+          && ev.clientY >= mainOffset.top - 24
+          && ev.clientY <= mainOffset.top + main[0].offsetHeight + 24) {
             $(this.$refs.main).on('mouseleave', this._hideVisible);
           }
           else {
@@ -238,7 +238,7 @@
           }
 
           $('body').off('click', this._hide);
-        }, 50);
+        // }, 50);
       },
       _show: function(directionData) {
         let bind = this.bind;
@@ -374,9 +374,34 @@
         $('body').off('click', this._hide);
         this.hide().then(res=>{});
       },
-      _hideVisible() {
-        this.visibleReal = false;
+      _hideVisible(ev) {
         $(this.$refs.main).off('mouseleave', this._hideVisible)
+        if (ev) {
+          let el;
+          if (bpLibs.dom.isVueObject(this.bind)) {
+            el = this.bind.$el;
+          }
+          else {
+            el = this.bind;
+            if (typeof el === 'string') {
+              el = $(el)[0];
+            }
+          }
+          let mainOffset = bpLibs.dom.getElementOffset(el);
+
+          // in popover.
+          if (ev.clientX >= mainOffset.left - 24
+          && ev.clientX <= mainOffset.left + el.offsetWidth + 24
+          && ev.clientY >= mainOffset.top - 24
+          && ev.clientY <= mainOffset.top + el.offsetHeight + 24) {
+            return;
+          }
+
+          // if (ev.toElement.isSameNode(el)) {
+          //   return;
+          // }
+        }
+        this.visibleReal = false;
       }
     },
   };
