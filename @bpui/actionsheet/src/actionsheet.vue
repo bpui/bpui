@@ -9,7 +9,7 @@
  -->
 
 <template>
-  <div class="bp-widget bp-actionsheet" :class="tabletClass" @click="onClickMask">
+  <div class="bp-widget bp-actionsheet" :class="tabletClass" @click.stop="onClickMask">
     <div class="bp-widget__content">
       <div class="bp-widget__contentWrap" @click.stop>
         <div class="bp-actionsheet__main" :class="pageClass" :style="pageStyle" @click.stop>

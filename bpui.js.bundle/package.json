@@ -1,21 +1,21 @@
 {
   "description": "bpui components bundle",
   "dependencies": {
-    "@bpui/actionsheet": "^1.1.14",
+    "@bpui/actionsheet": "^1.1.15",
     "@bpui/button": "^1.1.9",
     "@bpui/checkbox": "^1.1.10",
-    "@bpui/dialog": "^1.1.13",
+    "@bpui/dialog": "^1.1.14",
     "@bpui/input": "^1.1.15",
     "@bpui/libs": "^1.1.7",
     "@bpui/navbar-view": "^1.1.6",
-    "@bpui/picker": "^1.1.25",
-    "@bpui/popover": "^1.1.20",
+    "@bpui/picker": "^1.1.26",
+    "@bpui/popover": "^1.1.22",
     "@bpui/radio": "^1.1.7",
-    "@bpui/select": "^1.1.10",
+    "@bpui/select": "^1.1.12",
     "@bpui/switch": "^1.1.6",
     "@bpui/tabbar": "^1.1.5",
-    "@bpui/table-view": "^1.1.14",
-    "@bpui/uploader": "^1.1.13"
+    "@bpui/table-view": "^1.1.15",
+    "@bpui/uploader": "^1.1.14"
   },
   "directories": {},
   "keywords": [
@@ -37,5 +37,5 @@
     }
   ],
   "name": "bpui.js.bundle",
-  "version": "1.1.33"
+  "version": "1.1.34"
 }

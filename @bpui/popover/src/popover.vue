@@ -227,10 +227,10 @@
           
           // in popover.
           if (ev 
-          && ev.clientX >= mainOffset.left - 24
-          && ev.clientX <= mainOffset.left + main[0].offsetWidth + 24
-          && ev.clientY >= mainOffset.top - 24
-          && ev.clientY <= mainOffset.top + main[0].offsetHeight + 24) {
+          && ev.clientX >= mainOffset.left - 14
+          && ev.clientX <= mainOffset.left + main[0].offsetWidth + 14
+          && ev.clientY >= mainOffset.top - 14
+          && ev.clientY <= mainOffset.top + main[0].offsetHeight + 14) {
             $(this.$refs.main).on('mouseleave', this._hideVisible);
           }
           else {
@@ -390,10 +390,10 @@
           let mainOffset = bpLibs.dom.getElementOffset(el);
 
           // in popover.
-          if (ev.clientX >= mainOffset.left - 24
-          && ev.clientX <= mainOffset.left + el.offsetWidth + 24
-          && ev.clientY >= mainOffset.top - 24
-          && ev.clientY <= mainOffset.top + el.offsetHeight + 24) {
+          if (ev.clientX >= mainOffset.left - 14
+          && ev.clientX <= mainOffset.left + el.offsetWidth + 14
+          && ev.clientY >= mainOffset.top - 14
+          && ev.clientY <= mainOffset.top + el.offsetHeight + 14) {
             return;
           }
 

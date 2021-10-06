@@ -8,16 +8,8 @@
 .bp-popover {
     /* 主内容 */
     .bp-popover__main {
-        padding-left: 0;
-        padding-right: 0;
-
-        & > span {
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-
         .bp-popover__cell {
-            text-align: center;
+            text-align: left;
             padding-top: 12px;
             padding-bottom: 12px;
             padding-left: 12px;
@@ -25,7 +17,7 @@
             min-width: 80px;
             cursor: pointer;
 
-            &:hover,&:active {
+            &:hover, &:active {
                 color: darken($color: $bpPopoverTextColor, $amount: 15%);
             }
 
@@ -39,7 +31,7 @@
         .bp-popover__cellWarn {
             @extend .bp-popover__cell;
 
-            &:hover,&:active {
+            &:hover, &:active {
                 color: darken($color: $bpColorWarn, $amount: 15%);
             }
 
@@ -48,27 +40,35 @@
     }
 
     /* 按行显示 */
-    &.bp-popover__row {
+    &.bp-popover__row,
+    &[row] {
         white-space: nowrap;
 
         .bp-popover__main {
             padding: 0;
             max-width: 90vw;
             overflow-x: auto;
-
-            & > span {
-                padding-left: 5px;
-                padding-right: 5px;
-            }
+            overflow-y: hidden;
+            background-color: $bpPopoverBgColorRow;
+            color: $bpPopoverTextColorRow;
+            border-radius: 12px;
+            border: 1px solid $bpPopoverCellBorderColorRow;
+            box-shadow: 0px 0px 0px 0px rgba($bpPopoverCellBorderColorRow, 0.3);
 
             .bp-popover__cell {
                 display: inline-block;
+                text-align: center;
+                padding-top: 12px;
+                padding-bottom: 12px;
+                padding-left: 12px;
+                padding-right: 12px;
 
-                &:hover,&:active {
-                    color: darken($color: $bpPopoverTextColor, $amount: 15%);
+                &:hover, &:active {
+                    color: darken($color: $bpPopoverTextColorRow, $amount: 15%);
+                    background-color: $bpPopoverBgColorRow;
                 }
 
-                @include bp-thinBorderRight($bpPopoverCellBorderColor);
+                @include bp-thinBorderRight($bpPopoverCellBorderColorRow);
 
                 &:nth-last-child(2) {
                     @include bp-thinBorderRight(rgba(0, 0, 0, 0));
@@ -76,18 +76,63 @@
             }
 
             .bp-popover__cellWarn {
+                @extend .bp-popover__cell;
                 display: inline-block;
 
-                &:hover,&:active {
+                &:hover, &:active {
                     color: darken($color: $bpColorWarn, $amount: 15%);
+                    background-color: $bpPopoverBgColorRow;
                 }
 
                 color: $bpColorWarn;
 
-                @include bp-thinBorderRight($bpPopoverCellBorderColor);
+                @include bp-thinBorderRight($bpPopoverCellBorderColorRow);
 
                 &:nth-last-child(2) {
                     @include bp-thinBorderRight(rgba(0, 0, 0, 0));
+                }
+            }
+
+            .bp-popover__arrow {
+                filter: drop-shadow(0 2px 12px rgba($bpPopoverCellBorderColorRow, 0.3));
+            }
+
+            &[direction^=bottom] {
+                .bp-popover__arrow {
+                    border-bottom-color: $bpPopoverCellBorderColorRow;
+
+                    &:after {
+                        border-bottom-color: $bpPopoverBgColorRow;
+                    }
+                }
+            }
+
+            &[direction^=left] {
+                .bp-popover__arrow {
+                    border-left-color: $bpPopoverCellBorderColorRow;
+                    &:after {
+                        border-left-color: $bpPopoverBgColorRow;
+                    }
+                }
+            }
+
+            &[direction^=right] {
+                .bp-popover__arrow {
+                    border-right-color: $bpPopoverCellBorderColorRow;
+
+                    &:after {
+                        border-right-color: $bpPopoverBgColorRow;
+                    }
+                }
+            }
+
+            &[direction^=top] {
+                .bp-popover__arrow {
+                    border-top-color: $bpPopoverCellBorderColorRow;
+
+                    &:after {
+                        border-top-color: $bpPopoverBgColorRow;
+                    }
                 }
             }
         }

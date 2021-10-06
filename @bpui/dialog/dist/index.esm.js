@@ -1,6 +1,6 @@
 /*!
- * bpui dialog v1.1.13
- * Copyright (c) 2021 Copyright bpuioint.lee@live.com All Rights Reserved.
+ * bpui dialog v1.1.14
+ * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 
@@ -4392,7 +4392,10 @@ var __vue_render__ = function __vue_render__() {
   return _c("div", {
     staticClass: "bp-widget",
     on: {
-      click: _vm.onClickMask
+      click: function click($event) {
+        $event.stopPropagation();
+        return _vm.onClickMask.apply(null, arguments);
+      }
     }
   }, [_c("div", {
     staticClass: "bp-widget__content",

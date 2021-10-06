@@ -15,7 +15,7 @@
  -->
 
 <template>
-  <div class="bp-widget" @click="onClickMask">
+  <div class="bp-widget" @click.stop="onClickMask">
     <div class="bp-widget__content" :class="pageClass" :style="pageStyle">
       <slot name="default" />
     </div>

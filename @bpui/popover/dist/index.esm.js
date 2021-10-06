@@ -1,5 +1,5 @@
 /*!
- * bpui popover v1.1.20
+ * bpui popover v1.1.22
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -960,7 +960,7 @@ var script = {
 
       var mainOffset = bpLibs.dom.getElementOffset(main[0]); // in popover.
 
-      if (ev && ev.clientX >= mainOffset.left - 24 && ev.clientX <= mainOffset.left + main[0].offsetWidth + 24 && ev.clientY >= mainOffset.top - 24 && ev.clientY <= mainOffset.top + main[0].offsetHeight + 24) {
+      if (ev && ev.clientX >= mainOffset.left - 14 && ev.clientX <= mainOffset.left + main[0].offsetWidth + 14 && ev.clientY >= mainOffset.top - 14 && ev.clientY <= mainOffset.top + main[0].offsetHeight + 14) {
         $(this.$refs.main).on('mouseleave', this._hideVisible);
       } else {
         this.visibleReal = false;
@@ -1127,7 +1127,7 @@ var script = {
 
         var mainOffset = bpLibs.dom.getElementOffset(el); // in popover.
 
-        if (ev.clientX >= mainOffset.left - 24 && ev.clientX <= mainOffset.left + el.offsetWidth + 24 && ev.clientY >= mainOffset.top - 24 && ev.clientY <= mainOffset.top + el.offsetHeight + 24) {
+        if (ev.clientX >= mainOffset.left - 14 && ev.clientX <= mainOffset.left + el.offsetWidth + 14 && ev.clientY >= mainOffset.top - 14 && ev.clientY <= mainOffset.top + el.offsetHeight + 14) {
           return;
         } // if (ev.toElement.isSameNode(el)) {
         //   return;
