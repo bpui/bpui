@@ -33,7 +33,7 @@
         pointer-events: none;
     }
 
-    .bp-select__arrowDown {
+    .bp-select__arrowDown, .bp-select_clearable {
         position: absolute;
         right: 10px;
         top: (42px - 12px) / 2;

@@ -8,7 +8,7 @@
   <div class="bp-select" ref="main" :class="{
       'bp-select__selected': visibleDropdown,
       'bp-select__multiple': isMultiple,
-    }">
+    }" @mouseenter="isHover=true" @mouseleave="isHover=false">
 
     <!-- main -->
     <div class="bp-select__main">
@@ -54,7 +54,8 @@
     </div>
 
     <!-- arrow icon -->
-    <bp-icon class="bp-select__arrowDown" :class="visibleDropdown?'bp-select__arrowDownR':''"
+    <bp-icon v-if="showClearable" class="bp-select_clearable" name="bp-select_close" @click.stop="_updateValue(null)" />
+    <bp-icon v-else class="bp-select__arrowDown" :class="visibleDropdown?'bp-select__arrowDownR':''"
       name="bp-select_arrowDown" />
 
     <!-- dropdown -->
@@ -126,6 +127,7 @@
       placeholder: {
         type: String,
       },
+      clearable: String,
       emptyText: {
         type: String,
       }
@@ -140,6 +142,7 @@
         selectedValue: null,
         valueIndex: null,
         valueLabels: null,
+        isHover: false,
       }
     },
     components: {
@@ -151,6 +154,16 @@
     computed: {
       isMultiple() {
         return this.multiple && this.groupCount == 1;
+      },
+      showClearable() {
+        if (this.clearable != null) {
+
+          if (this.valueIndex && this.valueIndex.length > 0 && this.isHover) {
+            return true;
+          }
+        }
+
+        return false;
       }
     },
     watch: {

@@ -3,7 +3,7 @@
     <h4>example</h4>
 
     <h4>custom</h4>
-    <bpSelect ref="selectc" @change="onChange" multiple>
+    <bpSelect ref="selectc" @change="onChange" multiple clearable>
       <bp-select-option value="1">
         <div style="align-items: center;display: inline-flex; width:auto"><bp-icon name="loading" width="20px"/>1 dsfds</div>
       </bp-select-option>
@@ -34,12 +34,12 @@
     </bpSelect>
 
     <h4>multiple</h4>
-    <bpSelect ref="select1" v-model="singleValue" multiple :datasource="singleDatasource" @change="onChange"></bpSelect>
+    <bpSelect ref="select1" v-model="singleValue" multiple clearable :datasource="singleDatasource" @change="onChange"></bpSelect>
     <button @click="singleValue=['value3', 'value1']">修改value</button>
     <button @click="singleDatasource = [
     {label: `label1`, value: `value1`, disabled: false},
     {label: `label2`, value: `value2`, disabled: false},]">修改ds</button>
-    <button @click="$bpWidget.showAlert(singleValue)">value</button>
+    <button @click="$bpWidget.showAlert(JSON.stringify(singleValue))">value</button>
     <button @click="$refs.select1.show()">show</button>
     <button @click="$refs.select1.hide()">hide</button>
     <button @click="$bpWidget.showAlert(JSON.stringify($refs.select1.getSelect(0)))">getSelect</button>

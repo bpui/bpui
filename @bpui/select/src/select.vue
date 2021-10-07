@@ -8,7 +8,7 @@
   <selectCascader ref="select" :class="{
       'bp-select__disabled': disabled,
       'bp-select__readonly': readonly,
-    }" v-bind="$attrs" v-on="$listeners" :value="realValue"
+    }" v-bind="$attrs" v-on="$listeners" :value="realValue" :clearable="clearable"
     @input="_onUpdateValue" :groupCount="groupCount"
     :multiple="multiple" :placeholder="placeholder" :emptyText="emptyText">
     <template v-if="$slots.default">
@@ -38,6 +38,7 @@
       datasource: {
         type: [Array, Object],
       },
+      clearable: String,
       multiple: {
         type: Boolean
       },
@@ -76,7 +77,8 @@
     },
     filters: {},
     directives: {},
-    computed: {},
+    computed: {
+    },
     watch: {
       value(newVal, oldVal) {
         if (utils.isEqual(newVal, oldVal)) {
