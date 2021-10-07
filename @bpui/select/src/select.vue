@@ -100,12 +100,64 @@
     created() {},
     beforeMount() {},
     mounted() {
-      if (!this.datasource) {
-        if (!this.$slots.default) {
-          throw new Error('select must have datasource');
+      // if (!this.datasource) {
+      //   if (!this.$slots.default) {
+      //     throw new Error('select must have datasource');
+      //   }
+      // }
+      this._initRealDatasource(this.datasource);
+      this._refreshDatasource(false);
+    },
+    updated() {
+
+      if (!!this.datasource) {
+        return;
+      }
+
+      let newSlot = this.$slots.default || [];
+      let oldSlot = this.srcSlot || [];
+
+      if (oldSlot.length != newSlot.length) {
+        // this._initRealDatasource(this.datasource);
+        this._refreshDatasource(false);
+        return;
+      }
+
+      let i = 0;
+      for ( ; i < newSlot.length; i++) {
+        let node1 = oldSlot[i];
+        let node2 = newSlot[i];
+        
+        if (node1.tag != node2.tag 
+        || node1.text != node2.text) {
+          break;
+        }
+
+        let props1 = node1.componentOptions.propsData;
+        let props2 = node2.componentOptions.propsData;
+
+        if (!!props1 ^ !!props2) {
+          break;
+        }
+
+        let diff = false;
+        for (const key in props1) {
+          const element1 = props1[key];
+          const element2 = props2[key];
+          if (element1 != element2) {
+            diff = true;
+            break;
+          }
+        }
+        if (diff) {
+          break;
         }
       }
-      this._initRealDatasource(this.datasource);
+      if (i >= newSlot.length) {
+        return;
+      }
+
+      // this._initRealDatasource(this.datasource);
       this._refreshDatasource(false);
     },
     methods: {
@@ -202,17 +254,19 @@
 
         // 使用solt的单数据源.
         if (!this.realDatasource) {
-          if (!this.$slots.default) {
-            throw new Error('select missing datasource or children cells');
-          }
+          // if (!this.$slots.default) {
+          //   throw new Error('select missing datasource or children cells');
+          // }
 
           return new Promise((resolve, reject) => {
             let value = this.value;
             let datasource = [];
             try {
               this.slotIndexs = [];
-              for (let i = 0; i < this.$slots.default.length; i++) {
-                let c = this.$slots.default[i];
+              let slots = this.$slots.default || [];
+              this.srcSlot = slots;
+              for (let i = 0; i < slots.length; i++) {
+                let c = slots[i];
                 if (!c.tag) continue;
                 if (c.tag.indexOf('bpSelectOption') >= 0) {
                   this.slotIndexs.push(i);

@@ -63,15 +63,15 @@
       :visible.sync="visibleDropdown">
       <div class="bp-select__dropdown">
         <template v-if="!cascaderDatasource || cascaderDatasource.length == 0 || cascaderDatasource[0].length == 0">
-          <div class="bp-select__dropdownList bp-select__dropdownList__empty">
+          <div class="bp-select__dropdownList bp-select__dropdownList__empty" :style="{'min-width': dropdownMinWidth}">
             <span>{{emptyText}}</span>
           </div>
         </template>
         <template v-else>
           <div class="bp-select__dropdownList" v-for="(items, index) in cascaderDatasource"
-            :key="index">
+            :key="index" :style="{'min-width': groupCount == 1? dropdownMinWidth: ''}">
             <div class="bp-select__dropdownList__scroller">
-              <div class="bp-select__dropdownList__inner">
+              <div class="bp-select__dropdownList__inner" :style="{'min-width': groupCount == 1? dropdownMinWidth: ''}">
                 <!-- slot -->
                 <template v-if="$slots.default">
                   <template v-for="(item, i) in cascaderDatasource[0]">
@@ -135,6 +135,7 @@
     data() {
       return {
         slotIndexs: [],
+        slotLabel: [],
         cascaderDatasource: null,
         cascaderClickIndex: null,
         visibleDropdown: false,
@@ -143,6 +144,7 @@
         valueIndex: null,
         valueLabels: null,
         isHover: false,
+        dropdownMinWidth: 'auto',
       }
     },
     components: {
@@ -174,6 +176,7 @@
       },
       visibleDropdown(newVal) {
         if (newVal) {
+          this._resize();
           if (this.valueIndex) {
             this.cascaderClickIndex = [].concat(this.valueIndex);
             if (this.isMultiple) {
@@ -190,6 +193,8 @@
             this.cascaderClickIndex = null;
             this.cascaderDatasource = [this.$parent.realDatasourceItem0];
           } // if..else.
+        } else {
+          this.$emit('blur');
         }
       },
       selectedIndex(newVal) {
@@ -288,13 +293,23 @@
     },
     mounted() {
       // this._updateDatasource();
+      this._resize();
     },
     methods: {
+      _resize() {
+        this.dropdownMinWidth = this.$refs.main.clientWidth + 'px';
+      },
       _getSlotLabel(index) {
         const div = document.createElement('div');
-        div.appendChild(this.$slots.default[index].elm.cloneNode(true));
-        const divString = div.innerHTML;
-        return divString;
+        if (this.$slots.default[index].elm) {
+          div.appendChild(this.$slots.default[index].elm.cloneNode(true));
+          const divString = div.innerHTML;
+          this.slotLabel.length = this.slotIndexs.length;
+          this.slotLabel[index] = divString;
+          return divString;
+        } else {
+          return this.slotLabel[index];
+        }
       },
       /**
        * @desc: 获得当前界面上选中的元素的值.

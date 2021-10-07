@@ -234,6 +234,7 @@
 .bp-popover.bp-select__popover .bp-popover__main {
     background-color: $bpSelectDropdownBgColor;
     text-align: left;
+    border-radius: 4px;
 
     .bp-popover__arrow {
         filter: drop-shadow(0 2px 12px rgba($bpSelectDropdownBorderColor, 0.3));

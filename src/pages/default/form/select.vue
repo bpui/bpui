@@ -3,7 +3,7 @@
     <h4>example</h4>
 
     <h4>custom</h4>
-    <bpSelect ref="selectc" @change="onChange" multiple clearable>
+    <bpSelect ref="selectc" @change="onChange" @blur="onChange" multiple clearable>
       <bp-select-option value="1">
         <div style="align-items: center;display: inline-flex; width:auto"><bp-icon name="loading" width="20px"/>1 dsfds</div>
       </bp-select-option>
@@ -14,6 +14,9 @@
       <bpSelectOption value="6">label6</bpSelectOption>
       <bpSelectOption value="7">label7</bpSelectOption>
       <bpSelectOption value="8">label8</bpSelectOption>
+      <bpSelectOption value="9">label8</bpSelectOption>
+      <bpSelectOption value="10">label8</bpSelectOption>
+      <bpSelectOption value="11">label8</bpSelectOption>
     </bpSelect>
     
     <bpSelect>
@@ -31,6 +34,12 @@
       <bpSelectOption value="6">label6</bpSelectOption>
       <bpSelectOption value="7">label7</bpSelectOption>
       <bpSelectOption value="8">label8</bpSelectOption>
+    </bpSelect>
+
+    <bpSelect>
+      <bp-select-option v-for="(item, i) in optionsList" :value="item" :key="i">
+        <div style="align-items: center;display: flex; width:auto"><bp-icon name="loading" width="20px" style="margin-right:5px;"/>1 dsfds</div>
+      </bp-select-option>
     </bpSelect>
 
     <h4>multiple</h4>
@@ -96,6 +105,7 @@ import bpui from 'bpui.js';
   }
 })
 export default class App extends Vue {
+  optionsList = [];
   JSON = JSON;
   singleValue = '';
   singleDatasource = [
@@ -184,7 +194,18 @@ export default class App extends Vue {
   }
 
   created() {}
-  mounted() {}
+  mounted() {
+    setTimeout(()=>{
+      this.optionsList = [
+        1,2,3,4,5,6
+      ]
+    }, 5000);
+    setTimeout(()=>{
+      this.optionsList = [
+        1,2,3,4,8,6
+      ]
+    }, 10000);
+  }
   onChange(e) {
     this.$bpWidget.showToast(JSON.stringify(e));
   }
