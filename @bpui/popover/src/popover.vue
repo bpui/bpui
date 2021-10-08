@@ -128,7 +128,8 @@
     },
     beforeDestroy() {
       this._removeEvent(this.bind);
-      $('body').off('click', this._hide);
+      let clickEventName = bpLibs.device.browserIsMobile()?'click':'mousedown';
+      $('body').off(clickEventName, this._hide);
     },
     mounted() {
       // $('body').off('click', this._hide).on('click', this._hide);
@@ -210,10 +211,28 @@
         }
       },
       _onTriggerShow(ev) {
+        let clickEventName = bpLibs.device.browserIsMobile()?'click':'mousedown';
+        let closeHandleTimeout = 10;
+
+        if (ev) {
+          if (this.trigger == 'click') {
+            if (this.visibleReal) {
+              $('body').off(clickEventName, this._hide);
+              this._hide();
+
+              ev.stopPropagation();
+              ev.preventDefault();
+              ev.cancelBubble = true;
+              return false;
+            }
+          }
+        }
+
+
         this.visibleReal = true;
         setTimeout(()=>{
-          $('body').off('click', this._hide).on('click', this._hide);
-        }, 10);
+          $('body').off(clickEventName, this._hide).on(clickEventName, this._hide);
+        }, closeHandleTimeout);
 
         this._show(this.direction);
       },
@@ -237,7 +256,8 @@
             this.visibleReal = false;
           }
 
-          $('body').off('click', this._hide);
+          let clickEventName = bpLibs.device.browserIsMobile()?'click':'mousedown';
+          $('body').off(clickEventName, this._hide);
         // }, 50);
       },
       _show: function(directionData) {
@@ -370,8 +390,9 @@
           }
         });
       },
-      _hide() {
-        $('body').off('click', this._hide);
+      _hide(e) {
+        let clickEventName = bpLibs.device.browserIsMobile()?'click':'mousedown';
+        $('body').off(clickEventName, this._hide);
         this.hide().then(res=>{});
       },
       _hideVisible(ev) {

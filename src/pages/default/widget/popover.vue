@@ -28,6 +28,11 @@
         hellosd fsd sdf dsf dsf s
       </span>
     </bp-popover>
+    <bp-popover :bind="$refs.btn2" trigger="long-press">
+      <span style="width:100px">
+        long-press
+      </span>
+    </bp-popover>
 
     <button ref="btn3">
       custom

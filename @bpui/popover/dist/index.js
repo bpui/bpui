@@ -1,5 +1,5 @@
 /*!
- * bpui popover v1.1.22
+ * bpui popover v1.1.23
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -857,7 +857,8 @@
     beforeDestroy: function beforeDestroy() {
       this._removeEvent(this.bind);
 
-      $('body').off('click', this._hide);
+      var clickEventName = bpLibs.device.browserIsMobile() ? 'click' : 'mousedown';
+      $('body').off(clickEventName, this._hide);
     },
     mounted: function mounted() {
       var _this = this;
@@ -951,12 +952,30 @@
       _onTriggerShow: function _onTriggerShow(ev) {
         var _this3 = this;
 
+        var clickEventName = bpLibs.device.browserIsMobile() ? 'click' : 'mousedown';
+        var closeHandleTimeout = 10;
+
+        if (ev) {
+          if (this.trigger == 'click') {
+            if (this.visibleReal) {
+              $('body').off(clickEventName, this._hide);
+
+              this._hide();
+
+              ev.stopPropagation();
+              ev.preventDefault();
+              ev.cancelBubble = true;
+              return false;
+            }
+          }
+        }
+
         this.visibleReal = true;
         setTimeout(function () {
           _newArrowCheck(this, _this3);
 
-          $('body').off('click', this._hide).on('click', this._hide);
-        }.bind(this), 10);
+          $('body').off(clickEventName, this._hide).on(clickEventName, this._hide);
+        }.bind(this), closeHandleTimeout);
 
         this._show(this.direction);
       },
@@ -972,7 +991,8 @@
           this.visibleReal = false;
         }
 
-        $('body').off('click', this._hide); // }, 50);
+        var clickEventName = bpLibs.device.browserIsMobile() ? 'click' : 'mousedown';
+        $('body').off(clickEventName, this._hide); // }, 50);
       },
       _show: function _show(directionData) {
         var _this4 = this;
@@ -1107,10 +1127,11 @@
           }
         }.bind(this));
       },
-      _hide: function _hide() {
+      _hide: function _hide(e) {
         var _this5 = this;
 
-        $('body').off('click', this._hide);
+        var clickEventName = bpLibs.device.browserIsMobile() ? 'click' : 'mousedown';
+        $('body').off(clickEventName, this._hide);
         this.hide().then(function (res) {
           _newArrowCheck(this, _this5);
         }.bind(this));
