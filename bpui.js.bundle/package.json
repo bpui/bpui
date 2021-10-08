@@ -11,7 +11,7 @@
     "@bpui/picker": "^1.1.26",
     "@bpui/popover": "^1.1.23",
     "@bpui/radio": "^1.1.7",
-    "@bpui/select": "^1.1.14",
+    "@bpui/select": "^1.1.15",
     "@bpui/switch": "^1.1.6",
     "@bpui/tabbar": "^1.1.5",
     "@bpui/table-view": "^1.1.16",
@@ -37,5 +37,5 @@
     }
   ],
   "name": "bpui.js.bundle",
-  "version": "1.1.36"
+  "version": "1.1.37"
 }

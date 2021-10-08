@@ -38,5 +38,5 @@
     "postinstall": "node ./postinstall"
   },
   "name": "bpui.js",
-  "version": "1.1.36"
+  "version": "1.1.37"
 }

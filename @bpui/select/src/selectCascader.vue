@@ -21,12 +21,16 @@
             <!-- custom slot -->
             <template v-if="$slots.default">
               <template v-for="(iindex, index) in valueIndex">
-                <div v-if="isMultiple" class="bp-select__label bp-ellipsis">
-                  <div v-html="_getSlotLabel(slotIndexs[iindex])" :key="index"/>
+                <div v-if="isMultiple" class="bp-select__label bp-ellipsis" :key="index">
+                  <template v-if="rerenderLabel || !rerenderLabel">
+                    <div v-html="_getSlotLabel(slotIndexs[iindex])"/>
+                  </template>
                   <bp-icon class="bp-select_close" name="bp-select_close" @click.stop="onRemoveMultipleOption(index)"/>
                 </div>
                 <template v-else>
-                  <div v-html="_getSlotLabel(slotIndexs[iindex])" :key="index"/>
+                  <template v-if="rerenderLabel || !rerenderLabel">
+                    <div v-html="_getSlotLabel(slotIndexs[iindex])" :key="index"/>
+                  </template>
                 </template>
               </template>
             </template>
@@ -134,6 +138,7 @@
     },
     data() {
       return {
+        rerenderLabel: false,
         slotIndexs: [],
         slotLabel: [],
         cascaderDatasource: null,
@@ -229,6 +234,22 @@
         }
       },
       value(newVal, o) {
+        this._setValue(newVal, o);
+      },
+    },
+    created() {},
+    beforeMount() {
+      // this._updateDatasource();
+    },
+    mounted() {
+      // this._updateDatasource();
+      // this._resize();
+    },
+    methods: {
+      _resize() {
+        this.dropdownMinWidth = this.$refs.main.clientWidth + 'px';
+      },
+      _setValue(newVal, o) {
         if (null === newVal) {
           this.oldValue = null;
           this.selectedIndex = null;
@@ -286,19 +307,6 @@
         } // if..else.
 
       },
-    },
-    created() {},
-    beforeMount() {
-      // this._updateDatasource();
-    },
-    mounted() {
-      // this._updateDatasource();
-      this._resize();
-    },
-    methods: {
-      _resize() {
-        this.dropdownMinWidth = this.$refs.main.clientWidth + 'px';
-      },
       _getSlotLabel(index) {
         const div = document.createElement('div');
         if (this.$slots.default[index].elm) {
@@ -308,8 +316,19 @@
           this.slotLabel[index] = divString;
           return divString;
         } else {
-          return this.slotLabel[index];
+          if (!this._getSlotLabelTimer) {
+            this._getSlotLabelTimer = this.$timer.setTimeout(this._getSlotLabelTimerFoo, 0);
+          }
+          return this.slotLabel[index] || '<span></span>';
         }
+      },
+      _getSlotLabelTimerFoo() {
+        bpLibs.dom.probeDom(60, ()=>{
+          return !!this.$slots.default[0].elm;
+        }, ()=>{
+          this.rerenderLabel = !this.rerenderLabel;
+          this._getSlotLabelTimer = null;
+        });
       },
       /**
        * @desc: 获得当前界面上选中的元素的值.
@@ -333,8 +352,47 @@
         return {};
       },
       _updateDatasource() {
-        this.selectedIndex = null;
-        this.selectedValue = null;
+        let selectedIndex = null;
+        let selectedValue = (null === this.$parent.value || undefined === this.$parent.value)? null: (Array.isArray(this.$parent.value)? this.$parent.value: [this.$parent.value]);
+        if (selectedValue) {
+          selectedIndex = [];
+          if (this.isMultiple) {
+            for (let i = 0; i < selectedValue.length; i++) {
+              let ds = this.$parent['realDatasourceItem' + 0];
+              let j = 0;
+              for (j = 0; j < ds.length; j++) {
+                if (ds[j].value == selectedValue[i]) {
+                  selectedIndex.push(j);
+                  break;
+                }
+              }
+            }
+            if (selectedIndex.length == 0) {
+              selectedIndex = null;
+              selectedValue = null;
+            }
+          }
+          else {
+            for (let i = 0; i < selectedValue.length; i++) {
+              let ds = this.$parent['realDatasourceItem' + i];
+              let j = 0;
+              for (j = 0; j < ds.length; j++) {
+                if (ds[j].value == selectedValue[i]) {
+                  selectedIndex.push(j);
+                  break;
+                }
+              }
+              if (j >= ds.length) {
+                selectedIndex = null;
+                selectedValue = null;
+                break;
+              }
+            }
+          } // if..else.
+        }
+
+        this.selectedIndex = selectedIndex;
+        this.selectedValue = selectedValue;
         this.valueIndex = null;
         this._updateValue(this.selectedValue);
 
