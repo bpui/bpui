@@ -133,6 +133,9 @@
           break;
         }
 
+        if (!node1.componentOptions || !node2.componentOptions) {
+          continue;
+        }
         let props1 = node1.componentOptions.propsData;
         let props2 = node2.componentOptions.propsData;
 

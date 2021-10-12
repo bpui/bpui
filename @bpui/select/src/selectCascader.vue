@@ -83,11 +83,11 @@
                       :key="index+'_'+i" :class="{ 
                         'bp-select__option_active': (selectedIndex && selectedIndex.indexOf(i) >= 0),
                         'bp-select__option_disabled': !!cascaderDatasource[0][i].disabled
-                      }" @click.stop="onClickOption(cascaderDatasource[0][i], index, i, false)"/>
+                      }" @mousedown.stop="onClickOption(cascaderDatasource[0][i], index, i, false)"/>
                     <renderDom v-else :node="$slots.default[slotIndexs[i]]" class="bp-select__option bp-ellipsis" :key="index+'_'+i" :class="{
                         'bp-select__option_active': (selectedValue && cascaderDatasource[0][i].value === selectedValue[index]) || (cascaderClickIndex && i === cascaderClickIndex[index]),
                         'bp-select__option_disabled': !!cascaderDatasource[0][i].disabled
-                      }" @click.stop="onClickOption(cascaderDatasource[0][i], index, i, true)" />
+                      }" @mousedown.stop="onClickOption(cascaderDatasource[0][i], index, i, true)" />
                   </template>
                 </template>
                 <template v-else>
@@ -96,12 +96,12 @@
                       :key="index+'_'+i" :class="{ 
                         'bp-select__option_active': (selectedIndex && selectedIndex.indexOf(i) >= 0),
                         'bp-select__option_disabled': !!item.disabled
-                      }" @click.stop="onClickOption(item, index, i, false)">{{item.label}}</div>
+                      }" @mousedown.stop="onClickOption(item, index, i, false)">{{item.label}}</div>
                     <div class="bp-select__option bp-ellipsis" v-else
                       :key="index+'_'+i" :class="{ 
                         'bp-select__option_active': (selectedValue && item.value === selectedValue[index]) || (cascaderClickIndex && i === cascaderClickIndex[index]),
                         'bp-select__option_disabled': !!item.disabled
-                      }" @click.stop="onClickOption(item, index, i, false)">{{item.label}}</div>
+                      }" @mousedown.stop="onClickOption(item, index, i, false)">{{item.label}}</div>
                   </template>
                 </template>
               </div>
