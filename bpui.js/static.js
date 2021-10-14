@@ -24,7 +24,7 @@ export default function init() {
   window[SymComponentStaticInit] = true;
 
   // 加载必须加载的库.
-  (function() { require('@bpui/libs/style/class.scss') })();
+  // (function() { require('@bpui/libs/style/class.scss') })();
   // (function() { require('@bpui/button/style/_index.scss') })();
 
   // 需要注册.
