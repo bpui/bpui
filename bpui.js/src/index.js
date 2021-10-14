@@ -39,20 +39,25 @@ function getLayout(layouts/*:any*/, newRoute/*:any*/, oldRoute/*:any*/) {
   return (layouts /*as any*/)['default'];
 }
 
+function getComponentInstance(name) {
+  let c = componentInstance.getComponent(name);
+  return c.default || c;
+}
+
 class Hook {
   /**
    * 添加页面抖动hook.
    * 回调方法中的paddingRight参数表示发生抖动时页面中fixed元素应该在原有paddingRight值上增加的像素值.
    */
   addWidgetShake(foo/*:(paddingRight:number)=>void*/) {
-    componentInstance.getComponent('dialog').default.hook.addWidgetShake(foo);
+    getComponentInstance('dialog').hook.addWidgetShake(foo);
   }
 
   /**
    * 移除页面抖动hook.
    */
   removeWidgetShake(foo/*:(paddingRight:number)=>void*/) {
-    componentInstance.getComponent('dialog').default.hook.removeWidgetShake(foo);
+    getComponentInstance('dialog').hook.removeWidgetShake(foo);
   }
 }
 
@@ -86,167 +91,167 @@ Object.defineProperty(Instance, 'hook', {
 });
 
 Object.defineProperty(Instance, 'bpTableViewComponents', {
-  get: function () { return componentInstance.getComponent('tableView').default.bpTableViewComponents; },
+  get: function () { return getComponentInstance('tableView').bpTableViewComponents; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpTableView', {
-  get: function () { return componentInstance.getComponent('tableView').default.bpTableView; },
+  get: function () { return getComponentInstance('tableView').bpTableView; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpTableCell', {
-  get: function () { return componentInstance.getComponent('tableView').default.bpTableCell; },
+  get: function () { return getComponentInstance('tableView').bpTableCell; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpTableCellCenter', {
-  get: function () { return componentInstance.getComponent('tableView').default.bpTableCellCenter; },
+  get: function () { return getComponentInstance('tableView').bpTableCellCenter; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpTableCellLeft', {
-  get: function () { return componentInstance.getComponent('tableView').default.bpTableCellLeft; },
+  get: function () { return getComponentInstance('tableView').bpTableCellLeft; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpTableCellRight', {
-  get: function () { return componentInstance.getComponent('tableView').default.bpTableCellRight; },
+  get: function () { return getComponentInstance('tableView').bpTableCellRight; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpTableCellEditor', {
-  get: function () { return componentInstance.getComponent('tableView').default.bpTableCellEditor; },
+  get: function () { return getComponentInstance('tableView').bpTableCellEditor; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpTabbarComponents', {
-  get: function () { return componentInstance.getComponent('tabbar').default.bpTabbarComponents; },
+  get: function () { return getComponentInstance('tabbar').bpTabbarComponents; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpTabbar', {
-  get: function () { return componentInstance.getComponent('tabbar').default.bpTabbar; },
+  get: function () { return getComponentInstance('tabbar').bpTabbar; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpTabbarItem', {
-  get: function () { return componentInstance.getComponent('tabbar').default.bpTabbarItem; },
+  get: function () { return getComponentInstance('tabbar').bpTabbarItem; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpTabbarItemTitle', {
-  get: function () { return componentInstance.getComponent('tabbar').default.bpTabbarItemTitle; },
+  get: function () { return getComponentInstance('tabbar').bpTabbarItemTitle; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpNavbarView', {
-  get: function () { return componentInstance.getComponent('navbarView').default.bpNavbarView; },
+  get: function () { return getComponentInstance('navbarView').bpNavbarView; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpNavbar', {
-  get: function () { return componentInstance.getComponent('navbarView').default.bpNavbar; },
+  get: function () { return getComponentInstance('navbarView').bpNavbar; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'setNavbarDefaultCfg', {
-  get: function () { return componentInstance.getComponent('navbarView').default.setNavbarDefaultCfg; },
+  get: function () { return getComponentInstance('navbarView').setNavbarDefaultCfg; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpCheckbox', {
-  get: function () { return componentInstance.getComponent('checkbox').default.bpCheckbox; },
+  get: function () { return getComponentInstance('checkbox').bpCheckbox; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpCheckboxGroup', {
-  get: function () { return componentInstance.getComponent('checkbox').default.bpCheckboxGroup; },
+  get: function () { return getComponentInstance('checkbox').bpCheckboxGroup; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpRadio', {
-  get: function () { return componentInstance.getComponent('radio').default.bpRadio; },
+  get: function () { return getComponentInstance('radio').bpRadio; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpRadioGroup', {
-  get: function () { return componentInstance.getComponent('radio').default.bpRadioGroup; },
+  get: function () { return getComponentInstance('radio').bpRadioGroup; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpSwitch', {
-  get: function () { return componentInstance.getComponent('switch').default.bpSwitch; },
+  get: function () { return getComponentInstance('switch').bpSwitch; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpInput', {
-  get: function () { return componentInstance.getComponent('input').default.bpInput; },
+  get: function () { return getComponentInstance('input').bpInput; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpDialog', {
-  get: function () { return componentInstance.getComponent('dialog').default.bpDialog; },
+  get: function () { return getComponentInstance('dialog').bpDialog; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'apiWidget', {
-  get: function () { return componentInstance.getComponent('dialog').default.apiWidget; },
+  get: function () { return getComponentInstance('dialog').apiWidget; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpWidget', {
-  get: function () { return componentInstance.getComponent('dialog').default.bpWidget; },
+  get: function () { return getComponentInstance('dialog').bpWidget; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'registerDialogComponents', {
-  get: function () { return componentInstance.getComponent('dialog').default.registerDialogComponents; },
+  get: function () { return getComponentInstance('dialog').registerDialogComponents; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'registerDialogCustom', {
-  get: function () { return componentInstance.getComponent('dialog').default.registerDialogCustom; },
+  get: function () { return getComponentInstance('dialog').registerDialogCustom; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpPicker', {
-  get: function () { return componentInstance.getComponent('picker').default.bpPicker; },
+  get: function () { return getComponentInstance('picker').bpPicker; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpPickerCell', {
-  get: function () { return componentInstance.getComponent('picker').default.bpPickerCell; },
+  get: function () { return getComponentInstance('picker').bpPickerCell; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'PickerDateDatasource', {
-  get: function () { return componentInstance.getComponent('picker').default.PickerDateDatasource; },
+  get: function () { return getComponentInstance('picker').PickerDateDatasource; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'PickerDoubleDatasource', {
-  get: function () { return componentInstance.getComponent('picker').default.PickerDoubleDatasource; },
+  get: function () { return getComponentInstance('picker').PickerDoubleDatasource; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'PickerSingleDatasource', {
-  get: function () { return componentInstance.getComponent('picker').default.PickerSingleDatasource; },
+  get: function () { return getComponentInstance('picker').PickerSingleDatasource; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'PickerThreeDatasource', {
-  get: function () { return componentInstance.getComponent('picker').default.PickerThreeDatasource; },
+  get: function () { return getComponentInstance('picker').PickerThreeDatasource; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'PickerTimeDatasource', {
-  get: function () { return componentInstance.getComponent('picker').default.PickerTimeDatasource; },
+  get: function () { return getComponentInstance('picker').PickerTimeDatasource; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpActionsheet', {
-  get: function () { return componentInstance.getComponent('actionsheet').default.bpActionsheet; },
+  get: function () { return getComponentInstance('actionsheet').bpActionsheet; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpPopover', {
-  get: function () { return componentInstance.getComponent('popover').default.bpPopover; },
+  get: function () { return getComponentInstance('popover').bpPopover; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpFileUploader', {
-  get: function () { return componentInstance.getComponent('uploader').default.bpFileUploader; },
+  get: function () { return getComponentInstance('uploader').bpFileUploader; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpImageCropUploader', {
-  get: function () { return componentInstance.getComponent('uploader').default.bpImageCropUploader; },
+  get: function () { return getComponentInstance('uploader').bpImageCropUploader; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpImageCropPreviewMobile', {
-  get: function () { return componentInstance.getComponent('uploader').default.bpImageCropPreviewMobile; },
+  get: function () { return getComponentInstance('uploader').bpImageCropPreviewMobile; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpImageCropPreviewTablet', {
-  get: function () { return componentInstance.getComponent('uploader').default.bpImageCropPreviewTablet; },
+  get: function () { return getComponentInstance('uploader').bpImageCropPreviewTablet; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpImageCropPreview', {
-  get: function () { return componentInstance.getComponent('uploader').default.bpImageCropPreview; },
+  get: function () { return getComponentInstance('uploader').bpImageCropPreview; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpSelect', {
-  get: function () { return componentInstance.getComponent('select').default.bpSelect; },
+  get: function () { return getComponentInstance('select').bpSelect; },
   enumerable: true
 });
 Object.defineProperty(Instance, 'bpSelectOption', {
-  get: function () { return componentInstance.getComponent('select').default.bpSelectOption; },
+  get: function () { return getComponentInstance('select').bpSelectOption; },
   enumerable: true
 });
 
