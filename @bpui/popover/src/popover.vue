@@ -61,6 +61,8 @@
         type: String,
       },
       bind: {
+        default: null,
+        type: [String,Object,HTMLButtonElement],
       },
     },
     computed: {
@@ -141,6 +143,11 @@
 
       this.$nextTick(()=>{
         this.$parent.$forceUpdate();
+        this.$nextTick(()=>{
+          if (!this.bind) {
+            this._bindEvent(this.bind);
+          }
+        });
       })
     },
     methods: {
@@ -180,6 +187,11 @@
       },
       _bindEvent(v) {
         this._removeEvent(v);
+
+        if (!v) {
+          v = this.$parent;
+        }
+
         if (v) {
           let el;
           if (bpLibs.dom.isVueObject(v)) {
@@ -263,7 +275,7 @@
       _show: function(directionData) {
         let bind = this.bind;
         if (!this.bind)  {
-          return;
+          bind = this.$parent;
         }
 
         let el;

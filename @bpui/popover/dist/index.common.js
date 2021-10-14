@@ -1,5 +1,5 @@
 /*!
- * bpui popover v1.1.23
+ * bpui popover v1.1.24
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -788,7 +788,10 @@ var script = {
     trigger: {
       type: String
     },
-    bind: {}
+    bind: {
+      "default": null,
+      type: [String, Object, HTMLButtonElement]
+    }
   },
   computed: {
     pStyle: function pStyle() {
@@ -867,9 +870,18 @@ var script = {
     //   this._bindEvent(el);
     // }
     this.$nextTick(function () {
+      var _this2 = this;
+
       _newArrowCheck(this, _this);
 
       this.$parent.$forceUpdate();
+      this.$nextTick(function () {
+        _newArrowCheck(this, _this2);
+
+        if (!this.bind) {
+          this._bindEvent(this.bind);
+        }
+      }.bind(this));
     }.bind(this));
   },
   methods: {
@@ -909,9 +921,13 @@ var script = {
       }
     },
     _bindEvent: function _bindEvent(v) {
-      var _this2 = this;
+      var _this3 = this;
 
       this._removeEvent(v);
+
+      if (!v) {
+        v = this.$parent;
+      }
 
       if (v) {
         var el;
@@ -938,7 +954,7 @@ var script = {
             duration: 600
           });
           this.ges.on('press', function (ev) {
-            _newArrowCheck(this, _this2);
+            _newArrowCheck(this, _this3);
 
             bpLibs.device.vibrate(10);
 
@@ -948,7 +964,7 @@ var script = {
       }
     },
     _onTriggerShow: function _onTriggerShow(ev) {
-      var _this3 = this;
+      var _this4 = this;
 
       var clickEventName = bpLibs.device.browserIsMobile() ? 'click' : 'mousedown';
       var closeHandleTimeout = 10;
@@ -970,7 +986,7 @@ var script = {
 
       this.visibleReal = true;
       setTimeout(function () {
-        _newArrowCheck(this, _this3);
+        _newArrowCheck(this, _this4);
 
         $('body').off(clickEventName, this._hide).on(clickEventName, this._hide);
       }.bind(this), closeHandleTimeout);
@@ -993,12 +1009,12 @@ var script = {
       $('body').off(clickEventName, this._hide); // }, 50);
     },
     _show: function _show(directionData) {
-      var _this4 = this;
+      var _this5 = this;
 
       var bind = this.bind;
 
       if (!this.bind) {
-        return;
+        bind = this.$parent;
       }
 
       var el;
@@ -1055,11 +1071,11 @@ var script = {
       var SCREEN_PADDING = 10;
       var main = this.$refs.main;
       bpLibs.dom.probeDom(400, function () {
-        _newArrowCheck(this, _this4);
+        _newArrowCheck(this, _this5);
 
         return main.clientWidth > 0;
       }.bind(this), function () {
-        _newArrowCheck(this, _this4);
+        _newArrowCheck(this, _this5);
 
         if (directionData == 'left' || directionData == 'right') {
           var mainOffset = parseInt(arrowOffset - main.clientHeight / 2);
@@ -1126,12 +1142,12 @@ var script = {
       }.bind(this));
     },
     _hide: function _hide(e) {
-      var _this5 = this;
+      var _this6 = this;
 
       var clickEventName = bpLibs.device.browserIsMobile() ? 'click' : 'mousedown';
       $('body').off(clickEventName, this._hide);
       this.hide().then(function (res) {
-        _newArrowCheck(this, _this5);
+        _newArrowCheck(this, _this6);
       }.bind(this));
     },
     _hideVisible: function _hideVisible(ev) {
