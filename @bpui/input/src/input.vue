@@ -109,7 +109,7 @@ export default {
         return tt === "string" || tt === "number";
       },
     },
-    clearable: String,
+    clearable: Boolean,
     prefixIcon: String,
     suffixIcon: String,
     prefixLabel: String,

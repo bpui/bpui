@@ -38,7 +38,7 @@
       datasource: {
         type: [Array, Object],
       },
-      clearable: String,
+      clearable: Boolean,
       multiple: {
         type: Boolean
       },

@@ -131,7 +131,7 @@
       placeholder: {
         type: String,
       },
-      clearable: String,
+      clearable: Boolean,
       emptyText: {
         type: String,
       }

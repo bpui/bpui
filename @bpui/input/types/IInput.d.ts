@@ -17,7 +17,7 @@ declare namespace bp {
     /** @desc value */
     value: string | number;
     /** @desc 是否存在清除图标 */
-    clearable: string;
+    clearable: boolean;
     /** @desc 前置图标 */
     prefixIcon: string;
     /** @desc 后置图标 */

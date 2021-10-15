@@ -1,6 +1,6 @@
 /*!
- * bpui input v1.1.15
- * Copyright (c) 2021 Copyright bpuioint.lee@live.com All Rights Reserved.
+ * bpui input v1.1.16
+ * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 
@@ -1575,7 +1575,7 @@ var script = {
         return tt === "string" || tt === "number";
       }
     },
-    clearable: String,
+    clearable: Boolean,
     prefixIcon: String,
     suffixIcon: String,
     prefixLabel: String,
