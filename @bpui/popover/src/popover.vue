@@ -62,7 +62,7 @@
       },
       bind: {
         default: null,
-        type: [String,Object,HTMLButtonElement],
+        type: [String,Object,HTMLElement],
       },
     },
     computed: {

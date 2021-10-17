@@ -1,5 +1,5 @@
 /*!
- * bpui popover v1.1.24
+ * bpui popover v1.1.25
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -792,7 +792,7 @@
       },
       bind: {
         "default": null,
-        type: [String, Object, HTMLButtonElement]
+        type: [String, Object, HTMLElement]
       }
     },
     computed: {
