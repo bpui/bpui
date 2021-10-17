@@ -58,6 +58,18 @@
     </bp-popover>
 
  
+
+    <div style="width:100px;">
+      parent
+      <bp-popover direction="right" trigger="hover">
+        <div class="bp-popover__cell">cell 1</div>
+        <div class="bp-popover__cell">cell 2</div>
+        <div class="bp-popover__cell">cell 3</div>
+        <div class="bp-popover__cell">cell 4</div>
+        <div class="bp-popover__cellWarn">cell warn</div>
+      </bp-popover>
+    </div>
+
   </div>
 </template>
 

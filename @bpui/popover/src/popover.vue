@@ -189,7 +189,11 @@
         this._removeEvent(v);
 
         if (!v) {
-          v = this.$parent;
+          v = this.$refs.widget._uuid;
+          if (!v) {
+            throw new Error('cannot find the popover bind');
+          }
+          v = $('.' + v)[0];
         }
 
         if (v) {
@@ -275,7 +279,11 @@
       _show: function(directionData) {
         let bind = this.bind;
         if (!this.bind)  {
-          bind = this.$parent;
+          bind = this.$refs.widget._uuid;
+          if (!bind) {
+            throw new Error('cannot find the popover bind');
+          }
+          bind = $('.' + bind)[0];
         }
 
         let el;

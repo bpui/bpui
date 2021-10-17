@@ -63,6 +63,7 @@
     },
     data() {
       return {
+        _uuid: null,
         uuid: null,
         _show: false,
       }
@@ -82,14 +83,17 @@
       }
     },
     beforeMount() {
+      this._uuid = 'bp-widget-' + febs.crypt.uuid();
       if (this.appendToBody && this.appendToBody != 'false') {
-        this.uuid = 'bp-widget-' + febs.crypt.uuid();
+        this.uuid = this._uuid;
       }
     },
     mounted() {
       this._show = this.visible;
+      let el = $(this.$el);
+      el.parent().addClass(this._uuid);
       if (this.appendToBody && this.appendToBody != 'false') {
-        $(this.$el).attr('id', this.uuid);
+        el.attr('id', this.uuid);
         $('body').append(this.$el);
       }
       if (this.visible) {

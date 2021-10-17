@@ -1,5 +1,5 @@
 /*!
- * bpui popover v1.1.25
+ * bpui popover v1.1.26
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -928,7 +928,13 @@
         this._removeEvent(v);
 
         if (!v) {
-          v = this.$parent;
+          v = this.$refs.widget._uuid;
+
+          if (!v) {
+            throw new Error('cannot find the popover bind');
+          }
+
+          v = $('.' + v)[0];
         }
 
         if (v) {
@@ -1016,7 +1022,13 @@
         var bind = this.bind;
 
         if (!this.bind) {
-          bind = this.$parent;
+          bind = this.$refs.widget._uuid;
+
+          if (!bind) {
+            throw new Error('cannot find the popover bind');
+          }
+
+          bind = $('.' + bind)[0];
         }
 
         var el;

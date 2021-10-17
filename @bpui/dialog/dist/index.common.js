@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v1.1.14
+ * bpui dialog v1.1.15
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -4178,6 +4178,7 @@ var script = {
   },
   data: function data() {
     return {
+      _uuid: null,
       uuid: null,
       _show: false
     };
@@ -4202,17 +4203,21 @@ var script = {
     }
   },
   beforeMount: function beforeMount() {
+    this._uuid = 'bp-widget-' + febs.crypt.uuid();
+
     if (this.appendToBody && this.appendToBody != 'false') {
-      this.uuid = 'bp-widget-' + febs.crypt.uuid();
+      this.uuid = this._uuid;
     }
   },
   mounted: function mounted() {
     var _this2 = this;
 
     this._show = this.visible;
+    var el = $(this.$el);
+    el.parent().addClass(this._uuid);
 
     if (this.appendToBody && this.appendToBody != 'false') {
-      $(this.$el).attr('id', this.uuid);
+      el.attr('id', this.uuid);
       $('body').append(this.$el);
     }
 
