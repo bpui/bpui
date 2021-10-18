@@ -198,7 +198,7 @@ export default {
         : this.type;
     },
     showClearable() {
-      if (this.clearable != null) {
+      if (this.clearable) {
         if ((this.textChangeMark || !this.textChangeMark) && this._isFocusForClean) {
           let t = this.text();
           return t ? t.length > 0: false;
@@ -1083,7 +1083,7 @@ export default {
     },
 
     _onNextInput() {
-      if (this.clearable != null) {
+      if (this.clearable) {
         this.textChangeMark = !this.textChangeMark;
       }
     }

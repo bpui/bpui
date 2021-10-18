@@ -163,7 +163,7 @@
         return this.multiple && this.groupCount == 1;
       },
       showClearable() {
-        if (this.clearable != null) {
+        if (this.clearable) {
 
           if (this.valueIndex && this.valueIndex.length > 0 && this.isHover) {
             return true;

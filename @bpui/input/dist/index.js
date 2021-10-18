@@ -1,5 +1,5 @@
 /*!
- * bpui input v1.1.16
+ * bpui input v1.1.17
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1657,7 +1657,7 @@
         return ["int", "unsigned-int", "float", "unsigned-float"].indexOf(this.type) >= 0 ? "number" : this.type;
       },
       showClearable: function showClearable() {
-        if (this.clearable != null) {
+        if (this.clearable) {
           if ((this.textChangeMark || !this.textChangeMark) && this._isFocusForClean) {
             var t = this.text();
             return t ? t.length > 0 : false;
@@ -2609,7 +2609,7 @@
         this.$emit("click-icon", "prefixIcon");
       },
       _onNextInput: function _onNextInput() {
-        if (this.clearable != null) {
+        if (this.clearable) {
           this.textChangeMark = !this.textChangeMark;
         }
       }
