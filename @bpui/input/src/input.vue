@@ -478,9 +478,23 @@ export default {
             true,
           );
         } else {
-          this.validate(null, value, true);
-          if (this.isMarkError == value) {
-            this.isInputWrong = true;
+          if (this.pattern) {
+            this.validate(
+              (vv) => {
+                elem.val(vv);
+                if (this.isMarkError == vv) {
+                  this.isInputWrong = true;
+                }
+              },
+              value,
+              true,
+            );
+          }
+          else {
+            this.validate(null, value, true);
+            if (this.isMarkError == value) {
+              this.isInputWrong = true;
+            }
           }
         }
 

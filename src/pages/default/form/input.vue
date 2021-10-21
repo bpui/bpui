@@ -1,5 +1,10 @@
 <template>
   <div>
+    <h4>pattern</h4>
+    <bp-input
+      :pattern="regex.alphaOrDigit"
+    ></bp-input>
+
     <h4>placeholder</h4>
     <bp-input
       placeholder="placeholder"
@@ -77,6 +82,7 @@ import {
 import { State, Mutation } from "vuex-class";
 
 import bpui from "bpui.js";
+import { regex } from '@/regex';
 
 @Component({
   components: {
@@ -84,6 +90,7 @@ import bpui from "bpui.js";
   },
 })
 export default class extends Vue {
+  regex = regex;
   //
   // event.
   @Emit()

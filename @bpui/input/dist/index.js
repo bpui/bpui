@@ -1,5 +1,5 @@
 /*!
- * bpui input v1.1.17
+ * bpui input v1.1.18
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -1949,10 +1949,22 @@
               }
             }.bind(this), value, true);
           } else {
-            this.validate(null, value, true);
+            if (this.pattern) {
+              this.validate(function (vv) {
+                _newArrowCheck(this, _this7);
 
-            if (this.isMarkError == value) {
-              this.isInputWrong = true;
+                elem.val(vv);
+
+                if (this.isMarkError == vv) {
+                  this.isInputWrong = true;
+                }
+              }.bind(this), value, true);
+            } else {
+              this.validate(null, value, true);
+
+              if (this.isMarkError == value) {
+                this.isInputWrong = true;
+              }
             }
           } // type.
 
