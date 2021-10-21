@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v1.1.15
+ * bpui dialog v1.1.16
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -4465,7 +4465,8 @@ var script$1 = {
   data: function data() {
     return {
       visibleReal: false,
-      footClass: null
+      footClass: null,
+      _hackOnUpdateVisible: null
     };
   },
   watch: {
@@ -4474,6 +4475,10 @@ var script$1 = {
     },
     visibleReal: function visibleReal(v) {
       this.$emit('update:visible', v);
+
+      if (this._hackOnUpdateVisible) {
+        this._hackOnUpdateVisible(v);
+      }
     }
   },
   beforeMount: function beforeMount() {

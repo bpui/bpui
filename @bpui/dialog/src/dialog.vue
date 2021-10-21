@@ -74,6 +74,7 @@
       return {
         visibleReal: false,
         footClass: null,
+        _hackOnUpdateVisible: null,
       };
     },
     watch: {
@@ -82,6 +83,9 @@
       },
       visibleReal(v) {
         this.$emit('update:visible', v);
+        if (this._hackOnUpdateVisible) {
+          this._hackOnUpdateVisible(v);
+        }
       },
     },
     beforeMount() {
