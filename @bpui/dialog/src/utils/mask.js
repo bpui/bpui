@@ -99,7 +99,7 @@ export function restoreFixedScroll(widget) {
   }
 
   let ss = widget.attr("data-htmlp");
-  if (ss.length > 0) {
+  if (ss && ss.length > 0) {
     let sss = febs.string.replace(ss, "px", "");
     sss = parseInt(sss) || 0;
     hooks.callWidgetShake(sss);

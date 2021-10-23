@@ -159,7 +159,7 @@ export default {
     /**
      * @desc: 正则表达式.
      */
-    pattern: String,
+    pattern: [String,RegExp],
     validator: {
       validator: function (value) {
         return !value || typeof value === "function";

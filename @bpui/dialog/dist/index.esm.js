@@ -1,5 +1,5 @@
 /*!
- * bpui dialog v1.1.16
+ * bpui dialog v1.1.17
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -2862,7 +2862,7 @@ function restoreFixedScroll(widget) {
 
   var ss = widget.attr("data-htmlp");
 
-  if (ss.length > 0) {
+  if (ss && ss.length > 0) {
     var sss = string.replace(ss, "px", "");
     sss = parseInt(sss) || 0;
     callWidgetShake(sss);
