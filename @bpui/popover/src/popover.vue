@@ -247,7 +247,9 @@
 
         this.visibleReal = true;
         setTimeout(()=>{
-          $('body').off(clickEventName, this._hide).on(clickEventName, this._hide);
+          if (this.visibleReal) {
+            $('body').off(clickEventName, this._hide).on(clickEventName, this._hide);
+          }
         }, closeHandleTimeout);
 
         this._show(this.direction);
@@ -269,7 +271,8 @@
             $(this.$refs.main).on('mouseleave', this._hideVisible);
           }
           else {
-            this.visibleReal = false;
+            // this.visibleReal = false;
+            this.hide().then(res=>{});
           }
 
           let clickEventName = bpLibs.device.browserIsMobile()?'click':'mousedown';
@@ -442,7 +445,8 @@
           //   return;
           // }
         }
-        this.visibleReal = false;
+        // this.visibleReal = false;
+        this.hide().then(res=>{});
       }
     },
   };

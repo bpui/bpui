@@ -9,12 +9,12 @@
     "@bpui/libs": "^1.1.7",
     "@bpui/navbar-view": "^1.1.6",
     "@bpui/picker": "^1.1.29",
-    "@bpui/popover": "^1.1.28",
+    "@bpui/popover": "^1.1.29",
     "@bpui/radio": "^1.1.7",
-    "@bpui/select": "^1.1.24",
+    "@bpui/select": "^1.1.25",
     "@bpui/switch": "^1.1.6",
     "@bpui/tabbar": "^1.1.5",
-    "@bpui/table-view": "^1.1.21",
+    "@bpui/table-view": "^1.1.22",
     "@bpui/uploader": "^1.1.17"
   },
   "directories": {},
@@ -37,5 +37,5 @@
     }
   ],
   "name": "bpui.js.bundle",
-  "version": "1.1.48"
+  "version": "1.1.49"
 }

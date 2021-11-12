@@ -1,5 +1,5 @@
 /*!
- * bpui popover v1.1.28
+ * bpui popover v1.1.29
  * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
@@ -990,12 +990,16 @@ var script = {
       setTimeout(function () {
         _newArrowCheck(this, _this4);
 
-        $('body').off(clickEventName, this._hide).on(clickEventName, this._hide);
+        if (this.visibleReal) {
+          $('body').off(clickEventName, this._hide).on(clickEventName, this._hide);
+        }
       }.bind(this), closeHandleTimeout);
 
       this._show(this.direction);
     },
     _onTriggerHide: function _onTriggerHide(e) {
+      var _this5 = this;
+
       var main = $(this.$refs.main);
       var ev = e; // this.$timer.setTimeout(()=>{
 
@@ -1004,14 +1008,17 @@ var script = {
       if (ev && ev.clientX >= mainOffset.left - 14 && ev.clientX <= mainOffset.left + main[0].offsetWidth + 14 && ev.clientY >= mainOffset.top - 14 && ev.clientY <= mainOffset.top + main[0].offsetHeight + 14) {
         $(this.$refs.main).on('mouseleave', this._hideVisible);
       } else {
-        this.visibleReal = false;
+        // this.visibleReal = false;
+        this.hide().then(function (res) {
+          _newArrowCheck(this, _this5);
+        }.bind(this));
       }
 
       var clickEventName = bpLibs.device.browserIsMobile() ? 'click' : 'mousedown';
       $('body').off(clickEventName, this._hide); // }, 50);
     },
     _show: function _show(directionData) {
-      var _this5 = this;
+      var _this6 = this;
 
       var bind = this.bind;
 
@@ -1079,11 +1086,11 @@ var script = {
       var SCREEN_PADDING = 10;
       var main = this.$refs.main;
       bpLibs.dom.probeDom(400, function () {
-        _newArrowCheck(this, _this5);
+        _newArrowCheck(this, _this6);
 
         return main.clientWidth > 0;
       }.bind(this), function () {
-        _newArrowCheck(this, _this5);
+        _newArrowCheck(this, _this6);
 
         if (directionData == 'left' || directionData == 'right') {
           var mainOffset = parseInt(arrowOffset - main.clientHeight / 2);
@@ -1150,15 +1157,17 @@ var script = {
       }.bind(this));
     },
     _hide: function _hide(e) {
-      var _this6 = this;
+      var _this7 = this;
 
       var clickEventName = bpLibs.device.browserIsMobile() ? 'click' : 'mousedown';
       $('body').off(clickEventName, this._hide);
       this.hide().then(function (res) {
-        _newArrowCheck(this, _this6);
+        _newArrowCheck(this, _this7);
       }.bind(this));
     },
     _hideVisible: function _hideVisible(ev) {
+      var _this8 = this;
+
       $(this.$refs.main).off('mouseleave', this._hideVisible);
 
       if (ev) {
@@ -1182,9 +1191,12 @@ var script = {
         //   return;
         // }
 
-      }
+      } // this.visibleReal = false;
 
-      this.visibleReal = false;
+
+      this.hide().then(function (res) {
+        _newArrowCheck(this, _this8);
+      }.bind(this));
     }
   }
 };
