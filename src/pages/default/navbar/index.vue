@@ -18,6 +18,9 @@
     <router-link to="/navbar/page2" animate="lift">push with lift</router-link><br>
     <router-link to="/navbar/page2" animate="fade">push with fade</router-link><br>
 
+    <router-link to="#abcd1">#abcd</router-link><br>
+    <router-link to="#abcd2">#abcd</router-link><br>
+
     <span @click="$navbar.push({path: '/'}, true)">push to /</span>
     <div style="height:800px">ddd</div>
     <a name="abc">abc</a>

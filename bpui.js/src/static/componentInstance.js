@@ -7,7 +7,7 @@
 * Desc: 所有的组件.
 */
 
-import Components from './bpui.components';
+import Components from '../static/bpui.components';
 var componentStore = require('../componentStore');
 
 export function getComponent(name) {

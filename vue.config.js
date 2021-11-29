@@ -63,8 +63,9 @@ module.exports = {
       .set("ext", resolve("./ext"))
       .set("bpui.js", resolve("./bpui.js"))
       .set("@bpui", resolve("./@bpui"))
-      // 开发模式
       .set("./dyn/bpui.components", resolve("./bpui.js/src/dyn/bpui.components.dev"))
-      .set("./static/bpui.components", resolve("./bpui.js/src/static/bpui.components.dev"));
+      .set("../dyn/bpui.components", resolve("./bpui.js/src/dyn/bpui.components.dev"))
+      .set("./static/bpui.components", resolve("./bpui.js/src/static/bpui.components.dev"))
+      .set("../static/bpui.components", resolve("./bpui.js/src/static/bpui.components.dev"));
   }
 };
