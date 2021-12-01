@@ -1,4 +1,4 @@
-/// <reference path="./INavbarView.d.ts" />
+/// <reference path="./inavbarView.d.ts" />
 
 /**
  * Copyright (c) 2020 Copyright bpui All Rights Reserved.

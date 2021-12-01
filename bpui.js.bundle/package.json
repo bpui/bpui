@@ -7,7 +7,7 @@
     "@bpui/dialog": "^1.1.17",
     "@bpui/input": "^1.1.19",
     "@bpui/libs": "^1.1.7",
-    "@bpui/navbar-view": "^1.1.7",
+    "@bpui/navbar-view": "^1.1.8",
     "@bpui/picker": "^1.1.29",
     "@bpui/popover": "^1.1.29",
     "@bpui/radio": "^1.1.7",
@@ -37,5 +37,5 @@
     }
   ],
   "name": "bpui.js.bundle",
-  "version": "1.1.50"
+  "version": "1.1.51"
 }

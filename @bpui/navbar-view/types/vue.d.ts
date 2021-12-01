@@ -1,4 +1,4 @@
-/// <reference path="./INavbarView.d.ts" />
+/// <reference path="./inavbarView.d.ts" />
 
 import Vue from 'vue';
 import '@bpui/libs/types';
