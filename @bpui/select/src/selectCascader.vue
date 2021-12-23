@@ -501,6 +501,10 @@
         this.valueIndex = this.valueIndex.concat([]);
         this.valueLabels.splice(index, 1);
         this.valueLabels = this.valueLabels.concat([]);
+
+        this.$nextTick().then(()=>{
+          this._updateValue(this.selectedValue);
+        });
       },
       _updateValue(selectedValue) {
         if (null === selectedValue) {

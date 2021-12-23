@@ -36,5 +36,5 @@
     "prepublishOnly": "node ../../scripts/bundle.js && rm -rf dist/style.js*"
   },
   "name": "@bpui/select",
-  "version": "1.1.25"
+  "version": "1.1.26"
 }
