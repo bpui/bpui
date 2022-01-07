@@ -1,6 +1,6 @@
 /*!
- * bpui checkbox v1.1.10
- * Copyright (c) 2021 Copyright bpoint.lee@live.com All Rights Reserved.
+ * bpui checkbox v1.1.11
+ * Copyright (c) 2022 Copyright bpoint.lee@live.com All Rights Reserved.
  * Released under the MIT License.
  */
 
@@ -55,6 +55,12 @@ var script = {
     labelValue: {
       "default": null,
       type: String
+    },
+    customData: {
+      "default": null,
+      validator: function validator(value) {
+        return true;
+      }
     }
   },
   watch: {
@@ -1084,7 +1090,8 @@ var script$1 = {
         if (child.bpNodeName == 'bpCheckbox') {
           values.push({
             isChecked: child.isChecked,
-            labelValue: label
+            labelValue: label,
+            customData: child.customData
           });
         }
       }

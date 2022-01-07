@@ -78,6 +78,7 @@ export default {
           values.push({
             isChecked: child.isChecked,
             labelValue: label,
+            customData: child.customData,
           });
         }
       }

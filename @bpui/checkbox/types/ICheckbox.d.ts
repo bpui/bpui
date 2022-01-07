@@ -34,7 +34,7 @@ declare namespace bp {
     /**
     * @desc: 所有checkbox的选值情况.
     */
-    value?: Array<{isChecked: Boolean, labelValue?: String}>;
+    value?: Array<{isChecked: Boolean, labelValue?: String, customData?: any}>;
 
     /**
      * @desc disabled

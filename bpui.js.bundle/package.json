@@ -3,7 +3,7 @@
   "dependencies": {
     "@bpui/actionsheet": "^1.1.18",
     "@bpui/button": "^1.1.9",
-    "@bpui/checkbox": "^1.1.10",
+    "@bpui/checkbox": "^1.1.11",
     "@bpui/dialog": "^1.1.17",
     "@bpui/input": "^1.1.19",
     "@bpui/libs": "^1.1.7",
@@ -37,5 +37,5 @@
     }
   ],
   "name": "bpui.js.bundle",
-  "version": "1.1.52"
+  "version": "1.1.53"
 }

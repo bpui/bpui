@@ -45,6 +45,12 @@ value属性优先, 会覆盖checked属性
         default: null,
         type: String,
       },
+      customData: {
+        default: null,
+        validator: function(value) {
+          return true;
+        }
+      },
     },
     watch: {
       value: function (val, oldVal) {
